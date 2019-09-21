@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.hdg.BatteryCellMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.hdg.BatteryCell">
+        select
+        *
+        from hdg_battery_cell
+        where id = #{id}
+    </select>
+
+    <select id="findByBarcode" resultType="cn.com.yusong.yhdg.common.domain.hdg.BatteryCell">
+        select
+        *
+        from hdg_battery_cell
+        where barcode = #{barcode}
+    </select>
+
+    <select id="findByBatteryId" resultType="cn.com.yusong.yhdg.common.domain.hdg.BatteryCell">
+        select
+        *
+        from hdg_battery_cell
+        where battery_id = #{batteryId}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.hdg.BatteryCell" resultType="int">
+        select count(*) from hdg_battery_cell
+        where 1 = 1
+        <if test="cellMfr != null and cellMfr !='' ">
+            <![CDATA[and cell_mfr LIKE concat('%',#{cellMfr}, '%')]]>
+        </if>
+        <if test="cellModel != null and cellModel !='' ">
+            <![CDATA[and cell_model LIKE concat('%',#{cellModel}, '%')]]>
+        </if>
+        <if test="barcode != null and barcode !='' ">
+            <![CDATA[and barcode LIKE concat('%',#{barcode}, '%')]]>
+        </if>
+        <if test="batteryId != null and batteryId !='' ">
+            and battery_id = #{batteryId}
+        </if>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.hdg.BatteryCell"
+            resultType="cn.com.yusong.yhdg.common.domain.hdg.BatteryCell">
+        select
+        *
+        from hdg_battery_cell
+        where 1 = 1
+        <if test="cellMfr != null and cellMfr !='' ">
+            <![CDATA[and cell_mfr LIKE concat('%',#{cellMfr}, '%')]]>
+        </if>
+        <if test="cellModel != null and cellModel !='' ">
+            <![CDATA[and cell_model LIKE concat('%',#{cellModel}, '%')]]>
+        </if>
+        <if test="barcode != null and barcode !='' ">
+            <![CDATA[and barcode LIKE concat('%',#{barcode}, '%')]]>
+        </if>
+        <if test="batteryId != null and batteryId !='' ">
+            and battery_id = #{batteryId}
+        </if>
+        order by create_time desc
+        limit ${beginIndex}, ${rows}
+    </select>
+
+    <select id="findEmptyPageCount" parameterType="cn.com.yusong.yhdg.common.domain.hdg.BatteryCell" resultType="int">
+        select count(*) from hdg_battery_cell
+        where create_time is null
+    </select>
+
+    <select id="findEmptyPageResult" parameterType="cn.com.yusong.yhdg.common.domain.hdg.BatteryCell"
+            resultType="cn.com.yusong.yhdg.common.domain.hdg.BatteryCell">
+        select
+        *
+        from hdg_battery_cell
+        where create_time is null
+        limit ${beginIndex}, ${rows}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.BatteryCell" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO hdg_battery_cell(
+        battery_id,
+        cell_mfr,
+        cell_model,
+        barcode,
+        nominal_cap,
+        ac_resistance,
+        resilience_vol,
+        static_vol,
+        circle,
+        appearance,
+        memo,
+        operator,
+        create_time
+        ) VALUES (
+        #{batteryId},
+        #{cellMfr},
+        #{cellModel},
+        #{barcode},
+        #{nominalCap},
+        #{acResistance},
+        #{resilienceVol},
+        #{staticVol},
+        #{circle},
+        #{appearance},
+        #{memo},
+        #{operator},
+        #{createTime}
+        )
+    </insert>
+
+    <update id="update">
+        update hdg_battery_cell set
+        nominal_cap = #{nominalCap},
+        ac_resistance = #{acResistance},
+        resilience_vol = #{resilienceVol},
+        static_vol = #{staticVol},
+        circle = #{circle},
+        appearance =#{appearance}
+        where id = #{id}
+    </update>
+
+    <update id="unbind">
+        update hdg_battery_cell set
+        battery_id = null
+        where id = #{id}
+    </update>
+
+    <update id="unbindByBatteryId">
+        update hdg_battery_cell set
+        battery_id = null
+        where battery_id = #{batteryId}
+    </update>
+
+    <update id="bindBattery">
+        update hdg_battery_cell set
+        battery_id = #{batteryId}
+        where id = #{id}
+    </update>
+
+</mapper>

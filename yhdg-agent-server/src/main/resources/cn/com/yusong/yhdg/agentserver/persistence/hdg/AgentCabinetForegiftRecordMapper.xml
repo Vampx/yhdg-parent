@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.hdg.AgentCabinetForegiftRecordMapper">
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.hdg.AgentCabinetForegiftRecord" resultType="int">
+        select
+        count(id)
+        from hdg_agent_cabinet_foregift_record
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null">
+                and agent_id = #{agentId}
+            </if>
+            <if test="materialDayStatsId != null">
+                and material_day_stats_id = #{materialDayStatsId}
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.hdg.AgentCabinetForegiftRecord" resultType="cn.com.yusong.yhdg.common.domain.hdg.AgentCabinetForegiftRecord">
+        select
+        *
+        from hdg_agent_cabinet_foregift_record
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null">
+                and agent_id = #{agentId}
+            </if>
+            <if test="materialDayStatsId != null">
+                and material_day_stats_id = #{materialDayStatsId}
+            </if>
+        </trim>
+        limit ${beginIndex}, ${rows}
+    </select>
+
+</mapper>

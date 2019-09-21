@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.basic.UserMpPushMessageTemplateMapper">
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.UserMpPushMessageTemplate" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO `bas_user_mp_push_message_template` (id, weixinmp_id, `user_id`, `is_active`)
+        VALUES (#{id}, #{weixinmpId}, #{userId}, #{isActive})
+    </insert>
+
+    <delete id="deleteByUser">
+        DELETE FROM bas_user_mp_push_message_template
+            WHERE user_id = #{userId}
+    </delete>
+
+</mapper>

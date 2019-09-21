@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.staticserver.persistence.basic.MobileMessageTemplateMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.basic.MobileMessageTemplate">
+        select
+            *
+       from bas_mobile_message_template
+       where id = #{id} and partner_id = #{partnerId}
+    </select>
+</mapper>

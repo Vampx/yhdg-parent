@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.agentappserver.persistence.hdg.CabinetDayDegreeStatsMapper">
+
+    <select id="findList"  resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetDayDegreeStats">
+        SELECT
+          *
+        FROM hdg_cabinet_day_degree_stats
+        where 1=1
+        <if test="cabinetId != null and cabinetId != '' ">
+            and cabinet_id = #{cabinetId}
+        </if>
+        <if test="agentId != null">
+            and agent_id = #{agentId}
+        </if>
+        order by stats_date DESC
+        limit #{offset},#{limit}
+    </select>
+
+    <select id="findLast"  resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetDayDegreeStats">
+        SELECT
+        *
+        FROM hdg_cabinet_day_degree_stats
+        where cabinet_id = #{cabinetId}
+        order by stats_date DESC
+        limit 1
+    </select>
+
+    <select id="findDayDegree" resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetDayDegreeStats">
+        select
+        *
+        from hdg_cabinet_day_degree_stats
+        where cabinet_id = #{cabinetId}
+        AND stats_date = #{statsDate}
+        limit 1
+    </select>
+
+    <select id="findForStats" resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetDayDegreeStats">
+        select
+        hdg_cabinet_day_degree_stats.*,
+        hdg_cabinet.price
+        from hdg_cabinet_day_degree_stats left join hdg_cabinet on hdg_cabinet_day_degree_stats.cabinet_id = hdg_cabinet.id
+        where  hdg_cabinet.agent_id = #{agentId}
+        and hdg_cabinet_day_degree_stats.stats_date = #{statsDate}
+        limit #{offset}, #{limit}
+    </select>
+
+    <select id="findForAgent" resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetDayDegreeStats">
+        select
+        sum(hdg_cabinet_day_degree_stats.num) as num,
+        sum(hdg_cabinet_day_degree_stats.num * hdg_cabinet.price) as price
+        from hdg_cabinet_day_degree_stats left join hdg_cabinet on hdg_cabinet_day_degree_stats.cabinet_id = hdg_cabinet.id
+        where  hdg_cabinet.agent_id = #{agentId}
+        <if test="statsDate!=null">
+            and hdg_cabinet_day_degree_stats.stats_date = #{statsDate}
+        </if>
+        <if test="cabinetId != null and cabinetId != ''">
+            and hdg_cabinet_day_degree_stats.cabinet_id = #{cabinetId}
+        </if>
+    </select>
+
+</mapper>

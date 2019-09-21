@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.agentappserver.persistence.hdg.BatteryOrderMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.hdg.BatteryOrder">
+        SELECT
+        *
+        FROM
+        hdg_battery_order
+        WHERE
+        id=#{id}
+    </select>
+
+    <select id="findByBatteryId" resultType="cn.com.yusong.yhdg.common.domain.hdg.BatteryOrder">
+        SELECT
+        *
+        FROM
+        hdg_battery_order
+        WHERE
+        battery_id = #{batteryId} order by create_time desc limit 1
+    </select>
+
+    <select id="findListByCustomer" resultType="cn.com.yusong.yhdg.common.domain.hdg.BatteryOrder">
+        SELECT
+        *
+        FROM
+        hdg_battery_order
+        WHERE
+        customer_id = #{customerId}
+        <if test="orderStatus!=null">
+            and order_status = #{orderStatus}
+        </if>
+        order by id DESC
+    </select>
+
+
+    <select id="findListByCabinetId" resultType="cn.com.yusong.yhdg.common.domain.hdg.BatteryOrder">
+        SELECT
+        *
+        FROM
+        hdg_battery_order
+        WHERE
+        take_cabinet_id = #{cabinetId} and agent_id = #{agentId}
+        <![CDATA[and create_time > #{beginTime} ]]>
+        <![CDATA[and create_time < #{endTime} ]]>
+        order by id DESC
+    </select>
+
+    <select id="findByCabinetId" resultType="cn.com.yusong.yhdg.common.domain.hdg.BatteryOrder">
+        SELECT
+        *
+        FROM
+        hdg_battery_order
+        WHERE
+        agent_id = #{agentId}
+        <if test="cabinetId != null and cabinetId != ''">
+            and take_cabinet_id = #{cabinetId}
+        </if>
+        order by id DESC
+        limit #{offset},#{limit}
+    </select>
+
+    <select id="findCountByCabinetId" resultType="int">
+        SELECT
+        count(*)
+        FROM
+        hdg_battery_order
+        WHERE
+        agent_id = #{agentId} and put_cabinet_id is not null
+        <if test="cabinetId != null and cabinetId != ''">
+            and put_cabinet_id = #{cabinetId}
+        </if>
+        <if test="orderStatus != null">
+            and order_status = #{orderStatus}
+        </if>
+    </select>
+
+    <select id="findActiveUserCountByCabinetId"  resultType="int">
+        select
+        count(id)
+        from hdg_battery_order
+        <trim prefix="where" prefixOverrides="and">
+            <if test="cabinetId != null and cabinetId != '' ">
+                and take_cabinet_id = #{cabinetId}
+            </if>
+            <if test="agentId != null">
+                and agent_id = #{agentId}
+            </if>
+            <if test="orderStatus != null">
+                and order_status in
+                <foreach collection="orderStatus" index="index" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </trim>
+    </select>
+
+    <select id="findList" resultType="cn.com.yusong.yhdg.common.domain.hdg.BatteryOrder">
+        SELECT
+        *
+        FROM
+        hdg_battery_order
+        WHERE
+        agent_id = #{agentId}
+        <if test="keyword != null and keyword != ''">
+            <![CDATA[and ( battery_id LIKE concat('%', #{keyword}, '%')
+                     or customer_fullname LIKE concat('%', #{keyword}, '%')
+                     or customer_mobile LIKE concat('%', #{keyword}, '%') )]]>
+        </if>
+        order by id DESC
+        limit #{offset},#{limit}
+    </select>
+
+    <select id="findByBatteryList" resultType="cn.com.yusong.yhdg.common.domain.hdg.BatteryOrder">
+        SELECT
+        *
+        FROM
+        hdg_battery_order
+        WHERE
+        agent_id = #{agentId}
+        and battery_id = #{batteryId}
+        <if test="idAndName != null and idAndName != ''">
+            <![CDATA[and (id LIKE concat('%', #{idAndName}, '%') or customer_fullname LIKE concat('%', #{idAndName}, '%'))]]>
+        </if>
+        order by create_time DESC
+        limit #{offset},#{limit}
+    </select>
+
+    <select id="findBatteryListByCustomer" resultType="cn.com.yusong.yhdg.common.domain.hdg.BatteryOrder">
+        SELECT
+        *
+        FROM
+        hdg_battery_order
+        WHERE
+        agent_id = #{agentId}
+        and battery_id = #{batteryId}
+        <if test="customerId != null">
+            and customer_id = #{customerId}
+        </if>
+        order by create_time DESC
+    </select>
+
+    <select id="findByBattery" resultType="cn.com.yusong.yhdg.common.domain.hdg.BatteryOrder">
+        SELECT
+        *
+        FROM
+        hdg_battery_order
+        WHERE
+        agent_id = #{agentId}
+        and battery_id = #{batteryId}
+        <if test="shopId != null and shopId != ''">
+            and take_shop_id = #{shopId}
+        </if>
+        <if test="idAndName != null and idAndName != ''">
+            <![CDATA[and (id LIKE concat('%', #{idAndName}, '%') or customer_fullname LIKE concat('%', #{idAndName}, '%'))]]>
+        </if>
+        order by create_time DESC
+        limit #{offset},#{limit}
+    </select>
+
+    <select id="findByShopBatteryList" resultType="cn.com.yusong.yhdg.common.domain.hdg.BatteryOrder">
+        SELECT
+        *
+        FROM
+        hdg_battery_order
+        WHERE
+        agent_id = #{agentId}
+        and battery_id = #{batteryId}
+        order by create_time DESC
+        limit #{offset},#{limit}
+    </select>
+
+    <select id="findListByShop" resultType="cn.com.yusong.yhdg.common.domain.hdg.BatteryOrder">
+        SELECT
+            *
+        FROM hdg_battery_order
+        WHERE take_shop_id = #{shopId}
+        <if test="keyword != null and keyword != ''">
+            <![CDATA[AND (battery_id LIKE concat('%', #{keyword}, '%') OR customer_mobile LIKE concat('%', #{keyword}, '%'))]]>
+        </if>
+        ORDER BY id DESC
+        limit #{offset}, #{limit}
+    </select>
+
+    <select id="findTakeTimeoutCount" resultType="int">
+        SELECT
+        count(id)
+        FROM
+        hdg_battery_order
+        WHERE
+        order_status = #{orderStatus}
+        AND create_time &lt;= #{createTime}
+        and  agent_id = #{agentId}
+    </select>
+
+    <select id="findTakeTimeout" resultType="cn.com.yusong.yhdg.common.domain.hdg.BatteryOrder">
+        SELECT
+         a.*,
+         b.volume as currentVolume
+        FROM
+        hdg_battery_order a left join hdg_battery b on a.battery_id = b.id
+        WHERE
+        a.order_status = #{orderStatus}
+        AND a.create_time &lt;= #{createTime}
+        and a.agent_id = #{agentId}
+        order by a.create_time
+        limit #{offset},#{limit}
+    </select>
+
+    <select id="countShopTodayOrderNum" resultType="java.lang.Integer">
+        select count(*)
+        from hdg_battery_order
+        where take_shop_id = #{shopId} and create_time >= #{startTime} and create_time &lt;= #{endTime}
+    </select>
+
+    <update id="complete">
+        update hdg_battery_order
+        set
+        order_status = #{toStatus},
+        pay_type = #{payType},
+        pay_time = #{completeTime},
+        complete_time = #{completeTime},
+        price = 0,
+        money = 0
+        where id = #{id}
+    </update>
+
+    <update id="updateBattery">
+        update hdg_battery_order set battery_id = #{batteryId} where id = #{id}
+    </update>
+
+</mapper>

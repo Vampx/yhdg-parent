@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.basic.DeviceCommandMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.basic.DeviceCommand">
+        select
+            *
+        from bas_device_command
+        where id = #{id}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.basic.DeviceCommand" resultType="int">
+        select
+          count(*)
+        from bas_device_command
+        <trim prefix="where" prefixOverrides="and">
+            <if test="deviceId != null">
+                <![CDATA[and device_id LIKE concat('%', #{deviceId}, '%')]]>
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" resultType="cn.com.yusong.yhdg.common.domain.basic.DeviceCommand">
+        select
+          *
+        from bas_device_command
+        <trim prefix="where" prefixOverrides="and">
+            <if test="deviceId != null">
+                <![CDATA[and device_id LIKE concat('%', #{deviceId}, '%')]]>
+            </if>
+            <if test="type != null">
+                and  type = #{type}
+            </if>
+            <if test="status != null">
+                and  status = #{status}
+            </if>
+        </trim>
+        ORDER BY create_time DESC
+        limit ${beginIndex}, ${rows}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.DeviceCommand">
+        INSERT INTO bas_device_command (
+            device_type,
+            device_id,
+            type,
+            status,
+            dispatch_time,
+            log_date,
+            create_time
+        ) VALUES (
+            #{deviceType},
+            #{deviceId},
+            #{type},
+            #{status},
+            #{dispatchTime},
+            #{logDate},
+            #{createTime}
+        )
+    </insert>
+
+</mapper>

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.hdg.KeepOrderMapper">
+    <select id="find" parameterType="String" resultType="cn.com.yusong.yhdg.common.domain.hdg.KeepOrder">
+        select
+        *
+        from hdg_keep_order
+        where id = #{id}
+    </select>
+
+    <select id="findCountByTakeCabinet" resultType="int">
+        select
+        count(*)
+        from hdg_keep_order
+        where take_cabinet_id = #{takeCabinetId}
+    </select>
+
+    <select id="findCountByPutCabinet" resultType="int">
+        select
+        count(*)
+        from hdg_keep_order
+        where put_cabinet_id = #{putCabinetId}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.hdg.KeepOrder" resultType="int">
+        select
+        count(*)
+        from hdg_keep_order
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null">
+                and agent_id = #{agentId}
+            </if>
+            <if test="id != null and id != ''">
+                <![CDATA[and id LIKE concat(#{id}, '%')]]>
+            </if>
+            <if test="batteryId != null and batteryId != ''">
+                and battery_id = #{batteryId}
+            </if>
+            <if test="takeOrderId != null and takeOrderId != ''">
+                and take_order_id = #{takeOrderId}
+            </if>
+            <if test="putOrderId != null and putOrderId != ''">
+                and put_order_id = #{putOrderId}
+            </if>
+            <if test="takeUserFullname != null and takeUserFullname != ''">
+                <![CDATA[and take_user_fullname LIKE concat(#{takeUserFullname}, '%')]]>
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.hdg.KeepOrder" resultType="cn.com.yusong.yhdg.common.domain.hdg.KeepOrder">
+        select
+        *
+        from hdg_keep_order
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null">
+                and agent_id = #{agentId}
+            </if>
+            <if test="id != null and id != ''">
+                <![CDATA[and id LIKE concat(#{id}, '%')]]>
+            </if>
+            <if test="batteryId != null and batteryId != ''">
+                and battery_id = #{batteryId}
+            </if>
+            <if test="takeOrderId != null and takeOrderId != ''">
+                and take_order_id = #{takeOrderId}
+            </if>
+            <if test="putOrderId != null and putOrderId != ''">
+                and put_order_id = #{putOrderId}
+            </if>
+            <if test="takeUserFullname != null and takeUserFullname != ''">
+                <![CDATA[and take_user_fullname LIKE concat(#{takeUserFullname}, '%')]]>
+            </if>
+            <if test="orderStatus != null">
+                and order_status = #{orderStatus}
+            </if>
+        </trim>
+        order by hdg_keep_order.id desc
+        limit ${beginIndex}, ${rows}
+    </select>
+
+</mapper>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.basic.DepositOrderMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.basic.DepositOrder">
+        select
+            id,
+            agent_id as agentId,
+            money,
+            biz_type as bizType,
+            customer_id as customerId,
+            status
+        from bas_deposit_order
+        where id = #{id}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.basic.DepositOrder" resultType="int">
+        select
+            count(id)
+        from bas_deposit_order
+        <trim prefix="where" prefixOverrides="and">
+            <if test="customerId != null and customerId != ''">
+                and customer_id = #{customerId}
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.basic.DepositOrder" resultType="cn.com.yusong.yhdg.common.domain.basic.DepositOrder">
+        select
+            id,
+            agent_id as agentId,
+            money,
+            biz_type as bizType,
+            customer_id as customerId,
+            status,
+            fail_reason as failReason,
+            handle_time as handleTime,
+            create_time as createTime
+        from bas_deposit_order
+        <trim prefix="where" prefixOverrides="and">
+            <if test="customerId != null and customerId != ''">
+                and customer_id = #{customerId}
+            </if>
+        </trim>
+        order by id desc
+        limit ${beginIndex}, ${rows}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.DepositOrder">
+        insert into bas_deposit_order (
+            id,
+            agent_id,
+            money,
+            biz_type,
+            customer_id,
+            status,
+            handle_time,
+            create_time)
+        values (
+            #{id},
+            #{agentId},
+            #{money},
+            #{bizType},
+            #{customerId},
+            #{status},
+            #{handleTime},
+            #{createTime}
+        )
+    </insert>
+
+    <update id="payOk">
+        update bas_deposit_order set status = #{toStatus}, handle_time = #{handleTime} where id = #{id} and status = #{fromStatus}
+    </update>
+</mapper>

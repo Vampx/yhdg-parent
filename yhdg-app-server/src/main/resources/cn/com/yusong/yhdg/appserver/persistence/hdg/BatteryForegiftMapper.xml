@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.appserver.persistence.hdg.BatteryForegiftMapper">
+
+    <select id="findByBatteryType" resultType="cn.com.yusong.yhdg.common.domain.hdg.BizaForegift">
+        SELECT
+        *
+        FROM
+        hdg_biza_foregift
+        where price_group_id = #{priceGroupId}
+        <if test="batteryType != null">
+            and battery_type = #{batteryType}
+        </if>
+        limit 1
+    </select>
+
+    <select id="findList" resultType="cn.com.yusong.yhdg.common.domain.hdg.BizaForegift">
+        SELECT
+        *
+        FROM
+        hdg_biza_foregift
+        where price_group_id = #{priceGroupId}
+    </select>
+
+</mapper>

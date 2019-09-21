@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.basic.DictItemMapper">
+
+    <select id="find" parameterType="long" resultType="cn.com.yusong.yhdg.common.domain.basic.DictItem">
+        select
+            id,
+            category_id as categoryId,
+            item_name as itemName,
+            item_value as itemValue,
+            order_num as orderNum
+        from bas_dict_item
+        where id = #{id}
+    </select>
+
+    <select id="findByCategoryAndItemValue" resultType="cn.com.yusong.yhdg.common.domain.basic.DictItem">
+        select
+        id,
+        category_id as categoryId,
+        item_name as itemName,
+        item_value as itemValue,
+        order_num as orderNum
+        from bas_dict_item
+        where category_id = #{categoryId}
+        and item_value = #{itemValue}
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.basic.DictItem" resultType="cn.com.yusong.yhdg.common.domain.basic.DictItem">
+        select
+            id,
+            category_id as categoryId,
+            item_name as itemName,
+            item_value as itemValue,
+            order_num as orderNum
+        from bas_dict_item
+        where 1 = 1
+        <if test="categoryId != null and categoryId != 0 ">
+            and category_id = #{categoryId}
+        </if>
+        <if test="itemName != null and itemName != ''">
+            <![CDATA[and item_name LIKE concat('%', #{itemName}, '%')]]>
+        </if>
+        ORDER by order_num ASC
+        limit ${beginIndex}, ${rows}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.basic.DictItem" resultType="int">
+        select count(id) from bas_dict_item
+        where 1 = 1
+        <if test="categoryId != null and categoryId != 0 ">
+            and category_id = #{categoryId}
+        </if>
+        <if test="itemName != null and itemName != ''">
+            <![CDATA[and item_name LIKE concat('%', #{itemName}, '%')]]>
+        </if>
+    </select>
+
+    <select id="findByCategory" parameterType="long" resultType="cn.com.yusong.yhdg.common.domain.basic.DictItem">
+          select
+            id,
+            category_id as categoryId,
+            item_name as itemName,
+            item_value as itemValue,
+            order_num as orderNum
+        from bas_dict_item
+        where category_id = #{categoryId}
+    </select>
+
+    <select id="findByValue" parameterType="String" resultType="cn.com.yusong.yhdg.common.domain.basic.DictItem">
+         select
+            id,
+            category_id as categoryId,
+            item_name as itemName,
+            item_value as itemValue,
+            order_num as orderNum
+        from bas_dict_item
+        where item_value = #{itemValue}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.DictItem">
+        insert into bas_dict_item(category_id, item_name, item_value, order_num)
+        values(#{categoryId}, #{itemName}, #{itemValue}, #{orderNum})
+    </insert>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.basic.DictItem">
+        update bas_dict_item set
+            category_id = #{categoryId},
+            item_name = #{itemName},
+            item_value = #{itemValue},
+            order_num = #{orderNum}
+        where id = #{id}
+    </update>
+
+    <update id="updateOrderNum">
+        update bas_dict_item set
+            order_num = #{orderNum}
+        where id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="long">
+        delete from bas_dict_item where id = #{id}
+    </delete>
+</mapper>

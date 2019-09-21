@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.serviceserver.persistence.basic.CustomerNoticeMessageMapper">
+    <select id="findByToday" resultType="cn.com.yusong.yhdg.common.domain.basic.CustomerNoticeMessage">
+        select
+        *
+        from bas_customer_notice_message
+        where customer_id = #{customerId} and type = #{type}  and create_time > CURDATE() limit 1
+    </select>
+
+     <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.CustomerNoticeMessage">
+         insert into bas_customer_notice_message
+         (type,title,content,customer_id,customer_mobile,customer_fullname,create_time)
+         VALUES
+         (#{type},#{title},#{content},#{customerId},#{customerMobile},#{customerFullname},#{createTime})
+     </insert>
+</mapper>

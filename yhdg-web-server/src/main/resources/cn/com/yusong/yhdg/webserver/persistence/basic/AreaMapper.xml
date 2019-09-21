@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.basic.AreaMapper">
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.basic.Area">
+        select
+        id,
+        area_level as areaLevel,
+        area_code as areaCode,
+        area_name as areaName,
+        parent_id as parentId,
+        letter,
+        baidu_id as baiduId,
+        longitude,
+        latitude
+        from bas_area
+        where  id = #{id}
+        order by area_code
+    </select>
+
+    <select id="findChildren" resultType="cn.com.yusong.yhdg.common.domain.basic.Area">
+        select
+        id,
+        area_level as areaLevel,
+        area_code as areaCode,
+        area_name as areaName,
+        parent_id as parentId,
+        letter,
+        baidu_id as baiduId,
+        longitude,
+        latitude
+        from bas_area
+        where  parent_id = #{id}
+        order by area_code
+    </select>
+
+    <select id="findAll" resultType="cn.com.yusong.yhdg.common.domain.basic.Area">
+        select
+        id,area_level,area_code,area_name,parent_id,letter,baidu_id,longitude,latitude
+        from bas_area order by area_code
+    </select>
+
+    <select id="findAllCity" resultType="cn.com.yusong.yhdg.common.domain.basic.Area">
+        select
+        id,
+        area_code as areaCode,
+        area_name as areaName
+        from (
+        select id, area_code, area_name from bas_area where id in (1, 18, 790, 2229)
+        union
+        select id, area_code, area_name from bas_area where area_level = 1
+        union
+        select city.id, city.area_code, concat(province.area_name, '-', city.area_name)
+        from bas_area as city, bas_area as province
+        where province.id = city.parent_id and city.area_level = 2 and city.parent_id not in(1, 18, 790, 2229)
+        ) as t
+        order by area_code
+    </select>
+
+    <select id="findProvinceForCharger" resultType="cn.com.yusong.yhdg.common.domain.basic.Area">
+        select * from bas_area where id in (select DISTINCT province_id from bas_charger) order by id
+    </select>
+
+    <select id="findCityByProvinceForCharger" resultType="cn.com.yusong.yhdg.common.domain.basic.Area">
+        select * from bas_area where id in (select DISTINCT city_id from bas_charger where province_id = #{provinceId}) order by id
+    </select>
+
+</mapper>

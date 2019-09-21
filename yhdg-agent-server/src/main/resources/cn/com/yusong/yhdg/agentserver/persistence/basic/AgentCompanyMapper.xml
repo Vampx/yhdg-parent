@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.basic.AgentCompanyMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.basic.AgentCompany">
+        select
+        *
+        from bas_agent_company
+        where id = #{id}
+    </select>
+
+    <select id="findByAgent" resultType="cn.com.yusong.yhdg.common.domain.basic.AgentCompany">
+        select * from bas_agent_company where agent_id = #{agentId}
+    </select>
+
+    <select id="findAll" resultType="cn.com.yusong.yhdg.common.domain.basic.AgentCompany">
+        select * from bas_agent_company
+    </select>
+
+    <select id="findMaxId" parameterType="String" resultType="String">
+        select
+        id
+        from bas_agent_company
+        where
+        <![CDATA[id LIKE concat(#{id}, '%')]]>
+        ORDER BY id DESC
+        limit 1
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.basic.AgentCompany" resultType="int">
+        select count(*) from bas_agent_company
+        where 1 = 1
+        <if test="agentId != null ">
+            and agent_id = #{agentId}
+        </if>
+        <if test="companyName != null and companyName !='' ">
+            <![CDATA[and company_name LIKE concat('%',#{companyName}, '%')]]>
+        </if>
+        <if test="vipFlag != null and vipFlag == 1">
+            and id not in (select agent_company_id from hdg_vip_price_agent_company)
+        </if>
+        <if test="vipRentFlag != null and vipRentFlag == 1">
+            and id not in (select agent_company_id from zd_vip_rent_price_agent_company)
+        </if>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.basic.AgentCompany"
+            resultType="cn.com.yusong.yhdg.common.domain.basic.AgentCompany">
+        select
+        *
+        from bas_agent_company
+        where 1 = 1
+        <if test="agentId != null ">
+            and agent_id = #{agentId}
+        </if>
+        <if test="companyName != null and companyName !='' ">
+            <![CDATA[and company_name LIKE concat('%',#{companyName}, '%')]]>
+        </if>
+        <if test="vipFlag != null and vipFlag == 1">
+            and id not in (select agent_company_id from hdg_vip_price_agent_company)
+        </if>
+        <if test="vipRentFlag != null and vipRentFlag == 1">
+            and id not in (select agent_company_id from zd_vip_rent_price_agent_company)
+        </if>
+        order by create_time desc
+        limit ${beginIndex}, ${rows}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.AgentCompany">
+          insert into bas_agent_company (
+            id,
+            agent_id,
+            agent_name,
+            agent_code,
+            company_name,
+            province_id,
+            city_id,
+            district_id,
+            street,
+            lng,
+            lat,
+            geo_hash,
+            active_status,
+            image_path1,
+            image_path2,
+            image_path3,
+            work_time,
+            linkname,
+            tel,
+            address,
+            keyword,
+            company_ratio,
+            balance,
+            create_time
+        )
+        values(
+          #{id},
+          #{agentId},
+          #{agentName},
+          #{agentCode},
+          #{companyName},
+          #{provinceId},
+          #{cityId},
+          #{districtId},
+          #{street},
+          #{lng},
+          #{lat},
+          #{geoHash},
+          #{activeStatus},
+          #{imagePath1},
+          #{imagePath2},
+          #{imagePath3},
+          #{workTime},
+          #{linkname},
+          #{tel},
+          #{address},
+          #{keyword},
+          #{companyRatio},
+          #{balance},
+          #{createTime}
+        )
+    </insert>
+
+    <update id="update">
+        update bas_agent_company set
+        <trim suffix="" suffixOverrides=",">
+            <if test="companyName != null and companyName != ''">
+                company_name = #{companyName},
+            </if>
+            <if test="provinceId != null">
+                province_id = #{provinceId},
+            </if>
+            <if test="cityId != null">
+                city_id = #{cityId},
+            </if>
+            <if test="districtId != null">
+                district_id = #{districtId},
+            </if>
+            <if test="street != null and street != ''">
+                street = #{street},
+            </if>
+            <if test="lng != null">
+                lng = #{lng},
+            </if>
+            <if test="lat != null">
+                lat = #{lat},
+            </if>
+            <if test="geoHash != null and geoHash != ''">
+                geo_hash = #{geoHash},
+            </if>
+            <if test="activeStatus != null">
+                active_status = #{activeStatus},
+            </if>
+            <if test="imagePath1 != null and imagePath1 != ''">
+                image_path1 = #{imagePath1},
+            </if>
+            <if test="imagePath2 != null and imagePath2 != ''">
+                image_path2 = #{imagePath2},
+            </if>
+            <if test="imagePath3 != null and imagePath3 != ''">
+                image_path3 = #{imagePath3},
+            </if>
+            <if test="workTime != null and workTime != ''">
+                work_time = #{workTime},
+            </if>
+            <if test="linkname != null and linkname != ''">
+                linkname = #{linkname},
+            </if>
+            <if test="tel != null and tel != ''">
+                tel = #{tel},
+            </if>
+            <if test="address != null and address != '' ">
+                address = #{address},
+            </if>
+            <if test="keyword != null and keyword != '' ">
+                keyword = #{keyword},
+            </if>
+            <if test="companyRatio != null">
+                company_ratio = #{companyRatio},
+            </if>
+            <if test="balance != null">
+                balance = #{balance},
+            </if>
+            <if test="payPeopleMobile != null and payPeopleMobile != ''">
+                pay_people_mobile = #{payPeopleMobile},
+            </if>
+            <if test="payPeopleName != null and payPeopleName != ''">
+                pay_people_name = #{payPeopleName},
+            </if>
+            <if test="payPeopleMpOpenId != null and payPeopleMpOpenId != ''">
+                pay_people_mp_open_id = #{payPeopleMpOpenId},
+            </if>
+            <if test="payPeopleFwOpenId != null and payPeopleFwOpenId != ''">
+                pay_people_fw_open_id = #{payPeopleFwOpenId},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="updateRatio">
+        update bas_agent_company
+        set
+        company_ratio = #{companyRatio},
+        keep_shop_ratio = #{keepShopRatio},
+        company_fixed_money = #{companyFixedMoney},
+        ratio_base_money = #{ratioBaseMoney}
+        where id = #{id}
+    </update>
+
+    <delete id="delete">
+        delete from bas_agent_company where id = #{id}
+    </delete>
+
+    <update id="updatePayPeople">
+        UPDATE bas_agent_company SET
+        pay_people_name = #{payPeopleName},
+        pay_people_mp_open_id = #{payPeopleMpOpenId},
+        pay_people_fw_open_id = #{payPeopleFwOpenId},
+        <if test="payPassword != null and payPassword != ''">
+            pay_password = #{payPassword},
+        </if>
+        pay_people_mobile = #{payPeopleMobile}
+        where id = #{id}
+    </update>
+
+    <update id="updateBalance">
+        <choose>
+            <when test="balance > 0">
+                update bas_agent_company set balance = balance + #{balance} where id = #{id}
+            </when>
+            <otherwise>
+                <![CDATA[update bas_agent_company set balance = balance + #{balance} where id = #{id} and balance + #{balance} >= 0]]>
+            </otherwise>
+        </choose>
+    </update>
+
+</mapper>

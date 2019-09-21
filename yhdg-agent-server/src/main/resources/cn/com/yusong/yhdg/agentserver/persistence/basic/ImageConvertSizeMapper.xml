@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.basic.ImageConvertSizeMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.basic.ImageConvertSize">
+        select
+            id,
+            title,
+            stand
+       from bas_image_convert_size
+       where id = #{id}
+    </select>
+
+    <select id="findPageResult" resultType="cn.com.yusong.yhdg.common.domain.basic.ImageConvertSize">
+        select
+          id,
+          title,
+          stand
+        from bas_image_convert_size
+        <trim prefix="where" prefixOverrides="and">
+            <if test="title != null">
+                <![CDATA[and title LIKE concat('%', #{title}, '%')]]>
+            </if>
+        </trim>
+        limit ${beginIndex}, ${rows}
+    </select>
+
+    <select id="findPageCount" resultType="int">
+        select count(id) from bas_image_convert_size
+        <trim prefix="where" prefixOverrides="and">
+            <if test="title != null">
+                <![CDATA[and title LIKE concat('%', #{title}, '%')]]>
+            </if>
+        </trim>
+    </select>
+
+    <insert id="insert">
+        ${sql}
+    </insert>
+
+    <update id="update">
+        update bas_image_convert_size set stand = #{stand} where id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="int">
+        delete from bas_image_convert_size where id = #{id}
+    </delete>
+
+</mapper>

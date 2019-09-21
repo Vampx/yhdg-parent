@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.serviceserver.persistence.basic.AlipayfwTemplateMessageMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.basic.AlipayfwTemplateMessage">
+        select
+            *
+        from  bas_alipayfw_template_message
+        where id = #{id}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.AlipayfwTemplateMessage" useGeneratedKeys="true" keyProperty="id">
+        insert into bas_alipayfw_template_message(source_id, source_type, mobile, nickname, variable, status, type, delay, create_time, alipayfw_id, open_id, url, read_count)
+        values(#{sourceId}, #{sourceType}, #{mobile}, #{nickname}, #{variable}, #{status}, #{type}, #{delay}, #{createTime}, #{alipayfwId}, #{openId}, #{url}, #{readCount})
+    </insert>
+
+    <select id="findListByStatus" resultType="cn.com.yusong.yhdg.common.domain.basic.AlipayfwTemplateMessage">
+        SELECT
+          *
+       FROM bas_alipayfw_template_message
+        WHERE status = #{status}
+        <if test="lastId != null">
+            and id > #{lastId}
+        </if>
+        ORDER  BY id ASC
+        limit ${limit}
+    </select>
+
+    <select id="findMessageCountByStatus" resultType="long">
+        SELECT count(*)
+         FROM bas_alipayfw_template_message
+        WHERE status = #{status}
+        and type = #{type}
+        <![CDATA[and create_time >= #{begin} ]]>
+        <![CDATA[and create_time <= #{end} ]]>
+    </select>
+
+    <select id="findReadCountByStatus" resultType="long">
+        SELECT count(*)
+        FROM bas_alipayfw_template_message
+        WHERE status = #{status}
+        and type = #{type}
+        <![CDATA[and create_time >= #{begin} ]]>
+        <![CDATA[and create_time <= #{end} ]]>
+        <![CDATA[and read_count > 0 ]]>
+    </select>
+
+    <select id="findReadCountSumByStatus" resultType="long">
+        SELECT
+        ifnull(sum(read_count), 0)
+        FROM bas_alipayfw_template_message
+        WHERE status = #{status}
+        and type = #{type}
+        <![CDATA[and create_time >= #{begin} ]]>
+        <![CDATA[and create_time <= #{end} ]]>
+        <![CDATA[and read_count > 0 ]]>
+    </select>
+
+    <update id="complete">
+      update bas_alipayfw_template_message set status = #{status}, handle_time = #{handleTime} , resend_num = #{resendNum} where id = #{id}
+    </update>
+
+    <update id="updateStatus">
+        update bas_alipayfw_template_message set
+        status = #{status},
+        handle_time = #{handleTime}
+        where id = #{id}
+    </update>
+
+    <update id="updateVariable">
+        update bas_alipayfw_template_message set
+        variable = #{variable}
+        where id = #{id}
+    </update>
+
+</mapper>

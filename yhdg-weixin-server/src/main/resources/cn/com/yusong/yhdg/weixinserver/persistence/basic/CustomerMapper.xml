@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.weixinserver.persistence.basic.CustomerMapper">
+
+    <select id="findByMobile" resultType="cn.com.yusong.yhdg.common.domain.basic.Customer">
+        select * from bas_customer where partner_id = #{partnerId} and mobile = #{mobile} limit 1
+    </select>
+
+    <select id="findByMpOpenId" resultType="cn.com.yusong.yhdg.common.domain.basic.Customer">
+        select * from bas_customer where partner_id = #{partnerId} and mp_open_id = #{mpOpenId} limit 1
+    </select>
+
+    <select id="findByFwOpenId" resultType="cn.com.yusong.yhdg.common.domain.basic.Customer">
+        select * from bas_customer where partner_id = #{partnerId} and fw_open_id = #{fwOpenId} limit 1
+    </select>
+
+    <update id="updateAuthFacePath">
+        update bas_customer set
+        auth_face_path = #{authFacePath}
+        where id = #{id}
+    </update>
+
+    <update id="updateCertification">
+        update bas_customer set
+        fullname = #{fullname},
+        id_card  = #{idCard},
+        auth_status = #{authStatus}
+        where id = #{id}
+    </update>
+
+    <update id="bindCompany">
+        update bas_customer set
+        agent_company_id = #{agentCompanyId}
+        where id = #{id}
+    </update>
+
+</mapper>

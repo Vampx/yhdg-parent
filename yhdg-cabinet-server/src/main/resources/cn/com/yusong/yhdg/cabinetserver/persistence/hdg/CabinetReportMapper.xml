@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.cabinetserver.persistence.hdg.CabinetReportMapper">
+
+    <select id="findTable" resultType="String">
+        SHOW TABLES LIKE #{tableName}
+    </select>
+
+    <update id="createTable">
+        create table if not exists ${tableName} (
+            id bigint unsigned not null auto_increment,
+            cabinet_id char(12) not null,
+            request_body_hex varchar(2000) not null,
+            request_body_obj varchar(6000) not null,
+            response_body_hex varchar(2000) not null,
+            response_body_obj varchar(5000) not null,
+            create_time datetime not null,/*创建时间*/
+        primary key (id),
+        index idx_cabinet_report_cabinet_id_create_time(cabinet_id, create_time)
+        ) engine=innodb default charset=utf8;
+    </update>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.CabinetReport" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO hdg_cabinet_report_${suffix}  (
+            cabinet_id,
+            request_body_hex,
+            request_body_obj,
+            response_body_hex,
+            response_body_obj,
+            create_time
+        ) values (
+            #{cabinetId},
+            #{requestBodyHex},
+            #{requestBodyObj},
+            #{requestBodyHex},
+            #{responseBodyObj},
+            #{createTime}
+          )
+    </insert>
+
+</mapper>

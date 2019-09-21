@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.staticserver.persistence.zd.RentOrderMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.zd.RentOrder">
+        SELECT
+        *
+        FROM
+        zd_rent_order
+        WHERE id = #{id}
+    </select>
+
+    <insert id="insert"  parameterType="cn.com.yusong.yhdg.common.domain.zd.RentOrder" >
+        INSERT INTO
+        zd_rent_order
+        (
+            id,
+            partner_id,
+            agent_id,
+            agent_name,
+            agent_code,
+            shop_id,
+            shop_name,
+            customer_id,
+            customer_mobile,
+            customer_fullname,
+            battery_type,
+            battery_id,
+            status,
+            current_volume,
+            current_distance,
+            create_time
+        )
+        VALUES
+        (
+            #{id},
+            #{partnerId},
+            #{agentId},
+            #{agentName},
+            #{agentCode},
+            #{shopId},
+            #{shopName},
+            #{customerId},
+            #{customerMobile},
+            #{customerFullname},
+            #{batteryType},
+            #{batteryId},
+            #{status},
+            #{currentVolume},
+            #{currentDistance},
+            #{createTime}
+        )
+    </insert>
+
+</mapper>

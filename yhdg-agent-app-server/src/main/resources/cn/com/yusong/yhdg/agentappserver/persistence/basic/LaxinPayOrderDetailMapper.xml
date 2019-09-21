@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.agentappserver.persistence.basic.LaxinPayOrderDetailMapper">
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.LaxinPayOrderDetail">
+        insert into bas_laxin_pay_order_detail (order_id, record_id)
+        values (#{orderId}, #{recordId})
+    </insert>
+</mapper>

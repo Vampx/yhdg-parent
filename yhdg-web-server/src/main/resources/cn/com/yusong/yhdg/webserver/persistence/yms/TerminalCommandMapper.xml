@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.yms.TerminalCommandMapper">
+
+    <select id="find" parameterType="long" resultType="cn.com.yusong.yhdg.common.domain.yms.TerminalCommand">
+        select
+            *
+        from yms_terminal_command
+        where id = #{id}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.yms.TerminalCommand" resultType="int">
+        select
+            count(id)
+        from yms_terminal_command
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != 0 and agentId != null">
+                <choose>
+                    <when test="descendant != null and descendant == 1">
+                        <![CDATA[and agent_id LIKE concat('%', #{agentId})]]>
+                    </when>
+                    <otherwise>
+                        <![CDATA[and agent_id = #{agentId}]]>
+                    </otherwise>
+                </choose>
+            </if>
+            <if test="terminalId != null and terminalId != ''">
+                <![CDATA[and terminal_id LIKE concat('%', #{terminalId}, '%')]]>
+            </if>
+            <if test="type != null ">
+                and type = #{type}
+            </if>
+            <if test="status != null ">
+                and status = #{status}
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.yms.TerminalCommand" resultType="cn.com.yusong.yhdg.common.domain.yms.TerminalCommand">
+        select
+            *
+        from yms_terminal_command
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != 0 and agentId != null">
+                <choose>
+                    <when test="descendant != null and descendant == 1">
+                        <![CDATA[and agent_id LIKE concat('%', #{agentId})]]>
+                    </when>
+                    <otherwise>
+                        <![CDATA[and agent_id = #{agentId}]]>
+                    </otherwise>
+                </choose>
+            </if>
+            <if test="terminalId != null and terminalId != ''">
+                <![CDATA[and terminal_id LIKE concat('%', #{terminalId}, '%')]]>
+            </if>
+            <if test="type != null ">
+                and type = #{type}
+            </if>
+            <if test="status != null ">
+                and status = #{status}
+            </if>
+        </trim>
+        order by id desc
+        limit #{beginIndex}, #{rows}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.yms.TerminalCommand" useGeneratedKeys="true" keyProperty="id" >
+        insert into yms_terminal_command(agent_id, terminal_id, type, content, status, create_time)
+        values(#{agentId}, #{terminalId}, #{type}, #{content}, #{status}, #{createTime})
+    </insert>
+
+</mapper>

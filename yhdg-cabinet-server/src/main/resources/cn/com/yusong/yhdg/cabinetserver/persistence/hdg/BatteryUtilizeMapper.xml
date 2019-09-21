@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.cabinetserver.persistence.hdg.BatteryUtilizeMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.hdg.BatteryUtilize">
+        select
+            *
+        from hdg_battery_utilize
+        where battery_id = #{batteryId}
+        AND take_time is NULL
+        ORDER BY put_time DESC
+        limit 1
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.BatteryUtilize">
+        INSERT
+        INTO
+            hdg_battery_utilize
+            (
+                battery_id,
+                cabinet_id,
+                cabinet_name,
+                put_time,
+                take_time,
+                utilize
+            )
+            VALUES
+            (
+                #{batteryId},
+                #{cabinetId},
+                #{cabinetName},
+                #{putTime},
+                #{takeTime},
+                #{utilize}
+            )
+    </insert>
+
+    <update id="update">
+        update hdg_battery_utilize set
+            take_time = #{takeTime},
+            utilize = #{utilize}
+        where id = #{id}
+    </update>
+
+    <delete id="delete">
+        delete from hdg_battery_utilize where id = #{id}
+    </delete>
+</mapper>

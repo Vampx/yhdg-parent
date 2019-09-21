@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.basic.AgentSystemConfigMapper">
+
+    <select id="findAllCategoryByAgentId" parameterType="int" resultType="cn.com.yusong.yhdg.common.domain.basic.AgentSystemConfig">
+        select distinct
+            category_type as categoryType,
+            category_name as categoryName
+        from bas_agent_system_config where is_show = 1
+        and agent_id = #{agentId}
+        order by category_type
+    </select>
+
+    <select id="findByAgentId" parameterType="int" resultType="cn.com.yusong.yhdg.common.domain.basic.AgentSystemConfig">
+        select * from
+        bas_agent_system_config where agent_id = #{agentId}
+    </select>
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.basic.AgentSystemConfig">
+        select
+            *
+        from bas_agent_system_config
+        where id = #{id} and agent_id = #{agentId}
+    </select>
+
+    <select id="findAll" parameterType="cn.com.yusong.yhdg.common.domain.basic.AgentSystemConfig" resultType="cn.com.yusong.yhdg.common.domain.basic.AgentSystemConfig">
+        select
+            *
+        from bas_agent_system_config
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null">
+                and agent_id = #{agentId}
+            </if>
+            <if test="isShow != null">
+                and is_show = #{isShow}
+            </if>
+            <if test="configName != null and configName != ''">
+                <![CDATA[and config_name LIKE concat('%', #{configName}, '%')]]>
+            </if>
+            <if test="categoryType != null">
+                and category_type = #{categoryType}
+            </if>
+        </trim>
+        order by category_type
+    </select>
+
+    <select id="findConfigValue" resultType="String">
+        SELECT config_value
+        FROM bas_agent_system_config
+        WHERE id=#{id} and agent_id = #{agentId}
+    </select>
+
+    <insert id="insert">
+        ${sql}
+    </insert>
+
+    <insert id="insertOne">
+        insert into bas_agent_system_config
+        (
+        agent_id,
+        id,
+        category_type,
+        category_name,
+        config_name,
+        config_value,
+        is_read_only,
+        is_show,
+        value_type
+        ) values
+        (
+        #{agentId},
+        #{id},
+        #{categoryType},
+        #{categoryName},
+        #{configName},
+        #{configValue},
+        #{isReadOnly},
+        #{isShow},
+        #{valueType}
+        )
+    </insert>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.basic.AgentSystemConfig">
+        update bas_agent_system_config set config_value = #{configValue} where id = #{id} and agent_id = #{agentId}
+    </update>
+
+    <delete id="deleteByAgentId" parameterType="int">
+        delete from bas_agent_system_config where agent_id = #{agentId}
+    </delete>
+
+</mapper>

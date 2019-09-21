@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.batteryserver.persistence.hdg.FaultLogMapper">
+
+    <update id="handle" parameterType="cn.com.yusong.yhdg.common.domain.hdg.FaultLog">
+        update hdg_fault_log set
+        handle_type = #{handleType},
+        handle_memo = #{handleMemo},
+        handle_time =#{handleTime} ,
+        handler_name = #{handlerName},
+        status = #{status}
+        where id = #{id}
+    </update>
+
+    <insert id="create" parameterType="cn.com.yusong.yhdg.common.domain.hdg.FaultLog" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO `hdg_fault_log`
+        ( `fault_level`, `order_id`, `province_id`, `city_id`, `district_id`, `dispatcher_id`, `agent_id`, `agent_name`, `battery_id`, `cabinet_id`, `cabinet_name`,`cabinet_address`, `box_num`, `fault_type`, `fault_content`, `status`, `handle_memo`, `handle_time`, `handler_name`, `create_time`)
+        VALUES ( #{faultLevel},#{orderId},#{provinceId},#{cityId},#{districtId},#{dispatcherId},#{agentId},#{agentName},#{batteryId},#{cabinetId},#{cabinetName},#{cabinetAddress},#{boxNum},#{faultType},#{faultContent},#{status},#{handleMemo},#{handleTime},#{handlerName},#{createTime})
+    </insert>
+
+    <update id="updateFaultLevel">
+        update hdg_fault_log set
+        fault_level = #{faultLevel}
+        where id = #{id}
+    </update>
+
+</mapper>

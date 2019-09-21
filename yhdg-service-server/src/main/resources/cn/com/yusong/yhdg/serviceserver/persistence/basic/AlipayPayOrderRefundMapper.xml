@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.serviceserver.persistence.basic.AlipayPayOrderRefundMapper">
+    <select id="findPartnerRefund" resultType="cn.com.yusong.yhdg.common.domain.basic.AlipayPayOrderRefund">
+      select
+        partner_id as partnerId,
+        sum(refund_money) as refundMoney
+       from bas_alipay_pay_order_refund
+      WHERE create_time &lt;= #{endTime}
+        AND create_time &gt;= #{beginTime}
+        group by partner_id
+    </select>
+</mapper>

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.zd.RentBatteryTypeMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.zd.RentBatteryType">
+        SELECT
+            bas_system_battery_type.*,
+            bas_agent.agent_name as agentName,
+            zd_rent_battery_type.agent_id as agentId,
+            zd_rent_battery_type.battery_type as batteryType
+        FROM bas_system_battery_type, zd_rent_battery_type, bas_agent
+        WHERE bas_system_battery_type.id = zd_rent_battery_type.battery_type
+          AND zd_rent_battery_type.agent_id = bas_agent.id
+          AND zd_rent_battery_type.battery_type = #{batteryType}
+          AND zd_rent_battery_type.agent_id = #{agentId}
+    </select>
+
+    <select id="findByBatteryTypeAndAgent" resultType="cn.com.yusong.yhdg.common.domain.zd.RentBatteryType">
+        SELECT
+            *
+        FROM zd_rent_battery_type
+        WHERE battery_type = #{batteryType}
+        AND agent_id = #{agentId}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.zd.RentBatteryType" resultType="int">
+        SELECT
+            COUNT(*)
+        FROM bas_system_battery_type, zd_rent_battery_type, bas_agent
+        WHERE bas_system_battery_type.id = zd_rent_battery_type.battery_type
+        AND zd_rent_battery_type.agent_id = bas_agent.id
+        <if test="agentId != null">
+            AND zd_rent_battery_type.agent_id = #{agentId}
+        </if>
+        <if test="typeName != null and typeName != ''">
+            <![CDATA[AND bas_system_battery_type.type_name LIKE concat('%', #{typeName}, '%')]]>
+        </if>
+        ORDER BY bas_system_battery_type.create_time DESC
+        limit ${beginIndex}, ${rows}
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.zd.RentBatteryType" resultType="cn.com.yusong.yhdg.common.domain.zd.RentBatteryType">
+        SELECT
+            bas_system_battery_type.*,
+            bas_agent.agent_name as agentName,
+            zd_rent_battery_type.*
+        FROM bas_system_battery_type,  zd_rent_battery_type, bas_agent
+        WHERE bas_system_battery_type.id = zd_rent_battery_type.battery_type
+        AND zd_rent_battery_type.agent_id =bas_agent.id
+        <if test="agentId != null">
+            AND zd_rent_battery_type.agent_id = #{agentId}
+        </if>
+        <if test="typeName != null and typeName != ''">
+            <![CDATA[AND bas_system_battery_type.type_name LIKE concat('%', #{typeName}, '%')]]>
+        </if>
+        ORDER BY bas_system_battery_type.create_time DESC
+        limit ${beginIndex}, ${rows}
+    </select>
+
+    <select id="findListByAgent" parameterType="int" resultType="cn.com.yusong.yhdg.common.domain.zd.RentBatteryType">
+        SELECT
+           *
+        FROM zd_rent_battery_type
+        WHERE agent_id = #{agentId}
+    </select>
+
+    <select id="findBatteryListByAgentId" parameterType="int" resultType="cn.com.yusong.yhdg.common.domain.zd.RentBatteryType">
+        select
+        bas_system_battery_type.*,
+        zd_rent_battery_type.*
+        from bas_system_battery_type,
+        zd_rent_battery_type
+        where bas_system_battery_type.id = zd_rent_battery_type.battery_type
+        and zd_rent_battery_type.agent_id = #{agentId}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.zd.RentBatteryType" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO zd_rent_battery_type(
+            agent_id,
+            battery_type,
+            type_name
+        ) VALUES (
+            #{agentId},
+            #{batteryType},
+            #{typeName}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE zd_rent_battery_type SET
+            agent_id = #{agentId},
+            battery_type = #{batteryType},
+            type_name = #{typeName}
+        WHERE agent_id = #{agentId} AND battery_type = #{fromBatteryType}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM zd_rent_battery_type WHERE agent_id = #{agentId} AND battery_type = #{batteryType}
+    </delete>
+
+</mapper>

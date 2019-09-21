@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.basic.PartPermMapper">
+
+    <select id="findAll" resultType="string">
+        select
+            perm_id as permId
+        from bas_part_perm
+        where part_id = #{partId}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.PartPerm">
+        insert into bas_part_perm (part_id, perm_id) values(#{partId}, #{permId})
+    </insert>
+
+    <delete id="delete">
+        delete from bas_part_perm where part_id = #{partId}
+    </delete>
+
+</mapper>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.appserver.persistence.hdg.ReliefStationMapper">
+
+    <select id="findList" resultType="cn.com.yusong.yhdg.common.domain.hdg.ReliefStation">
+        select
+        *,
+        floor(6378.138*2*ASIN(SQRT(POW(SIN((${lat}*PI()/180-lat*PI()/180)/2),2)+COS(${lat}*PI()/180)*COS(lat*PI()/180)*POW(SIN((${lng}*PI()/180-lng*PI()/180)/2),2)))*1000)
+        as distance
+        FROM
+        hdg_relief_station
+        where partner_id = #{partnerId}
+        <if test="cityId != null">
+            and city_id = #{cityId}
+        </if>
+        ORDER BY distance asc
+        limit #{offset},#{limit}
+    </select>
+
+
+</mapper>

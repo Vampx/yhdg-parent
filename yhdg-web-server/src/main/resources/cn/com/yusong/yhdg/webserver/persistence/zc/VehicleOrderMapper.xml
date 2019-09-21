@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.zc.VehicleOrderMapper">
+
+    <select id="find"  resultType="cn.com.yusong.yhdg.common.domain.zc.VehicleOrder">
+        select
+        *
+        from zc_vehicle_order
+        where id = #{id}
+    </select>
+
+    <select id="findCountByModelId"  resultType="int">
+        select
+        count(*)
+        from zc_vehicle_order
+        where model_id = #{modelId}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.zc.VehicleOrder" resultType="int">
+        select
+        count(*)
+        from zc_vehicle_order
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null">
+                and agent_id = #{agentId}
+            </if>
+            <if test="status != null and status != ''">
+                and status = #{status}
+            </if>
+            <if test="modelId != null and modelId != ''">
+                <![CDATA[and model_id LIKE concat('%', #{modelId}, '%')]]>
+            </if>
+            <if test="vehicleName != null and vehicleName != ''">
+                <![CDATA[and vehicle_name LIKE concat('%', #{vehicleName}, '%')]]>
+            </if>
+            <if test="customerFullname != null and customerFullname != ''">
+                <![CDATA[and customer_fullname LIKE concat('%', #{customerFullname}, '%')]]>
+            </if>
+            <if test="customerMobile != null and customerMobile != ''">
+                <![CDATA[and customer_mobile LIKE concat('%', #{customerMobile}, '%')]]>
+            </if>
+            <if test="shopName != null and shopName != ''">
+                <![CDATA[and shop_name LIKE concat('%', #{shopName}, '%')]]>
+            </if>
+            <if test="shopId != null and shopId != ''">
+                <![CDATA[and shop_id LIKE concat('%', #{shopId}, '%')]]>
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.zc.VehicleOrder"
+            resultType="cn.com.yusong.yhdg.common.domain.zc.VehicleOrder">
+        select
+        *
+        from zc_vehicle_order
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null">
+                and agent_id = #{agentId}
+            </if>
+            <if test="status != null and status != ''">
+                and status = #{status}
+            </if>
+            <if test="modelId != null and modelId != ''">
+                <![CDATA[and model_id LIKE concat('%', #{modelId}, '%')]]>
+            </if>
+            <if test="vehicleName != null and vehicleName != ''">
+                <![CDATA[and vehicle_name LIKE concat('%', #{vehicleName}, '%')]]>
+            </if>
+            <if test="customerFullname != null and customerFullname != ''">
+                <![CDATA[and customer_fullname LIKE concat('%', #{customerFullname}, '%')]]>
+            </if>
+            <if test="customerMobile != null and customerMobile != ''">
+                <![CDATA[and customer_mobile LIKE concat('%', #{customerMobile}, '%')]]>
+            </if>
+            <if test="shopName != null and shopName != ''">
+                <![CDATA[and shop_name LIKE concat('%', #{shopName}, '%')]]>
+            </if>
+            <if test="shopId != null and shopId != ''">
+                <![CDATA[and shop_id LIKE concat('%', #{shopId}, '%')]]>
+            </if>
+        </trim>
+        order by id desc
+        limit #{beginIndex}, #{rows}
+    </select>
+
+    <update id="complete">
+        update zc_vehicle_order set
+        status = #{toStatus},
+        back_time = #{backTime},
+        back_operator = #{backOperator}
+        where id = #{id} and status = #{fromStatus}
+    </update>
+
+</mapper>

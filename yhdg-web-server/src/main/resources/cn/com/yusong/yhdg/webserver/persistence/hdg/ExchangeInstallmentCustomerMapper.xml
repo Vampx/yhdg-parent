@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.hdg.ExchangeInstallmentCustomerMapper">
+
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.hdg.ExchangeInstallmentCustomer" resultType="int">
+        select
+        count(*)
+        from hdg_exchange_installment_customer heic
+        where 1 = 1
+        <if test="settingId != null">
+            and heic.setting_id = #{settingId}
+        </if>
+        <if test="customerMobile != null">
+            <![CDATA[and heic.customer_mobile LIKE concat(#{customerMobile}, '%')]]>
+        </if>
+    </select>
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.hdg.ExchangeInstallmentCustomer"
+            resultType="cn.com.yusong.yhdg.common.domain.hdg.ExchangeInstallmentCustomer">
+        select
+        heic.*,
+        bc.id AS customerId,
+        bc.fullname AS customerFullname
+        from hdg_exchange_installment_customer heic
+        LEFT JOIN bas_customer bc ON heic.customer_mobile = bc.mobile
+        where 1 = 1
+        <if test="settingId != null">
+            and heic.setting_id = #{settingId}
+        </if>
+        <if test="customerMobile != null">
+            <![CDATA[and heic.customer_mobile LIKE concat(#{customerMobile}, '%')]]>
+        </if>
+        limit ${beginIndex}, ${rows}
+    </select>
+
+    <select id="findCustomerMobile" resultType="cn.com.yusong.yhdg.common.domain.hdg.ExchangeInstallmentCustomer"  parameterType="string" >
+        select
+        *
+        from hdg_exchange_installment_customer
+        where customer_mobile = #{customerMobile}
+    </select>
+
+
+    <select id="findSettingId" parameterType="long" resultType="cn.com.yusong.yhdg.common.domain.hdg.ExchangeInstallmentCustomer">
+        select
+        *
+        from hdg_exchange_installment_customer
+        where setting_id = #{settingId}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.ExchangeInstallmentCustomer">
+        insert into hdg_exchange_installment_customer (
+        setting_id,
+        customer_id,
+        customer_mobile,
+        customer_fullname
+        )
+        values(
+        #{settingId},
+        #{customerId},
+        #{customerMobile},
+        #{customerFullname}
+        )
+    </insert>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.hdg.ExchangeInstallmentCustomer">
+        update hdg_exchange_installment_customer set
+        <trim suffix="" suffixOverrides=",">
+            <if test="customerId != null and customerId != ''">
+                customer_id = #{customerId},
+            </if>
+            <if test="customerFullname != null and customerFullname != ''">
+                customer_fullname = #{customerFullname},
+            </if>
+        </trim>
+        where customer_mobile = #{customerMobile} AND setting_id = #{settingId}
+    </update>
+
+
+
+
+    <delete id="deleteCustomerMobile">
+        delete from hdg_exchange_installment_customer where customer_mobile = #{customerMobile} AND setting_id = #{settingId}
+    </delete>
+
+
+</mapper>

@@ -1,0 +1,34 @@
+html {
+  height: 100%;
+}
+html body {
+  height: 100%;
+  background-color: #EFEFEF;
+  padding-top: 1rem;
+  box-sizing: border-box;
+}
+html body .weui-cells {
+  margin-top: 0;
+}
+html body .weui-cells .weui-cell {
+  padding: 0.58823529rem 0.88235294rem;
+}
+html body .weui-cells .weui-cell .weui-btn_blue {
+  background-color: #4CBFFF;
+  width: 100%;
+}
+html body .weui-cells .weui-cell .input {
+  border-bottom: 1px solid #4CBFFF;
+  color: #333333;
+}
+html body .weui-cells .tip {
+  padding-top: 0;
+}
+html body .weui-cells .tip p {
+  color: #999999;
+  font-size: 0.82352941rem;
+}
+html body .weui-cells .btn {
+  background-color: #EFEFEF;
+  padding-top: 1rem;
+}

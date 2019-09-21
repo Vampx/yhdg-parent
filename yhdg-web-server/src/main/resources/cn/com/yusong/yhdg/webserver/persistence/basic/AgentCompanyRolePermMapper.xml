@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.basic.AgentCompanyRolePermMapper">
+
+    <select id="findAll" resultType="string">
+        select
+        perm_id as permId
+        from bas_agent_company_role_perm
+        where role_id = #{roleId}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.AgentCompanyRolePerm">
+        insert into bas_agent_company_role_perm (role_id, perm_id) values(#{roleId}, #{permId})
+    </insert>
+
+    <delete id="delete">
+        delete from bas_agent_company_role_perm where role_id = #{roleId}
+    </delete>
+
+</mapper>

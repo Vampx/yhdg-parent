@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.hdg.CabinetChargerMapper">
+
+    <select id="findByCabinetBox" resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetCharger">
+        select
+            *
+        from hdg_cabinet_charger
+        where cabinet_id = #{cabinetId} and box_num = #{boxNum}
+    </select>
+
+    <select id="findByCabinetId" resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetCharger">
+        select
+            *
+        from hdg_cabinet_charger
+        where cabinet_id = #{cabinetId}
+    </select>
+
+    <update id="update">
+        update hdg_cabinet_charger set
+        enable_charge = #{enableCharge},
+        enable_link = #{enableLink},
+        auto_swtich_mode = #{autoSwtichMode},
+        max_charge_voltage_of_stage1 = #{maxChargeVoltageOfStage1},
+        charge_current_of_stage1 = #{chargeCurrentOfStage1},
+        max_charge_voltage_of_stage2 = #{maxChargeVoltageOfStage2},
+        charge_current_of_stage2 = #{chargeCurrentOfStage2},
+        slope_voltage = #{slopeVoltage},
+        charge_current_of_stage3 = #{chargeCurrentOfStage3},
+        full_voltage = #{fullVoltage},
+        slope_current = #{slopeCurrent},
+        min_current_of_stage4 = #{minCurrentOfStage4},
+        low_temperature_mode = #{lowTemperatureMode},
+        other = #{other}
+        where cabinet_id = #{cabinetId} and box_num = #{boxNum}
+    </update>
+</mapper>

@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.basic.WeixinmaPayOrderMapper">
+
+    <select id="find" parameterType="string" resultType="cn.com.yusong.yhdg.common.domain.basic.WeixinmaPayOrder">
+        select
+            *
+        from bas_weixinma_pay_order
+        where id = #{id}
+    </select>
+
+    <select id="findBySourceId" resultType="cn.com.yusong.yhdg.common.domain.basic.WeixinmaPayOrder">
+        select
+        *
+        from bas_weixinma_pay_order
+        <if test="sourceId != null and sourceId != ''">
+            <![CDATA[where  source_id LIKE concat('%',#{sourceId}, '%')]]>
+        </if>
+    </select>
+
+    <select id="findBySourceIdeq" resultType="cn.com.yusong.yhdg.common.domain.basic.WeixinmaPayOrder">
+        select
+        *
+        from bas_weixinma_pay_order
+        where source_id = #{sourceId}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.basic.WeixinmaPayOrder" resultType="int">
+        select
+        count(*)
+        from bas_weixinma_pay_order
+        <trim prefix="where" prefixOverrides="and">
+            <if test="partnerId != null">
+                and partner_id = #{partnerId}
+            </if>
+            <if test="agentId != null and agentId != 0">
+                <![CDATA[and agent_id = #{agentId}]]>
+            </if>
+            <if test="sourceType != null">
+                <![CDATA[and source_type = #{sourceType}]]>
+            </if>
+            <if test="orderStatus != null">
+                <![CDATA[and order_status = #{orderStatus}]]>
+            </if>
+            <if test="mobile !=null and mobile !=''">
+                <![CDATA[and mobile LIKE concat(#{mobile}, '%')]]>
+            </if>
+            <if test="customerName != null and customerName != ''">
+                <![CDATA[and customer_name  LIKE concat('%', #{customerName}, '%')]]>
+            </if>
+            <if test="sourceId != null and sourceId != ''">
+                <![CDATA[and source_id  LIKE concat('%', #{sourceId}, '%')]]>
+            </if>
+            <if test="id != null and id != ''">
+                <![CDATA[and id   LIKE concat('%', #{id}, '%')]]>
+            </if>
+            <if test="statsDate != null and statsDate != ''">
+                <![CDATA[and create_time   LIKE concat('%', #{statsDate}, '%')]]>
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.basic.WeixinmaPayOrder" resultType="cn.com.yusong.yhdg.common.domain.basic.WeixinmaPayOrder">
+        select
+        *
+        from bas_weixinma_pay_order
+        <trim prefix="where" prefixOverrides="and">
+            <if test="partnerId != null">
+                and partner_id = #{partnerId}
+            </if>
+            <if test="agentId != null and agentId != 0">
+                <![CDATA[and agent_id = #{agentId}]]>
+            </if>
+            <if test="sourceType != null">
+                <![CDATA[and source_type = #{sourceType}]]>
+            </if>
+            <if test="orderStatus != null">
+                <![CDATA[and order_status = #{orderStatus}]]>
+            </if>
+            <if test="mobile !=null and mobile !=''">
+                <![CDATA[and mobile LIKE concat(#{mobile}, '%')]]>
+            </if>
+            <if test="customerName != null and customerName != ''">
+                <![CDATA[and customer_name  LIKE concat('%', #{customerName}, '%')]]>
+            </if>
+            <if test="sourceId != null and sourceId != ''">
+                <![CDATA[and source_id  LIKE concat('%', #{sourceId}, '%')]]>
+            </if>
+            <if test="id != null and id != ''">
+                <![CDATA[and id   LIKE concat('%', #{id}, '%')]]>
+            </if>
+            <if test="statsDate != null and statsDate != ''">
+                <![CDATA[and create_time   LIKE concat('%', #{statsDate}, '%')]]>
+            </if>
+        </trim>
+        ORDER BY create_time DESC
+        limit ${beginIndex}, ${rows}
+    </select>
+
+    <select id="findPageByPacketRefundCount"  parameterType="cn.com.yusong.yhdg.common.domain.basic.WeixinmaPayOrder"
+            resultType="int">
+        select count(*)
+        from bas_weixinma_pay_order
+        join hdg_packet_period_order on bas_weixinma_pay_order.source_id = hdg_packet_period_order.id
+        left join bas_customer on bas_weixinma_pay_order.customer_id = bas_customer.id
+        <trim prefix="where" prefixOverrides="and">
+            <if test="orderRefundId != null">
+                and hdg_packet_period_order.order_refund_id = #{orderRefundId}
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageByPacketRefundResult"  parameterType="cn.com.yusong.yhdg.common.domain.basic.WeixinmaPayOrder"
+            resultType="cn.com.yusong.yhdg.common.domain.basic.WeixinmaPayOrder">
+        select
+        bas_weixinma_pay_order.id,
+        bas_weixinma_pay_order.customer_id as customerId,
+        bas_weixinma_pay_order.money,
+        bas_weixinma_pay_order.source_id as sourceId,
+        bas_weixinma_pay_order.source_type as sourceType,
+        bas_weixinma_pay_order.order_status as orderStatus,
+        bas_weixinma_pay_order.payment_id as paymentId,
+        bas_customer.mobile,
+        bas_weixinma_pay_order.handle_time as handleTime,
+        bas_weixinma_pay_order.refund_time as refundTime,
+        bas_weixinma_pay_order.refund_money as refundMoney,
+        bas_customer.fullname as customerName
+        from bas_weixinma_pay_order
+        join hdg_packet_period_order on bas_weixinma_pay_order.source_id = hdg_packet_period_order.id
+        left join bas_customer on bas_weixinma_pay_order.customer_id = bas_customer.id
+        <trim prefix="where" prefixOverrides="and">
+            <if test="orderRefundId != null">
+                and hdg_packet_period_order.order_refund_id = #{orderRefundId}
+            </if>
+        </trim>
+        ORDER by bas_weixinma_pay_order.create_time DESC
+        limit ${beginIndex}, ${rows}
+    </select>
+
+    <select id="findPageResult1" parameterType="cn.com.yusong.yhdg.common.domain.basic.WeixinmaPayOrder" resultType="cn.com.yusong.yhdg.common.domain.basic.WeixinmaPayOrder">
+        <if test="page == 1 or page == 2 or page == 3">
+            select
+            *
+            from bas_weixinma_pay_order
+            <trim prefix="where" prefixOverrides="and">
+                <if test="agentId != null and agentId != 0">
+                    <![CDATA[and agent_id = #{agentId}]]>
+                </if>
+                <if test="sourceType != null">
+                    <![CDATA[and source_type = #{sourceType}]]>
+                </if>
+                <if test="orderStatus != null">
+                    <![CDATA[and order_status = #{orderStatus}]]>
+                </if>
+                <if test="customerName != null and customerName != ''">
+                    <![CDATA[and customer_name = #{customerName}]]>
+                </if>
+                <if test="sourceId != null and sourceId != ''">
+                    <![CDATA[and source_id = #{sourceId}]]>
+                </if>
+                <if test="id != null and id != ''">
+                    <![CDATA[and id = #{id}]]>
+                </if>
+                <if test="mobile != null and mobile != ''">
+                    <![CDATA[and mobile = #{mobile}]]>
+                </if>
+
+                <choose>
+                    <when test="page == 2 and rowId != null and rowId != ''">
+                        <![CDATA[and id > #{rowId}]]>
+                    </when>
+                    <when test="page == 3 and rowId != null and rowId != ''">
+                        <![CDATA[and id < #{rowId}]]>
+                    </when>
+                </choose>
+            </trim>
+            order by id desc
+        </if>
+        <if test="page == 4">
+            select * from (
+                select
+                    id
+                from bas_weixinma_pay_order
+                <trim prefix="where" prefixOverrides="and">
+                    <if test="agentId != null and agentId != 0">
+                        <![CDATA[and agent_id = #{agentId}]]>
+                    </if>
+                    <if test="sourceType != null">
+                        <![CDATA[and source_type = #{sourceType}]]>
+                    </if>
+                    <if test="orderStatus != null">
+                        <![CDATA[and order_status = #{orderStatus}]]>
+                    </if>
+                    <if test="customerName != null and customerName != ''">
+                        <![CDATA[and customerName = #{customerName}]]>
+                    </if>
+                    <if test="sourceId != null and sourceId != ''">
+                        <![CDATA[and source_id = #{sourceId}]]>
+                    </if>
+                    <if test="id != null and id != ''">
+                        <![CDATA[and id = #{id}]]>
+                    </if>
+                    <if test="mobile != null and mobile != ''">
+                        <![CDATA[and mobile = #{mobile}]]>
+                    </if>
+                </trim>
+                order by id asc
+                limit ${rows}
+            ) t
+            order by id desc
+        </if>
+
+    </select>
+
+    <select id="findList"  resultType="cn.com.yusong.yhdg.common.domain.basic.WeixinmaPayOrder">
+        select
+            *
+        from bas_weixinma_pay_order
+        where mobile = #{mobile}
+        <if test="statusList != null ">
+            and order_status in
+            <foreach collection="statusList" index="index" item="e" open="(" separator="," close=")">
+                #{e}
+            </foreach>
+        </if>
+        order by order_status, create_time desc
+    </select>
+
+    <update id="refundOk">
+        update bas_weixinma_pay_order set
+        order_status = #{toStatus},
+        refund_money = IFNULL(refund_money,0) + #{refundMoney},
+        refund_time = #{refundTime}
+        where id = #{id}
+    </update>
+
+    <delete id="deleteByCustomerId">
+        delete from bas_weixinma_pay_order where customer_id = #{customerId}
+    </delete>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.WeixinmaPayOrder">
+        insert into bas_weixinma_pay_order(id, partner_id, agent_id, customer_id, mobile, customer_name,  money, source_type, source_id, order_status, handle_time, memo, create_time)
+        values(#{id}, #{partnerId}, #{agentId}, #{customerId}, #{mobile}, #{customerName}, #{money}, #{sourceType}, #{sourceId}, #{orderStatus}, #{handleTime}, #{memo}, #{createTime})
+    </insert>
+
+</mapper>

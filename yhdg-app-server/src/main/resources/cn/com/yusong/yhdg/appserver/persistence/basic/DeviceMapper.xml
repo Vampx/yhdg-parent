@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.appserver.persistence.basic.DeviceMapper">
+    <select id="findByDeviceId" resultType="cn.com.yusong.yhdg.common.domain.basic.Device">
+        SELECT * FROM bas_device
+        WHERE type = #{type} and device_id = #{deviceId}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.Device">
+        INSERT INTO bas_device(type, device_id, version, heart_time)
+        VALUES (#{type}, #{deviceId}, #{version}, #{heartTime})
+    </insert>
+
+    <update id="updateVersion">
+        UPDATE bas_device SET
+        version = #{version},
+        heart_time =  #{heartTime}
+        where type = #{type} and device_id = #{deviceId}
+    </update>
+</mapper>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.basic.AgentDepositOrderMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.basic.AgentDepositOrder">
+        select *
+        from bas_agent_deposit_order
+        where id=#{id}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.basic.AgentDepositOrder" resultType="int">
+        select count(id)
+        from bas_agent_deposit_order
+        <trim prefix="where" prefixOverrides="and">
+            <if test="id != null">and id = #{id} </if>
+            <if test="partnerId != null">and partner_id = #{partnerId} </if>
+            <if test="agentId != null">and agent_id = #{agentId} </if>
+            <if test="agentName != null">and agent_name = #{agentName} </if>
+            <if test="agentCode != null">and agent_code = #{agentCode} </if>
+            <if test="money != null">and money = #{money} </if>
+            <if test="status != null">and status = #{status} </if>
+            <if test="handleTime != null">and handle_time = #{handleTime} </if>
+            <if test="payType != null">and pay_type = #{payType} </if>
+            <if test="operator != null">and operator = #{operator} </if>
+            <if test="createTime != null">and create_time = #{createTime} </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.basic.AgentDepositOrder" resultType="cn.com.yusong.yhdg.common.domain.basic.AgentDepositOrder">
+        select *
+        from bas_agent_deposit_order
+        <trim prefix="where" prefixOverrides="and">
+            <if test="id != null">and id = #{id} </if>
+            <if test="partnerId != null">and partner_id = #{partnerId} </if>
+            <if test="agentId != null">and agent_id = #{agentId} </if>
+            <if test="agentName != null">and agent_name = #{agentName} </if>
+            <if test="agentCode != null">and agent_code = #{agentCode} </if>
+            <if test="money != null">and money = #{money} </if>
+            <if test="status != null">and status = #{status} </if>
+            <if test="handleTime != null">and handle_time = #{handleTime} </if>
+            <if test="payType != null">and pay_type = #{payType} </if>
+            <if test="operator != null">and operator = #{operator} </if>
+            <if test="createTime != null">and create_time = #{createTime} </if>
+        </trim>
+        order by id desc
+        limit #{beginIndex}, #{rows}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.AgentDepositOrder" keyProperty="id" useGeneratedKeys="true">
+        insert into bas_agent_deposit_order (
+        id,partner_id,agent_id,agent_name,
+        agent_code,money,status,handle_time,pay_type,operator,create_time)
+        values (
+        #{id},#{partnerId},#{agentId},#{agentName},
+        #{agentCode},#{money},#{status},#{handleTime},#{payType},#{operator},#{createTime})
+    </insert>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.basic.AgentDepositOrder">
+        update bas_agent_deposit_order
+        <trim prefix="set" suffixOverrides="," suffix=" where id = #{id} ">
+            <if test="partnerId != null"> partner_id = #{partnerId}, </if>
+            <if test="agentId != null"> agent_id = #{agentId}, </if>
+            <if test="agentName != null"> agent_name = #{agentName}, </if>
+            <if test="agentCode != null"> agent_code = #{agentCode}, </if>
+            <if test="money != null"> money = #{money}, </if>
+            <if test="status != null"> status = #{status}, </if>
+            <if test="handleTime != null"> handle_time = #{handleTime}, </if>
+            <if test="payType != null"> pay_type = #{payType}, </if>
+            <if test="operator != null"> operator = #{operator}, </if>
+            <if test="createTime != null"> create_time = #{createTime}, </if>
+        </trim>
+    </update>
+
+</mapper>

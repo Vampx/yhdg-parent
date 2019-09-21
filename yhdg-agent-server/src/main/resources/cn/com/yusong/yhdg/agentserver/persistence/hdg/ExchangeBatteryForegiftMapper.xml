@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.hdg.ExchangeBatteryForegiftMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.hdg.ExchangeBatteryForegift">
+      select * from hdg_exchange_battery_foregift where id = #{id}
+    </select>
+
+    <select id="findByBatteryType" resultType="cn.com.yusong.yhdg.common.domain.hdg.ExchangeBatteryForegift">
+        select * from hdg_exchange_battery_foregift where battery_type = #{batteryType} and agent_id = #{agentId}
+    </select>
+
+    <select id="findListByBatteryType" resultType="cn.com.yusong.yhdg.common.domain.hdg.ExchangeBatteryForegift">
+        SELECT
+        *
+        FROM hdg_exchange_battery_foregift
+        WHERE battery_type = #{batteryType} and agent_id = #{agentId}
+    </select>
+
+    <select id="findByAgent" resultType="cn.com.yusong.yhdg.common.domain.hdg.ExchangeBatteryForegift">
+        SELECT
+        *
+        FROM
+        hdg_exchange_battery_foregift
+        where agent_id = #{agentId}
+        <if test="batteryType != null">
+            and battery_type = #{batteryType}
+        </if>
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.ExchangeBatteryForegift" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO hdg_exchange_battery_foregift(
+        agent_id,
+        battery_type,
+        money,
+        memo
+        ) VALUES (
+        #{agentId},
+        #{batteryType},
+        #{money},
+        #{memo}
+        )
+    </insert>
+
+    <update id="update">
+        update hdg_exchange_battery_foregift set
+        money = #{money},
+        memo = #{memo}
+        where agent_id = #{agentId} and battery_type = #{batteryType} and id = #{id}
+    </update>
+
+    <delete id="delete">
+        delete from hdg_exchange_battery_foregift
+        where id = #{id}
+    </delete>
+
+</mapper>

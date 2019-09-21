@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.batteryserver.persistence.hdg.BatteryChargeRecordDetailMapper">
+
+    <update id="createTable">
+        /*电池充电记录详情*/
+        create table if not exists ${tableName} (
+          id bigint unsigned not null,
+          report_time datetime not null, /*上报时间*/
+          current_volume int, /*当前电量*/
+          current_power int /*当前功率*/
+        ) engine=innodb default charset=utf8;
+    </update>
+    <select id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.BatteryChargeRecordDetail" >
+        INSERT INTO `hdg_battery_charge_record_detail_${suffix}`
+        (`id`, `report_time`, `current_volume`, `current_power`)
+        VALUES (#{id}, #{reportTime}, #{currentVolume}, #{currentPower})
+    </select>
+
+</mapper>

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.appserver.persistence.hdg.VipPriceMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.hdg.VipPrice">
+            SELECT
+            *
+            FROM hdg_vip_price
+            WHERE id = #{id}
+    </select>
+
+    <select id="findByIsActive" resultType="cn.com.yusong.yhdg.common.domain.hdg.VipPrice">
+        <![CDATA[
+            SELECT
+            *
+            FROM hdg_vip_price
+            WHERE id = #{id}
+            and #{now} >= begin_time
+            and #{now} <= end_time
+            and is_active = 1
+        ]]>
+    </select>
+
+    <select id="findOneByStationId" resultType="cn.com.yusong.yhdg.common.domain.hdg.VipPrice">
+        <![CDATA[
+            SELECT
+            *
+            FROM hdg_vip_price t1, hdg_vip_price_station t2
+            WHERE t1.agent_id = #{agentId}
+            and t1.battery_type = #{batteryType}
+            and #{now} >= t1.begin_time
+            and #{now} <= t1.end_time
+            and t1.is_active = 1
+            and t1.id = t2.price_id
+            and t2.station_id = #{stationId}
+            limit 1
+        ]]>
+    </select>
+
+    <select id="findOneByCabinetId" resultType="cn.com.yusong.yhdg.common.domain.hdg.VipPrice">
+        <![CDATA[
+            SELECT
+            *
+            FROM hdg_vip_price t1, hdg_vip_price_cabinet t2
+            WHERE t1.agent_id = #{agentId}
+            and t1.battery_type = #{batteryType}
+            and #{now} >= t1.begin_time
+            and #{now} <= t1.end_time
+            and t1.is_active = 1
+            and t1.id = t2.price_id
+            and t2.cabinet_id = #{cabinetId}
+            limit 1
+        ]]>
+    </select>
+
+    <select id="findOneByCustomerMobile" resultType="cn.com.yusong.yhdg.common.domain.hdg.VipPrice">
+        <![CDATA[
+            SELECT
+            *
+            FROM hdg_vip_price t1, hdg_vip_price_customer t2
+            WHERE t1.agent_id = #{agentId}
+            and t1.battery_type = #{batteryType}
+            and #{now} >= t1.begin_time
+            and #{now} <= t1.end_time
+            and t1.is_active = 1
+            and t1.id = t2.price_id
+            and t2.mobile = #{mobile}
+            limit 1
+        ]]>
+    </select>
+
+    <select id="findOneByAgentCompanyId" resultType="cn.com.yusong.yhdg.common.domain.hdg.VipPrice">
+        <![CDATA[
+            SELECT
+            *
+            FROM hdg_vip_price t1, hdg_vip_price_agent_company t2
+            WHERE t1.agent_id = #{agentId}
+            and t1.battery_type = #{batteryType}
+            and #{now} >= t1.begin_time
+            and #{now} <= t1.end_time
+            and t1.is_active = 1
+            and t1.id = t2.price_id
+            and t2.agent_company_id = #{agentCompanyId}
+            limit 1
+        ]]>
+    </select>
+
+    <select id="findByBatteryType" resultType="cn.com.yusong.yhdg.common.domain.hdg.VipPrice">
+        SELECT
+        *
+        FROM hdg_vip_price
+        WHERE agent_id = #{agentId}
+        and battery_type = #{batteryType}
+    </select>
+
+</mapper>

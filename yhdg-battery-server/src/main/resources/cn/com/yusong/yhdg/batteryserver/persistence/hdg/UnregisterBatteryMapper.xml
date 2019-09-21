@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.batteryserver.persistence.hdg.UnregisterBatteryMapper">
+    <select id="find" parameterType="string" resultType="cn.com.yusong.yhdg.common.domain.hdg.UnregisterBattery">
+        select
+           *
+        from hdg_unregister_battery
+        where id = #{id}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.UnregisterBattery">
+        insert into hdg_unregister_battery (
+            id,
+            version,
+            voltage,
+            electricity,
+            current_capacity,
+            total_capacity,
+            use_count,
+            produce_date,
+            protect_state,
+            fet_status,
+            strand,
+            material,
+            temp,
+            lng,
+            lat,
+            fet,
+            position_state,
+            signal_type,
+            current_signal,
+            sim_code,
+            single_voltage,
+            volume,
+            heart_interval,
+            std_interval,
+            report_time,
+            create_time
+        ) values (
+            #{id},
+            #{version},
+            #{voltage},
+            #{electricity},
+            #{currentCapacity},
+            #{totalCapacity},
+            #{useCount},
+            #{produceDate},
+            #{protectState},
+            #{fetStatus},
+            #{strand},
+            #{material},
+            #{temp},
+            #{lng},
+            #{lat},
+            #{fet},
+            #{positionState},
+            #{signalType},
+            #{currentSignal},
+            #{simCode},
+            #{singleVoltage},
+            #{volume},
+            #{heartInterval},
+            #{stdInterval},
+            #{reportTime},
+            #{createTime}
+        )
+    </insert>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.hdg.UnregisterBattery">
+        update hdg_unregister_battery set
+        <trim suffix="" suffixOverrides=",">
+            <if test="id != null">
+                id = #{id},
+            </if>
+            <if test="version != null">
+                version = #{version},
+            </if>
+            <if test="voltage != null">
+                voltage = #{voltage},
+            </if>
+            <if test="electricity != null">
+                electricity = #{electricity},
+            </if>
+            <if test="currentCapacity != null">
+                current_capacity = #{currentCapacity},
+            </if>
+            <if test="totalCapacity != null">
+                total_capacity = #{totalCapacity},
+            </if>
+            <if test="useCount != null">
+                use_count = #{useCount},
+            </if>
+            <if test="produceDate != null">
+                produce_date = #{produceDate},
+            </if>
+            <if test="protectState != null">
+                protect_state = #{protectState},
+            </if>
+            <if test="fetStatus != null">
+                fet_status = #{fetStatus},
+            </if>
+            <if test="material != null">
+                material = #{material},
+            </if>
+            <if test="temp != null">
+                temp = #{temp},
+            </if>
+            <if test="lng != null">
+                lng = #{lng},
+            </if>
+            <if test="lat != null">
+                lat = #{lat},
+            </if>
+            <if test="fet != null">
+                fet = #{fet},
+            </if>
+            <if test="positionState != null">
+                position_state = #{positionState},
+            </if>
+            <if test="signalType != null">
+                signal_type = #{signalType},
+            </if>
+            <if test="currentSignal != null">
+                current_signal = #{currentSignal},
+            </if>
+            <if test="simCode != null">
+                sim_code = #{simCode},
+            </if>
+            <if test="singleVoltage != null">
+                single_voltage = #{singleVoltage},
+            </if>
+            <if test="volume != null">
+                volume = #{volume},
+            </if>
+            <if test="heartInterval != null">
+                heart_interval = #{heartInterval},
+            </if>
+            <if test="stdInterval != null">
+                std_interval = #{stdInterval},
+            </if>
+            <if test="reportTime != null">
+                report_time = #{reportTime},
+            </if>
+        </trim>
+        where id=#{id}
+    </update>
+</mapper>

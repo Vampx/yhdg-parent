@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.basic.WagesDayTicketGiftMapper">
+    <select id="findPageResult"  parameterType="cn.com.yusong.yhdg.common.domain.basic.WagesDayTicketGift"
+            resultType="cn.com.yusong.yhdg.common.domain.basic.WagesDayTicketGift">
+       SELECT * FROM bas_wages_day_ticket_gift
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId !=null and agentId != 0">
+                and agent_id i= #{agentId}
+            </if>
+            <if test="category != null and category > 0 ">
+                and category = #{category}
+            </if>
+            <if test="ticketGiftId != null and ticketGiftId > 0 ">
+                and ticket_gift_id = #{ticketGiftId}
+            </if>
+            <if test="customerMobile != null and customerMobile != '' ">
+                <![CDATA[and customer_mobile LIKE concat(#{customerMobile}, '%')]]>
+            </if>
+        </trim>
+        limit ${beginIndex}, ${rows}
+    </select>
+
+    <select id="findAllWagesDay"  parameterType="cn.com.yusong.yhdg.common.domain.basic.WagesDayTicketGift"
+            resultType="cn.com.yusong.yhdg.common.domain.basic.WagesDayTicketGift">
+        SELECT * FROM bas_wages_day_ticket_gift
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId !=null and agentId != 0">
+                and agent_id i= #{agentId}
+            </if>
+            <if test="category != null and category > 0 ">
+                and category = #{category}
+            </if>
+            <if test="ticketGiftId != null and ticketGiftId > 0 ">
+                and ticket_gift_id = #{ticketGiftId}
+            </if>
+            <if test="customerMobile != null and customerMobile != '' ">
+                <![CDATA[and customer_mobile LIKE concat(#{customerMobile}, '%')]]>
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.basic.WagesDayTicketGift" resultType="int">
+        select count(*) from bas_wages_day_ticket_gift
+        <trim prefix="where" prefixOverrides="and">
+        <if test="category != null and category != ''">
+            and   category = #{category}
+        </if>
+        <if test="agentId != null and agentId != ''">
+            and agent_id = #{agentId}
+        </if>
+        <if test="ticketGiftId != null and ticketGiftId != ''">
+            and ticket_gift_id = #{ticketGiftId}
+        </if>
+        <if test="customerMobile != null and customerMobile != ''">
+            and customer_mobile = #{customerMobile}
+        </if>
+        </trim>
+    </select>
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.basic.WagesDayTicketGift">
+        select * from bas_wages_day_ticket_gift
+        where id = #{id}
+    </select>
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.WagesDayTicketGift" useGeneratedKeys="true" keyProperty="id">
+        insert into bas_wages_day_ticket_gift(
+        category,
+        agent_id,
+        ticket_gift_id,
+        customer_mobile
+        ) values (
+        #{category},
+        #{agentId},
+        #{ticketGiftId},
+        #{customerMobile}
+        )
+    </insert>
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.basic.WagesDayTicketGift">
+        update  bas_wages_day_ticket_gift set
+        <trim suffix="" suffixOverrides=",">
+            <if test="agentId != null">
+                agent_id = #{agentId},
+            </if>
+            <if test="category != null">
+                category = #{category},
+            </if>
+            <if test="ticketGiftId != null">
+                ticket_gift_id = #{ticketGiftId},
+            </if>
+            <if test="customerMobile != null">
+                customer_mobile = #{customerMobile},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+    <delete id="delete" >
+        delete from bas_wages_day_ticket_gift where id = #{id}
+    </delete>
+
+    <delete id="deleteAll" parameterType="list">
+        delete from bas_wages_day_ticket_gift where id in
+        <foreach collection="list" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

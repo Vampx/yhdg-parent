@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.appserver.persistence.hdg.BespeakOrderMapper">
+
+   <select id="find" resultType="cn.com.yusong.yhdg.common.domain.hdg.BespeakOrder">
+       select *
+       from hdg_bespeak_order
+       where id = #{id}
+   </select>
+
+    <select id="findSuccessByCustomer" resultType="cn.com.yusong.yhdg.common.domain.hdg.BespeakOrder">
+        select *
+        from hdg_bespeak_order
+        where customer_id = #{customerId}
+         and status =  #{status}
+    </select>
+
+    <select id="findFailCountForToday" resultType="int">
+        select count(id)
+        from hdg_bespeak_order
+        where customer_id = #{customerId}
+        and status in (4, 5)
+        and create_time >= CURDATE()
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.BespeakOrder" >
+        insert hdg_bespeak_order
+        (
+            id,
+            partner_id,
+            agent_id,
+            agent_name,
+            agent_code,
+            customer_id,
+            customer_mobile,
+            customer_fullname,
+            bespeak_cabinet_id,
+            bespeak_cabinet_name,
+            bespeak_box_num,
+            bespeak_battery_id,
+            status,
+            expire_time,
+            vehicle_order_flag,
+            create_time
+            )
+        VALUES
+        (
+            #{id},
+            #{partnerId},
+            #{agentId},
+            #{agentName},
+            #{agentCode},
+            #{customerId},
+            #{customerMobile},
+            #{customerFullname},
+            #{bespeakCabinetId},
+            #{bespeakCabinetName},
+            #{bespeakBoxNum},
+            #{bespeakBatteryId},
+            #{status},
+            #{expireTime},
+            #{vehicleOrderFlag},
+            #{createTime}
+         )
+    </insert>
+
+    <update id="take">
+        update hdg_bespeak_order
+        set take_cabinet_id = #{takeCabinetId},
+        take_cabinet_name = #{takeCabinetName},
+        take_box_num = #{takeBoxNum},
+        take_battery_id = #{takeBatteryId},
+        take_time = #{takeTime},
+        status = #{status}
+      where id = #{id}
+    </update>
+
+    <update id="updateStatus">
+        update hdg_bespeak_order
+        set status = #{toStatus},
+        cancel_time = #{cancelTime}
+        where id = #{id} and status = #{fromStatus}
+    </update>
+
+</mapper>

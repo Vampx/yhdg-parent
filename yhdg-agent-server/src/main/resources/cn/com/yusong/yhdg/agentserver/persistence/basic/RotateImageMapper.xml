@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.basic.RotateImageMapper">
+
+    <select id="find" parameterType="int" resultType="cn.com.yusong.yhdg.common.domain.basic.RotateImage">
+        select
+        id,
+        image_path as imagePath,
+        order_num as orderNum,
+        url,
+        is_show  as isShow,
+        create_time as createTime
+        from bas_rotate_image
+        where id = #{id}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.basic.RotateImage" resultType="int">
+        select count(*) from bas_rotate_image
+        <trim prefix="where" prefixOverrides="and">
+            <if test="isShow != null ">
+                and is_show = #{isShow}
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.basic.RotateImage" resultType="cn.com.yusong.yhdg.common.domain.basic.RotateImage">
+        select
+        id,
+        image_path as imagePath,
+        order_num as orderNum,
+        url,
+        is_show  as isShow,
+        create_time as createTime
+        from bas_rotate_image
+        <trim prefix="where" prefixOverrides="and">
+            <if test="isShow != null ">
+                and is_show = #{isShow}
+            </if>
+        </trim>
+        ORDER BY order_num
+        limit ${beginIndex}, ${rows}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.RotateImage" useGeneratedKeys="true" keyProperty="id">
+        insert into bas_rotate_image (image_path, order_num, url, is_show, create_time)
+        values (#{imagePath}, #{orderNum}, #{url}, #{isShow}, #{createTime})
+    </insert>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.basic.RotateImage">
+        update bas_rotate_image set
+        image_path = #{imagePath},
+        order_num = #{orderNum},
+        url = #{url},
+        is_show  = #{isShow}
+        where id = #{id}
+    </update>
+
+    <update id="updateOrderNum">
+        update bas_rotate_image set
+        order_num = #{orderNum}
+        where id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="int">
+        delete from bas_rotate_image where id = #{id}
+    </delete>
+</mapper>

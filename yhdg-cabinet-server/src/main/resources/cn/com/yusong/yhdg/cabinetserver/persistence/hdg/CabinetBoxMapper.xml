@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.cabinetserver.persistence.hdg.CabinetBoxMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetBox">
+        select
+        *
+        from hdg_cabinet_box
+        where cabinet_id = #{cabinetId} and box_num = #{boxNum}
+    </select>
+
+    <select id="findBoxBatteryList" resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetBox">
+        select
+            t1.box_num,
+            t1.battery_id,
+            t2.volume,
+            ifnull(t3.charge_full_volume,90) as fullVolume,
+            t2.status as batteryStatus,
+            t2.charge_status
+        from hdg_cabinet_box t1
+        left join hdg_battery t2 on t1.battery_id = t2.id
+        left join hdg_cabinet t3 on t3.id = t1.cabinet_id
+        where t1.cabinet_id = #{cabinetId}
+    </select>
+
+    <select id="findListByCabinet" resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetBox">
+        select
+         *
+        from hdg_cabinet_box
+        where cabinet_id = #{cabinetId}
+        order by box_num
+    </select>
+
+    <select id="findOneFull" resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetBox">
+        select a.* from (
+        select
+        t1.cabinet_id,
+        t1.box_num,
+        t1.type,
+        t1.box_status,
+        t1.battery_id,
+        t2.volume
+        from hdg_cabinet_box t1
+        inner join hdg_battery t2 on t1.battery_id = t2.id
+        inner join hdg_cabinet t3 on t3.id = t1.cabinet_id
+        where t1.cabinet_id = #{cabinetId}
+        and t1.box_status = #{fullStatus}
+        and t1.is_active = 1
+        and t1.is_online = 1
+        and t2.up_line_status = 1
+        and t2.status = #{batteryStatus}
+        and t2.type = #{batteryType}
+        and t2.is_normal = 1
+        and ((t3.min_exchange_volume is not null and  t2.volume >= t3.min_exchange_volume)
+        or  t2.volume >= t3.charge_full_volume)
+
+        <if test="batteryId != null and batteryId != ''">
+            and t2.id != #{batteryId}
+        </if>
+
+        <if test="bespeakBoxNum != null and bespeakBoxNum != ''">
+            union all
+            select
+            t1.cabinet_id,
+            t1.box_num,
+            t1.type,
+            t1.box_status,
+            t1.battery_id,
+            t2.volume
+            from hdg_cabinet_box t1
+            inner join hdg_battery t2 on t1.battery_id = t2.id
+            where t1.cabinet_id = #{cabinetId}
+            and t1.box_num = #{bespeakBoxNum}
+            and t1.is_active = 1
+            and t1.is_online = 1
+            and t2.up_line_status = 1
+            and t2.status = #{batteryStatus}
+            and t2.type = #{batteryType}
+            and t2.is_normal = 1
+        </if>
+        ) a ORDER BY a.volume DESC
+        limit 1
+    </select>
+
+    <select id="findOneEmptyBoxNum" resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetBox">
+        select
+        *
+        from hdg_cabinet_box
+        where cabinet_id = #{cabinetId}
+        and box_status = #{boxStatus}
+        and is_active = #{isActive}
+        and is_online = 1
+        LIMIT 1
+    </select>
+
+    <select id="findEmptyCount" resultType="int">
+        select
+        count(*)
+        from hdg_cabinet_box
+        where cabinet_id = #{cabinetId}
+        and box_status = #{boxStatus}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.CabinetBox">
+        insert into hdg_cabinet_box (
+            agent_id,
+            cabinet_id,
+            box_num,
+            type,
+            subtype,
+            is_active,
+            is_online,
+            box_status,
+            battery_id,
+            bespeak_time,
+            is_open,
+            open_time,
+            lock_time,
+            open_type,
+            opener_id,
+            charge_full_volume
+          )
+        values(
+            #{agentId},
+            #{cabinetId},
+            #{boxNum},
+            #{type},
+            #{subtype},
+            #{isActive},
+            #{isOnline},
+            #{boxStatus},
+            #{batteryId},
+            #{bespeakTime},
+            #{isOpen},
+            #{openTime},
+            #{lockTime},
+            #{openType},
+            #{openerId},
+            #{chargeFullVolume}
+          )
+    </insert>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.hdg.CabinetBox">
+        update hdg_cabinet_box set
+        <foreach collection="kvList" index="index" item="item" open="" separator="," close="">
+            ${item.k} = #{item.v}
+        </foreach>
+        where cabinet_id = #{cabinetId} and box_num = #{boxNum}
+    </update>
+
+    <update id="updateFaultLogId">
+        update hdg_cabinet_box set
+        smoke_fault_log_id = #{smokeFaultLogId}
+        where cabinet_id = #{cabinetId} and box_num = #{boxNum}
+    </update>
+
+    <update id="unlockBox">
+        update hdg_cabinet_box
+        set
+        lock_time = null,
+        open_type = null,
+        opener_id = null,
+        box_status = #{toStatus}
+        where cabinet_id = #{cabinetId}
+        and box_num = #{boxNum}
+        and box_status = #{fromStatus}
+    </update>
+
+    <update id="updateOnline">
+        update hdg_cabinet_box set is_online = #{isOnline} where cabinet_id = #{cabinetId}
+    </update>
+
+    <update id="updateBoxStatus">
+        update hdg_cabinet_box set
+        box_status = #{boxStatus}
+        where cabinet_id = #{cabinetId} and box_num = #{boxNum}
+    </update>
+
+
+</mapper>

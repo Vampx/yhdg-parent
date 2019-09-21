@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.staticserver.persistence.basic.MobileMessageMapper">
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.MobileMessage" useGeneratedKeys="true" keyProperty="id">
+        insert into bas_mobile_message(agent_id, source_id, source_type, content, mobile, status, sender_id, type, delay, create_time)
+        values(#{agentId},  #{sourceId}, #{sourceType}, #{content}, #{mobile}, #{status}, #{senderId}, #{type}, #{delay}, #{createTime})
+    </insert>
+</mapper>

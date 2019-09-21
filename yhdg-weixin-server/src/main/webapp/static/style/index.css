@@ -1,0 +1,87 @@
+* {
+  margin: 0px;
+  padding: 0px;
+}
+html {
+  height: 100%;
+}
+html body {
+  height: 100%;
+  font-family: simhei;
+}
+html body .weui-tab__panel {
+  padding-bottom: 3.176rem;
+}
+html body .weui-tab__panel #info {
+  width: 603px;
+  padding-top: 3px;
+  overflow: hidden;
+}
+html body .weui-tab__panel #container {
+  width: 100%;
+  height: 90%;
+}
+html body .weui-tab__panel #container .goback {
+  z-index: 101;
+  position: absolute;
+  right: .5rem;
+  bottom: .5rem;
+}
+html body .weui-tab__panel #container .goback img {
+  height: 2rem;
+  width: 2rem;
+}
+html body .weui-tab__panel #container .prompt {
+  z-index: 101;
+  position: absolute;
+  top: 1.64705882rem;
+  left: 0.64705882rem;
+}
+html body .weui-tab__panel #container .prompt img {
+  width: 4.70588235rem;
+  height: 5.64705882rem;
+}
+html body .weui-tab__panel .foot .weui-cell {
+  padding: 0.58823529rem 0.88235294rem;
+}
+html body .weui-tab__panel .foot .charge_name {
+  font-size: 0.824rem;
+  color: #5c5c5c;
+}
+html body .weui-tab__panel .foot .charge_adr {
+  font-size: 1rem;
+  color: #333;
+}
+html body .weui-tab__panel .foot .charge_distance {
+  font-size: 0.706rem;
+}
+html body .weui-tab__panel .foot .navBtn {
+  width: 4.82rem;
+  height: 1.88rem;
+}
+html body .weui-tabbar {
+  height: 3.176rem;
+  overflow: hidden;
+}
+html body .weui-tabbar .weui-tabbar__label {
+  font-size: 0.70588235rem;
+  color: #999999;
+}
+html body .weui-tabbar .weui-tabbar__icon {
+  width: 1.35294118rem;
+  height: 1.41176471rem;
+}
+html body .weui-tabbar .weui-tabbar__item {
+  padding: .59rem 0 0;
+}
+html body .weui-tabbar .weui-tabbar__item img {
+  height: 1.35294118rem;
+  width: 1.41176471rem;
+}
+html body .weui-tabbar .weui-tabbar__item .scan {
+  width: 3.17647059rem;
+  height: 3.17647059rem;
+}
+html body .weui-tabbar .weui-bar__item_on .slected {
+  color: #4CBFFF;
+}

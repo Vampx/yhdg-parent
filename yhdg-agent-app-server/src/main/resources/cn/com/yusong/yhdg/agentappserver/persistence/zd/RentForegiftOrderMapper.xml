@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.agentappserver.persistence.zd.RentForegiftOrderMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.zd.RentForegiftOrder">
+        SELECT
+        *
+        FROM
+        zd_rent_foregift_order
+        WHERE id = #{id}
+    </select>
+
+    <select id="findByForegiftIdAndStatus" parameterType="string" resultType="cn.com.yusong.yhdg.common.domain.zd.RentForegiftOrder">
+        select
+        *
+        from zd_rent_foregift_order
+        where foregift_id = #{foregiftId}
+        <foreach collection="foregiftList" item="item" open=" AND status in (" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="sumMoneyByAgent" resultType="int">
+        select ifnull(SUM(money),0) as money
+        from  zd_rent_foregift_order
+        where agent_id = #{agentId}
+        <foreach collection="status" item="item" open=" AND status in (" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="findCountByCustomerId" resultType="int">
+        select count(*)
+        from  zd_rent_foregift_order
+        where customer_id = #{customerId}
+        and agent_id = #{agentId}
+        and status != #{status} and id != #{id}
+    </select>
+
+    <select id="findListByShopId" resultType="cn.com.yusong.yhdg.common.domain.zd.RentForegiftOrder">
+        select
+        *
+        from zd_rent_foregift_order
+        where agent_id = #{agentId}
+        <if test="shopId != null and shopId != ''">
+            and shop_id = #{shopId}
+        </if>
+        <if test="shopId == null">
+            and shop_id is not null
+        </if>
+        <if test="beginTime != null and endTime != ''">
+            and pay_time >= #{beginTime} and pay_time &lt;= #{endTime}
+        </if>
+        <if test="keyword != null and keyword != ''">
+            and customer_fullname like concat('%', #{keyword} ,'%')
+        </if>
+        ORDER BY id desc
+    </select>
+
+    <select id="findByShopId" resultType="cn.com.yusong.yhdg.common.domain.zd.RentForegiftOrder">
+        select
+        *
+        from zd_rent_foregift_order
+        where agent_id = #{agentId}
+        <if test="shopId != null and shopId != ''">
+            and shop_id = #{shopId}
+        </if>
+        <if test="status != null">
+            and status in
+            <foreach collection="status" index="index" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="keyword != null and keyword != ''">
+            and customer_fullname like concat('%', #{keyword} ,'%')
+        </if>
+        ORDER BY create_time desc
+        limit #{offset}, #{limit}
+    </select>
+
+    <select id="findListByCustomerIdAndStatus" resultType="cn.com.yusong.yhdg.common.domain.zd.RentForegiftOrder">
+        select *
+        from  zd_rent_foregift_order
+        where customer_id = #{customerId} and status = #{status}
+        order by id DESC
+    </select>
+
+    <select id="countShopTodayOrderNum" resultType="java.lang.Integer">
+        select count(*)
+        from zd_rent_foregift_order
+        where shop_id = #{shopId} and pay_time >= #{startTime} and pay_time &lt;= #{endTime}
+    </select>
+
+    <select id="findCountByShopId"  resultType="int">
+        select
+        count(id)
+        from zd_rent_foregift_order
+        <trim prefix="where" prefixOverrides="and">
+            <if test="shopId != null and shopId != '' ">
+                and shop_id = #{shopId}
+            </if>
+            <if test="agentId != null">
+                and agent_id = #{agentId}
+            </if>
+            <if test="status != null">
+                and status in
+                <foreach collection="status" index="index" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </trim>
+    </select>
+
+    <select id="findLastEndTime" resultType="cn.com.yusong.yhdg.common.domain.zd.RentForegiftOrder">
+        select
+        *
+        FROM
+        zd_rent_foregift_order
+        where
+        customer_id = #{customerId}
+        and status = #{status}
+        limit 1
+    </select>
+
+    <select id="findRefund" resultType="cn.com.yusong.yhdg.common.domain.zd.RentForegiftOrder">
+        select
+        *
+        from zd_rent_foregift_order
+        where
+        agent_id = #{agentId}
+        and refund_time >= #{beginTime}
+        and refund_time &lt;= #{endTime}
+        limit #{offset}, #{limit}
+    </select>
+
+    <select id="findIncrement"  resultType="cn.com.yusong.yhdg.common.domain.zd.RentForegiftOrder">
+        select
+        *
+        from zd_rent_foregift_order
+        WHERE
+        agent_id = #{agentId}
+        and pay_time &lt;= #{endTime}
+        AND pay_time &gt;= #{beginTime}
+        limit #{offset}, #{limit}
+    </select>
+
+    <insert id="insert"  parameterType="cn.com.yusong.yhdg.common.domain.zd.RentForegiftOrder" >
+        INSERT INTO
+        zd_rent_foregift_order
+        (
+            id,
+            partner_id,
+            agent_id,
+            agent_name,
+            shop_id,
+            battery_type,
+            battery_id,
+            price,
+            money,
+            consume_deposit_balance,
+            consume_gift_balance,
+            customer_id,
+            customer_mobile,
+            customer_fullname,
+            status,
+            handle_time,
+            memo,
+            pay_time,
+            pay_type,
+            ticket_name,
+            ticket_money,
+            coupon_ticket_id,
+            deduction_ticket_name,
+            deduction_ticket_money,
+            deduction_ticket_id,
+            apply_refund_time,
+            refund_time,
+            refund_money,
+            refund_photo,
+            refund_operator,
+            foregift_id,
+            create_time
+        )
+        VALUES
+        (
+            #{id},
+            #{partnerId},
+            #{agentId},
+            #{agentName},
+            #{shopId},
+            #{batteryType},
+            #{batteryId},
+            #{price},
+            #{money},
+            #{consumeDepositBalance},
+            #{consumeGiftBalance},
+            #{customerId},
+            #{customerMobile},
+            #{customerFullname},
+            #{status},
+            #{handleTime},
+            #{memo},
+            #{payTime},
+            #{payType},
+            #{ticketName},
+            #{ticketMoney},
+            #{couponTicketId},
+            #{deductionTicketName},
+            #{deductionTicketMoney},
+            #{deductionTicketId},
+            #{applyRefundTime},
+            #{refundTime},
+            #{refundMoney},
+            #{refundPhoto},
+            #{refundOperator},
+            #{foregiftId},
+            #{createTime}
+        )
+    </insert>
+
+    <update id="refund">
+        update zd_rent_foregift_order set
+            status = #{toStatus},
+            apply_refund_time = #{applyRefundTime},
+            refund_time = #{refundTime},
+            refund_money = #{refundMoney},
+            refund_operator = #{refundOperator}
+        where id = #{id} and status = #{fromStatus}
+    </update>
+
+    <update id="applyRefund">
+        update zd_rent_foregift_order set
+            status = #{toStatus},
+            apply_refund_time = #{applyRefundTime},
+            refund_money = #{refundMoney}
+        where id = #{id} and status = #{fromStatus}
+    </update>
+
+
+
+</mapper>

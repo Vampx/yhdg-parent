@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.basic.AgentDayInOutMoneyMapper">
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.basic.AgentDayInOutMoney" resultType="int">
+        select count(*)
+        from bas_agent_day_in_out_money
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentName != null and agentName != ''">
+                <![CDATA[and agent_name LIKE concat('%', #{agentName}, '%')]]>
+            </if>
+            <if test="statsDate != null and statsDate != ''">
+                <![CDATA[and stats_date = #{statsDate} ]]>
+            </if>
+            <if test="agentId != null and agentId != ''">
+                <![CDATA[and agent_id = #{agentId} ]]>
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.basic.AgentDayInOutMoney" resultType="cn.com.yusong.yhdg.common.domain.basic.AgentDayInOutMoney">
+        select
+          *
+        from bas_agent_day_in_out_money
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentName != null and agentName != ''">
+                <![CDATA[and agent_name LIKE concat('%', #{agentName}, '%')]]>
+            </if>
+            <if test="statsDate != null and statsDate != ''">
+                <![CDATA[and stats_date = #{statsDate} ]]>
+            </if>
+            <if test="agentId != null and agentId != ''">
+                <![CDATA[and agent_id = #{agentId} ]]>
+            </if>
+        </trim>
+        order by stats_date desc
+        limit ${beginIndex}, ${rows}
+    </select>
+
+</mapper>

@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.hdg.BatteryFormatMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.hdg.BatteryFormat">
+        SELECT
+        *
+        FROM hdg_battery_format
+        WHERE id = #{id}
+    </select>
+
+    <select id="findByCellModelId" resultType="cn.com.yusong.yhdg.common.domain.hdg.BatteryFormat">
+        SELECT
+        *
+        FROM hdg_battery_format
+        WHERE cell_model_id = #{cellModelId}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.hdg.BatteryFormat" resultType="int">
+        select
+        count(*)
+        from hdg_battery_format
+        <trim prefix="where" prefixOverrides="and">
+            <if test="cellModel != null and cellModel != ''">
+                <![CDATA[and cell_model LIKE concat('%', #{cellModel}, '%')]]>
+            </if>
+            <if test="cellMfr != null and cellMfr != ''">
+                <![CDATA[and cell_mfr LIKE concat('%', #{cellMfr}, '%')]]>
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.hdg.BatteryFormat"
+            resultType="cn.com.yusong.yhdg.common.domain.hdg.BatteryFormat">
+        select
+        *
+        from hdg_battery_format
+        <trim prefix="where" prefixOverrides="and">
+            <if test="cellModel != null and cellModel != ''">
+                <![CDATA[and cell_model LIKE concat('%', #{cellModel}, '%')]]>
+            </if>
+            <if test="cellMfr != null and cellMfr != ''">
+                <![CDATA[and cell_mfr LIKE concat('%', #{cellMfr}, '%')]]>
+            </if>
+        </trim>
+        order by id desc
+        limit #{beginIndex}, #{rows}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.BatteryFormat" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO hdg_battery_format(
+         cell_model_id,
+         cell_mfr,
+         cell_model,
+         battery_format_name,
+         nominal_pow,
+         nominal_cap,
+         min_nominal_cap,
+         max_nominal_cap,
+         ac_resistance,
+         min_ac_resistance,
+         max_ac_resistance,
+         resilience_vol,
+         min_resilience_vol,
+         max_resilience_vol,
+         static_vol,
+         min_static_vol,
+         max_static_vol,
+         circle,
+         min_circle,
+         max_circle,
+         barcode_rule,
+         cell_count,
+         memo,
+         operator,
+         create_time
+        ) VALUES (
+          #{cellModelId},
+          #{cellMfr},
+          #{cellModel},
+          #{batteryFormatName},
+          #{nominalPow},
+          #{nominalCap},
+          #{minNominalCap},
+          #{maxNominalCap},
+          #{acResistance},
+          #{minAcResistance},
+          #{maxAcResistance},
+          #{resilienceVol},
+          #{minResilienceVol},
+          #{maxResilienceVol},
+          #{staticVol},
+          #{minStaticVol},
+          #{maxStaticVol},
+          #{circle},
+          #{minCircle},
+          #{maxCircle},
+          #{barcodeRule},
+          #{cellCount},
+          #{memo},
+          #{operator},
+          #{createTime}
+        )
+    </insert>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.hdg.BatteryFormat">
+        update hdg_battery_format set
+              cell_model_id = #{cellModelId},
+              cell_mfr = #{cellMfr},
+              cell_model = #{cellModel},
+              battery_format_name = #{batteryFormatName},
+              nominal_pow = #{nominalPow},
+              nominal_cap = #{nominalCap},
+              min_nominal_cap = #{minNominalCap},
+              max_nominal_cap = #{maxNominalCap},
+              ac_resistance = #{acResistance},
+              min_ac_resistance = #{minAcResistance},
+              max_ac_resistance = #{maxAcResistance},
+              resilience_vol = #{resilienceVol},
+              min_resilience_vol = #{minResilienceVol},
+              max_resilience_vol = #{maxResilienceVol},
+              static_vol = #{staticVol},
+              min_static_vol = #{minStaticVol},
+              max_static_vol = #{maxStaticVol},
+              circle = #{circle},
+              min_circle = #{minCircle},
+              max_circle = #{maxCircle},
+              barcode_rule = #{barcodeRule},
+              cell_count = #{cellCount},
+              memo = #{memo},
+              operator = #{operator}
+        where id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="long">
+        delete from hdg_battery_format where id = #{id}
+    </delete>
+
+</mapper>

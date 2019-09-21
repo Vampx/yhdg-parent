@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.appserver.persistence.zc.CustomerVehicleInfoMapper">
+
+    <select id="find" parameterType="long" resultType="cn.com.yusong.yhdg.common.domain.zc.CustomerVehicleInfo">
+        select
+        *
+        from zc_customer_vehicle_info
+        where id = #{id}
+    </select>
+
+    <select id="findByCustomerId" parameterType="long" resultType="cn.com.yusong.yhdg.common.domain.zc.CustomerVehicleInfo">
+        select
+        *
+        from zc_customer_vehicle_info
+        where id = #{customerId}
+    </select>
+
+    <insert id="insert">
+        insert into zc_customer_vehicle_info(
+        id,
+        agent_id,
+        model_id,
+        category,
+        foregift,
+        battery_type,
+        foregift_order_id,
+        rent_price_id,
+        vip_price_id,
+        balance_shop_id,
+        create_time)
+        values(
+        #{id},
+        #{agentId},
+        #{modelId},
+        #{category},
+        #{foregift},
+        #{batteryType},
+        #{foregiftOrderId},
+        #{rentPriceId},
+        #{vipPriceId},
+        #{balanceShopId},
+        #{createTime})
+    </insert>
+
+    <update id="updateCustomerVehicleInfo">
+        update zc_customer_vehicle_info set
+        vehicle_id = #{vehicleId},
+        vehicle_name = #{vehicleName}
+        <if test="vehicleOrderId != null">
+            ,vehicle_order_id = #{vehicleOrderId}
+        </if>
+        where id = #{id}
+    </update>
+
+</mapper>

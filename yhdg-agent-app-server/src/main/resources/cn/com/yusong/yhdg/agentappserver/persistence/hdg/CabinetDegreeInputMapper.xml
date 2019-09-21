@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.agentappserver.persistence.hdg.CabinetDegreeInputMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetDegreeInput">
+        select * from hdg_cabinet_degree_input
+        where id = #{id}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.CabinetDegreeInput" useGeneratedKeys="true" keyProperty="id">
+        insert into hdg_cabinet_degree_input (agent_id, agent_name,
+        estate_id, estate_name, cabinet_id,
+        cabinet_name,  degree_price,
+        begin_num, end_num, charger_num,
+        degree, degree_money, status,
+        create_time, begin_time, end_time ,day_count, create_user_name
+        )
+        values (#{agentId}, #{agentName},
+        #{estateId}, #{estateName}, #{cabinetId},
+        #{cabinetName}, #{degreePrice},
+        #{beginNum}, #{endNum}, #{chargerNum},
+        #{degree}, #{degreeMoney}, #{status},
+        #{createTime}, #{beginTime}, #{endTime}, #{dayCount}, #{createUserName}
+        )
+    </insert>
+
+    <select id="findList" resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetDegreeInput">
+        select
+        *
+        from hdg_cabinet_degree_input
+        where cabinet_id = #{cabinetId}
+         limit ${offset}, ${limit}
+    </select>
+
+    <select id="findEnd" resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetDegreeInput">
+        select
+        *
+        from hdg_cabinet_degree_input
+        where cabinet_id = #{cabinetId}
+        order by create_time desc limit 1
+    </select>
+
+    <select id="findSum" resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetDegreeInput">
+        select  degree_price, charger_name,
+        end_num, SUM(degree) as SumDegree,SUM(degree_money) as sumMoney
+        from hdg_cabinet_degree_input  d
+        where  cabinet_id = #{cabinetId}
+        order by d.create_time desc limit 1
+    </select>
+
+    <select id="findListByEstate" resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetDegreeInput">
+        select
+        *
+        from hdg_cabinet_degree_input
+        where agent_id = #{agentId} and estate_id = #{estateId}
+        ORDER BY id desc
+        limit ${offset}, ${limit}
+    </select>
+
+    <update id="updateStatus">
+        update hdg_cabinet_degree_input set status = #{status} where id = #{id}
+    </update>
+
+</mapper>

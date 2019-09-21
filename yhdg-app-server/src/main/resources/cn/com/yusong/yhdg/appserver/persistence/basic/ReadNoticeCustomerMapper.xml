@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.appserver.persistence.basic.ReadNoticeCustomerMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.basic.ReadNoticeCustomer">
+        select
+            *
+        from bas_read_notice_customer
+        where notice_id = #{noticeId}
+        and customer_id = #{customerId}
+    </select>
+
+    <select id="findByCustomer" resultType="Long">
+        select
+        notice_id
+        from bas_read_notice_customer
+        where customer_id = #{customerId}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.ReadNoticeCustomer">
+        INSERT INTO bas_read_notice_customer (
+            notice_id,
+            customer_id
+        ) VALUES (
+            #{noticeId},
+            #{customerId}
+        )
+    </insert>
+</mapper>

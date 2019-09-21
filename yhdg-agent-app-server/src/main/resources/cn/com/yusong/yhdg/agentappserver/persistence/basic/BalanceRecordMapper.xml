@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.agentappserver.persistence.basic.BalanceRecordMapper">
+
+    <select id="findByBalanceDate" resultType="cn.com.yusong.yhdg.common.domain.basic.BalanceRecord">
+        select
+        *
+        from bas_balance_record
+        where agent_id = #{agentId}
+        and balance_date = #{balanceDate}
+        and category = #{category}
+        limit 1
+    </select>
+
+    <select id="findTotalMoney" resultType="cn.com.yusong.yhdg.common.domain.basic.BalanceRecord">
+        select
+        ifnull(sum(money), 0) as totalMoney
+        from bas_balance_record
+        where agent_id = #{agentId}
+        and biz_type = #{bizType}
+        and category = #{category}
+    </select>
+
+    <select id="findDateRange" resultType="cn.com.yusong.yhdg.common.domain.basic.BalanceRecord">
+        SELECT
+        *
+        FROM  bas_balance_record
+        WHERE agent_id = #{agentId} and biz_type = #{bizType}
+        <if test="beginDate != null and endDate != null">
+            AND balance_date BETWEEN #{beginDate} AND #{endDate}
+        </if>
+        and category = #{category}
+    </select>
+
+    <select id="findTotalDateRange" resultType="cn.com.yusong.yhdg.common.domain.basic.BalanceRecord">
+        SELECT
+        ifnull(sum(foregift_remain_money), 0) as foregiftRemainMoney
+        FROM  bas_balance_record
+        WHERE agent_id = #{agentId} and biz_type = #{bizType}
+        <if test="beginDate != null and endDate != null">
+            AND balance_date BETWEEN #{beginDate} AND #{endDate}
+        </if>
+        and category = #{category}
+    </select>
+
+</mapper>

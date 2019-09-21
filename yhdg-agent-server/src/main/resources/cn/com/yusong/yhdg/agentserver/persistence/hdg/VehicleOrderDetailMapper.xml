@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.hdg.VehicleOrderDetailMapper">
+    
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.hdg.VehicleOrderDetail" resultType="int">
+        select
+            count(*)
+        from hdg_vehicle_order_detail
+        <trim prefix="where" prefixOverrides="and">
+            <if test="orderId != null and orderId != ''">
+                <![CDATA[and order_id LIKE concat(#{orderId}, '%')]]>
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.hdg.VehicleOrderDetail" resultType="cn.com.yusong.yhdg.common.domain.hdg.VehicleOrderDetail">
+        select
+            *
+        from hdg_vehicle_order_detail
+        <trim prefix="where" prefixOverrides="and">
+            <if test="orderId != null and orderId != ''">
+                <![CDATA[and order_id LIKE concat(#{orderId}, '%')]]>
+            </if>
+        </trim>
+        order by order_id desc
+        limit ${beginIndex}, ${rows}
+    </select>
+
+
+</mapper>

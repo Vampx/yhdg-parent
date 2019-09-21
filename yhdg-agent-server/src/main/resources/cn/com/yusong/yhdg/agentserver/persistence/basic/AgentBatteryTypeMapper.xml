@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.basic.AgentBatteryTypeMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.basic.AgentBatteryType">
+        select
+        bas_system_battery_type.*,
+        bas_agent.agent_name as agentName,
+        bas_agent_battery_type.agent_id as agentId,
+        bas_agent_battery_type.battery_type as batteryType
+        from bas_system_battery_type ,
+        bas_agent_battery_type,
+        bas_agent
+        where bas_system_battery_type.id = bas_agent_battery_type.battery_type
+        and bas_agent_battery_type.agent_id =bas_agent.id
+        and bas_agent_battery_type.battery_type = #{batteryType} and bas_agent_battery_type.agent_id = #{agentId}
+    </select>
+
+    <select id="findBatteryListByAgentId" parameterType="int" resultType="cn.com.yusong.yhdg.common.domain.basic.AgentBatteryType">
+        select
+        bas_system_battery_type.*,
+        bas_agent_battery_type.*
+        from bas_system_battery_type,
+        bas_agent_battery_type
+        where bas_system_battery_type.id = bas_agent_battery_type.battery_type
+        and bas_agent_battery_type.agent_id = #{agentId}
+    </select>
+
+    <select id="findListByCabinetId" parameterType="string" resultType="cn.com.yusong.yhdg.common.domain.basic.AgentBatteryType">
+        SELECT
+        bas_agent_battery_type.*
+        FROM bas_agent_battery_type, hdg_cabinet_battery_type
+        where bas_agent_battery_type.battery_type = hdg_cabinet_battery_type.battery_type
+        and hdg_cabinet_battery_type.cabinet_id = #{cabinetId}
+    </select>
+
+    <select id="findForName" resultType="cn.com.yusong.yhdg.common.domain.basic.AgentBatteryType">
+        select * from bas_agent_battery_type
+        where battery_type = #{batteryType} and agent_id = #{agentId}
+    </select>
+
+    <select id="findCountByBatteryType" parameterType="int" resultType="int">
+        select
+        count(*)
+        from bas_agent_battery_type
+        where battery_type = #{batteryType}
+    </select>
+
+    <select id="findListByBatteryType" parameterType="int" resultType="cn.com.yusong.yhdg.common.domain.basic.AgentBatteryType">
+        select
+          *
+        from bas_agent_battery_type
+        where battery_type = #{batteryType}
+    </select>
+
+    <select id="findListByAgentId" parameterType="int" resultType="cn.com.yusong.yhdg.common.domain.basic.AgentBatteryType">
+        select
+        *
+        from bas_agent_battery_type
+        where agent_id = #{agentId}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.basic.AgentBatteryType" resultType="int">
+        select
+        count(bas_system_battery_type.id)
+        from bas_system_battery_type ,
+        bas_agent_battery_type,
+        bas_agent
+        where bas_system_battery_type.id = bas_agent_battery_type.battery_type
+        and bas_agent_battery_type.agent_id =bas_agent.id
+        <if test="agentId != null">
+            and bas_agent_battery_type.agent_id = #{agentId}
+        </if>
+        <if test="typeName != null and typeName != ''">
+            <![CDATA[and bas_system_battery_type.type_name LIKE concat('%', #{typeName}, '%')]]>
+        </if>
+        <if test="cabinetId != null and cabinetId !='' and unbind == null ">
+            and battery_type in (select battery_type from hdg_cabinet_battery_type where cabinet_id = #{cabinetId})
+        </if>
+        <if test="cabinetId != null and cabinetId !='' and unbind != null and unbind ==1">
+            and battery_type not in (select battery_type from hdg_cabinet_battery_type where cabinet_id = #{cabinetId})
+        </if>
+        order by bas_system_battery_type.create_time desc
+        limit ${beginIndex}, ${rows}
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.basic.AgentBatteryType"
+            resultType="cn.com.yusong.yhdg.common.domain.basic.AgentBatteryType">
+
+        select
+        bas_system_battery_type.*,
+        bas_agent.agent_name as agentName,
+        bas_agent_battery_type.*
+        from bas_system_battery_type ,
+        bas_agent_battery_type,
+        bas_agent
+        where bas_system_battery_type.id = bas_agent_battery_type.battery_type
+        and bas_agent_battery_type.agent_id =bas_agent.id
+        <if test="agentId != null">
+            and bas_agent_battery_type.agent_id = #{agentId}
+        </if>
+        <if test="typeName != null and typeName != ''">
+            <![CDATA[and bas_system_battery_type.type_name LIKE concat('%', #{typeName}, '%')]]>
+        </if>
+        <if test="cabinetId != null and cabinetId !='' and unbind == null ">
+            and battery_type in (select battery_type from hdg_cabinet_battery_type where cabinet_id = #{cabinetId})
+        </if>
+        <if test="cabinetId != null and cabinetId !='' and unbind != null and unbind ==1">
+            and battery_type not in (select battery_type from hdg_cabinet_battery_type where cabinet_id = #{cabinetId})
+        </if>
+        order by bas_system_battery_type.create_time desc
+        limit ${beginIndex}, ${rows}
+
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.AgentBatteryType" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO bas_agent_battery_type(
+        agent_id,
+        battery_type,
+        type_name
+        ) VALUES (
+        #{agentId},
+        #{batteryType},
+        #{typeName}
+        )
+    </insert>
+
+    <update id="update">
+        update bas_agent_battery_type set
+        agent_id = #{agentId},
+        battery_type = #{batteryType},
+        type_name = #{typeName}
+        where agent_id = #{agentId} and battery_type = #{fromBatteryType}
+    </update>
+
+    <delete id="delete">
+        delete from bas_agent_battery_type where agent_id = #{agentId} and battery_type = #{batteryType}
+    </delete>
+
+</mapper>

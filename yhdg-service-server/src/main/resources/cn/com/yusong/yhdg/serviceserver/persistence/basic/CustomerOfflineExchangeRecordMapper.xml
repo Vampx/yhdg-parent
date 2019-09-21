@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.serviceserver.persistence.basic.CustomerOfflineExchangeRecordMapper">
+
+    <select id="find" parameterType="long" resultType="cn.com.yusong.yhdg.common.domain.basic.CustomerOfflineExchangeRecord">
+        select
+        *
+        from bas_customer_offline_exchange_record
+        where id = #{id}
+    </select>
+
+    <select id="findList" resultType="cn.com.yusong.yhdg.common.domain.basic.CustomerOfflineExchangeRecord">
+        select
+        *
+        from bas_customer_offline_exchange_record
+        where status = #{status}
+        order by id
+        limit  ${limit}
+    </select>
+
+    <update id="complete">
+        update bas_customer_offline_exchange_record set
+         status = #{status},
+         put_cabinet_id = #{putCabinetId},
+         put_battery_id = #{putBatteryId},
+         take_cabinet_id = #{takeCabinetId},
+         take_battery_id = #{takeBatteryId},
+         handle_time = #{handleTime}
+         where id = #{id}
+    </update>
+
+
+
+</mapper>

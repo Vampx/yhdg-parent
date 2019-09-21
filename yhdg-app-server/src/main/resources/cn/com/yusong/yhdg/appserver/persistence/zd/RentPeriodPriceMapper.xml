@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.appserver.persistence.zd.RentPeriodPriceMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.zd.RentPeriodPrice">
+        select
+        *
+        from zd_rent_period_price
+        where id = #{id}
+    </select>
+
+    <select id="findList" resultType="cn.com.yusong.yhdg.common.domain.zd.RentPeriodPrice">
+        select
+        *
+        from zd_rent_period_price
+        where agent_id = #{agentId}
+        <if test="batteryType != null">
+            AND battery_type = #{batteryType}
+        </if>
+        <if test="foregiftId != null and  foregiftId != 0  " >
+            AND foregift_id = #{foregiftId}
+        </if>
+    </select>
+
+</mapper>

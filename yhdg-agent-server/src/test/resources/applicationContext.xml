@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+     http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+     http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+     http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
+
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:app.properties</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="masterDataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
+          destroy-method="close">
+        <property name="driverClass" value="${master.driver}" />
+        <property name="jdbcUrl" value="${master.url}" />
+        <property name="user" value="${master.user}" />
+        <property name="password" value="${master.password}" />
+
+        <property name="minPoolSize" value="1" />
+        <property name="maxPoolSize" value="20" />
+        <property name="maxIdleTime" value="1800" />
+        <property name="acquireIncrement" value="2" />
+        <property name="maxStatements" value="10" />
+        <property name="initialPoolSize" value="2" />
+        <property name="idleConnectionTestPeriod" value="1800" />
+        <property name="acquireRetryAttempts" value="30" />
+        <property name="breakAfterAcquireFailure" value="false" />
+        <property name="testConnectionOnCheckout" value="false" />
+    </bean>
+
+    <!-- define the SqlSessionFactory -->
+    <bean id="masterSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="masterDataSource" />
+        <property name="configLocation" value="classpath:mybatis-config.xml"/>
+    </bean>
+
+    <!-- scan for mappers and let them be autowired -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="sqlSessionFactoryBeanName" value="masterSqlSessionFactory"/>
+        <property name="markerInterface" value="cn.com.yusong.yhdg.common.persistence.MasterMapper"/>
+        <property name="basePackage" value="cn.com.yusong.yhdg.agentserver.persistence" />
+    </bean>
+
+    <bean id="historyDataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
+          destroy-method="close">
+        <property name="driverClass" value="${history.driver}" />
+        <property name="jdbcUrl" value="${history.url}" />
+        <property name="user" value="${history.user}" />
+        <property name="password" value="${history.password}" />
+
+        <property name="minPoolSize" value="1" />
+        <property name="maxPoolSize" value="20" />
+        <property name="maxIdleTime" value="1800" />
+        <property name="acquireIncrement" value="2" />
+        <property name="maxStatements" value="10" />
+        <property name="initialPoolSize" value="2" />
+        <property name="idleConnectionTestPeriod" value="1800" />
+        <property name="acquireRetryAttempts" value="30" />
+        <property name="breakAfterAcquireFailure" value="false" />
+        <property name="testConnectionOnCheckout" value="false" />
+    </bean>
+
+    <!-- define the SqlSessionFactory -->
+    <bean id="historySqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="historyDataSource" />
+        <property name="configLocation" value="classpath:mybatis-config.xml"/>
+    </bean>
+
+    <!-- scan for mappers and let them be autowired -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="sqlSessionFactoryBeanName" value="historySqlSessionFactory"/>
+        <property name="markerInterface" value="cn.com.yusong.yhdg.common.persistence.HistoryMapper"/>
+        <property name="basePackage" value="cn.com.yusong.yhdg.agentserver.persistence" />
+    </bean>
+
+    <!-- transaction manager, use JtaTransactionManager for global tx -->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="masterDataSource" />
+    </bean>
+
+    <!-- enable component scanning (beware that this does not enable mapper scanning!) -->
+    <context:component-scan base-package="cn.com.yusong.yhdg.agentserver.service" />
+    <context:component-scan base-package="cn.com.yusong.yhdg.agentserver.biz" />
+    <context:component-scan base-package="cn.com.yusong.yhdg.agentserver.weixin" />
+    <context:component-scan base-package="cn.com.yusong.yhdg.agentserver.aliapy" />
+
+    <!-- enable autowire -->
+    <context:annotation-config />
+
+    <!-- enable transaction demarcation with annotations -->
+    <tx:annotation-driven />
+
+    <aop:aspectj-autoproxy expose-proxy="true"/>
+
+    <bean id = "jdbcTemplate"
+          class = "org.springframework.jdbc.core.JdbcTemplate">
+        <property name = "dataSource" ref="masterDataSource"/>
+    </bean>
+
+    <bean class="cn.com.yusong.yhdg.common.spring.SpringContextHolder" />
+
+    <bean id="appConfig" class="cn.com.yusong.yhdg.agentserver.config.AppConfig">
+        <property name="zkUrl" value="${zk.url}" />
+        <property name="domainUrl" value="${domain.url}" />
+        <property name="memCachedClient" ref="memCachedClient"/>
+    </bean>
+
+    <bean class="cn.com.yusong.yhdg.agentserver.config.SpringApplicationContextAware" />
+    <bean id="areaCache" class="cn.com.yusong.yhdg.common.entity.AreaCache"/>
+    <bean id="memCachedClient" class="cn.com.yusong.yhdg.common.tool.memcached.MemCachedClientFactory">
+        <property name="config">
+            <bean class="cn.com.yusong.yhdg.common.tool.memcached.MemCachedConfig">
+                <constructor-arg index="0" value="${memcached.url}"></constructor-arg>
+            </bean>
+        </property>
+    </bean>
+</beans>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.zd.RentRefundMapper">
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.basic.Customer" resultType="int">
+        select count(*) from bas_customer
+        where 1 = 1
+        <if test="agentId != null">
+            <![CDATA[and bas_customer.agent_id = #{agentId}]]>
+        </if>
+        <if test="mobile != null and mobile !=''">
+            <![CDATA[and bas_customer.mobile LIKE concat('%',#{mobile}, '%')]]>
+        </if>
+        <if test="fullname != null and fullname !=''">
+            <![CDATA[and bas_customer.fullname LIKE concat('%',#{fullname}, '%')]]>
+        </if>
+        <if test="zdRefundStatus != null">
+            <![CDATA[and bas_customer.zd_refund_status = #{zdRefundStatus}]]>
+        </if>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.basic.Customer"
+            resultType="cn.com.yusong.yhdg.common.domain.basic.Customer">
+        select
+        bas_customer.id, bas_customer.agent_id, bas_customer.fullname, bas_customer.mobile, bas_customer.zd_refund_status,
+        zd_customer_rent_info.battery_type as batteryType,
+        zd_customer_rent_info.foregift as foregiftMoney,
+        (
+        select
+        SUM(zd_rent_period_order.money) as packetPeriodMoney
+        from zd_rent_period_order
+        where zd_rent_period_order.agent_id = bas_customer.agent_id
+        and zd_rent_period_order.customer_id = bas_customer.id
+        and zd_rent_period_order.status in (2,3,5)
+        and zd_rent_period_order.pay_type != 17
+        ) as packetPeriodMoney,
+        (
+        select
+        SUM(zd_rent_insurance_order.money) as insuranceMoney
+        from zd_rent_insurance_order
+        where zd_rent_insurance_order.customer_id = bas_customer.id
+        and zd_rent_insurance_order.agent_id = bas_customer.agent_id
+        and zd_rent_insurance_order.status in (2,4)
+        ) as insuranceMoney
+        from bas_customer
+        left join zd_customer_rent_info on bas_customer.id = zd_customer_rent_info.id
+        where 1 = 1
+        <if test="agentId != null">
+            <![CDATA[and bas_customer.agent_id = #{agentId}]]>
+        </if>
+        <if test="mobile != null and mobile !=''">
+            <![CDATA[and bas_customer.mobile LIKE concat('%',#{mobile}, '%')]]>
+        </if>
+        <if test="fullname != null and fullname !=''">
+            <![CDATA[and bas_customer.fullname LIKE concat('%',#{fullname}, '%')]]>
+        </if>
+        <if test="zdRefundStatus != null">
+            <![CDATA[and bas_customer.zd_refund_status = #{zdRefundStatus}]]>
+        </if>
+        order by zd_refund_status desc
+        limit ${beginIndex}, ${rows}
+    </select>
+
+</mapper>

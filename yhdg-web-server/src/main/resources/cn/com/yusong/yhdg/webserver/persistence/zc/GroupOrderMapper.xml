@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.zc.GroupOrderMapper">
+
+    <select id="findCountByPriceId" resultType="int">
+        select
+        count(*)
+        from zc_group_order
+        where rent_price_id = #{rentPriceId}
+    </select>
+
+    <select id="find" parameterType="string" resultType="cn.com.yusong.yhdg.common.domain.zc.GroupOrder">
+        select
+        *
+        from zc_group_order
+        where id = #{id}
+    </select>
+
+    <select id="findByRentPriceId" parameterType="long" resultType="cn.com.yusong.yhdg.common.domain.zc.GroupOrder">
+        select
+        *
+        from zc_group_order
+        where rent_price_id = #{rentPriceId}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.zc.GroupOrder" resultType="int">
+        select
+        count(*)
+        from zc_group_order
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null">
+                and agent_id = #{agentId}
+            </if>
+            <if test="status != null and status != ''">
+                and status = #{status}
+            </if>
+            <if test="modelId != null and modelId != ''">
+                <![CDATA[and model_id LIKE concat('%', #{modelId}, '%')]]>
+            </if>
+            <if test="vehicleName != null and vehicleName != ''">
+                <![CDATA[and vehicle_name LIKE concat('%', #{vehicleName}, '%')]]>
+            </if>
+            <if test="customerFullname != null and customerFullname != ''">
+                <![CDATA[and customer_fullname LIKE concat('%', #{customerFullname}, '%')]]>
+            </if>
+            <if test="customerMobile != null and customerMobile != ''">
+                <![CDATA[and customer_mobile LIKE concat('%', #{customerMobile}, '%')]]>
+            </if>
+            <if test="shopName != null and shopName != ''">
+                <![CDATA[and shop_name LIKE concat('%', #{shopName}, '%')]]>
+            </if>
+            <if test="shopId != null and shopId != ''">
+                <![CDATA[and shop_id LIKE concat('%', #{shopId}, '%')]]>
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.zc.GroupOrder"
+            resultType="cn.com.yusong.yhdg.common.domain.zc.GroupOrder">
+        select
+        *
+        from zc_group_order
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null">
+                and agent_id = #{agentId}
+            </if>
+            <if test="status != null and status != ''">
+                and status = #{status}
+            </if>
+            <if test="modelId != null and modelId != ''">
+                <![CDATA[and model_id LIKE concat('%', #{modelId}, '%')]]>
+            </if>
+            <if test="vehicleName != null and vehicleName != ''">
+                <![CDATA[and vehicle_name LIKE concat('%', #{vehicleName}, '%')]]>
+            </if>
+            <if test="customerFullname != null and customerFullname != ''">
+                <![CDATA[and customer_fullname LIKE concat('%', #{customerFullname}, '%')]]>
+            </if>
+            <if test="customerMobile != null and customerMobile != ''">
+                <![CDATA[and customer_mobile LIKE concat('%', #{customerMobile}, '%')]]>
+            </if>
+            <if test="shopName != null and shopName != ''">
+                <![CDATA[and shop_name LIKE concat('%', #{shopName}, '%')]]>
+            </if>
+            <if test="shopId != null and shopId != ''">
+                <![CDATA[and shop_id LIKE concat('%', #{shopId}, '%')]]>
+            </if>
+        </trim>
+        order by id desc
+        limit #{beginIndex}, #{rows}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.zc.GroupOrder">
+        insert into zc_group_order(
+          id,
+          partner_id,
+          agent_id,
+          agent_name,
+          agent_code,
+          shop_id,
+          shop_name,
+          model_id,
+          vehicle_name,
+          battery_type,
+          price,
+          money,
+          vehicle_foregift_money,
+          battery_foregift_money,
+          vehicle_rent_period_money,
+          battery_rent_period_money,
+          vehicle_day_count,
+          battery_day_count,
+          customer_id,
+          customer_mobile,
+          customer_fullname,
+          status tinyint,
+          handle_time,
+          memo,%
+          pay_time,
+          pay_type,
+          foregift_ticket_name,
+          foregift_ticket_money,
+          foregift_coupon_ticket_id,
+          deduction_ticket_name,
+          deduction_ticket_money,
+          deduction_ticket_id,
+          rent_ticket_name,
+          rent_ticket_money,
+          rent_coupon_ticket_id,
+          apply_refund_time,
+          refund_time,
+          refund_money,
+          refund_photo,
+          refund_operator,
+          complete_installment_time,
+          reduce_money,
+          create_time,
+        ) values (
+        #{id},
+        #{partnerId},
+        #{agentId},
+        #{agentName},
+        #{agentCode},
+        #{shopId},
+        #{shopName},
+        #{modelId},
+        #{vehicleName},
+        #{batteryType},
+        #{price},
+        #{money},
+        #{vehicleForegiftMoney},
+        #{batteryForegiftMoney},
+        #{vehicleRentPeriodMoney},
+        #{batteryRentPeriodMoney},
+        #{vehicleDayCount},
+        #{batteryDayCount},
+        #{customerId},
+        #{customerMobile},
+        #{customerFullname},
+        #{status},
+        #{handleTime},
+        #{memo},
+        #{payTime},
+        #{payType},
+        #{foregiftTicketName},
+        #{foregiftTicketMoney},
+        #{foregiftCouponTicketId},
+        #{deductionTicketName},
+        #{deductionTicketMoney},
+        #{deductionTicketId},
+        #{rentTicketName},
+        #{rentTicketMoney},
+        #{rentCouponTicketId},
+        #{applyRefundTime},
+        #{refundTime},
+        #{refundMoney},
+        #{refundPhoto},
+        #{refundOperator},
+        #{completeInstallmentTime},
+        #{reduceMoney},
+        #{createTime}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE zc_group_order SET
+        agent_id = #{agentId}
+        <if test="partnerId != null and partnerId != ''">
+            ,partner_id = #{partnerId}
+        </if>
+        <if test="agentName != null and agentName != ''">
+            ,agent_name = #{agentName}
+        </if>
+        <if test="agentCode != null and agentCode != ''">
+            ,agent_code = #{agentCode}
+        </if>
+        <if test="shopId != null and shopId != ''">
+            ,shop_id = #{shopId}
+        </if>
+        <if test="shopName != null and shopName != ''">
+            ,shop_name = #{shopName}
+        </if>
+        <if test="modelId != null and modelId != ''">
+            ,model_id = #{modelId}
+        </if>
+        <if test=" vehicleName!= null and vehicleName != ''">
+            ,vehicle_name = #{vehicleName}
+        </if>
+        <if test=" batteryType!= null and batteryType != ''">
+            ,battery_type = #{batteryType}
+        </if>
+        <if test=" price!= null and price != ''">
+            ,price = #{price}
+        </if>
+        <if test=" money!= null and money != ''">
+            ,money = #{money}
+        </if>
+        <if test=" vehicleForegiftMoney!= null and vehicleForegiftMoney != ''">
+            ,vehicle_foregift_money = #{vehicleForegiftMoney}
+        </if>
+        <if test=" batteryForegiftMoney!= null and batteryForegiftMoney != ''">
+            ,battery_foregift_money = #{batteryForegiftMoney}
+        </if>
+        <if test=" vehicleRentPeriodMoney!= null and vehicleRentPeriodMoney != ''">
+            ,vehicle_rent_period_money = #{vehicleRentPeriodMoney}
+        </if>
+        <if test=" batteryRentPeriodMoney!= null and batteryRentPeriodMoney != ''">
+            ,battery_rent_period_money = #{batteryRentPeriodMoney}
+        </if>
+        <if test="vehicleDayCount != null and vehicleDayCount != ''">
+            ,vehicle_day_count = #{vehicleDayCount}
+        </if>
+        <if test=" batteryDayCount != null and batteryDayCount != ''">
+            ,battery_day_count = #{batteryDayCount}
+        </if>
+        <if test="customerId != null and customerId != ''">
+            ,customer_id = #{customerId}
+        </if>
+        <if test="customerMobile != null and customerMobile != ''">
+            ,customer_mobile = #{customerMobile}
+        </if>
+        <if test="customerFullname != null and customerFullname != ''">
+            ,customer_fullname = #{customerFullname}
+        </if>
+        <if test=" status!= null and status != ''">
+            ,status = #{status}
+        </if>
+        <if test="handleTime != null and handleTime != ''">
+            ,handle_time = #{handleTime}
+        </if>
+        <if test=" memo!= null and memo != ''">
+            ,memo = #{memo}
+        </if>
+        <if test="payTime != null and payTime != ''">
+            ,pay_time = #{payTime}
+        </if>
+        <if test="payType != null and payType != ''">
+            ,pay_type = #{payType}
+        </if>
+        <if test="foregiftTicketName != null and foregiftTicketName != ''">
+            ,foregift_ticket_name = #{foregiftTicketName}
+        </if>
+        <if test=" foregiftTicketMoney != null and foregiftTicketMoney != ''">
+            ,foregift_ticket_money = #{foregiftTicketMoney}
+        </if>
+        <if test=" foregiftCouponTicketId != null and foregiftCouponTicketId != ''">
+            ,foregift_coupon_ticket_id = #{foregiftCouponTicketId}
+        </if>
+        <if test="deductionTicketName != null and deductionTicketName != ''">
+            ,deduction_ticket_name = #{deductionTicketName}
+        </if>
+        <if test="deductionTicketMoney != null and deductionTicketMoney != ''">
+            ,deduction_ticket_money = #{deductionTicketMoney}
+        </if>
+        <if test="deductionTicketId != null and deductionTicketId != ''">
+            ,deduction_ticket_id = #{deductionTicketId}
+        </if>
+        <if test="rentTicketName != null and rentTicketName != ''">
+            ,rent_ticket_name = #{rentTicketName}
+        </if>
+        <if test="rentTicketMoney != null and rentTicketMoney != ''">
+            ,rent_ticket_money = #{rentTicketMoney}
+        </if>
+        <if test=" rentCouponTicketId != null and rentCouponTicketId != ''">
+            ,rent_coupon_ticket_id = #{rentCouponTicketId}
+        </if>
+        <if test="applyRefundTime != null and applyRefundTime != ''">
+            ,apply_refund_time = #{applyRefundTime}
+        </if>
+        <if test="refundTime != null and refundTime != ''">
+            ,refund_time = #{refundTime}
+        </if>
+        <if test="refundMoney != null and refundMoney != ''">
+            ,refund_money = #{refundMoney}
+        </if>
+        <if test="refundPhoto != null and refundPhoto != ''">
+            ,refund_photo = #{refundPhoto}
+        </if>
+        <if test="refundOperator != null and refundOperator != ''">
+            ,refund_operator = #{refundOperator}
+        </if>
+        <if test="completeInstallmentTime != null and completeInstallmentTime != ''">
+            ,complete_installment_time = #{completeInstallmentTime}
+        </if>
+        <if test="reduceMoney != null and reduceMoney != ''">
+            ,reduce_money = #{reduceMoney}
+        </if>
+        <if test="createTime != null and createTime != ''">
+            ,create_time = #{createTime}
+        </if>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="string">
+        delete from zc_group_order where id = #{id}
+    </delete>
+
+    <update id="updateStatus">
+        update zc_group_order set
+        status = #{status},
+        refund_money = #{refundMoney},
+        refund_operator = #{refundOperator},
+        refund_time = #{refundTime},
+        refund_photo = #{refundPhoto},
+        memo = #{memo},
+        handle_time = #{handleTime}
+        where id = #{id}
+    </update>
+
+    <update id="updatePayTime">
+        update zc_group_order
+        set pay_time = #{payTime}
+        where id = #{id}
+    </update>
+
+</mapper>

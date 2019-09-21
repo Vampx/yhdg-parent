@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.agentappserver.persistence.hdg.ExchangeBatteryForegiftMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.hdg.ExchangeBatteryForegift">
+        select * from hdg_exchange_battery_foregift where id = #{id}
+    </select>
+
+    <select id="findByBatteryType" resultType="cn.com.yusong.yhdg.common.domain.hdg.ExchangeBatteryForegift">
+      select * from hdg_exchange_battery_foregift where battery_type = #{batteryType} and agent_id = #{agentId}
+    </select>
+
+    <select id="findList" resultType="cn.com.yusong.yhdg.common.domain.hdg.ExchangeBatteryForegift">
+        select * from hdg_exchange_battery_foregift where battery_type = #{batteryType} and agent_id = #{agentId}
+    </select>
+
+    <select id="findListByAgentId" resultType="cn.com.yusong.yhdg.common.domain.hdg.ExchangeBatteryForegift">
+        select * from hdg_exchange_battery_foregift where agent_id = #{agentId}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.ExchangeBatteryForegift" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO hdg_exchange_battery_foregift(
+        agent_id,
+        battery_type,
+        money,
+        memo
+        ) VALUES (
+        #{agentId},
+        #{batteryType},
+        #{money},
+        #{memo}
+        )
+    </insert>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.hdg.ExchangeBatteryForegift">
+        update hdg_exchange_battery_foregift set
+        agent_id = #{agentId},
+        battery_type = #{batteryType},
+        money = #{money},
+        memo = #{memo}
+        where id = #{id}
+    </update>
+
+    <delete id="deleteByBatteryType">
+        delete from hdg_exchange_battery_foregift where agent_id = #{agentId} and battery_type = #{batteryType}
+    </delete>
+
+    <delete id="delete">
+        delete from hdg_exchange_battery_foregift where id = #{id}
+    </delete>
+
+</mapper>

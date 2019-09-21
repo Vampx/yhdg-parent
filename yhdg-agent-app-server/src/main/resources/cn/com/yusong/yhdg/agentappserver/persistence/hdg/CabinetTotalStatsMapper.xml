@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.agentappserver.persistence.hdg.CabinetTotalStatsMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetTotalStats">
+        select
+        *
+        from hdg_cabinet_total_stats
+        where 1=1
+        <if test="cabinetId != null and cabinetId != ''">
+            and cabinet_id = #{cabinetId}
+        </if>
+        and agent_id = #{agentId}
+        limit 1
+    </select>
+
+
+    <select id="sumAll" resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetTotalStats">
+        select
+          ifnull(sum(order_count), 0) as orderCount,
+          ifnull(sum(foregift_count), 0)  as foregiftCount,
+          ifnull(sum(refund_foregift_count), 0) as refundForegiftCount,
+          ifnull(sum(electric_degree), 0) as electricDegree,
+          ifnull(sum(electric_price), 0) as electricPrice
+        from hdg_cabinet_total_stats
+        where  agent_id = #{agentId}
+
+    </select>
+
+    <select id="findListByAgentId" resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetTotalStats">
+        select
+        *
+        from hdg_cabinet_total_stats
+        where agent_id = #{agentId}
+        <if test="keyword != null and keyword != ''">
+            <![CDATA[and cabinet_name LIKE concat('%', #{keyword}, '%')]]>
+        </if>
+        limit #{offset}, #{limit}
+    </select>
+
+    <select id="findCountByAgentId" resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetTotalStats">
+        select
+        ifnull(sum(foregift_money), 0) as foregiftMoney,
+        ifnull(sum(refund_foregift_money), 0) as refundForegiftMoney,
+
+        ifnull(sum(packet_period_money), 0) as packetPeriodMoney,
+        ifnull(sum(refund_packet_period_money), 0) as refundPacketPeriodMoney,
+
+        ifnull(sum(insurance_money), 0) as insuranceMoney,
+        ifnull(sum(refund_insurance_money), 0) as refundInsuranceMoney,
+
+        ifnull(sum(electric_degree), 0) as electricDegree,
+        ifnull(sum(electric_price), 0) as electricPrice,
+
+        ifnull(sum(foregift_count), 0) as foregiftCount,
+        ifnull(sum(refund_foregift_count), 0) as refundForegiftCount,
+
+        ifnull(sum(order_count), 0) as orderCount,
+        ifnull(sum(active_customer_count), 0) as activeCustomerCount
+
+        from hdg_cabinet_day_stats
+        where agent_id = #{agentId}
+    </select>
+
+</mapper>

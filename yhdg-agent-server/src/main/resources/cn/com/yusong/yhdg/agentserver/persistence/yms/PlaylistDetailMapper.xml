@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.yms.PlaylistDetailMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.yms.PlayListDetail" parameterType="int">
+        select
+        *
+        from yms_playlist_detail
+        where id = #{id}
+    </select>
+
+    <select id="findByPlaylistAndMaterial" resultType="cn.com.yusong.yhdg.common.domain.yms.PlayListDetail" >
+        select
+        *
+        from yms_playlist_detail
+        where playlist_id = #{playlistId} and material_id = #{materialId}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.yms.PlayListDetail" resultType="int">
+        select
+            count(id)
+        from yms_playlist_detail
+        <trim prefix="where" prefixOverrides="and">
+            <if test="playlistId != null and playlistId != ''">
+                and playlist_id = #{playlistId}
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.yms.PlayListDetail" resultType="cn.com.yusong.yhdg.common.domain.yms.PlayListDetail">
+        select
+            a.*,
+            b.material_name
+        from yms_playlist_detail  a left join yms_material b on a.material_id = b.id
+        <trim prefix="where" prefixOverrides="and">
+            <if test="playlistId != null and playlistId != ''">
+                and a.playlist_id = #{playlistId}
+            </if>
+        </trim>
+    </select>
+
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.yms.PlayListDetail" useGeneratedKeys="true" keyProperty="id" >
+        insert into yms_playlist_detail(playlist_id, material_id,order_num,create_time)
+        values(#{playlistId}, #{materialId}, #{orderNum}, #{createTime})
+    </insert>
+
+    <delete id="update" parameterType="cn.com.yusong.yhdg.common.domain.yms.PlayListDetail">
+        update  yms_playlist_detail
+        set order_num = #{orderNum}
+        where id = #{id}
+    </delete>
+
+    <delete id="delete" parameterType="int">
+        delete from yms_playlist_detail where id = #{id}
+    </delete>
+
+    <delete id="deleteByPlaylist" parameterType="int">
+        delete from yms_playlist_detail where playlist_id = #{playlistId}
+    </delete>
+
+</mapper>

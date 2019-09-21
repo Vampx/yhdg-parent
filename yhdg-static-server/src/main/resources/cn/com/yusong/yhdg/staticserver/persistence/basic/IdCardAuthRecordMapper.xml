@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.staticserver.persistence.basic.IdCardAuthRecordMapper">
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.IdCardAuthRecord" useGeneratedKeys="true" keyProperty="id">
+        insert into bas_id_card_auth_record(agent_id, agent_name, agent_code, customer_id, mobile, fullname, money, status, create_time)
+        values(#{agentId}, #{agentName}, #{agentCode}, #{customerId}, #{mobile}, #{fullname}, #{money},  #{status}, #{createTime})
+    </insert>
+
+</mapper>

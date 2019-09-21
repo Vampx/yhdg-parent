@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.appserver.persistence.basic.CustomerNoticeMessageMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.basic.CustomerNoticeMessage">
+        select
+        *
+        from bas_customer_notice_message
+        where id = #{id}
+        <if test="type != null and type != 0">
+            and type = #{type}
+        </if>
+    </select>
+
+    <select id="findListByCustomerId" resultType="cn.com.yusong.yhdg.common.domain.basic.CustomerNoticeMessage">
+        select
+        *
+        from bas_customer_notice_message
+        where customer_id = #{customerId}
+        <if test="type != null and type != 0">
+            and type = #{type}
+        </if>
+        order by create_time desc
+        limit ${offset},${limit}
+    </select>
+
+    <select id="findUnreadListByCustomerId" resultType="cn.com.yusong.yhdg.common.domain.basic.CustomerNoticeMessage">
+        select
+        *
+        from bas_customer_notice_message
+        where customer_id = #{customerId}
+        <if test="type != null and type != 0">
+            and type = #{type}
+        </if>
+        and receive_time is null
+        order by create_time desc
+        limit ${offset},${limit}
+    </select>
+
+    <select id="findListAndPublicNotice" resultType="cn.com.yusong.yhdg.common.domain.basic.CustomerNoticeMessage">
+        SELECT
+        t.*
+        FROM
+        (
+        SELECT
+        id,
+        title,
+        content,
+        create_time
+        FROM
+        bas_customer_notice_message
+        WHERE
+        customer_id = #{customerId}
+        <if test="type != null and type != 0">
+            and type = #{type}
+        </if>
+        UNION ALL
+        SELECT
+        id,
+        title,
+        content,
+        create_time
+        FROM
+        bas_public_notice
+        WHERE
+        notice_type = #{noticeType}
+        ) t
+        ORDER BY
+        t.create_time DESC
+        limit ${offset},${limit}
+    </select>
+
+    <update id="updateReceiveTime">
+        update bas_customer_notice_message set
+        receive_time = #{receiveTime}
+        where id = #{id}
+    </update>
+</mapper>

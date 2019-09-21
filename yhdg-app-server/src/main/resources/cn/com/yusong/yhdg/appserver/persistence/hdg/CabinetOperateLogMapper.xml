@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.appserver.persistence.hdg.CabinetOperateLogMapper">
+
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.CabinetOperateLog">
+        INSERT INTO hdg_cabinet_operate_log (
+            agent_id,
+            cabinet_id,
+            cabinet_name,
+            box_num,
+            operate_type,
+            operator_type,
+            operator,
+            content,
+            create_time
+        ) VALUES (
+            #{agentId},
+            #{cabinetId},
+            #{cabinetName},
+            #{boxNum},
+            #{operateType},
+            #{operatorType},
+            #{operator},
+            #{content},
+            #{createTime}
+        )
+    </insert>
+</mapper>

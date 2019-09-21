@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.hdg.PacketPeriodPriceMapper">
+
+    <select id="find" parameterType="long" resultType="cn.com.yusong.yhdg.common.domain.hdg.PacketPeriodPrice">
+        SELECT
+        *
+        FROM hdg_packet_period_price
+        WHERE id = #{id}
+    </select>
+
+    <select id="findListByBatteryType"  resultType="cn.com.yusong.yhdg.common.domain.hdg.PacketPeriodPrice">
+        SELECT
+        *
+        FROM hdg_packet_period_price
+        WHERE battery_type = #{batteryType} and agent_id = #{agentId}
+    </select>
+
+    <select id="findListByForegiftId"  resultType="cn.com.yusong.yhdg.common.domain.hdg.PacketPeriodPrice">
+        SELECT
+        *
+        FROM hdg_packet_period_price
+        WHERE foregift_id = #{foregiftId} and battery_type = #{batteryType} and agent_id = #{agentId}
+    </select>
+
+    <select id="findList" resultType="cn.com.yusong.yhdg.common.domain.hdg.PacketPeriodPrice">
+        select
+        *
+        from hdg_packet_period_price
+        where agent_id = #{agentId}
+        AND battery_type = #{batteryType}
+        <if test="foregiftId != null and  foregiftId != 0  " >
+            AND foregift_id = #{foregiftId}
+        </if>
+
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.PacketPeriodPrice" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO hdg_packet_period_price(
+          agent_id,
+          agent_name,
+          agent_code,
+          foregift_id,
+          battery_type,
+          day_count,
+          price,
+          limit_count,
+          day_limit_count,
+          memo,
+          is_ticket,
+          create_time
+        ) VALUES (
+          #{agentId},
+          #{agentName},
+          #{agentCode},
+          #{foregiftId},
+          #{batteryType},
+          #{dayCount},
+          #{price},
+          #{limitCount},
+          #{dayLimitCount},
+          #{memo},
+          #{isTicket},
+          #{createTime}
+        )
+    </insert>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.hdg.PacketPeriodPrice">
+        update hdg_packet_period_price SET
+          day_count = #{dayCount},
+          price = #{price},
+          limit_count = #{limitCount},
+          day_limit_count = #{dayLimitCount},
+          is_ticket = #{isTicket},
+          memo = #{memo}
+          where id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="long">
+        delete from hdg_packet_period_price where id = #{id}
+    </delete>
+
+    <delete id="deleteByForegiftId" parameterType="int">
+        delete from hdg_packet_period_price where foregift_id = #{foregiftId}
+    </delete>
+
+</mapper>

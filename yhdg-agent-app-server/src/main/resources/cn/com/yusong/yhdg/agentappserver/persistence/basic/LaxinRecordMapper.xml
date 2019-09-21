@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.agentappserver.persistence.basic.LaxinRecordMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.basic.LaxinRecord">
+        select
+        *
+        from bas_laxin_record
+        where id = #{id}
+    </select>
+
+    <select id="findExistByLaxinId" parameterType="long" resultType="int">
+        select count(*) from (
+            select
+            *
+            from bas_laxin_record
+            where laxin_id = #{laxinId}
+            limit 1
+        ) as t
+    </select>
+
+    <select id="findByStatus" resultType="cn.com.yusong.yhdg.common.domain.basic.LaxinRecord">
+        select
+            *
+        from bas_laxin_record
+        where agent_id = #{agentId}
+        and status = #{status}
+        <if test="keyword != null and keyword != ''">
+            and laxin_mobile like concat(#{keyword}, '%')
+        </if>
+        limit #{offset}, #{limit}
+    </select>
+
+    <select id="findByOrderId" resultType="cn.com.yusong.yhdg.common.domain.basic.LaxinRecord">
+        select
+            *
+        from bas_laxin_record t1 inner join bas_laxin_pay_order_detail t2 on t1.id = t2.record_id
+        where t2.order_id = #{orderId}
+    </select>
+
+    <select id="totalMoneyByPayTime" resultType="int">
+        select
+            ifnull(sum(laxin_money), 0)
+        from bas_laxin_record
+        where agent_id = #{agentId}
+        <if test="beginTime != null">
+            and pay_time >= #{beginTime}
+        </if>
+        <if test="endTime != null">
+            <![CDATA[and pay_time < #{endTime}]]>
+        </if>
+    </select>
+
+    <select id="totalCountByCreateTime" resultType="int">
+        select
+            count(*)
+        from bas_laxin_record
+        where agent_id = #{agentId}
+        <if test="beginTime != null">
+            and create_time >= #{beginTime}
+        </if>
+        <if test="endTime != null">
+            <![CDATA[and create_time < #{endTime}]]>
+        </if>
+    </select>
+
+    <update id="updateStatus">
+          update bas_laxin_record set order_id = #{orderId}, status = #{toStatus}, pay_type = #{payType}, pay_time = #{payTime}  where id = #{id} and status = #{fromStatus}
+    </update>
+
+    <update id="updateCancel">
+        update bas_laxin_record set
+        status = #{status},
+        cancel_canuse = #{cancelCanuse}
+        where id = #{id}
+    </update>
+</mapper>

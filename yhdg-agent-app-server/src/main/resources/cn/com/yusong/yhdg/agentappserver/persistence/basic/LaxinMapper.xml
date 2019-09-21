@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.agentappserver.persistence.basic.LaxinMapper">
+
+    <select id="find" parameterType="long" resultType="cn.com.yusong.yhdg.common.domain.basic.Laxin">
+        select
+            *
+        from bas_laxin
+        where id = #{id}
+    </select>
+
+    <select id="findByMobile" resultType="cn.com.yusong.yhdg.common.domain.basic.Laxin">
+        select
+        *
+        from bas_laxin
+        where agent_id = #{agentId} and mobile = #{mobile}
+    </select>
+
+    <select id="findByMobilePartner" resultType="cn.com.yusong.yhdg.common.domain.basic.Laxin">
+        select
+        *
+        from bas_laxin
+        where partner_id = #{partnerId} and mobile = #{mobile}
+    </select>
+
+
+    <select id="findList" parameterType="cn.com.yusong.yhdg.common.domain.basic.Laxin"
+            resultType="cn.com.yusong.yhdg.common.domain.basic.Laxin">
+        select
+        *
+        from bas_laxin
+        where agent_id = #{agentId}
+        <if test="mobile != null and mobile != ''">
+            and mobile like concat(#{mobile}, '%')
+        </if>
+        order by id desc
+        limit #{offset}, #{limit}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.Laxin" useGeneratedKeys="true" keyProperty="id">
+        insert into bas_laxin (partner_id, agent_id, agent_name, agent_code, mobile, password, laxin_money, ticket_money, ticket_day_count,
+          packet_period_money, packet_period_month, is_active, income_type, memo, interval_day, create_time)
+        values (#{partnerId}, #{agentId}, #{agentName}, #{agentCode}, #{mobile}, #{password}, #{laxinMoney}, #{ticketMoney}, #{ticketDayCount},
+          #{packetPeriodMoney}, #{packetPeriodMonth}, #{isActive}, #{incomeType}, #{memo}, #{intervalDay}, #{createTime})
+    </insert>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.basic.Laxin">
+        update bas_laxin set
+            <if test="password != null and password != ''">
+                password = #{password},
+            </if>
+            laxin_money = #{laxinMoney},
+            ticket_money = #{ticketMoney},
+            ticket_day_count = #{ticketDayCount},
+            packet_period_money = #{packetPeriodMoney},
+            packet_period_month = #{packetPeriodMonth},
+            is_active = #{isActive},
+            income_type = #{incomeType},
+            interval_day = #{intervalDay}
+        where id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="long">
+        delete from bas_laxin where id = #{id}
+    </delete>
+
+</mapper>

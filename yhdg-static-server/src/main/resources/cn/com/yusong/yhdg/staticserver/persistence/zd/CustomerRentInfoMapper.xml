@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.staticserver.persistence.zd.CustomerRentInfoMapper">
+    <select id="find" parameterType="long" resultType="cn.com.yusong.yhdg.common.domain.zd.CustomerRentInfo">
+        select
+        *
+        from zd_customer_rent_info
+        where id = #{id}
+    </select>
+
+    <insert id="insert">
+        insert into zd_customer_rent_info(id, agent_id, battery_type, foregift, foregift_order_id, balance_shop_id, vehicle_foregift_flag, create_time)
+        values(#{id}, #{agentId}, #{batteryType}, #{foregift}, #{foregiftOrderId}, #{balanceShopId}, #{vehicleForegiftFlag}, #{createTime})
+    </insert>
+
+    <update id="updateForegift">
+        update zd_customer_rent_info
+        set foregift = #{foregift}
+        where foregift_order_id = #{foregiftOrderId}
+    </update>
+
+    <delete id="delete">
+        delete from zd_customer_rent_info where id = #{id}
+    </delete>
+
+</mapper>

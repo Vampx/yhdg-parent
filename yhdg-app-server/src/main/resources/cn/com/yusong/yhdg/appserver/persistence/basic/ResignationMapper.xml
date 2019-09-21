@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.appserver.persistence.basic.ResignationMapper">
+
+    <select id="findList" resultType="cn.com.yusong.yhdg.common.domain.basic.Resignation">
+        select
+        *
+        from bas_resignation
+        where
+        customer_id = #{customerId}
+        order by create_time desc
+        limit 1
+    </select>
+
+    <update id="cancel">
+        UPDATE bas_resignation
+        SET state = #{toState}
+        where customer_id = #{customerId}
+        and id = #{id} and state = #{formState}
+    </update>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.Resignation" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into bas_resignation(customer_id, customer_mobile, customer_fullname, content, state, create_time, operator, reason, agent_id, cabinet_id)
+        values(#{customerId}, #{customerMobile}, #{customerFullname}, #{content}, #{state}, #{createTime}, #{operator}, #{reason}, #{agentId}, #{cabinetId})
+    </insert>
+
+</mapper>

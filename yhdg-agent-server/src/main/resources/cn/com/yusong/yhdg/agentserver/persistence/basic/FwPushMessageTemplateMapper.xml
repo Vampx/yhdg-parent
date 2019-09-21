@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.basic.FwPushMessageTemplateMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.basic.FwPushMessageTemplate">
+        select
+        *
+        from bas_fw_push_message_template
+        where alipayfw_id = #{alipayfwId} and id = #{id}
+    </select>
+
+    <select id="findByAppId" resultType="cn.com.yusong.yhdg.common.domain.basic.FwPushMessageTemplate">
+        select
+        *
+        from bas_fw_push_message_template
+        where alipayfw_id = #{alipayfwId}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.basic.FwPushMessageTemplate" resultType="int">
+        select
+        count(id)
+        from bas_fw_push_message_template
+        <trim prefix="where" prefixOverrides="and">
+            <if test="alipayfwId != null">
+                and alipayfw_id = #{alipayfwId}
+            </if>
+            <if test="templateName != null and templateName != ''">
+                <![CDATA[and template_name LIKE concat('%', #{templateName}, '%')]]>
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.basic.FwPushMessageTemplate" resultType="cn.com.yusong.yhdg.common.domain.basic.FwPushMessageTemplate">
+        select
+        *
+        from bas_fw_push_message_template
+        <trim prefix="where" prefixOverrides="and">
+            <if test="appId != null">
+                and app_id = #{appId}
+            </if>
+            <if test="templateName != null and templateName != ''">
+                <![CDATA[and template_name LIKE concat('%', #{templateName}, '%')]]>
+            </if>
+        </trim>
+        order by id desc
+        limit #{beginIndex}, #{rows}
+    </select>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.basic.FwPushMessageTemplate">
+        update bas_fw_push_message_template set
+        template_name = #{templateName},
+        fw_code = #{fwCode},
+        variable = #{variable},
+        is_active = #{isActive},
+        memo = #{memo}
+        where app_id = #{appId} and id = #{id}
+    </update>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.FwPushMessageTemplate" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO `bas_fw_push_message_template` (id, app_id, `template_name`, `variable`, `fw_code`, `is_active`, `memo`)
+        VALUES (#{id}, #{appId}, #{templateName}, #{variable}, #{fwCode}, #{isActive}, #{memo})
+    </insert>
+
+</mapper>

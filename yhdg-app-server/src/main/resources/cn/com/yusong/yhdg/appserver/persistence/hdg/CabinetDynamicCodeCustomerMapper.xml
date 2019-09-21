@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.appserver.persistence.hdg.CabinetDynamicCodeCustomerMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetDynamicCodeCustomer">
+        select
+            *
+        from hdg_cabinet_dynamic_code_customer
+        where cabinet_id = #{cabinetId}
+        and customer_id = #{customerId}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.CabinetDynamicCodeCustomer">
+        INSERT INTO hdg_cabinet_dynamic_code_customer (cabinet_id,customer_id)
+        VALUES (#{cabinetId} , #{customerId})
+    </insert>
+
+</mapper>

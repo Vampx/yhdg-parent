@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.basic.PartnerFwOpenIdMapper">
+
+    <insert id="deleteByOpenId" parameterType="cn.com.yusong.yhdg.common.domain.basic.PartnerFwOpenId">
+        delete from bas_partner_fw_open_id
+        where open_id = #{openId} and customer_id = #{customerId}
+    </insert>
+
+
+</mapper>

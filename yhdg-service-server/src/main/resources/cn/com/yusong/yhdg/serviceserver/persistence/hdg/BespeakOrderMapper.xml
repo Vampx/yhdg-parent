@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.serviceserver.persistence.hdg.BespeakOrderMapper">
+    <select id="findExpireList" resultType="cn.com.yusong.yhdg.common.domain.hdg.BespeakOrder">
+        SELECT
+        *
+        FROM
+        hdg_bespeak_order a
+        WHERE status = #{status}
+         and expire_time &lt;= #{expireTime}
+        limit #{offset}, #{limit}
+    </select>
+
+    <update id="updateExpiredOrder">
+        update hdg_bespeak_order set
+            status = #{toStatus}
+        where status = #{fromStatus}
+        and id = #{id}
+    </update>
+</mapper>

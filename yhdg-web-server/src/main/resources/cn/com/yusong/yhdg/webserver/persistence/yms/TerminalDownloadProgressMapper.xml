@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.yms.TerminalDownloadProgressMapper">
+
+    <select id="findPlaylistProgressInfo" parameterType="string" resultType="string">
+        select
+            playlist_progress_info
+        from yms_terminal_download_progress
+        where id = #{id}
+    </select>
+
+    <delete id="delete" parameterType="string">
+        delete from yms_terminal_download_progress where id = #{id}
+    </delete>
+
+</mapper>

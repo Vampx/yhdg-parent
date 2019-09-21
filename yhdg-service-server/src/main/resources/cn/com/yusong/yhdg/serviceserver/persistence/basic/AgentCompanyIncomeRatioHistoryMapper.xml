@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.serviceserver.persistence.basic.AgentCompanyIncomeRatioHistoryMapper">
+    <select id="exist" resultType="string">
+        show tables like 'bas_agent_company_income_ratio_history_${suffix}'
+    </select>
+
+    <update id="createTable">
+        create table bas_agent_company_income_ratio_history_${suffix} (
+        agent_id int unsigned not null, /*运营商id*/
+        agent_company_id char(12) not null, /*运营公司id*/
+        stats_date char(10) not null, /*统计日期*/
+        agent_name varchar(40), /*运营商名称*/
+        ratio tinyint not null, /*分成比例*/
+        agent_company_fixed_money int,
+        ratio_base_money int, /*分成下限金额*/
+        org_type tinyint not null, /*1 平台 2 运营商 3 省代 4 市代 5 门店 6 运营公司*/
+        org_id bigint unsigned,/*对应的运营商id*/
+        org_name varchar(40),
+        create_time datetime not null,
+        primary key (agent_id, stats_date, agent_company_id, org_type)
+        ) engine=innodb default charset=utf8;
+    </update>
+
+    <select id="findList" resultType="cn.com.yusong.yhdg.common.domain.basic.AgentCompanyIncomeRatioHistory">
+        select
+        *
+        from bas_agent_company_income_ratio_history_${suffix}
+        where agent_id = #{agentId}
+        and agent_company_id = #{agentCompanyId}
+        and stats_date = #{statsDate}
+    </select>
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.basic.AgentCompanyIncomeRatioHistory">
+        select
+        *
+        from bas_agent_company_income_ratio_history_${suffix}
+        where agent_id = #{agentId}
+        and agent_company_id = #{agentCompanyId}
+        and stats_date = #{statsDate}
+        and org_type = #{orgType}
+        limit 1
+    </select>
+
+    <insert id="insert">
+        insert into bas_agent_company_income_ratio_history_${suffix} (agent_id, agent_company_id, stats_date, agent_name, ratio, agent_company_fixed_money, ratio_base_money, org_type, org_id, org_name, create_time)
+        values ( #{agentId}, #{agentCompanyId}, #{statsDate}, #{agentName}, #{ratio}, #{agentCompanyFixedMoney}, #{ratioBaseMoney}, #{orgType}, #{orgId}, #{orgName}, #{createTime})
+    </insert>
+
+</mapper>

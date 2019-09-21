@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.appserver.persistence.hdg.FaultFeedBackMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.hdg.FaultFeedback">
+        SELECT
+        *
+        FROM
+        hdg_fault_feedback
+        WHERE
+        id=#{id}
+    </select>
+
+
+    <select id="findListByCustomer" resultType="cn.com.yusong.yhdg.common.domain.hdg.FaultFeedback">
+        SELECT
+        *
+        FROM
+        hdg_fault_feedback
+        WHERE
+        customer_id = #{customerId}
+        order by id DESC
+        limit #{offset},#{limit}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.FaultFeedback">
+       insert into hdg_fault_feedback(
+       agent_id,fault_name,fault_type, memo, photo_path1,photo_path2,photo_path3,photo_path4,photo_path5,
+       photo_path6, customer_id,customer_mobile,customer_name,handle_status,cabinet_id,cabinet_name,cabinet_address,battery_id,create_time)
+       values(
+        #{agentId},#{faultName},#{faultType}, #{memo}, #{photoPath1}, #{photoPath2}, #{photoPath3}, #{photoPath4}, #{photoPath5},
+        #{photoPath6}, #{customerId}, #{customerMobile}, #{customerName},#{handleStatus},#{cabinetId},#{cabinetName},#{cabinetAddress},#{batteryId},#{createTime})
+    </insert>
+
+
+</mapper>

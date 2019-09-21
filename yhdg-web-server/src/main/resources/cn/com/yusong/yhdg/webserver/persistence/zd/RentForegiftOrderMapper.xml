@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.zd.RentForegiftOrderMapper">
+
+    <select id="find" parameterType="String" resultType="cn.com.yusong.yhdg.common.domain.zd.RentForegiftOrder">
+        SELECT
+            *
+        FROM zd_rent_foregift_order
+        WHERE id = #{id}
+    </select>
+
+    <select id="sumMoneyByAgent" resultType="int">
+        select ifnull(SUM(money),0) as money
+        from  zd_rent_foregift_order
+        where agent_id = #{agentId}
+        <foreach collection="status" item="item" open=" AND status in (" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="findByForegiftIdAndStatus" parameterType="String" resultType="cn.com.yusong.yhdg.common.domain.zd.RentForegiftOrder">
+        select
+        *
+        from zd_rent_foregift_order
+        where foregift_id = #{foregiftId}
+        <foreach collection="foregiftList" item="item" open=" AND status in (" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.zd.RentForegiftOrder" resultType="int">
+        SELECT
+            COUNT(*)
+        FROM zd_rent_foregift_order
+        where 1 = 1
+        <if test="partnerId != null">
+            and partner_id = #{partnerId}
+        </if>
+        <if test="agentId != null">
+            and agent_id = #{agentId}
+        </if>
+        <if test="customerFullname != null and customerFullname != ''">
+            <![CDATA[ and customer_fullname LIKE concat('%', #{customerFullname}, '%')]]>
+        </if>
+        <if test="customerMobile != null and customerMobile != ''">
+            <![CDATA[ and customer_mobile LIKE concat(#{customerMobile}, '%')]]>
+        </if>
+        <if test="id != null and id != ''">
+            <![CDATA[ and id LIKE concat(#{id}, '%')]]>
+        </if>
+        <if test="defaultQueryStatus!=null and status == null">
+            and status != #{defaultQueryStatus}
+        </if>
+        <if test="defaultQueryStatus == null and status != null">
+            and status = #{status}
+        </if>
+        <if test="customerId != null">
+            and customer_id = #{customerId}
+        </if>
+        <if test="queryBeginTime !=null and queryEndTime !=null">
+            <![CDATA[and create_time BETWEEN  #{queryBeginTime} AND #{queryEndTime} ]]>
+        </if>
+        <if test="vehicleOrderFlag != null">
+            and  vehicle_order_flag = #{vehicleOrderFlag}
+        </if>
+        <if test="vehicleOrderFlag == null">
+            and  vehicle_order_flag =0
+        </if>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.zd.RentForegiftOrder" resultType="cn.com.yusong.yhdg.common.domain.zd.RentForegiftOrder">
+        SELECT
+            *
+        FROM zd_rent_foregift_order
+        WHERE 1 = 1
+        <if test="partnerId != null">
+            and partner_id = #{partnerId}
+        </if>
+        <if test="agentId != null">
+            and agent_id = #{agentId}
+        </if>
+        <if test="customerFullname != null and customerFullname != ''">
+            <![CDATA[ and customer_fullname LIKE concat('%', #{customerFullname}, '%')]]>
+        </if>
+        <if test="customerMobile != null and customerMobile != ''">
+            <![CDATA[ and customer_mobile LIKE concat(#{customerMobile}, '%')]]>
+        </if>
+        <if test="id != null and id != ''">
+            <![CDATA[ and id LIKE concat(#{id}, '%')]]>
+        </if>
+        <if test="defaultQueryStatus!=null and status == null">
+            and status != #{defaultQueryStatus}
+        </if>
+        <if test="defaultQueryStatus == null and status != null">
+            and status = #{status}
+        </if>
+        <if test="customerId != null">
+            and customer_id = #{customerId}
+        </if>
+        <if test="queryBeginTime !=null and queryEndTime !=null">
+            <![CDATA[and create_time BETWEEN  #{queryBeginTime} AND #{queryEndTime} ]]>
+        </if>
+        <if test="vehicleOrderFlag != null">
+            and  vehicle_order_flag = #{vehicleOrderFlag}
+        </if>
+        <if test="vehicleOrderFlag == null">
+            and  vehicle_order_flag =0
+        </if>
+        order by id desc
+        limit ${beginIndex}, ${rows}
+    </select>
+
+    <select id="findListByCustomerId" resultType="cn.com.yusong.yhdg.common.domain.zd.RentForegiftOrder">
+        select *
+        from  zd_rent_foregift_order
+        where customer_id = #{customerId} and agent_id = #{agentId}
+    </select>
+
+    <select id="findCanRefundByCustomerId" resultType="cn.com.yusong.yhdg.common.domain.zd.RentForegiftOrder">
+        SELECT
+            *
+        FROM zd_rent_foregift_order
+        WHERE customer_id = #{customerId}
+        AND status IN (2, 3)
+    </select>
+
+    <select id="findByCustomerIdAndStatus" resultType="cn.com.yusong.yhdg.common.domain.zd.RentForegiftOrder">
+        select *
+        from  zd_rent_foregift_order
+        where customer_id = #{customerId}
+        and status = #{status}
+        limit 1
+    </select>
+
+
+    <update id="updateStatus">
+        update zd_rent_foregift_order set
+            status = #{status},
+            refund_money = #{refundMoney},
+            refund_operator = #{refundOperator},
+            refund_time = #{refundTime},
+            refund_photo = #{refundPhoto},
+            memo = #{memo},
+            handle_time = #{handleTime}
+        where id = #{id}
+    </update>
+
+    <update id="updatePayTime">
+        update zd_rent_foregift_order
+        set pay_time = #{payTime}
+        where id = #{id}
+    </update>
+
+
+    <update id="updateRefund">
+        update zd_rent_foregift_order set
+            status = #{toStatus},
+            memo = #{memo},
+            apply_refund_time = #{applyRefundTime}
+        where id = #{id}
+        and status = #{fromStatus}
+    </update>
+
+    <delete id="deleteByCustomerId">
+        delete from zd_rent_foregift_order where customer_id = #{customerId}
+    </delete>
+
+</mapper>

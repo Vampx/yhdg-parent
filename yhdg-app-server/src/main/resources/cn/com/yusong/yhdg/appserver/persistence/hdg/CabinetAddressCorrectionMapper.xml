@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.appserver.persistence.hdg.CabinetAddressCorrectionMapper">
+
+     <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.CabinetAddressCorrection">
+          insert into hdg_cabinet_address_correction
+          ( agent_id,  cabinet_id , cabinet_name,  province_id,   city_id,   district_id,   street,
+            lng,   lat,   memo,  customer_id,  customer_mobile,  customer_fullname,  status,   create_time )
+          VALUES
+          ( #{agentId},  #{cabinetId} , #{cabinetName},  #{provinceId},   #{cityId},   #{districtId},   #{street},
+           #{lng},   #{lat},   #{memo},  #{customerId},  #{customerMobile},  #{customerFullname},  #{status},   #{createTime} )
+     </insert>
+</mapper>

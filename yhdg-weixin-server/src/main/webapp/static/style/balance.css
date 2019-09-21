@@ -1,0 +1,47 @@
+.header {
+  background-color: #12B7F5;
+}
+.header .tip {
+  padding: 1.05882353rem 0.88235294rem 0;
+}
+.header .tip p {
+  font-size: 0.82352941rem;
+  color: #FFFFFF;
+}
+.header .money {
+  padding: 2rem 0.88235294rem;
+}
+.header .money p {
+  font-size: 2.11764706rem;
+  color: #FFFFFF;
+  line-height: 3.17647059rem;
+  height: 3.17647059rem;
+}
+.header .money p span {
+  padding-left: .5rem;
+  font-size: 3.17647059rem;
+}
+.header .weui-cell::before {
+  border: none;
+}
+.body .weui-cell .weui-cell__hd {
+  display: flex;
+  align-items: center;
+}
+.body .weui-cell .weui-cell__bd {
+  padding-left: .5rem;
+  font-size: 1rem;
+  color: #5C5C5C;
+}
+.body .weui-cell .weui-cell__ft {
+  font-size: 1rem;
+  color: #5C5C5C;
+}
+.body .card .weui-cell__hd img {
+  height: 1rem;
+  width: 1.23529412rem;
+}
+.body .account .weui-cell__hd img {
+  height: 1.23529412rem;
+  width: 1rem;
+}

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.basic.ShopRoleMapper">
+
+    <select id="find" parameterType="int" resultType="cn.com.yusong.yhdg.common.domain.basic.ShopRole">
+        select
+        id,
+        role_name as roleName,
+        memo,
+        shop_id as shopId,
+        create_time as createTime
+        from bas_shop_role
+        where id = #{id}
+    </select>
+
+    <select id="findUnique" resultType="int">
+        select count(*) from bas_shop_role where role_name = #{roleName}
+        <if test="id != null">
+            and id != #{id}
+        </if>
+    </select>
+
+    <select id="findByShopId" parameterType="int" resultType="cn.com.yusong.yhdg.common.domain.basic.ShopRole">
+        select
+        id,
+        role_name as roleName,
+        memo,
+        shop_id as shopId,
+        create_time as createTime
+        from bas_shop_role
+        <choose>
+            <when test="shopId != null and shopId != '' ">
+                where shop_id = #{shopId}
+            </when>
+            <otherwise>
+                where shop_id is null
+            </otherwise>
+        </choose>
+        order by id desc
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.basic.ShopRole" resultType="int">
+        select
+        count(bas_shop_role.shop_id)
+        from bas_shop_role, hdg_shop
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null ">
+                and hdg_shop.agent_id = #{agentId}
+            </if>
+            <if test="shopId != null and shopId != '' ">
+                and bas_shop_role.shop_id = #{shopId}
+            </if>
+            <if test="roleName != null and roleName != ''">
+                <![CDATA[and role_name LIKE concat('%', #{roleName}, '%')]]>
+            </if>
+            and bas_shop_role.shop_id = hdg_shop.id
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.basic.ShopRole" resultType="cn.com.yusong.yhdg.common.domain.basic.ShopRole">
+        select
+        bas_shop_role.*
+        from bas_shop_role, hdg_shop
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null ">
+                and hdg_shop.agent_id = #{agentId}
+            </if>
+            <if test="shopId != null and shopId != '' ">
+                and bas_shop_role.shop_id = #{shopId}
+            </if>
+            <if test="roleName != null and roleName != ''">
+                <![CDATA[and role_name LIKE concat('%', #{roleName}, '%')]]>
+            </if>
+            and bas_shop_role.shop_id = hdg_shop.id
+        </trim>
+        order by bas_shop_role.create_time desc
+        limit #{beginIndex}, #{rows}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.ShopRole" useGeneratedKeys="true" keyProperty="id">
+        insert into bas_shop_role(shop_id, role_name, memo, create_time) values
+        (#{shopId}, #{roleName}, #{memo}, #{createTime})
+    </insert>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.basic.Role">
+        update bas_shop_role set
+        role_name = #{roleName},
+        memo = #{memo}
+        where id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="int">
+        delete from bas_shop_role where id = #{id}
+    </delete>
+</mapper>

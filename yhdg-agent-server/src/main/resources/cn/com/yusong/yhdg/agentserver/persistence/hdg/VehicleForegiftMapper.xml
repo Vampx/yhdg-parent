@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.hdg.VehicleForegiftMapper">
+
+    <select id="findListByPriceGroupId" resultType="cn.com.yusong.yhdg.common.domain.hdg.VehicleForegift">
+        select * from hdg_vehicle_foregift where price_group_id = #{priceGroupId}
+    </select>
+
+    <select id="findByPriceGroupIdAndModelId" resultType="cn.com.yusong.yhdg.common.domain.hdg.VehicleForegift">
+        select * from hdg_vehicle_foregift where price_group_id = #{priceGroupId} and model_id = #{modelId}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.VehicleForegift" useGeneratedKeys="true" keyProperty="id">
+        insert into hdg_vehicle_foregift(
+        agent_id,
+        price_group_id,
+        model_id,
+        money
+        ) values (
+        #{agentId},
+        #{priceGroupId},
+        #{modelId},
+        #{money})
+    </insert>
+
+    <update id="updateMoneyByModelId">
+        update hdg_vehicle_foregift set
+        money = #{money}
+        where model_id = #{modelId} and price_group_id = #{priceGroupId}
+    </update>
+
+    <delete id="deleteByPriceGroupId">
+        delete from hdg_vehicle_foregift where price_group_id = #{priceGroupId}
+    </delete>
+
+    <delete id="delete">
+        delete from hdg_vehicle_foregift where model_id = #{modelId} and price_group_id = #{priceGroupId}
+    </delete>
+
+</mapper>

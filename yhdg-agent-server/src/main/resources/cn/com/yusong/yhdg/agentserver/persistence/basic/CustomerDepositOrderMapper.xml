@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.basic.CustomerDepositOrderMapper">
+
+    <select id="find" parameterType="String" resultType="cn.com.yusong.yhdg.common.domain.basic.CustomerDepositOrder">
+        select
+            bas_customer_deposit_order.id,
+            bas_customer_deposit_order.money,
+            bas_customer_deposit_order.gift,
+            bas_customer_deposit_order.customer_id as customerId,
+            bas_customer_deposit_order.status,
+            bas_customer_deposit_order.customer_mobile as customerMobile,
+            bas_customer_deposit_order.customer_fullname as customerFullname,
+            bas_customer_deposit_order.handle_time as handleTime,
+            bas_customer_deposit_order.create_time as createTime,
+            bas_customer_deposit_order.pay_type as payType,
+            bas_customer_deposit_order.client_type as clientType,
+            bas_customer_deposit_order.memo,
+            refund_time as refundTime,
+            refund_money as refundMoney,
+            refund_photo as refundPhoto,
+            refund_operator as refundOperator,
+            refund_reason as refundReason
+        from bas_customer_deposit_order
+        where bas_customer_deposit_order.id = #{id}
+    </select>
+
+    <select id="sumMoney"  resultType="int">
+        select
+        ifnull(sum(money), 0) as totalMoney
+        from bas_customer_deposit_order
+        where status = #{status}
+    </select>
+
+    <select id="sumMonthMoney"  resultType="int">
+        select
+        ifnull(sum(money), 0) as totalMonthMoney
+        from bas_customer_deposit_order
+        <trim prefix="where" prefixOverrides="and">
+            <if test="status != null and status != ''">
+                and status = #{status}
+            </if>
+            <if test="queryBeginDate != null and queryBeginDate != ''">
+                <![CDATA[and create_time >= #{queryBeginDate} ]]>
+            </if>
+            <if test="queryEndDate != null and queryEndDate != ''">
+                <![CDATA[and create_time <= #{queryEndDate} ]]>
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.basic.CustomerDepositOrder" resultType="int">
+        select
+        count(*)
+        from bas_customer_deposit_order
+        <trim prefix="where" prefixOverrides="and">
+            <if test="partnerId != null">
+                and partner_id = #{partnerId}
+            </if>
+            <if test="customerFullname != null and customerFullname != ''">
+                <![CDATA[and customer_fullname LIKE concat('%', #{customerFullname}, '%')]]>
+            </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+            <if test="payType != null and payType != 0">
+                and pay_type = #{payType}
+            </if>
+            <if test="customerId != null">
+                and customer_id = #{customerId}
+            </if>
+            <if test="customerMobile != null and customerMobile != ''">
+                <![CDATA[and customer_mobile LIKE concat('%', #{customerMobile}, '%')]]>
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.basic.CustomerDepositOrder" resultType="cn.com.yusong.yhdg.common.domain.basic.CustomerDepositOrder">
+        select
+            *
+        from bas_customer_deposit_order
+        <trim prefix="where" prefixOverrides="and">
+            <if test="partnerId != null">
+                and partner_id = #{partnerId}
+            </if>
+            <if test="customerFullname != null and customerFullname != ''">
+                <![CDATA[and customer_fullname LIKE concat('%', #{customerFullname}, '%')]]>
+            </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+            <if test="payType != null and payType != 0">
+                and pay_type = #{payType}
+            </if>
+            <if test="customerId != null">
+                and customer_id = #{customerId}
+            </if>
+            <if test="customerMobile != null and customerMobile != ''">
+                <![CDATA[and customer_mobile LIKE concat('%', #{customerMobile}, '%')]]>
+            </if>
+        </trim>
+        order by create_time desc
+        limit ${beginIndex}, ${rows}
+    </select>
+
+    <select id="findList" resultType="cn.com.yusong.yhdg.common.domain.basic.CustomerDepositOrder">
+        select
+        *
+        from bas_customer_deposit_order
+        where customer_id = #{customerId}
+    </select>
+
+    <insert id = "insert" parameterType = "cn.com.yusong.yhdg.common.domain.basic.CustomerDepositOrder" >
+        insert into bas_customer_deposit_order(id, partner_id, money, gift, customer_id, customer_mobile, customer_fullname, status, handle_time, memo, pay_type, client_type, create_time)
+        values(#{id}, #{partnerId}, #{money}, #{gift}, #{customerId}, #{customerMobile}, #{customerFullname}, #{status}, #{handleTime}, #{memo}, #{payType}, #{clientType}, #{createTime})
+    </insert>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.basic.CustomerDepositOrder">
+        update bas_customer_deposit_order set
+        money = #{money}
+        where id = #{id}
+    </update>
+
+    <delete id="deleteByCustomerId">
+        delete from bas_customer_deposit_order where customer_id = #{customerId}
+    </delete>
+
+    <update id="refund" parameterType="cn.com.yusong.yhdg.common.domain.basic.CustomerDepositOrder">
+        update bas_customer_deposit_order set
+        refund_time = #{refundTime},
+        refund_money = #{refundMoney},
+        refund_photo = #{refundPhoto},
+        refund_operator = #{refundOperator},
+        status = #{status},
+        refund_reason = #{refundReason}
+        where id = #{id}
+    </update>
+
+</mapper>

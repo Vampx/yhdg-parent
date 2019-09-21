@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.agentappserver.persistence.yms.TerminalMapper">
+
+    <select id="find" parameterType="string" resultType="cn.com.yusong.yhdg.common.domain.yms.Terminal">
+        select
+        *
+        from yms_terminal
+        where id = #{id}
+    </select>
+
+    <select id="findList"  resultType="cn.com.yusong.yhdg.common.domain.yms.Terminal">
+        select
+        *
+        from yms_terminal
+        where id not in (select terminal_id from hdg_cabinet where terminal_id is not null)
+        <if test="isOnline == 0">
+            and is_online = 0
+        </if>
+        <if test="isOnline == 1">
+            and is_online = 1
+        </if>
+        <if test="isOnline == 2">
+            and is_online in (0,1)
+        </if>
+        order by id desc
+        limit #{offset}, #{limit}
+    </select>
+
+    <select id="findTerminalCount" resultType="int">
+        select
+        count(*)
+        from yms_terminal
+        where id not in (select terminal_id from hdg_cabinet where terminal_id is not null)
+        <if test="isOnline == 0">
+            and is_online = 0
+        </if>
+        <if test="isOnline == 1">
+            and is_online = 1
+        </if>
+        <if test="isOnline == 2">
+            and is_online in (0,1)
+        </if>
+    </select>
+
+
+</mapper>

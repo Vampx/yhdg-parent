@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.basic.CustomerMultiOrderMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.basic.CustomerMultiOrder">
+        select
+        *
+        from bas_customer_multi_order
+        where id = #{id}
+    </select>
+
+    <select id="findListByCustomerId" resultType="cn.com.yusong.yhdg.common.domain.basic.CustomerMultiOrder">
+        select * from bas_customer_multi_order
+        where customer_id = #{customerId}
+        and type = #{type} and status in (1,2)
+    </select>
+
+    <select id="findPageCount" resultType="int">
+        select count(*) from bas_customer_multi_order
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId !=null">
+                and agent_id = #{agentId}
+            </if>
+            <if test="mobile !=null and mobile !=''">
+                <![CDATA[and mobile LIKE concat(#{mobile}, '%')]]>
+            </if>
+            <if test="fullname != null and fullname !=''">
+                <![CDATA[and fullname LIKE concat(#{fullname}, '%')]]>
+            </if>
+            <if test="type !=null">
+                and type = #{type}
+            </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" resultType="cn.com.yusong.yhdg.common.domain.basic.CustomerMultiOrder">
+        select
+        *
+        from bas_customer_multi_order
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId !=null">
+                and agent_id = #{agentId}
+            </if>
+            <if test="mobile !=null and mobile !=''">
+                <![CDATA[and mobile LIKE concat(#{mobile}, '%')]]>
+            </if>
+            <if test="fullname != null and fullname !=''">
+                <![CDATA[and fullname LIKE concat(#{fullname}, '%')]]>
+            </if>
+            <if test="type !=null">
+                and type = #{type}
+            </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+        </trim>
+        order by id desc
+        limit ${beginIndex}, ${rows}
+    </select>
+    <select id="findCanRefund" resultType="cn.com.yusong.yhdg.common.domain.basic.CustomerMultiOrder">
+        select *
+        from bas_customer_multi_order
+        where customer_id = #{customerId} and type = #{type} and status = #{status}
+    </select>
+    <update id="updateRefund">
+        update bas_customer_multi_order
+        set refund_money = #{refundMoney},
+        refund_time = #{refundTime},
+        status = #{toStatus}
+        where id = #{id}
+    </update>
+</mapper>

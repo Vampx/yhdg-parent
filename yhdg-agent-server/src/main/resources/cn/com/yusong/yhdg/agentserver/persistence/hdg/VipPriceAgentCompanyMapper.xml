@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.hdg.VipPriceAgentCompanyMapper">
+
+    <select id="findListByPriceId" parameterType="long" resultType="cn.com.yusong.yhdg.common.domain.hdg.VipPriceAgentCompany">
+        SELECT
+        *
+        FROM hdg_vip_price_agent_company
+        where price_id = #{priceId}
+    </select>
+
+    <select id="findByPriceId"  resultType="cn.com.yusong.yhdg.common.domain.hdg.VipPriceAgentCompany">
+        SELECT
+        *
+        FROM hdg_vip_price_agent_company
+        where price_id = #{priceId}
+        and agent_company_id = #{agentCompanyId}
+        limit 1
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.VipPriceAgentCompany" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO hdg_vip_price_agent_company(
+          agent_company_id,
+          price_id
+        ) VALUES (
+          #{agentCompanyId},
+          #{priceId}
+        )
+    </insert>
+
+    <delete id="delete">
+        delete from hdg_vip_price_agent_company where id = #{id}
+    </delete>
+
+    <delete id="deleteByPriceId">
+        delete from hdg_vip_price_agent_company where price_id = #{priceId}
+    </delete>
+
+</mapper>

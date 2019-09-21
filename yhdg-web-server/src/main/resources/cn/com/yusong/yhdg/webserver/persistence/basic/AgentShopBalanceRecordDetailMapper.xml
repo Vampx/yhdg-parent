@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.basic.AgentShopBalanceRecordDetailMapper">
+
+    <select id="findByOrderId" parameterType="string" resultType="cn.com.yusong.yhdg.common.domain.basic.AgentShopBalanceRecordDetail">
+        select
+        *
+        from bas_agent_shop_balance_record_detail
+        WHERE order_id = #{orderId}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.basic.AgentShopBalanceRecordDetail" resultType="int">
+        select count(*)
+        from bas_agent_shop_balance_record_detail
+        <trim prefix="where" prefixOverrides="and">
+            <if test="recordId != null and recordId != ''">
+                <![CDATA[and record_id = #{recordId} ]]>
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.basic.AgentShopBalanceRecordDetail" resultType="cn.com.yusong.yhdg.common.domain.basic.AgentShopBalanceRecordDetail">
+        select
+        *
+        from bas_agent_shop_balance_record_detail
+        <trim prefix="where" prefixOverrides="and">
+            <if test="recordId != null and recordId != ''">
+                <![CDATA[and record_id = #{recordId} ]]>
+            </if>
+        </trim>
+        order by pay_time desc
+        limit ${beginIndex}, ${rows}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.AgentShopBalanceRecordDetail">
+        INSERT INTO bas_agent_shop_balance_record_detail(
+            record_id,
+            order_id,
+            agent_id,
+            agent_name,
+            agent_code,
+            shop_id,
+            shop_name,
+            cabinet_id,
+            day_count,
+            begin_time,
+            end_time,
+            status,
+            customer_id,
+            customer_mobile,
+            customer_fullname,
+            pay_type,
+            pay_time,
+            order_money,
+            shop_ratio,
+            shop_fixed_money,
+            money
+        )VALUES (
+            #{recordId},
+            #{orderId},
+            #{agentId},
+            #{agentName},
+            #{agentCode},
+            #{shopId},
+            #{shopName},
+            #{cabinetId},
+            #{dayCount},
+            #{beginTime},
+            #{endTime},
+            #{status},
+            #{customerId},
+            #{customerMobile},
+            #{customerFullname},
+            #{payType},
+            #{payTime},
+            #{orderMoney},
+            #{shopRatio},
+            #{shopFixedMoney},
+            #{money}
+        )
+    </insert>
+
+</mapper>

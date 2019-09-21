@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.agentappserver.persistence.basic.AgentInOutMoneyMapper">
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.AgentInOutMoney" useGeneratedKeys="true" keyProperty="id">
+        insert into bas_agent_in_out_money(
+            agent_id,
+            biz_type,
+            biz_id,
+            type,
+            money,
+            balance,
+            operator,
+            create_time)
+        values(
+            #{agentId},
+            #{bizType},
+            #{bizId},
+            #{type},
+            #{money},
+            #{balance},
+            #{operator},
+            #{createTime})
+    </insert>
+
+</mapper>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.cabinetserver.persistence.hdg.CabinetReportBatteryMapper">
+
+    <select id="findTable" resultType="String">
+        SHOW TABLES LIKE #{tableName}
+    </select>
+
+    <update id="createTable">
+        create table if not exists ${tableName} (
+            id bigint unsigned not null auto_increment,
+            cabinet_report_id bigint unsigned not null,
+            cabinet_id char(12) not null,
+            cabinet_name varchar(40),
+            battery_id varchar(40) not null,
+            battery_code varchar(40) not null,
+            create_time datetime not null,/*创建时间*/
+        primary key (id),
+        index idx_cabinet_report_id_battery_id(cabinet_report_id, battery_id)
+        ) engine=innodb default charset=utf8;
+    </update>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.CabinetReportBattery" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO hdg_cabinet_report_battery_${suffix}  (
+            cabinet_report_id,
+            cabinet_id,
+            cabinet_name,
+            battery_id,
+            battery_code,
+            create_time
+        ) values (
+            #{cabinetReportId},
+            #{cabinetId},
+            #{cabinetName},
+            #{batteryId},
+            #{batteryCode},
+            #{createTime}
+          )
+    </insert>
+
+</mapper>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.basic.PhoneappMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.basic.Phoneapp">
+        select *
+        from bas_phoneapp
+        where id=#{id}
+    </select>
+
+    <select id="findAll" resultType="cn.com.yusong.yhdg.common.domain.basic.Phoneapp">
+        select *
+        from bas_phoneapp
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.basic.Phoneapp" resultType="int">
+        select count(id)
+        from bas_phoneapp
+        <trim prefix="where" prefixOverrides="and">
+                <if test="id != null">and id = #{id} </if>
+                <if test="partnerId != null">and partner_id = #{partnerId} </if>
+                <if test="appName != null">and app_name = #{appName} </if>
+                <if test="systemTel != null">and system_tel = #{systemTel} </if>
+                <if test="createTime != null">and create_time = #{createTime} </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.basic.Phoneapp" resultType="cn.com.yusong.yhdg.common.domain.basic.Phoneapp">
+        select
+        bas_phoneapp.*,bas_partner.partner_name
+        from bas_phoneapp
+        left join bas_partner on bas_phoneapp.partner_id = bas_partner.id
+        <trim prefix="where" prefixOverrides="and">
+                <if test="id != null">and bas_phoneapp.id = #{id} </if>
+                <if test="partnerId != null">and bas_phoneapp.partner_id = #{partnerId} </if>
+                <if test="appName != null">and bas_phoneapp.app_name = #{appName} </if>
+                <if test="systemTel != null">and bas_phoneapp.system_tel = #{systemTel} </if>
+                <if test="createTime != null">and bas_phoneapp.create_time = #{createTime} </if>
+        </trim>
+        order by bas_phoneapp.id desc
+        limit #{beginIndex}, #{rows}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.Phoneapp" keyProperty="id" useGeneratedKeys="true">
+        insert into bas_phoneapp (
+        id,partner_id,app_name,system_tel,create_time)
+        values (
+        #{id},#{partnerId},#{appName},#{systemTel},#{createTime})
+    </insert>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.basic.Phoneapp">
+        update bas_phoneapp
+        <trim prefix="set" suffixOverrides="," suffix=" where id = #{id} ">
+            <if test="partnerId != null"> partner_id = #{partnerId}, </if>
+            <if test="appName != null"> app_name = #{appName}, </if>
+            <if test="systemTel != null"> system_tel = #{systemTel}, </if>
+            <if test="createTime != null"> create_time = #{createTime}, </if>
+        </trim>
+    </update>
+
+    <delete id="delete">
+        delete from bas_phoneapp
+        where id=#{id}
+    </delete>
+</mapper>

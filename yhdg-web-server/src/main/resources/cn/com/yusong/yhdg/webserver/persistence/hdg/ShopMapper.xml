@@ -1,0 +1,377 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.hdg.ShopMapper">
+
+    <select id="find" parameterType="String" resultType="cn.com.yusong.yhdg.common.domain.hdg.Shop">
+        select
+            *
+        from hdg_shop
+        where id = #{id}
+    </select>
+
+    <select id="findMaxId" parameterType="String" resultType="String">
+        select
+        id
+        from hdg_shop
+        where
+        <![CDATA[id LIKE concat(#{id}, '%')]]>
+        ORDER BY id DESC
+        limit 1
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.hdg.Shop" resultType="int">
+        select
+        count(id)
+        from hdg_shop
+        where 1 = 1
+        <if test="shopName != null and shopName != ''">
+            <![CDATA[and shop_name LIKE concat('%', #{shopName}, '%')]]>
+        </if>
+        <if test="agentId != null">
+            and agent_id = #{agentId}
+        </if>
+        <if test="provinceId != null">
+            and province_id = #{provinceId}
+        </if>
+        <if test="cityId != null">
+            and city_id = #{cityId}
+        </if>
+        <if test="districtId != null">
+            and district_id = #{districtId}
+        </if>
+        <if test="id != null and id != ''">
+            <![CDATA[and id LIKE concat(#{id}, '%')]]>
+        </if>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.hdg.Shop" resultType="cn.com.yusong.yhdg.common.domain.hdg.Shop">
+        select
+        *
+        from hdg_shop
+        where 1 = 1
+        <if test="shopName != null and shopName != ''">
+            <![CDATA[and shop_name LIKE concat('%', #{shopName}, '%')]]>
+        </if>
+        <if test="agentId != null">
+            and agent_id = #{agentId}
+        </if>
+        <if test="provinceId != null">
+            and province_id = #{provinceId}
+        </if>
+        <if test="cityId != null">
+            and city_id = #{cityId}
+        </if>
+        <if test="districtId != null">
+            and district_id = #{districtId}
+        </if>
+        <if test="vipFlag != null and vipFlag ==1">
+            and id not in (select shop_id from hdg_vip_price_shop)
+        </if>
+        <if test="id != null and id != ''">
+            <![CDATA[and id LIKE concat(#{id}, '%')]]>
+        </if>
+        order by id desc
+        limit ${beginIndex}, ${rows}
+    </select>
+
+    <select id="findUnboundPageCount" parameterType="cn.com.yusong.yhdg.common.domain.hdg.Shop" resultType="int">
+        select
+        count(id)
+        from hdg_shop
+        where 1 = 1
+        <if test="id != null and id != ''">
+            <![CDATA[and id LIKE concat(#{id}, '%')]]>
+        </if>
+        <if test="shopName != null and shopName != ''">
+            <![CDATA[and shop_name LIKE concat('%', #{shopName}, '%')]]>
+        </if>
+        <if test="agentId != null">
+            and agent_id = #{agentId}
+        </if>
+    </select>
+
+    <select id="findUnboundPageResult" parameterType="cn.com.yusong.yhdg.common.domain.hdg.Shop" resultType="cn.com.yusong.yhdg.common.domain.hdg.Shop">
+        select
+        *
+        from hdg_shop
+        where 1 = 1
+        <if test="id != null and id != ''">
+            <![CDATA[and id LIKE concat(#{id}, '%')]]>
+        </if>
+        <if test="shopName != null and shopName != ''">
+            <![CDATA[and shop_name LIKE concat('%', #{shopName}, '%')]]>
+        </if>
+        <if test="agentId != null">
+            and agent_id = #{agentId}
+        </if>
+        order by id desc
+        limit ${beginIndex}, ${rows}
+    </select>
+
+
+    <select id="findUnique" parameterType="String" resultType="cn.com.yusong.yhdg.common.domain.hdg.Shop">
+        select id from hdg_shop where id = #{id}
+    </select>
+
+    <select id="findCountByAgent" resultType="int">
+        select count(1) from hdg_shop where agent_id = #{agentId}
+    </select>
+
+    <select id="findByAgent" resultType="cn.com.yusong.yhdg.common.domain.hdg.Shop">
+        select * from hdg_shop where agent_id = #{agentId}
+    </select>
+
+    <select id="findByIsVehicle" resultType="cn.com.yusong.yhdg.common.domain.hdg.Shop">
+        select * from hdg_shop where agent_id = #{agentId}
+        <if test="isVehicle != null and isVehicle != ''">
+            and is_vehicle = #{isVehicle}
+        </if>
+    </select>
+
+    <select id="findAll" resultType="cn.com.yusong.yhdg.common.domain.hdg.Shop">
+        select * from hdg_shop
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.Shop">
+        insert into hdg_shop (
+            id,
+            agent_id,
+            shop_name,
+            province_id,
+            city_id,
+            district_id,
+            street,
+            lng,
+            lat,
+            geo_hash,
+            active_status,
+            image_path1,
+            image_path2,
+            image_path3,
+            work_time,
+            linkname,
+            tel,
+            address,
+            keyword,
+            platform_ratio,
+            agent_ratio,
+            province_agent_ratio,
+            city_agent_ratio,
+            shop_ratio,
+            balance,
+            is_allow_open_box,
+            create_time
+        )
+        values(
+          #{id},
+          #{agentId},
+          #{shopName},
+          #{provinceId},
+          #{cityId},
+          #{districtId},
+          #{street},
+          #{lng},
+          #{lat},
+          #{geoHash},
+          #{activeStatus},
+          #{imagePath1},
+          #{imagePath2},
+          #{imagePath3},
+          #{workTime},
+          #{linkname},
+          #{tel},
+          #{address},
+          #{keyword},
+          #{platformRatio},
+          #{agentRatio},
+          #{provinceAgentRatio},
+          #{cityAgentRatio},
+          #{shopRatio},
+          #{balance},
+          #{isAllowOpenBox},
+          #{createTime}
+        )
+    </insert>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.hdg.Shop">
+        update hdg_shop set
+        <trim suffix="" suffixOverrides=",">
+            <if test="isAllowOpenBox != null">
+                is_allow_open_box = #{isAllowOpenBox},
+            </if>
+            <if test="agentId != null">
+                agent_id = #{agentId},
+            </if>
+            <if test="shopName != null and shopName != ''">
+                shop_name = #{shopName},
+            </if>
+            <if test="provinceId != null">
+                province_id = #{provinceId},
+            </if>
+            <if test="cityId != null">
+                city_id = #{cityId},
+            </if>
+            <if test="districtId != null">
+                district_id = #{districtId},
+            </if>
+            <if test="street != null and street != ''">
+                street = #{street},
+            </if>
+            <if test="lng != null">
+                lng = #{lng},
+            </if>
+            <if test="lat != null">
+                lat = #{lat},
+            </if>
+            <if test="geoHash != null and geoHash != ''">
+                geo_hash = #{geoHash},
+            </if>
+            <if test="activeStatus != null">
+                active_status = #{activeStatus},
+            </if>
+            <if test="imagePath1 != null and imagePath1 != ''">
+                image_path1 = #{imagePath1},
+            </if>
+            <if test="imagePath2 != null and imagePath2 != ''">
+                image_path2 = #{imagePath2},
+            </if>
+            <if test="imagePath3 != null and imagePath3 != ''">
+                image_path3 = #{imagePath3},
+            </if>
+            <if test="workTime != null and workTime != ''">
+                work_time = #{workTime},
+            </if>
+            <if test="linkname != null and linkname != ''">
+                linkname = #{linkname},
+            </if>
+            <if test="tel != null and tel != ''">
+                tel = #{tel},
+            </if>
+            <if test="address != null and address != '' ">
+                address = #{address},
+            </if>
+            <if test="keyword != null and keyword != '' ">
+                keyword = #{keyword},
+            </if>
+            <if test="platformRatio != null">
+                platform_ratio = #{platformRatio},
+            </if>
+            <if test="agentRatio != null">
+                agent_ratio = #{agentRatio},
+            </if>
+            <if test="provinceAgentRatio != null">
+                province_agent_ratio = #{provinceAgentRatio},
+            </if>
+            <if test="cityAgentRatio != null">
+                city_agent_ratio = #{cityAgentRatio},
+            </if>
+            <if test="shopRatio != null">
+                shop_ratio = #{shopRatio},
+            </if>
+            <if test="balance != null">
+                balance = #{balance},
+            </if>
+            <if test="payPeopleMobile != null and payPeopleMobile != ''">
+                pay_people_mobile = #{payPeopleMobile},
+            </if>
+            <if test="payPeopleName != null and payPeopleName != ''">
+                pay_people_name = #{payPeopleName},
+            </if>
+            <if test="payPeopleMpOpenId != null and payPeopleMpOpenId != ''">
+                pay_people_mp_open_id  = #{payPeopleMpOpenId},
+            </if>
+            <if test="payPeopleFwOpenId != null and payPeopleFwOpenId != ''">
+                pay_people_fw_open_id   = #{payPeopleFwOpenId},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="updateRatio">
+        update hdg_shop
+        set platform_ratio = #{platformRatio},
+        agent_ratio = #{agentRatio},
+        province_agent_ratio = #{provinceAgentRatio},
+        city_agent_ratio = #{cityAgentRatio},
+        shop_ratio = #{shopRatio},
+        shop_fixed_money = #{shopFixedMoney}
+        where id = #{id}
+    </update>
+
+    <update id="updateLocation">
+        update hdg_shop
+        set
+        id = #{shopId}
+        <if test="shopName != null and shopName != '' ">
+            ,shop_name = #{shopName}
+        </if>
+        <if test="provinceId != null">
+            ,province_id = #{provinceId}
+        </if>
+        <if test="cityId != null">
+            ,city_id = #{cityId}
+        </if>
+        <if test="districtId != null">
+            ,district_id = #{districtId}
+        </if>
+        <if test="geoHash != null">
+            ,geo_hash = #{geoHash}
+        </if>
+        <if test="address != null">
+            ,address = #{address}
+        </if>
+        <if test="lng != null ">
+            ,lng = #{lng}
+        </if>
+        <if test="lat != null ">
+            ,lat = #{lat}
+        </if>
+        where id = #{shopId}
+    </update>
+
+    <update id="updateBalance">
+        <choose>
+            <when test="balance > 0">
+                update hdg_shop set balance = balance + #{balance} where id = #{id}
+            </when>
+            <otherwise>
+                <![CDATA[update hdg_shop set balance = balance + #{balance} where id = #{id} and balance + #{balance} >= 0]]>
+            </otherwise>
+        </choose>
+    </update>
+
+    <delete id="delete">
+        delete from hdg_shop where id = #{id}
+    </delete>
+
+    <update id="clearImage1">
+        update hdg_shop set image_path1 = NULL
+        where id = #{id}
+    </update>
+
+    <update id="clearImage2">
+        update hdg_shop set image_path2 = NULL
+        where id = #{id}
+    </update>
+    <update id="updatePayPeople">
+        UPDATE hdg_shop SET
+        pay_people_name = #{payPeopleName},
+        pay_people_mp_open_id = #{payPeopleMpOpenId},
+        pay_people_fw_open_id = #{payPeopleFwOpenId},
+        <if test="payPassword != null and payPassword != ''">
+            pay_password = #{payPassword},
+        </if>
+        pay_people_mobile = #{payPeopleMobile}
+        where id = #{id}
+    </update>
+
+    <update id="updatePrice">
+        update hdg_shop set
+        min_price = #{minPrice},
+        max_price = #{maxPrice}
+        where id = #{id}
+    </update>
+
+</mapper>

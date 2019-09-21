@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.agentappserver.persistence.basic.CustomerExchangeInfoMapper">
+
+    <select id="find" parameterType="long" resultType="cn.com.yusong.yhdg.common.domain.basic.CustomerExchangeInfo">
+        select
+        *
+        from bas_customer_exchange_info
+        where id = #{id}
+    </select>
+
+    <select id="findByBalanceCabinetId" parameterType="string" resultType="int">
+        select
+        count(id)
+        from bas_customer_exchange_info
+        <trim prefix="where" prefixOverrides="and">
+            <if test="balanceCabinetId != null">
+                and balance_cabinet_id = #{balanceCabinetId}
+            </if>
+        </trim>
+    </select>
+
+    <select id="findCountByAgentId" parameterType="int" resultType="int">
+        select
+        count(id)
+        from bas_customer_exchange_info
+        where agent_id = #{agentId}
+        and foregift_order_id is not null
+    </select>
+
+</mapper>

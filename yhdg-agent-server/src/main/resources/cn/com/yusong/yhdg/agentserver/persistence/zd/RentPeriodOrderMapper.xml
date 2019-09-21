@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.zd.RentPeriodOrderMapper">
+
+    <select id="find" parameterType="string" resultType="cn.com.yusong.yhdg.common.domain.zd.RentPeriodOrder">
+        SELECT
+        *
+        FROM zd_rent_period_order
+        WHERE id = #{id}
+    </select>
+
+    <select id="findListByCustomerId" resultType="cn.com.yusong.yhdg.common.domain.zd.RentPeriodOrder">
+        select
+        *
+        from zd_rent_period_order
+        where customer_id = #{customerId} and agent_id = #{agentId}
+    </select>
+
+    <select id="findCountByAgentCompany" resultType="int">
+        select
+        *
+        from zd_rent_period_order
+        where agent_company_id = #{agentCompanyId}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.zd.RentPeriodOrder" resultType="int">
+        select
+            count(*)
+        from zd_rent_period_order
+        <trim prefix="where" prefixOverrides="and">
+            <if test="partnerId != null">
+                and partner_id = #{partnerId}
+            </if>
+            <if test="agentId != null">
+                and agent_id = #{agentId}
+            </if>
+            <if test="customerFullname != null and customerFullname != ''">
+                <![CDATA[and customer_fullname LIKE concat('%', #{customerFullname}, '%')]]>
+            </if>
+            <if test="customerMobile != null and customerMobile != ''">
+                <![CDATA[and customer_mobile LIKE concat(#{customerMobile}, '%')]]>
+            </if>
+            <if test="status != null">
+                and status= #{status}
+            </if>
+            <if test="vehicleOrderFlag != null">
+                and  vehicle_order_flag = #{vehicleOrderFlag}
+            </if>
+            <if test="vehicleOrderFlag == null">
+                and  vehicle_order_flag = 0
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.zd.RentPeriodOrder"
+            resultType="cn.com.yusong.yhdg.common.domain.zd.RentPeriodOrder">
+        select
+            *
+        from zd_rent_period_order
+        <trim prefix="where" prefixOverrides="and">
+            <if test="partnerId != null">
+                and partner_id = #{partnerId}
+            </if>
+            <if test="agentId != null">
+                and agent_id = #{agentId}
+            </if>
+            <if test="customerFullname != null and customerFullname != ''">
+                <![CDATA[and customer_fullname LIKE concat('%', #{customerFullname}, '%')]]>
+            </if>
+            <if test="customerMobile != null and customerMobile != ''">
+                <![CDATA[and customer_mobile LIKE concat(#{customerMobile}, '%')]]>
+            </if>
+            <if test="status != null">
+                and status= #{status}
+            </if>
+            <if test="vehicleOrderFlag != null">
+                and  vehicle_order_flag = #{vehicleOrderFlag}
+            </if>
+            <if test="vehicleOrderFlag == null">
+                and  vehicle_order_flag = 0
+            </if>
+        </trim>
+        ORDER BY create_time DESC
+        limit #{beginIndex}, #{rows}
+    </select>
+
+    <select id="findPageForBalanceCount" parameterType="cn.com.yusong.yhdg.common.domain.zd.RentPeriodOrder" resultType="int">
+        select
+        count(*)
+        from zd_rent_period_order left join bas_customer on zd_rent_period_order.customer_id = bas_customer.id
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null">
+                and zd_rent_period_order.agent_id = #{agentId}
+            </if>
+            <if test="customerMobile != null and customerMobile != ''">
+                <![CDATA[and zd_rent_period_order.customer_mobile LIKE concat(#{customerMobile}, '%')]]>
+            </if>
+            <if test="customerFullname != null and customerFullname != ''">
+                <![CDATA[and zd_rent_period_order.customer_fullname LIKE concat(#{customerFullname}, '%')]]>
+            </if>
+
+            and zd_rent_period_order.status in (2,3)
+
+            <if test="queryBeginTime != null and queryBeginTime != ''">
+                <![CDATA[and zd_rent_period_order.create_time >= #{queryBeginTime} ]]>
+            </if>
+            <if test="queryEndTime != null and queryEndTime != ''">
+                <![CDATA[and zd_rent_period_order.create_time < #{queryEndTime} ]]>
+            </if>
+        </trim>
+    </select>
+
+    <select id="findList" resultType="cn.com.yusong.yhdg.common.domain.zd.RentPeriodOrder">
+        select
+        *
+        from zd_rent_period_order
+        where customer_id = #{customerId}
+    </select>
+
+    <select id="findPageForBalanceResult" parameterType="cn.com.yusong.yhdg.common.domain.zd.RentPeriodOrder"
+            resultType="cn.com.yusong.yhdg.common.domain.zd.RentPeriodOrder">
+        select
+        zd_rent_period_order.*
+        from zd_rent_period_order left join bas_customer on zd_rent_period_order.customer_id = bas_customer.id
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null">
+                and zd_rent_period_order.agent_id = #{agentId}
+            </if>
+            <if test="customerMobile != null and customerMobile != ''">
+                <![CDATA[and zd_rent_period_order.customer_mobile LIKE concat(#{customerMobile}, '%')]]>
+            </if>
+            <if test="customerFullname != null and customerFullname != ''">
+                <![CDATA[and zd_rent_period_order.customer_fullname LIKE concat(#{customerFullname}, '%')]]>
+            </if>
+
+            and zd_rent_period_order.status in (2,3)
+
+            <if test="queryBeginTime != null and queryBeginTime != ''">
+                <![CDATA[and zd_rent_period_order.create_time >= #{queryBeginTime} ]]>
+            </if>
+            <if test="queryEndTime != null and queryEndTime != ''">
+                <![CDATA[and zd_rent_period_order.create_time < #{queryEndTime} ]]>
+            </if>
+        </trim>
+        ORDER BY create_time DESC
+        limit #{beginIndex}, #{rows}
+    </select>
+
+
+
+    <select id="findOneEnabledLast" resultType="cn.com.yusong.yhdg.common.domain.zd.RentPeriodOrder">
+        select
+        *
+        FROM
+        zd_rent_period_order
+        where customer_id = #{customerId}
+        and status in
+        <foreach collection="status" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        order by end_time desc
+        limit 1
+    </select>
+    <select id="findCanRefundByCustomerId" resultType="cn.com.yusong.yhdg.common.domain.zd.RentPeriodOrder">
+        select *
+        from  zd_rent_period_order
+        where customer_id = #{customerId} and status in (2, 3, 5)
+    </select>
+
+    <update id="updateRefund">
+        update zd_rent_period_order
+        set refund_money = #{refundMoney},
+        refund_time = #{refundTime},
+        status = #{toStatus}
+        where id = #{id}
+    </update>
+
+    <update id="backRefund">
+        update zd_rent_period_order
+        set refund_money = null,
+        refund_time = null,
+        status = #{toStatus}
+        where id = #{id} and status = #{fromStatus}
+    </update>
+
+    <update id="updateStatus">
+        update zd_rent_period_order
+        set status = #{status}
+        where customer_id = #{customerId}
+    </update>
+
+    <update id="extendRent">
+        update zd_rent_period_order set
+            day_count = #{dayCount},
+            end_time = #{endTime},
+            status = #{status},
+            operator_memo = #{operatorMemo}
+        where id = #{id}
+    </update>
+
+    <update id="updatePayTime">
+        update zd_rent_period_order
+        set pay_time = #{payTime}
+        where id = #{id}
+    </update>
+
+    <delete id="deleteByCustomerId">
+        delete from zd_rent_period_order where customer_id = #{customerId}
+    </delete>
+
+</mapper>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.basic.BatchMobileMessageMapper">
+
+
+    <select id="find" parameterType="int" resultType="cn.com.yusong.yhdg.common.domain.basic.BatchMobileMessage">
+        select
+        *
+        from bas_batch_mobile_message
+        where id = #{id}
+    </select>
+
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.basic.BatchMobileMessage" resultType="int">
+        select
+        count(id)
+        from bas_batch_mobile_message
+        <trim prefix="where" prefixOverrides="and">
+            <if test="templateName != null and templateName != ''">
+                <![CDATA[and template_name LIKE concat('%', #{templateName}, '%')]]>
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.basic.BatchMobileMessage" resultType="cn.com.yusong.yhdg.common.domain.basic.BatchMobileMessage">
+        select
+        *
+        from bas_batch_mobile_message
+        <trim prefix="where" prefixOverrides="and">
+            <if test="templateName != null and templateName != ''">
+                <![CDATA[and template_name LIKE concat('%', #{templateName}, '%')]]>
+            </if>
+        </trim>
+        order by create_time DESC
+        limit ${beginIndex}, ${rows}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.BatchMobileMessage" useGeneratedKeys="true" keyProperty="id">
+        insert into bas_batch_mobile_message(template_name, template_id, title, content, variable, operator_name, mobile_count, create_time)
+        values(#{templateName}, #{templateId}, #{title}, #{content}, #{variable}, #{operatorName}, #{mobileCount}, #{createTime})
+    </insert>
+
+
+</mapper>

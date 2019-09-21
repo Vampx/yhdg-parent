@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.hdg.VehiclePriceMapper">
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.hdg.VehiclePrice" resultType="int">
+        select
+        count(id)
+        from hdg_vehicle_price
+        where 1 = 1
+        <if test="agentId != null">
+            and agent_id = #{agentId}
+        </if>
+        <if test="priceGroupId != null">
+            and price_group_id = #{priceGroupId}
+        </if>
+        <if test="modelId != null">
+            and model_id = #{modelId}
+        </if>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.hdg.VehiclePrice" resultType="cn.com.yusong.yhdg.common.domain.hdg.VehiclePrice">
+        select
+        *
+        from hdg_vehicle_price
+        where 1 = 1
+        <if test="agentId != null">
+            and agent_id = #{agentId}
+        </if>
+        <if test="priceGroupId != null">
+            and price_group_id = #{priceGroupId}
+        </if>
+        <if test="modelId != null">
+            and model_id = #{modelId}
+        </if>
+        order by id desc
+        limit ${beginIndex}, ${rows}
+    </select>
+
+    <select id="findList" parameterType="int" resultType="cn.com.yusong.yhdg.common.domain.hdg.VehiclePrice">
+        SELECT
+        *
+        FROM hdg_vehicle_price
+        WHERE agent_id = #{agentId}
+    </select>
+
+    <select id="findListByPriceGroupId" resultType="cn.com.yusong.yhdg.common.domain.hdg.VehiclePrice">
+        select * from hdg_vehicle_price where price_group_id = #{priceGroupId}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.VehiclePrice" useGeneratedKeys="true" keyProperty="id">
+         insert into hdg_vehicle_price(
+          model_id,
+          model_code,
+          model_name,
+          agent_id,
+          price_group_id,
+          overdue_price,
+          deduct_day,
+          duration,
+          unit,
+          price,
+          memo
+        )
+        values(
+        #{modelId},
+        #{modelCode},
+        #{modelName},
+        #{agentId},
+        #{priceGroupId},
+        #{overduePrice},
+        #{deductDay},
+        #{duration},
+        #{unit},
+        #{price},
+        #{memo})
+    </insert>
+
+    <delete id="delete">
+        delete from hdg_vehicle_price where id = #{id}
+    </delete>
+
+    <delete id="deleteByPriceGroupId">
+        delete from hdg_vehicle_price
+        where price_group_id = #{priceGroupId}
+    </delete>
+
+</mapper>

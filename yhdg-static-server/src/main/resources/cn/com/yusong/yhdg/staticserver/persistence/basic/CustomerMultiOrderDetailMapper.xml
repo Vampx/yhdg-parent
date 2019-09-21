@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.com.yusong.yhdg.staticserver.persistence.basic.CustomerMultiOrderDetailMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.basic.CustomerMultiOrderDetail">
+        select *
+        from bas_customer_multi_order_detail
+        where id=#{id}
+    </select>
+
+    <select id="findAll" resultType="cn.com.yusong.yhdg.common.domain.basic.CustomerMultiOrderDetail">
+        select *
+        from bas_customer_multi_order_detail
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.basic.CustomerMultiOrderDetail" resultType="int">
+        select count(id)
+        from bas_customer_multi_order_detail
+        <trim prefix="where" prefixOverrides="and">
+                <if test="orderId != null">and order_id = #{orderId} </if>
+                <if test="num != null">and num = #{num} </if>
+                <if test="sourceType != null">and source_type = #{sourceType} </if>
+                <if test="sourceId != null">and source_id = #{sourceId} </if>
+                <if test="money != null">and money = #{money} </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.basic.CustomerMultiOrderDetail" resultType="cn.com.yusong.yhdg.common.domain.basic.CustomerMultiOrderDetail">
+        select *
+        from bas_customer_multi_order_detail
+        <trim prefix="where" prefixOverrides="and">
+                <if test="orderId != null">and order_id = #{orderId} </if>
+                <if test="num != null">and num = #{num} </if>
+                <if test="sourceType != null">and source_type = #{sourceType} </if>
+                <if test="sourceId != null">and source_id = #{sourceId} </if>
+                <if test="money != null">and money = #{money} </if>
+        </trim>
+        order by id desc
+        limit #{beginIndex}, #{rows}
+    </select>
+    <select id="findListByOrderId" resultType="cn.com.yusong.yhdg.common.domain.basic.CustomerMultiOrderDetail">
+        select *
+        from bas_customer_multi_order_detail
+        where order_id=#{orderId}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.CustomerMultiOrderDetail" keyProperty="id" useGeneratedKeys="true">
+        insert into bas_customer_multi_order_detail (
+        order_id,num,source_type,source_id,money)
+        values (
+        #{orderId},#{num},#{sourceType},#{sourceId},#{money})
+    </insert>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.basic.CustomerMultiOrderDetail">
+        update bas_customer_multi_order_detail
+        <trim prefix="set" suffixOverrides="," suffix=" where id = #{id} ">
+            <if test="orderId != null"> order_id = #{orderId}, </if>
+            <if test="num != null"> num = #{num}, </if>
+            <if test="sourceType != null"> source_type = #{sourceType}, </if>
+            <if test="sourceId != null"> source_id = #{sourceId}, </if>
+            <if test="money != null"> money = #{money}, </if>
+        </trim>
+    </update>
+
+</mapper>

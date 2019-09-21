@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.routeserver.persistence.hdg.CabinetMapper">
+
+    <select id="find" parameterType="string" resultType="cn.com.yusong.yhdg.common.domain.hdg.Cabinet">
+        SELECT *
+        FROM hdg_cabinet
+        WHERE id = #{id}
+    </select>
+
+    <update id="updateSimMemo">
+        update hdg_cabinet set sim_memo = #{simMemo} where id = #{id}
+    </update>
+
+</mapper>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.appserver.persistence.hdg.BatteryReportLogMapper">
+
+    <select id="findTableExist" parameterType="string" resultType="String">
+        show tables like #{tableName};
+    </select>
+
+    <select id="findCount" resultType="int">
+        select
+        count(*)
+        from hdg_battery_report_log_${suffix}
+        where battery_id = #{batteryId}
+    </select>
+    <select id="findGps" resultType="int">
+        select
+        count(*)
+        from hdg_battery_report_log_${suffix}
+        where battery_id = #{batteryId}
+        AND lat is not null AND lat != 0 AND lng is not null AND lng != 0 AND coordinate_type is not null AND coordinate_type = 'gps'
+        limit 1
+    </select>
+
+</mapper>

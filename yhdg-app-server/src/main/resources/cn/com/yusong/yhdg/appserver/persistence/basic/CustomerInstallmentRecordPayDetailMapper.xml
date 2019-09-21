@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.appserver.persistence.basic.CustomerInstallmentRecordPayDetailMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.basic.CustomerInstallmentRecordPayDetail">
+        select * from bas_customer_installment_record_pay_detail where id = #{id}
+    </select>
+
+    <select id="findList" resultType="cn.com.yusong.yhdg.common.domain.basic.CustomerInstallmentRecordPayDetail">
+        select
+        *
+        from bas_customer_installment_record_pay_detail
+        where record_id = #{recordId}
+        and customer_id = #{customerId}
+        and category = #{category}
+        order by id asc
+    </select>
+
+    <select id="findCountByCustomerId" resultType="int">
+        select
+        count(a.id)
+        from bas_customer_installment_record_pay_detail a left join bas_customer_installment_record b on a.record_id = b.id
+        where a.customer_id = #{customerId} and a.status = #{status}
+        and a.category = #{category} and b.status = 2
+        <if test="nowDate != null">
+            <![CDATA[and a.expire_time <= #{nowDate}]]>
+        </if>
+        order by a.id asc
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.CustomerInstallmentRecordPayDetail" useGeneratedKeys="true" keyProperty="id">
+        insert into bas_customer_installment_record_pay_detail(
+        record_id,
+        num,
+        partner_id,
+        customer_id,
+        fullname,
+        mobile,
+        agent_id,
+        agent_name,
+        agent_code,
+        status,
+        category,
+        order_id,
+        pay_time,
+        pay_type,
+        total_money,
+        money,
+        fee_type,
+        fee_money,
+        foregift_money,
+        packet_money,
+        insurance_money,
+        expire_time,
+        create_time)
+        values (
+        #{recordId},
+        #{num},
+        #{partnerId},
+        #{customerId},
+        #{fullname},
+        #{mobile},
+        #{agentId},
+        #{agentName},
+        #{agentCode},
+        #{status},
+        #{category},
+        #{orderId},
+        #{payTime},
+        #{payType},
+        #{totalMoney},
+        #{money},
+        #{feeType},
+        #{feeMoney},
+        #{foregiftMoney},
+        #{packetMoney},
+        #{insuranceMoney},
+        #{expireTime},
+        #{createTime})
+    </insert>
+
+    <update id="updateApplyDetail">
+        update bas_customer_installment_record_pay_detail set
+        status = #{toStatus},
+        pay_time = #{payTime},
+        pay_type = #{payType},
+        money = #{money}
+        where id = #{id} and status = #{fromStatus}
+    </update>
+
+    <update id="updatePayType">
+        update bas_customer_installment_record_pay_detail set
+        pay_type = #{payType}
+        where record_id = #{recordId}
+    </update>
+
+</mapper>

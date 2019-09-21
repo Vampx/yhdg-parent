@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.serviceserver.persistence.basic.SmsConfigMapper">
+
+    <select id="findInfoByPartner" parameterType="int" resultType="cn.com.yusong.yhdg.common.domain.basic.SmsConfigInfo">
+        select
+            id,
+            sms_type as smsType,
+            config_name as configName,
+            account,
+            password,
+            sign,
+            sign_place as signPlace
+        from bas_sms_config
+        where partner_id = #{partnerId} and is_active = 1
+    </select>
+</mapper>

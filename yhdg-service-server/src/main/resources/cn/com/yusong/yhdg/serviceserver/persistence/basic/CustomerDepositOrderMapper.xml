@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.serviceserver.persistence.basic.CustomerDepositOrderMapper">
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.basic.CustomerDepositOrder">
+        select
+        *
+        from bas_customer_deposit_order
+        where
+        id  = #{id}
+    </select>
+
+    <select id="findIncrement" resultType="cn.com.yusong.yhdg.common.domain.hdg.PlatformDayStats">
+        select
+        ifnull(SUM(money),0) as incrementDepositMoney,
+        ifnull(count(*),0) as incrementDepositCount
+        FROM
+            bas_customer_deposit_order
+        WHERE
+            create_time &lt;= #{endTime}
+        AND create_time &gt;= #{beginTime}
+        AND status = #{status}
+    </select>
+    <select id="findTotal" resultType="cn.com.yusong.yhdg.common.domain.hdg.PlatformDayStats">
+        select
+        ifnull(SUM(money),0) as totalDepositMoney,
+        ifnull(count(*),0) as totalDepositCount
+        FROM
+            bas_customer_deposit_order
+        WHERE
+            status = #{status}
+    </select>
+    <select id="findIncrementRefund" resultType="cn.com.yusong.yhdg.common.domain.hdg.PlatformDayStats">
+        select
+        ifnull(SUM(refund_money),0) as incrementRefundDepositMoney,
+        ifnull(count(*),0) as incrementRefundDepositCount
+        FROM
+            bas_customer_deposit_order
+        WHERE
+            refund_time &lt;= #{endTime}
+        AND refund_time &gt;= #{beginTime}
+        AND status = #{status}
+    </select>
+    <select id="findTotalRefund" resultType="cn.com.yusong.yhdg.common.domain.hdg.PlatformDayStats">
+        select
+        ifnull(SUM(refund_money),0) as totalRefundDepositMoney,
+        ifnull(count(*),0) as totalRefundDepositCount
+        FROM
+            bas_customer_deposit_order
+        WHERE
+            status = #{status}
+    </select>
+</mapper>

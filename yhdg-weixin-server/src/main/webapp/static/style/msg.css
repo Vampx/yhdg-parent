@@ -1,0 +1,62 @@
+html {
+  height: 100%;
+}
+html body {
+  height: 100%;
+  background-color: #EFEFEF;
+  padding-top: 1rem;
+  box-sizing: border-box;
+}
+html body .weui-cells {
+  margin-top: 0;
+}
+html body .weui-cells .changeTip {
+  background-color: #EFEFEF;
+  padding: 1.41176471rem 0.88235294rem 1.64705882rem !important;
+}
+html body .weui-cells .changeTip .weui-cell__bd p {
+  text-align: center;
+}
+html body .weui-cells .changeTip .weui-cell__bd p:first-child {
+  font-size: 1rem;
+  color: #5C5C5C;
+}
+html body .weui-cells .changeTip .weui-cell__bd p + p {
+  font-size: 0.70588235rem;
+  color: #999999;
+}
+html body .weui-cells .weui-cell {
+  padding: 0.58823529rem 0.88235294rem;
+}
+html body .weui-cells .weui-cell .weui-btn_blue {
+  width: 100%;
+  background-color: #4CBFFF;
+}
+html body .weui-cells .weui-cell .weui-vcode-btn {
+  font-size: 0.82352941rem;
+  color: #4CBFFF;
+  font-family: simhei;
+}
+html body .weui-cells .weui-cell ::-webkit-input-placeholder {
+  font-family: simhei;
+  font-size: 0.82352941rem;
+}
+html body .weui-cells .weui-cell ::-moz-placeholder {
+  font-family: simhei;
+  font-size: 0.82352941rem;
+}
+html body .weui-cells .weui-cell input {
+  font-size: 0.82352941rem;
+  color: #5C5C5C;
+}
+html body .weui-cells .button-sp-area {
+  background-color: #EFEFEF;
+  padding-top: 1.05882353rem;
+}
+html body .js_dialog .weui-dialog .weui-dialog__bd p + p {
+  font-size: 1.2rem;
+  color: #4CBFFF;
+}
+html body .js_dialog .weui-dialog .weui-dialog__btn_primary {
+  color: #4CBFFF;
+}

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.staticserver.persistence.basic.CustomerExchangeBatteryMapper">
+    <select id="findListByCustomer" parameterType="long" resultType="cn.com.yusong.yhdg.common.domain.basic.CustomerExchangeBattery">
+        select
+        *
+        from bas_customer_exchange_battery
+        where customer_id = #{customerId}
+    </select>
+
+    <select id="exists" parameterType="long" resultType="int">
+        select
+        count(1)
+        from bas_customer_exchange_battery
+        where customer_id = #{customerId}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.CustomerExchangeBattery">
+        insert into bas_customer_exchange_battery(customer_id, agent_id, battery_id, battery_type, battery_order_id, back_battery_order_id, create_time)
+        values(#{customerId}, #{agentId}, #{batteryId}, #{batteryType}, #{batteryOrderId}, #{backBatteryOrderId}, #{createTime})
+    </insert>
+
+    <delete id="clearBattery">
+        delete from bas_customer_exchange_battery where customer_id = #{customerId} and battery_id = #{batteryId}
+    </delete>
+
+</mapper>

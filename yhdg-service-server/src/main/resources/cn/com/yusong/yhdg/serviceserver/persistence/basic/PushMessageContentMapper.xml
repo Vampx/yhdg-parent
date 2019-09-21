@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.serviceserver.persistence.basic.PushMessageContentMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.basic.PushMessageContent">
+        select
+         id ,
+         target,
+         content
+        from bas_push_message_content
+        where id = #{id}
+    </select>
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.PushMessageContent">
+        insert into bas_push_message_content(id, target, content)
+        values(#{id}, #{target}, #{content})
+    </insert>
+
+</mapper>

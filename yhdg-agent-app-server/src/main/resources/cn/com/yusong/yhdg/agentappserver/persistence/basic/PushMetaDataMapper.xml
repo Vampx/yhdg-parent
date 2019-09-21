@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.agentappserver.persistence.basic.PushMetaDataMapper">
+
+    <insert id="insert">
+        insert into bas_push_meta_data(source_id, source_type, create_time)
+        values(#{sourceId}, #{sourceType}, #{createTime})
+    </insert>
+
+    <delete id="delete" parameterType="string">
+        delete from bas_push_meta_data where source_id = #{sourceId}
+    </delete>
+
+</mapper>

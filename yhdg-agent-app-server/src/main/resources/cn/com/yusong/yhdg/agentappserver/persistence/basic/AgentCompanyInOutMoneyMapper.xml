@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.agentappserver.persistence.basic.AgentCompanyInOutMoneyMapper">
+
+    <select id="findList" resultType="cn.com.yusong.yhdg.common.domain.basic.AgentCompanyInOutMoney"
+            parameterType="cn.com.yusong.yhdg.common.domain.basic.AgentCompanyInOutMoney">
+        select
+        *
+        from bas_agent_company_in_out_money
+        where agent_company_id = #{agentCompanyId}
+        ORDER BY id DESC
+        limit #{offset},#{limit}
+    </select>
+
+    <select id="findIncome" resultType="cn.com.yusong.yhdg.common.domain.basic.AgentCompanyInOutMoney"
+            parameterType="cn.com.yusong.yhdg.common.domain.basic.AgentCompanyInOutMoney">
+        select
+        *
+        from bas_agent_company_in_out_money
+        where agent_company_id = #{agentCompanyId} and type = #{type}
+        ORDER BY id DESC
+        limit #{offset},#{limit}
+    </select>
+
+    <select id="findIncomeCount" resultType="int"
+            parameterType="cn.com.yusong.yhdg.common.domain.basic.AgentCompanyInOutMoney">
+        select
+        COUNT(*)
+        from bas_agent_company_in_out_money
+        where agent_company_id = #{agentCompanyId} and type = #{type}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.AgentCompanyInOutMoney">
+        insert into bas_agent_company_in_out_money(agent_company_id, type, biz_type, biz_id, money, balance, create_time)
+        values(#{agentCompanyId}, #{type}, #{bizType}, #{bizId}, #{money}, #{balance}, #{createTime})
+    </insert>
+
+</mapper>

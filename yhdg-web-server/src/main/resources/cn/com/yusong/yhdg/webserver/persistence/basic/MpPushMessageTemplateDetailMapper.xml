@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.basic.MpPushMessageTemplateDetailMapper">
+
+    <select id="find"  resultType="cn.com.yusong.yhdg.common.domain.basic.MpPushMessageTemplateDetail">
+        select
+        *
+        from bas_mp_push_message_template_detail
+        where weixinmp_id = #{weixinmpId} and id = #{id} and template_id = #{templateId}
+    </select>
+
+    <select id="findByTemplateId" resultType="cn.com.yusong.yhdg.common.domain.basic.MpPushMessageTemplateDetail">
+        select
+        *
+        from bas_mp_push_message_template_detail
+        where weixinmp_id = #{weixinmpId} and template_id = #{templateId}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.basic.MpPushMessageTemplateDetail" resultType="int">
+        select
+        count(id)
+        from bas_mp_push_message_template_detail
+        <trim prefix="where" prefixOverrides="and">
+            <if test="weixinmpId != null">
+                and weixinmp_id = #{weixinmpId}
+            </if>
+            <if test="templateId != null">
+                and template_id = #{templateId}
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.basic.MpPushMessageTemplateDetail" resultType="cn.com.yusong.yhdg.common.domain.basic.MpPushMessageTemplateDetail">
+        select
+        *
+        from bas_mp_push_message_template_detail
+        <trim prefix="where" prefixOverrides="and">
+            <if test="weixinmpId != null">
+                and weixinmp_id = #{weixinmpId}
+            </if>
+            <if test="templateId != null">
+                and template_id = #{templateId}
+            </if>
+        </trim>
+        order by order_num
+        limit #{beginIndex}, #{rows}
+    </select>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.basic.MpPushMessageTemplateDetail">
+        update bas_mp_push_message_template_detail set
+        keyword_value = #{keywordValue},
+        color = #{color}
+        where weixinmp_id = #{weixinmpId} and id = #{id} and template_id = #{templateId}
+    </update>
+
+    <insert id="insert">
+        INSERT INTO `bas_mp_push_message_template_detail` (`id`, weixinmp_id, `template_id`, `keyword_name`, `keyword_value`, `color`, `order_num`)
+        VALUES (#{id},#{weixinmpId},#{templateId},#{keywordName},#{keywordValue},#{color},#{orderNum})
+    </insert>
+
+</mapper>

@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.basic.DeptMapper">
+
+    <select id="find" parameterType="int" resultType="cn.com.yusong.yhdg.common.domain.basic.Dept">
+        select
+            id,
+            dept_name as deptName,
+            agent_id as agentId,
+            parent_id as parentId,
+            memo
+        from bas_dept
+        where id = #{id}
+    </select>
+
+    <select id="findCount" resultType="int">
+        select count(*) from bas_dept
+        <if test="agentId != null">
+            where
+            agent_id = #{agentId}
+        </if>
+    </select>
+
+    <select id="hasRecordByProperty" resultType="int">
+        select count(id) from bas_dept where
+        <if test="property == 'agentId'">
+            agent_id = #{value}
+        </if>
+    </select>
+
+    <select id="findByParent" parameterType="int" resultType="cn.com.yusong.yhdg.common.domain.basic.Dept">
+        select
+        id,
+        dept_name as deptName,
+        agent_id as agentId,
+        parent_id as parentId,
+        memo,
+        create_time as createTime
+        from bas_dept
+        where parent_id = #{id}
+        limit 1
+    </select>
+
+    <select id="findByAgent" resultType="cn.com.yusong.yhdg.common.domain.basic.Dept">
+        select
+            id,
+            dept_name as deptName,
+            agent_id as agentId,
+            parent_id as parentId,
+            memo
+        from bas_dept
+        <trim prefix="where" prefixOverrides="and">
+            <choose>
+                <when test="agentId == null">
+                    and agent_id is NULL
+                </when>
+                <otherwise>
+                    and agent_id = #{agentId}
+                </otherwise>
+            </choose>
+        </trim>
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.basic.Dept" resultType="int">
+        select
+            count(id)
+        from bas_dept
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null">
+                and agent_id = #{agentId}
+            </if>
+            <if test="agentId == null">
+                and agent_id is NULL
+            </if>
+            <if test="parentId != null">
+                and parent_id = #{parentId}
+            </if>
+            <if test="deptName != null and deptName != ''">
+                <![CDATA[and dept_name LIKE concat('%', #{deptName}, '%')]]>
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.basic.Dept" resultType="cn.com.yusong.yhdg.common.domain.basic.Dept">
+        select
+            id,
+            dept_name as deptName,
+            agent_id as agentId,
+            parent_id as parentId,
+            memo
+        from bas_dept
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null">
+                and agent_id = #{agentId}
+            </if>
+            <if test="agentId == null">
+                and agent_id is NULL
+            </if>
+            <if test="parentId != null">
+                and parent_id = #{parentId}
+            </if>
+            <if test="deptName != null and deptName != ''">
+                <![CDATA[and dept_name LIKE concat('%', #{deptName}, '%')]]>
+            </if>
+        </trim>
+        limit ${beginIndex}, ${rows}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.Dept" useGeneratedKeys="true" keyProperty="id">
+        insert into bas_dept(dept_name, agent_id, parent_id, memo, create_time)
+        values(#{deptName}, #{agentId}, #{parentId}, #{memo}, #{createTime})
+    </insert>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.basic.Dept">
+        update bas_dept set
+            dept_name = #{deptName},
+            memo = #{memo}
+        where id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="int">
+        delete from bas_dept where id = #{id}
+    </delete>
+</mapper>

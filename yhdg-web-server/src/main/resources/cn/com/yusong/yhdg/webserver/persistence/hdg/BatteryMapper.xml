@@ -1,0 +1,1632 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.hdg.BatteryMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.hdg.Battery">
+        select
+        *
+        from hdg_battery
+        where id = #{id}
+    </select>
+
+    <select id="findList" resultType="cn.com.yusong.yhdg.common.domain.hdg.Battery">
+        select
+        *
+        from hdg_battery
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null">
+                AND agent_id = #{agentId}
+            </if>
+            <if test="id != null and id !=''">
+                <![CDATA[AND id LIKE concat(#{id}, '%')]]>
+            </if>
+        </trim>
+        ORDER BY report_time DESC
+        limit 100
+    </select>
+
+    <select id="findCountByCabinet" resultType="int">
+        select
+        count(*)
+        from hdg_battery
+        where cabinet_id = #{cabinetId}
+    </select>
+
+    <select id="findCountByShop" resultType="int">
+        select
+        count(*)
+        from hdg_battery
+        <trim prefix="where" prefixOverrides="and">
+            <if test="shopId != null and shopId !=''">
+                and shop_id = #{shopId}
+            </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+        </trim>
+    </select>
+
+    <select id="findCountByPositionState" resultType="int">
+        select
+        count(*)
+        from hdg_battery
+        <trim prefix="where" prefixOverrides="and">
+            <if test="positionState != null">
+                and position_state = #{positionState}
+            </if>
+            <if test="isOnline != null">
+                and is_online = #{isOnline}
+            </if>
+            <if test="agentId != null">
+                and agent_id = #{agentId}
+            </if>
+        </trim>
+    </select>
+
+
+    <select id="findCountByCustomerUse" resultType="int">
+        select count(id) from hdg_battery
+        where 1 = 1
+        <if test="agentId != null">
+            <![CDATA[and agent_id = #{agentId}]]>
+        </if>
+        <if test="id != null and id !=''">
+            <![CDATA[and id LIKE concat('%',#{id}, '%')]]>
+        </if>
+        <if test="cabinetId != null and cabinetId != ''">
+            and cabinet_id = #{cabinetId}
+        </if>
+        <if test="code != null and code !=''">
+            <![CDATA[and code LIKE concat('%',#{code}, '%')]]>
+        </if>
+        <if test="shellCode != null and shellCode !=''">
+            <![CDATA[and shell_code LIKE concat('%',#{shellCode}, '%')]]>
+        </if>
+        <if test="status != null">
+            and status = #{status}
+        </if>
+        <if test="chargeStatus != null">
+            and charge_status = #{chargeStatus}
+        </if>
+        <if test="simMemo != null and simMemo != ''">
+            and sim_memo = #{simMemo}
+        </if>
+        <if test="brand != null and brand != ''">
+            and brand = #{brand}
+        </if>
+        <if test="type != null">
+            and type = #{type}
+        </if>
+        <if test="isOnline != null">
+            and is_online = #{isOnline}
+        </if>
+        <if test="repairStatus != null">
+            and repair_status = #{repairStatus}
+        </if>
+        <if test="qrcode != null and qrcode !=''">
+            <![CDATA[and qrcode LIKE concat('%',#{qrcode}, '%')]]>
+        </if>
+        <if test="queryBeginTime !=null">
+            and free_out_time &gt;= #{queryBeginTime}
+        </if>
+        <if test="queryEndTime !=null">
+            and free_out_time &lt;= #{queryEndTime}
+        </if>
+        <if test="maxVolume !=null">
+            and volume &lt;= #{maxVolume}
+        </if>
+        <if test="minVolume !=null">
+            and volume &gt;= #{minVolume}
+        </if>
+        <if test="version !=null and version != '' ">
+            and version = #{version}
+        </if>
+        <if test="queryAntiVersion !=null and queryAntiVersion != '' ">
+            and (version != #{queryAntiVersion} or version is null)
+        </if>
+        <if test="cellMfr != null and cellMfr !='' ">
+            <![CDATA[and cell_mfr LIKE concat('%',#{cellMfr}, '%')]]>
+        </if>
+        <if test="cellModel != null and cellModel !='' ">
+            <![CDATA[and cell_model LIKE concat('%',#{cellModel}, '%')]]>
+        </if>
+        <if test="customerFullname != null and customerFullname !=''">
+            <![CDATA[and customer_fullname LIKE concat('%',#{customerFullname}, '%')]]>
+        </if>
+        <if test="customerMobile != null and customerMobile !=''">
+            <![CDATA[and customer_mobile LIKE concat('%',#{customerMobile}, '%')]]>
+        </if>
+        <if test="category != null">
+            and category = #{category}
+        </if>
+        <if test="customerUseFlag != null and customerUseFlag == 1">
+            and status = 6
+        </if>
+        <if test="inCabinetFlag != null and inCabinetFlag == 1">
+            and status in (2,3,5)
+        </if>
+        <if test="notUseFlag != null and notUseFlag == 1">
+            and status = 1
+        </if>
+    </select>
+
+    <select id="findCountByInCabinet" resultType="int">
+        select count(id) from hdg_battery
+        where 1 = 1
+        <if test="agentId != null">
+            <![CDATA[and agent_id = #{agentId}]]>
+        </if>
+        <if test="id != null and id !=''">
+            <![CDATA[and id LIKE concat('%',#{id}, '%')]]>
+        </if>
+        <if test="cabinetId != null and cabinetId != ''">
+            and cabinet_id = #{cabinetId}
+        </if>
+        <if test="code != null and code !=''">
+            <![CDATA[and code LIKE concat('%',#{code}, '%')]]>
+        </if>
+        <if test="shellCode != null and shellCode !=''">
+            <![CDATA[and shell_code LIKE concat('%',#{shellCode}, '%')]]>
+        </if>
+        <if test="status != null">
+            and status = #{status}
+        </if>
+        <if test="chargeStatus != null">
+            and charge_status = #{chargeStatus}
+        </if>
+        <if test="simMemo != null and simMemo != ''">
+            and sim_memo = #{simMemo}
+        </if>
+        <if test="brand != null and brand != ''">
+            and brand = #{brand}
+        </if>
+        <if test="type != null">
+            and type = #{type}
+        </if>
+        <if test="isOnline != null">
+            and is_online = #{isOnline}
+        </if>
+        <if test="repairStatus != null">
+            and repair_status = #{repairStatus}
+        </if>
+        <if test="qrcode != null and qrcode !=''">
+            <![CDATA[and qrcode LIKE concat('%',#{qrcode}, '%')]]>
+        </if>
+        <if test="queryBeginTime !=null">
+            and free_out_time &gt;= #{queryBeginTime}
+        </if>
+        <if test="queryEndTime !=null">
+            and free_out_time &lt;= #{queryEndTime}
+        </if>
+        <if test="maxVolume !=null">
+            and volume &lt;= #{maxVolume}
+        </if>
+        <if test="minVolume !=null">
+            and volume &gt;= #{minVolume}
+        </if>
+        <if test="version !=null and version != '' ">
+            and version = #{version}
+        </if>
+        <if test="queryAntiVersion !=null and queryAntiVersion != '' ">
+            and (version != #{queryAntiVersion} or version is null)
+        </if>
+        <if test="cellMfr != null and cellMfr !='' ">
+            <![CDATA[and cell_mfr LIKE concat('%',#{cellMfr}, '%')]]>
+        </if>
+        <if test="cellModel != null and cellModel !='' ">
+            <![CDATA[and cell_model LIKE concat('%',#{cellModel}, '%')]]>
+        </if>
+        <if test="customerFullname != null and customerFullname !=''">
+            <![CDATA[and customer_fullname LIKE concat('%',#{customerFullname}, '%')]]>
+        </if>
+        <if test="customerMobile != null and customerMobile !=''">
+            <![CDATA[and customer_mobile LIKE concat('%',#{customerMobile}, '%')]]>
+        </if>
+        <if test="category != null">
+            and category = #{category}
+        </if>
+        <if test="customerUseFlag != null and customerUseFlag == 1">
+            and status = 6
+        </if>
+        <if test="inCabinetFlag != null and inCabinetFlag == 1">
+            and status in (2,3,5)
+        </if>
+        <if test="notUseFlag != null and notUseFlag == 1">
+            and status = 1
+        </if>
+    </select>
+
+    <select id="findCountByNotUse" resultType="int">
+        select count(id) from hdg_battery
+        where 1 = 1
+        <if test="agentId != null">
+            <![CDATA[and agent_id = #{agentId}]]>
+        </if>
+        <if test="id != null and id !=''">
+            <![CDATA[and id LIKE concat('%',#{id}, '%')]]>
+        </if>
+        <if test="cabinetId != null and cabinetId != ''">
+            and cabinet_id = #{cabinetId}
+        </if>
+        <if test="code != null and code !=''">
+            <![CDATA[and code LIKE concat('%',#{code}, '%')]]>
+        </if>
+        <if test="shellCode != null and shellCode !=''">
+            <![CDATA[and shell_code LIKE concat('%',#{shellCode}, '%')]]>
+        </if>
+        <if test="status != null">
+            and status = #{status}
+        </if>
+        <if test="chargeStatus != null">
+            and charge_status = #{chargeStatus}
+        </if>
+        <if test="simMemo != null and simMemo != ''">
+            and sim_memo = #{simMemo}
+        </if>
+        <if test="brand != null and brand != ''">
+            and brand = #{brand}
+        </if>
+        <if test="type != null">
+            and type = #{type}
+        </if>
+        <if test="isOnline != null">
+            and is_online = #{isOnline}
+        </if>
+        <if test="repairStatus != null">
+            and repair_status = #{repairStatus}
+        </if>
+        <if test="qrcode != null and qrcode !=''">
+            <![CDATA[and qrcode LIKE concat('%',#{qrcode}, '%')]]>
+        </if>
+        <if test="queryBeginTime !=null">
+            and free_out_time &gt;= #{queryBeginTime}
+        </if>
+        <if test="queryEndTime !=null">
+            and free_out_time &lt;= #{queryEndTime}
+        </if>
+        <if test="maxVolume !=null">
+            and volume &lt;= #{maxVolume}
+        </if>
+        <if test="minVolume !=null">
+            and volume &gt;= #{minVolume}
+        </if>
+        <if test="version !=null and version != '' ">
+            and version = #{version}
+        </if>
+        <if test="queryAntiVersion !=null and queryAntiVersion != '' ">
+            and (version != #{queryAntiVersion} or version is null)
+        </if>
+        <if test="cellMfr != null and cellMfr !='' ">
+            <![CDATA[and cell_mfr LIKE concat('%',#{cellMfr}, '%')]]>
+        </if>
+        <if test="cellModel != null and cellModel !='' ">
+            <![CDATA[and cell_model LIKE concat('%',#{cellModel}, '%')]]>
+        </if>
+        <if test="customerFullname != null and customerFullname !=''">
+            <![CDATA[and customer_fullname LIKE concat('%',#{customerFullname}, '%')]]>
+        </if>
+        <if test="customerMobile != null and customerMobile !=''">
+            <![CDATA[and customer_mobile LIKE concat('%',#{customerMobile}, '%')]]>
+        </if>
+        <if test="category != null">
+            and category = #{category}
+        </if>
+        <if test="customerUseFlag != null and customerUseFlag == 1">
+            and status = 6
+        </if>
+        <if test="inCabinetFlag != null and inCabinetFlag == 1">
+            and status in (2,3,5)
+        </if>
+        <if test="notUseFlag != null and notUseFlag == 1">
+            and status = 1
+        </if>
+    </select>
+
+    <select id="findCountByQrcode" resultType="int">
+        select
+        count(*)
+        from hdg_battery
+        where qrcode = #{qrcode}
+    </select>
+
+    <select id="findCountByShellCode" resultType="int">
+        select
+        count(*)
+        from hdg_battery
+        where shell_code = #{shellCode}
+    </select>
+
+    <select id="findCountByCode" resultType="int">
+        select
+        count(*)
+        from hdg_battery
+        where code = #{code}
+    </select>
+
+    <select id="findSingleVoltage" resultType="String">
+        select
+        single_voltage
+        from hdg_battery
+        where id = #{id}
+    </select>
+
+    <select id="findUnique" parameterType="String" resultType="cn.com.yusong.yhdg.common.domain.hdg.Battery">
+        select id from hdg_battery where id = #{id}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.hdg.Battery" resultType="int">
+        select count(*) from hdg_battery
+        where 1 = 1
+        <if test="agentId != null">
+            <![CDATA[and agent_id = #{agentId}]]>
+        </if>
+        <if test="id != null and id !=''">
+            <![CDATA[and id LIKE concat('%',#{id}, '%')]]>
+        </if>
+        <if test="cabinetId != null and cabinetId != ''">
+            and cabinet_id = #{cabinetId}
+        </if>
+        <if test="code != null and code !=''">
+            <![CDATA[and code LIKE concat('%',#{code}, '%')]]>
+        </if>
+        <if test="shellCode != null and shellCode !=''">
+            <![CDATA[and shell_code LIKE concat('%',#{shellCode}, '%')]]>
+        </if>
+        <if test="status != null">
+            and status = #{status}
+        </if>
+        <if test="chargeStatus != null">
+            and charge_status = #{chargeStatus}
+        </if>
+        <if test="simMemo != null and simMemo != ''">
+            and sim_memo = #{simMemo}
+        </if>
+        <if test="brand != null and brand != ''">
+            and brand = #{brand}
+        </if>
+        <if test="type != null">
+            and type = #{type}
+        </if>
+        <if test="isOnline != null">
+            and is_online = #{isOnline}
+        </if>
+        <if test="isNormal != null">
+            and is_normal = #{isNormal}
+        </if>
+        <if test="repairStatus != null">
+            and repair_status = #{repairStatus}
+        </if>
+        <if test="qrcode != null and qrcode !=''">
+            <![CDATA[and qrcode LIKE concat('%',#{qrcode}, '%')]]>
+        </if>
+        <if test="queryBeginTime !=null">
+            and free_out_time &gt;= #{queryBeginTime}
+        </if>
+        <if test="queryEndTime !=null">
+            and free_out_time &lt;= #{queryEndTime}
+        </if>
+        <if test="maxVolume !=null">
+            and volume &lt;= #{maxVolume}
+        </if>
+        <if test="minVolume !=null">
+            and volume &gt;= #{minVolume}
+        </if>
+        <if test="version !=null and version != '' ">
+            and version = #{version}
+        </if>
+        <if test="abnormalCause !=null and abnormalCause != '' ">
+            <![CDATA[and abnormal_cause LIKE concat('%',#{abnormalCause}, '%')]]>
+        </if>
+        <if test="queryAntiVersion !=null and queryAntiVersion != '' ">
+            and (version != #{queryAntiVersion} or version is null)
+        </if>
+        <if test="cellMfr != null and cellMfr !='' ">
+            <![CDATA[and cell_mfr LIKE concat('%',#{cellMfr}, '%')]]>
+        </if>
+        <if test="cellModel != null and cellModel !='' ">
+            <![CDATA[and cell_model LIKE concat('%',#{cellModel}, '%')]]>
+        </if>
+        <if test="customerFullname != null and customerFullname !=''">
+            <![CDATA[and customer_fullname LIKE concat('%',#{customerFullname}, '%')]]>
+        </if>
+        <if test="customerMobile != null and customerMobile !=''">
+            <![CDATA[and customer_mobile LIKE concat('%',#{customerMobile}, '%')]]>
+        </if>
+        <if test="category != null and category != ''">
+            and category = #{category}
+        </if>
+        <if test="customerUseFlag != null and customerUseFlag == 1">
+            and status = 6
+        </if>
+        <if test="inCabinetFlag != null and inCabinetFlag == 1">
+            and status in (2,3,5)
+        </if>
+        <if test="notUseFlag != null and notUseFlag == 1">
+            and status = 1
+        </if>
+    </select>
+
+    <select id="findByAbnormalAll" parameterType="cn.com.yusong.yhdg.common.domain.hdg.Battery"
+            resultType="cn.com.yusong.yhdg.common.domain.hdg.Battery">
+        select
+        *
+        from hdg_battery
+        where is_normal = 0
+        <if test="agentId != null">
+            <![CDATA[and agent_id = #{agentId}]]>
+        </if>
+        <if test="id != null and id !=''">
+            <![CDATA[and id LIKE concat('%',#{id}, '%')]]>
+        </if>
+        <if test="cabinetId != null and cabinetId != ''">
+            and cabinet_id = #{cabinetId}
+        </if>
+        <if test="code != null and code !=''">
+            <![CDATA[and code LIKE concat('%',#{code}, '%')]]>
+        </if>
+        <if test="shellCode != null and shellCode !=''">
+            <![CDATA[and shell_code LIKE concat('%',#{shellCode}, '%')]]>
+        </if>
+        <if test="status != null">
+            and status = #{status}
+        </if>
+        <if test="chargeStatus != null">
+            and charge_status = #{chargeStatus}
+        </if>
+        <if test="simMemo != null and simMemo != ''">
+            and sim_memo = #{simMemo}
+        </if>
+        <if test="brand != null and brand != ''">
+            and brand = #{brand}
+        </if>
+        <if test="type != null and type != ''">
+            and type = #{type}
+        </if>
+        <if test="isOnline != null">
+            and is_online = #{isOnline}
+        </if>
+        <if test="abnormalCause !=null and abnormalCause != '' ">
+            <![CDATA[and abnormal_cause LIKE concat('%',#{abnormalCause}, '%')]]>
+        </if>
+        <if test="repairStatus != null">
+            and repair_status = #{repairStatus}
+        </if>
+        <if test="qrcode != null and qrcode !=''">
+            <![CDATA[and qrcode LIKE concat('%',#{qrcode}, '%')]]>
+        </if>
+        <if test="queryBeginTime !=null">
+            and free_out_time &gt;= #{queryBeginTime}
+        </if>
+        <if test="queryEndTime !=null">
+            and free_out_time &lt;= #{queryEndTime}
+        </if>
+        <if test="maxVolume !=null">
+            and volume &lt;= #{maxVolume}
+        </if>
+        <if test="minVolume !=null">
+            and volume &gt;= #{minVolume}
+        </if>
+        <if test="version !=null and version != '' ">
+            and version = #{version}
+        </if>
+        <if test="queryAntiVersion !=null and queryAntiVersion != '' ">
+            and (version != #{queryAntiVersion} or version is null)
+        </if>
+        <if test="cellMfr != null and cellMfr !='' ">
+            <![CDATA[and cell_mfr LIKE concat('%',#{cellMfr}, '%')]]>
+        </if>
+        <if test="cellModel != null and cellModel !='' ">
+            <![CDATA[and cell_model LIKE concat('%',#{cellModel}, '%')]]>
+        </if>
+        <if test="customerFullname != null and customerFullname !=''">
+            <![CDATA[and customer_fullname LIKE concat('%',#{customerFullname}, '%')]]>
+        </if>
+        <if test="customerMobile != null and customerMobile !=''">
+            <![CDATA[and customer_mobile LIKE concat('%',#{customerMobile}, '%')]]>
+        </if>
+        <if test="category != null and category != ''">
+            and category = #{category}
+        </if>
+        order by operator_time desc, id asc
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.hdg.Battery"
+            resultType="cn.com.yusong.yhdg.common.domain.hdg.Battery">
+        select
+        *
+        from hdg_battery
+        where 1 = 1
+        <if test="agentId != null">
+            <![CDATA[and agent_id = #{agentId}]]>
+        </if>
+        <if test="id != null and id !=''">
+            <![CDATA[and id LIKE concat('%',#{id}, '%')]]>
+        </if>
+        <if test="cabinetId != null and cabinetId != ''">
+            and cabinet_id = #{cabinetId}
+        </if>
+        <if test="code != null and code !=''">
+            <![CDATA[and code LIKE concat('%',#{code}, '%')]]>
+        </if>
+        <if test="shellCode != null and shellCode !=''">
+            <![CDATA[and shell_code LIKE concat('%',#{shellCode}, '%')]]>
+        </if>
+        <if test="status != null">
+            and status = #{status}
+        </if>
+        <if test="chargeStatus != null">
+            and charge_status = #{chargeStatus}
+        </if>
+        <if test="simMemo != null and simMemo != ''">
+            and sim_memo = #{simMemo}
+        </if>
+        <if test="brand != null and brand != ''">
+            and brand = #{brand}
+        </if>
+        <if test="type != null and type != ''">
+            and type = #{type}
+        </if>
+        <if test="isOnline != null">
+            and is_online = #{isOnline}
+        </if>
+        <if test="isNormal != null">
+            and is_normal = #{isNormal}
+        </if>
+        <if test="repairStatus != null">
+            and repair_status = #{repairStatus}
+        </if>
+        <if test="qrcode != null and qrcode !=''">
+            <![CDATA[and qrcode LIKE concat('%',#{qrcode}, '%')]]>
+        </if>
+        <if test="queryBeginTime !=null">
+            and free_out_time &gt;= #{queryBeginTime}
+        </if>
+        <if test="queryEndTime !=null">
+            and free_out_time &lt;= #{queryEndTime}
+        </if>
+        <if test="maxVolume !=null">
+            and volume &lt;= #{maxVolume}
+        </if>
+        <if test="minVolume !=null">
+            and volume &gt;= #{minVolume}
+        </if>
+        <if test="version !=null and version != '' ">
+            and version = #{version}
+        </if>
+        <if test="abnormalCause !=null and abnormalCause != '' ">
+            <![CDATA[and abnormal_cause LIKE concat('%',#{abnormalCause}, '%')]]>
+        </if>
+        <if test="queryAntiVersion !=null and queryAntiVersion != '' ">
+            and (version != #{queryAntiVersion} or version is null)
+        </if>
+        <if test="cellMfr != null and cellMfr !='' ">
+            <![CDATA[and cell_mfr LIKE concat('%',#{cellMfr}, '%')]]>
+        </if>
+        <if test="cellModel != null and cellModel !='' ">
+            <![CDATA[and cell_model LIKE concat('%',#{cellModel}, '%')]]>
+        </if>
+        <if test="customerFullname != null and customerFullname !=''">
+            <![CDATA[and customer_fullname LIKE concat('%',#{customerFullname}, '%')]]>
+        </if>
+        <if test="customerMobile != null and customerMobile !=''">
+            <![CDATA[and customer_mobile LIKE concat('%',#{customerMobile}, '%')]]>
+        </if>
+        <if test="category != null and category != ''">
+            and category = #{category}
+        </if>
+        <if test="customerUseFlag != null and customerUseFlag == 1">
+            and status = 6
+        </if>
+        <if test="inCabinetFlag != null and inCabinetFlag == 1">
+            and status in (2,3,5)
+        </if>
+        <if test="notUseFlag != null and notUseFlag == 1">
+            and status = 1
+        </if>
+        order by operator_time desc, id asc
+        limit ${beginIndex}, ${rows}
+    </select>
+
+    <select id="findPageUpgradeCount" parameterType="cn.com.yusong.yhdg.common.domain.hdg.Battery" resultType="int">
+        select count(*) from hdg_battery
+        where 1 = 1
+        <if test="id != null and id !=''">
+            <![CDATA[and id LIKE concat('%',#{id}, '%') or code LIKE concat('%',#{code}, '%') ]]>
+        </if>
+    </select>
+
+    <select id="findPageUpgradeResult" parameterType="cn.com.yusong.yhdg.common.domain.hdg.Battery"
+            resultType="cn.com.yusong.yhdg.common.domain.hdg.Battery">
+        select
+        a.*,
+        b.bms_model
+        from hdg_battery a Left join hdg_battery_parameter b on a.id = b.id
+        where 1 = 1
+        <if test="id != null and id !=''">
+            <![CDATA[and (a.id LIKE concat('%',#{id}, '%') or a.code LIKE concat('%',#{id}, '%')) ]]>
+        </if>
+        order by a.is_online desc, a.id asc
+        limit ${beginIndex}, ${rows}
+    </select>
+
+    <select id="findCheckedPageCount" parameterType="cn.com.yusong.yhdg.common.domain.hdg.Battery" resultType="int">
+        select count(*) from hdg_battery
+        where id in (select battery_id from hdg_battery_cell)
+        <if test="cellMfr != null and cellMfr !='' ">
+            <![CDATA[and cell_mfr LIKE concat('%',#{cellMfr}, '%')]]>
+        </if>
+        <if test="cellModel != null and cellModel !='' ">
+            <![CDATA[and cell_model LIKE concat('%',#{cellModel}, '%')]]>
+        </if>
+        <if test="shellCode != null and shellCode !='' ">
+            <![CDATA[and shell_code LIKE concat('%',#{shellCode}, '%')]]>
+        </if>
+        <if test="id != null and id !=''">
+            <![CDATA[and id LIKE concat('%',#{id}, '%')]]>
+        </if>
+        <if test="code != null and code !=''">
+            <![CDATA[and code LIKE concat('%',#{code}, '%')]]>
+        </if>
+    </select>
+
+    <select id="findCheckedPageResult" parameterType="cn.com.yusong.yhdg.common.domain.hdg.Battery"
+            resultType="cn.com.yusong.yhdg.common.domain.hdg.Battery">
+        select
+        *
+        from hdg_battery
+        where id in (select battery_id from hdg_battery_cell)
+        <if test="cellMfr != null and cellMfr !='' ">
+            <![CDATA[and cell_mfr LIKE concat('%',#{cellMfr}, '%')]]>
+        </if>
+        <if test="cellModel != null and cellModel !='' ">
+            <![CDATA[and cell_model LIKE concat('%',#{cellModel}, '%')]]>
+        </if>
+        <if test="shellCode != null and shellCode !='' ">
+            <![CDATA[and shell_code LIKE concat('%',#{shellCode}, '%')]]>
+        </if>
+        <if test="id != null and id !=''">
+            <![CDATA[and id LIKE concat('%',#{id}, '%')]]>
+        </if>
+        <if test="code != null and code !=''">
+            <![CDATA[and code LIKE concat('%',#{code}, '%')]]>
+        </if>
+        order by create_time desc
+        limit ${beginIndex}, ${rows}
+    </select>
+
+    <select id="findBusinessBatteryPageCount" parameterType="cn.com.yusong.yhdg.common.domain.hdg.Battery"
+            resultType="int">
+        select count(t1.id) from hdg_battery t1 , hdg_cabinet t2
+        where t1.cabinet_id = t2.id
+        <if test="agentId != null">
+            <![CDATA[and t1.agent_id = #{agentId}]]>
+        </if>
+        <if test="id != null and id !=''">
+            <![CDATA[and t1.id LIKE concat('%',#{id}, '%')]]>
+        </if>
+        <if test="cabinetId != null and cabinetId != ''">
+            and cabinet_id = #{cabinetId}
+        </if>
+        <if test="code != null and code !=''">
+            <![CDATA[and code LIKE concat('%',#{code}, '%')]]>
+        </if>
+        <if test="shellCode != null and shellCode !=''">
+            <![CDATA[and shell_code LIKE concat('%',#{shellCode}, '%')]]>
+        </if>
+        <if test="status != null">
+            and status = #{status}
+        </if>
+        <if test="chargeStatus != null">
+            and charge_status = #{chargeStatus}
+        </if>
+        <if test="simMemo != null and simMemo != ''">
+            and sim_memo = #{simMemo}
+        </if>
+        <if test="brand != null and brand != ''">
+            and brand = #{brand}
+        </if>
+        <if test="type != null">
+            and type = #{type}
+        </if>
+        <if test="isOnline != null">
+            and is_online = #{isOnline}
+        </if>
+        <if test="repairStatus != null">
+            and repair_status = #{repairStatus}
+        </if>
+        <if test="qrcode != null and qrcode !=''">
+            <![CDATA[and qrcode LIKE concat('%',#{qrcode}, '%')]]>
+        </if>
+        <if test="queryBeginTime !=null">
+            and free_out_time &gt;= #{queryBeginTime}
+        </if>
+        <if test="queryEndTime !=null">
+            and free_out_time &lt;= #{queryEndTime}
+        </if>
+        <if test="maxVolume !=null">
+            and volume &lt;= #{maxVolume}
+        </if>
+        <if test="minVolume !=null">
+            and volume &gt;= #{minVolume}
+        </if>
+        <if test="queryFlag != null and queryFlag == 0">
+            and t2.cabinet_company_id is not null
+        </if>
+        <if test="queryFlag != null and queryFlag == 1">
+            and t2.cabinet_company_id = #{cabinetCompanyId}
+        </if>
+    </select>
+
+    <select id="findBusinessBatteryPageResult" parameterType="cn.com.yusong.yhdg.common.domain.hdg.Battery"
+            resultType="cn.com.yusong.yhdg.common.domain.hdg.Battery">
+        select t1.*,t2.cabinet_company_id from hdg_battery t1 , hdg_cabinet t2
+        where t1.cabinet_id = t2.id
+
+        <if test="agentId != null">
+            <![CDATA[and t1.agent_id = #{agentId}]]>
+        </if>
+        <if test="id != null and id !=''">
+            <![CDATA[and t1.id LIKE concat('%',#{id}, '%')]]>
+        </if>
+        <if test="cabinetId != null and cabinetId != ''">
+            and cabinet_id = #{cabinetId}
+        </if>
+        <if test="code != null and code !=''">
+            <![CDATA[and code LIKE concat('%',#{code}, '%')]]>
+        </if>
+        <if test="shellCode != null and shellCode !=''">
+            <![CDATA[and shell_code LIKE concat('%',#{shellCode}, '%')]]>
+        </if>
+        <if test="status != null">
+            and status = #{status}
+        </if>
+        <if test="chargeStatus != null">
+            and charge_status = #{chargeStatus}
+        </if>
+        <if test="simMemo != null and simMemo != ''">
+            and sim_memo = #{simMemo}
+        </if>
+        <if test="brand != null and brand != ''">
+            and brand = #{brand}
+        </if>
+        <if test="type != null">
+            and type = #{type}
+        </if>
+        <if test="isOnline != null">
+            and is_online = #{isOnline}
+        </if>
+        <if test="repairStatus != null">
+            and repair_status = #{repairStatus}
+        </if>
+        <if test="qrcode != null and qrcode !=''">
+            <![CDATA[and qrcode LIKE concat('%',#{qrcode}, '%')]]>
+        </if>
+        <if test="queryBeginTime !=null">
+            and free_out_time &gt;= #{queryBeginTime}
+        </if>
+        <if test="queryEndTime !=null">
+            and free_out_time &lt;= #{queryEndTime}
+        </if>
+        <if test="maxVolume !=null">
+            and volume &lt;= #{maxVolume}
+        </if>
+        <if test="minVolume !=null">
+            and volume &gt;= #{minVolume}
+        </if>
+        <if test="queryFlag != null and queryFlag == 0">
+            and t2.cabinet_company_id is not null
+        </if>
+        <if test="queryFlag != null and queryFlag == 1">
+            and t2.cabinet_company_id = #{cabinetCompanyId}
+        </if>
+    </select>
+
+    <select id="findShopBatteryPageCount" parameterType="cn.com.yusong.yhdg.common.domain.hdg.Battery"
+            resultType="int">
+        select count(t1.id) from hdg_battery t1 , hdg_shop t2
+        where t1.shop_id = t2.id
+        <if test="agentId != null">
+            <![CDATA[and t1.agent_id = #{agentId}]]>
+        </if>
+        <if test="id != null and id !=''">
+            <![CDATA[and t1.id LIKE concat('%',#{id}, '%')]]>
+        </if>
+        <if test="belongCabinetId != null and belongCabinetId != ''">
+            and belong_cabinet_id = #{belongCabinetId}
+        </if>
+        <if test="shopId !=null and shopId !=''">
+            and t1.shop_id = #{shopId}
+        </if>
+        <if test="code != null and code !=''">
+            <![CDATA[and code LIKE concat('%',#{code}, '%')]]>
+        </if>
+        <if test="shellCode != null and shellCode !=''">
+            <![CDATA[and shell_code LIKE concat('%',#{shellCode}, '%')]]>
+        </if>
+        <if test="status != null">
+            and status = #{status}
+        </if>
+        <if test="chargeStatus != null">
+            and charge_status = #{chargeStatus}
+        </if>
+        <if test="simMemo != null and simMemo != ''">
+            and sim_memo = #{simMemo}
+        </if>
+        <if test="brand != null and brand != ''">
+            and brand = #{brand}
+        </if>
+        <if test="type != null">
+            and type = #{type}
+        </if>
+        <if test="isOnline != null">
+            and is_online = #{isOnline}
+        </if>
+        <if test="repairStatus != null">
+            and repair_status = #{repairStatus}
+        </if>
+        <if test="qrcode != null and qrcode !=''">
+            <![CDATA[and qrcode LIKE concat('%',#{qrcode}, '%')]]>
+        </if>
+        <if test="queryBeginTime !=null">
+            and free_out_time &gt;= #{queryBeginTime}
+        </if>
+        <if test="queryEndTime !=null">
+            and free_out_time &lt;= #{queryEndTime}
+        </if>
+        <if test="maxVolume !=null">
+            and volume &lt;= #{maxVolume}
+        </if>
+        <if test="minVolume !=null">
+            and volume &gt;= #{minVolume}
+        </if>
+
+    </select>
+
+    <select id="findShopBatteryPageResult" parameterType="cn.com.yusong.yhdg.common.domain.hdg.Battery"
+            resultType="cn.com.yusong.yhdg.common.domain.hdg.Battery">
+        select t1.* from hdg_battery t1 , hdg_shop t2
+        where t1.shop_id = t2.id
+
+        <if test="agentId != null">
+            <![CDATA[and t1.agent_id = #{agentId}]]>
+        </if>
+        <if test="id != null and id !=''">
+            <![CDATA[and t1.id LIKE concat('%',#{id}, '%')]]>
+        </if>
+        <if test="belongCabinetId != null and belongCabinetId != ''">
+            and belong_cabinet_id = #{belongCabinetId}
+        </if>
+        <if test="shopId !=null and shopId !=''">
+            and t1.shop_id = #{shopId}
+        </if>
+        <if test="code != null and code !=''">
+            <![CDATA[and code LIKE concat('%',#{code}, '%')]]>
+        </if>
+        <if test="shellCode != null and shellCode !=''">
+            <![CDATA[and shell_code LIKE concat('%',#{shellCode}, '%')]]>
+        </if>
+        <if test="status != null">
+            and status = #{status}
+        </if>
+        <if test="chargeStatus != null">
+            and charge_status = #{chargeStatus}
+        </if>
+        <if test="simMemo != null and simMemo != ''">
+            and sim_memo = #{simMemo}
+        </if>
+        <if test="brand != null and brand != ''">
+            and brand = #{brand}
+        </if>
+        <if test="type != null">
+            and type = #{type}
+        </if>
+        <if test="isOnline != null">
+            and is_online = #{isOnline}
+        </if>
+        <if test="repairStatus != null">
+            and repair_status = #{repairStatus}
+        </if>
+        <if test="qrcode != null and qrcode !=''">
+            <![CDATA[and qrcode LIKE concat('%',#{qrcode}, '%')]]>
+        </if>
+        <if test="queryBeginTime !=null">
+            and free_out_time &gt;= #{queryBeginTime}
+        </if>
+        <if test="queryEndTime !=null">
+            and free_out_time &lt;= #{queryEndTime}
+        </if>
+        <if test="maxVolume !=null">
+            and volume &lt;= #{maxVolume}
+        </if>
+        <if test="minVolume !=null">
+            and volume &gt;= #{minVolume}
+        </if>
+    </select>
+
+    <select id="findFactoryBatteryCount" parameterType="int" resultType="int">
+        select
+        count(id)
+        from hdg_battery
+        where status in
+        <foreach collection="statusList" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+        <if test="agentId != null and agentId !=0">
+            <![CDATA[and agent_id = #{agentId}]]>
+        </if>
+        <if test="chargeStatus != null">
+            and charge_status = #{chargeStatus}
+        </if>
+    </select>
+
+    <select id="findChargingCount" parameterType="int" resultType="int">
+        select
+        count(id)
+        from hdg_battery
+        where volume &lt; charge_complete_volume and status in
+        <foreach collection="statusList" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+        <if test="agentId != null and agentId !=0">
+            <![CDATA[and agent_id = #{agentId}]]>
+        </if>
+        <if test="chargeStatus != null">
+            and charge_status = #{chargeStatus}
+        </if>
+    </select>
+
+    <select id="findFullCount" parameterType="int" resultType="int">
+        select
+        count(id)
+        from hdg_battery
+        where volume >= charge_complete_volume and status in
+        <foreach collection="statusList" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+        <if test="agentId != null and agentId !=0">
+            <![CDATA[and agent_id = #{agentId}]]>
+        </if>
+        <if test="chargeStatus != null">
+            and charge_status = #{chargeStatus}
+        </if>
+        and is_normal = 1
+    </select>
+
+    <select id="findWaitChargeCount" parameterType="int" resultType="int">
+        select
+        count(id)
+        from hdg_battery
+        where volume &lt; charge_complete_volume and charge_status in (1,2) and status in
+        <foreach collection="statusList" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+        <if test="agentId != null and agentId !=0">
+            <![CDATA[and agent_id = #{agentId}]]>
+        </if>
+        <if test="chargeStatus != null">
+            and charge_status = #{chargeStatus}
+        </if>
+    </select>
+
+    <select id="findByAgent" parameterType="int" resultType="cn.com.yusong.yhdg.common.domain.hdg.Battery">
+        select
+        *
+        from
+        hdg_battery
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null and agentId !=0">
+                and agent_id = #{agentId}
+            </if>
+            <if test="id != null and id !=''">
+                <![CDATA[and id LIKE concat('%',#{id}, '%')]]>
+            </if>
+            <if test="chargeStatus != null">
+                and charge_status = #{chargeStatus}
+            </if>
+            <if test="chargeCompleteFlag != null and chargeCompleteFlag == 1">
+                <![CDATA[and volume >= charge_complete_volume]]>
+            </if>
+            <if test="statusList != null">
+                <foreach collection="statusList" item="item" open=" and status in (" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+        </trim>
+    </select>
+
+    <select id="findQrcode" resultType="int">
+        select count(*) from hdg_battery where qrcode = #{qrcode}
+        <if test="id != null">
+            and id != #{id}
+        </if>
+    </select>
+
+    <select id="findShellCode" resultType="int">
+        select count(*) from hdg_battery where shell_code = #{shellCode}
+        <if test="id != null">
+            and id != #{id}
+        </if>
+    </select>
+
+    <select id="findByShellCode" resultType="cn.com.yusong.yhdg.common.domain.hdg.Battery">
+        select * from hdg_battery where shell_code = #{shellCode} limit 1
+    </select>
+
+    <select id="findUniqueCode" resultType="int">
+        select count(*) from hdg_battery where code = #{code}
+        <if test="id != null">
+            and id != #{id}
+        </if>
+    </select>
+
+    <select id="findByCode" resultType="cn.com.yusong.yhdg.common.domain.hdg.Battery">
+        select * from hdg_battery where code = #{code}
+    </select>
+
+    <select id="findByCodeAndShellCode" resultType="cn.com.yusong.yhdg.common.domain.hdg.Battery">
+        select * from hdg_battery where code = #{code} and shell_code = #{shellCode}
+    </select>
+
+    <select id="findCountByAgent" resultType="int">
+        select count(1) from hdg_battery where agent_id = #{agentId}
+    </select>
+
+    <select id="findByCustomer" resultType="cn.com.yusong.yhdg.common.domain.hdg.Battery">
+        select
+        *
+        from hdg_battery
+        WHERE customer_id = #{customerId}
+    </select>
+
+    <select id="findNotStorePageCount" parameterType="cn.com.yusong.yhdg.common.domain.hdg.Battery" resultType="int">
+        select count(*) from hdg_battery
+        where id NOT IN (SELECT battery_id FROM hdg_shop_store_battery)
+        <if test="agentId != null">
+            <![CDATA[and agent_id = #{agentId}]]>
+        </if>
+        <if test="id != null and id !=''">
+            <![CDATA[and id LIKE concat('%',#{id}, '%')]]>
+        </if>
+        <if test="cabinetId != null and cabinetId != ''">
+            and cabinet_id = #{cabinetId}
+        </if>
+        <if test="code != null and code !=''">
+            <![CDATA[and code LIKE concat('%',#{code}, '%')]]>
+        </if>
+        <if test="shellCode != null and shellCode !=''">
+            <![CDATA[and shell_code LIKE concat('%',#{shellCode}, '%')]]>
+        </if>
+        <if test="status != null">
+            and status = #{status}
+        </if>
+        <if test="chargeStatus != null">
+            and charge_status = #{chargeStatus}
+        </if>
+        <if test="simMemo != null and simMemo != ''">
+            and sim_memo = #{simMemo}
+        </if>
+        <if test="brand != null and brand != ''">
+            and brand = #{brand}
+        </if>
+        <if test="type != null">
+            and type = #{type}
+        </if>
+        <if test="isOnline != null">
+            and is_online = #{isOnline}
+        </if>
+        <if test="isNormal != null">
+            and is_normal = #{isNormal}
+        </if>
+        <if test="repairStatus != null">
+            and repair_status = #{repairStatus}
+        </if>
+        <if test="qrcode != null and qrcode !=''">
+            <![CDATA[and qrcode LIKE concat('%',#{qrcode}, '%')]]>
+        </if>
+        <if test="queryBeginTime !=null">
+            and free_out_time &gt;= #{queryBeginTime}
+        </if>
+        <if test="queryEndTime !=null">
+            and free_out_time &lt;= #{queryEndTime}
+        </if>
+        <if test="maxVolume !=null">
+            and volume &lt;= #{maxVolume}
+        </if>
+        <if test="minVolume !=null">
+            and volume &gt;= #{minVolume}
+        </if>
+        <if test="version !=null and version != '' ">
+            and version = #{version}
+        </if>
+        <if test="queryAntiVersion !=null and queryAntiVersion != '' ">
+            and (version != #{queryAntiVersion} or version is null)
+        </if>
+        <if test="cellMfr != null and cellMfr !='' ">
+            <![CDATA[and cell_mfr LIKE concat('%',#{cellMfr}, '%')]]>
+        </if>
+        <if test="cellModel != null and cellModel !='' ">
+            <![CDATA[and cell_model LIKE concat('%',#{cellModel}, '%')]]>
+        </if>
+        <if test="customerFullname != null and customerFullname !=''">
+            <![CDATA[and customer_fullname LIKE concat('%',#{customerFullname}, '%')]]>
+        </if>
+        <if test="customerMobile != null and customerMobile !=''">
+            <![CDATA[and customer_mobile LIKE concat('%',#{customerMobile}, '%')]]>
+        </if>
+        <if test="category != null and category != ''">
+            and category = #{category}
+        </if>
+        <if test="customerUseFlag != null and customerUseFlag == 1">
+            and status = 6
+        </if>
+        <if test="inCabinetFlag != null and inCabinetFlag == 1">
+            and status in (2,3,5)
+        </if>
+        <if test="notUseFlag != null and notUseFlag == 1">
+            and status = 1
+        </if>
+    </select>
+
+    <select id="findNotStorePageResult" parameterType="cn.com.yusong.yhdg.common.domain.hdg.Battery"
+            resultType="cn.com.yusong.yhdg.common.domain.hdg.Battery">
+        select
+        *
+        from hdg_battery
+        where id NOT IN (SELECT battery_id FROM hdg_shop_store_battery)
+        <if test="agentId != null">
+            <![CDATA[and agent_id = #{agentId}]]>
+        </if>
+        <if test="id != null and id !=''">
+            <![CDATA[and id LIKE concat('%',#{id}, '%')]]>
+        </if>
+        <if test="cabinetId != null and cabinetId != ''">
+            and cabinet_id = #{cabinetId}
+        </if>
+        <if test="code != null and code !=''">
+            <![CDATA[and code LIKE concat('%',#{code}, '%')]]>
+        </if>
+        <if test="shellCode != null and shellCode !=''">
+            <![CDATA[and shell_code LIKE concat('%',#{shellCode}, '%')]]>
+        </if>
+        <if test="status != null">
+            and status = #{status}
+        </if>
+        <if test="chargeStatus != null">
+            and charge_status = #{chargeStatus}
+        </if>
+        <if test="simMemo != null and simMemo != ''">
+            and sim_memo = #{simMemo}
+        </if>
+        <if test="brand != null and brand != ''">
+            and brand = #{brand}
+        </if>
+        <if test="type != null and type != ''">
+            and type = #{type}
+        </if>
+        <if test="isOnline != null">
+            and is_online = #{isOnline}
+        </if>
+        <if test="isNormal != null">
+            and is_normal = #{isNormal}
+        </if>
+        <if test="repairStatus != null">
+            and repair_status = #{repairStatus}
+        </if>
+        <if test="qrcode != null and qrcode !=''">
+            <![CDATA[and qrcode LIKE concat('%',#{qrcode}, '%')]]>
+        </if>
+        <if test="queryBeginTime !=null">
+            and free_out_time &gt;= #{queryBeginTime}
+        </if>
+        <if test="queryEndTime !=null">
+            and free_out_time &lt;= #{queryEndTime}
+        </if>
+        <if test="maxVolume !=null">
+            and volume &lt;= #{maxVolume}
+        </if>
+        <if test="minVolume !=null">
+            and volume &gt;= #{minVolume}
+        </if>
+        <if test="version !=null and version != '' ">
+            and version = #{version}
+        </if>
+        <if test="queryAntiVersion !=null and queryAntiVersion != '' ">
+            and (version != #{queryAntiVersion} or version is null)
+        </if>
+        <if test="cellMfr != null and cellMfr !='' ">
+            <![CDATA[and cell_mfr LIKE concat('%',#{cellMfr}, '%')]]>
+        </if>
+        <if test="cellModel != null and cellModel !='' ">
+            <![CDATA[and cell_model LIKE concat('%',#{cellModel}, '%')]]>
+        </if>
+        <if test="customerFullname != null and customerFullname !=''">
+            <![CDATA[and customer_fullname LIKE concat('%',#{customerFullname}, '%')]]>
+        </if>
+        <if test="customerMobile != null and customerMobile !=''">
+            <![CDATA[and customer_mobile LIKE concat('%',#{customerMobile}, '%')]]>
+        </if>
+        <if test="category != null and category != ''">
+            and category = #{category}
+        </if>
+        <if test="customerUseFlag != null and customerUseFlag == 1">
+            and status = 6
+        </if>
+        <if test="inCabinetFlag != null and inCabinetFlag == 1">
+            and status in (2,3,5)
+        </if>
+        <if test="notUseFlag != null and notUseFlag == 1">
+            and status = 1
+        </if>
+        order by operator_time desc, id asc
+        limit ${beginIndex}, ${rows}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.Battery">
+        insert into hdg_battery(
+            id,
+            code,
+            type,
+            category,
+            agent_id,
+            order_id,
+            volume,
+            status,
+            exchange_amount,
+            report_time,
+            order_distance,
+            total_distance,
+            is_active,
+            current_signal,
+            belong_city_id,
+            lng,
+            lat,
+            address,
+            health,
+            sim_memo,
+            brand,
+            voltage,
+            electricity,
+            use_count,
+            produce_date,
+            protect_state,
+            strand,
+            temp,
+            fet_status,
+            charge_status,
+            ready_charge_time,
+            customer_out_time,
+            customer_id,
+            customer_mobile,
+            customer_fullname,
+            in_box_time,
+            cabinet_id,
+            cabinet_name,
+            box_num,
+            keeper_out_time,
+            keeper_name,
+            free_out_time,
+            stay_heartbeat,
+            move_heartbeat,
+            electrify_heartbeat,
+            is_report_voltage,
+            is_online,
+            is_normal,
+            qrcode,
+            shell_code,
+            cell_count,
+            appearance,
+            charge_complete_volume,
+            gps_switch,
+            lock_switch,
+            gprs_shutdown,
+            shutdown_voltage,
+            accelereted_speed,
+            repair_status,
+            create_time
+        )
+        values(
+            #{id},
+            #{code},
+            #{type},
+            #{category},
+            #{agentId},
+            #{orderId},
+            #{volume},
+            #{status},
+            #{exchangeAmount},
+            #{reportTime},
+            #{orderDistance},
+            #{totalDistance},
+            #{isActive},
+            #{currentSignal},
+            #{belongCityId},
+            #{lng},
+            #{lat},
+            #{address},
+            #{health},
+            #{simMemo},
+            #{brand},
+            #{voltage},
+            #{electricity},
+            #{useCount},
+            #{produceDate},
+            #{protectState},
+            #{strand},
+            #{temp},
+            #{fetStatus},
+            #{chargeStatus},
+            #{readyChargeTime},
+            #{customerOutTime},
+            #{customerId},
+            #{customerMobile},
+            #{customerFullname},
+            #{inBoxTime},
+            #{cabinetId},
+            #{cabinetName},
+            #{boxNum},
+            #{keeperOutTime},
+            #{keeperName},
+            #{freeOutTime},
+            #{stayHeartbeat},
+            #{moveHeartbeat},
+            #{electrifyHeartbeat},
+            #{isReportVoltage},
+            #{isOnline},
+            #{isNormal},
+            #{qrcode},
+            #{shellCode},
+            #{cellCount},
+            #{appearance},
+            #{chargeCompleteVolume},
+            #{gpsSwitch},
+            #{lockSwitch},
+            #{gprsShutdown},
+            #{shutdownVoltage},
+            #{acceleretedSpeed},
+            #{repairStatus},
+            #{createTime}
+        )
+    </insert>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.hdg.Battery">
+        update hdg_battery set
+        type = #{type},
+        <if test="category != null and category != ''">
+            category = #{category},
+        </if>
+        brand = #{brand},
+        agent_id = #{agentId},
+        code = #{code},
+        is_active = #{isActive},
+        stay_heartbeat = #{stayHeartbeat},
+        move_heartbeat = #{moveHeartbeat},
+        electrify_heartbeat = #{electrifyHeartbeat},
+        gps_switch = #{gpsSwitch},
+        gprs_shutdown = #{gprsShutdown},
+        shutdown_voltage = #{shutdownVoltage},
+        accelereted_speed = #{acceleretedSpeed},
+        lock_switch = #{lockSwitch},
+        shell_code = #{shellCode},
+        <if test="cabinetId != null and cabinetId != ''">
+            cabinet_id = #{cabinetId},
+        </if>
+        <if test="belongCabinetId != null and belongCabinetId != ''">
+            belong_cabinet_id = #{belongCabinetId},
+        </if>
+        <if test="upLineTime != null and upLineTime != ''">
+            up_line_time = #{upLineTime},
+        </if>
+        <if test="upLineTime == null">
+            up_line_time = null,
+        </if>
+        up_line_status = #{upLineStatus},
+        charge_complete_volume = #{chargeCompleteVolume},
+        repair_status = #{repairStatus},
+        qrcode = #{qrcode}
+        where id = #{id}
+    </update>
+
+    <update id="checkBattery">
+        update hdg_battery set
+        cell_mfr = #{cellMfr},
+        cell_model = #{cellModel}
+        where id = #{id}
+    </update>
+
+
+    <update id="clearCustomer">
+        update hdg_battery
+        set
+        status = #{status},
+        order_id = null,
+        customer_out_time = null,
+        customer_id = null,
+        customer_mobile = null,
+        customer_fullname = null,
+        rescue_status = null,
+        low_volume_notice_volume = null,
+        low_volume_notice_time = null
+        where id = #{id}
+    </update>
+
+    <update id="updateOrderId">
+        update hdg_battery
+        set
+        status = #{status},
+        order_id = #{orderId},
+        customer_out_time = #{customerOutTime},
+        customer_id = #{customerId},
+        customer_mobile = #{customerMobile},
+        customer_fullname = #{customerFullname},
+        rescue_status = null,
+        low_volume_notice_volume = null,
+        low_volume_notice_time = null
+        where id = #{id}
+    </update>
+
+    <update id="updateFaultLog">
+        update hdg_battery set
+        <if test="property == 'notElectrifyFaultLogId'">
+            not_electrify_fault_log_id = null where not_electrify_fault_log_id = #{value}
+        </if>
+        <if test="property == 'monomerOvervoltageFaultLogId'">
+            monomer_overvoltage_fault_log_id = null where monomer_overvoltage_fault_log_id = #{value}
+        </if>
+        <if test="property == 'monomerLowvoltageFaultLogId'">
+            monomer_lowvoltage_fault_log_id = null where monomer_lowvoltage_fault_log_id = #{value}
+        </if>
+        <if test="property == 'wholeOvervoltageFaultLogId'">
+            whole_overvoltage_fault_log_id = null where whole_overvoltage_fault_log_id = #{value}
+        </if>
+        <if test="property == 'wholeLowvoltageFaultLogId'">
+            whole_lowvoltage_fault_log_id = null where whole_lowvoltage_fault_log_id = #{value}
+        </if>
+        <if test="property == 'chargeOvertempFaultLogId'">
+            charge_overtemp_fault_log_id = null where charge_overtemp_fault_log_id = #{value}
+        </if>
+        <if test="property == 'chargeLowtempFaultLogId'">
+            charge_lowtemp_fault_log_id = null where charge_lowtemp_fault_log_id = #{value}
+        </if>
+        <if test="property == 'dischargeOvertempFaultLogId'">
+            discharge_overtemp_fault_log_id = null where discharge_overtemp_fault_log_id = #{value}
+        </if>
+        <if test="property == 'dischargeLowtempFaultLogId'">
+            discharge_lowtemp_fault_log_id = null where discharge_lowtemp_fault_log_id = #{value}
+        </if>
+        <if test="property == 'chargeOvercurrentFaultLogId'">
+            charge_overcurrent_fault_log_id = null where charge_overcurrent_fault_log_id = #{value}
+        </if>
+        <if test="property == 'dischargeOvercurrentFaultLogId'">
+            discharge_overcurrent_fault_log_id = null where discharge_overcurrent_fault_log_id = #{value}
+        </if>
+        <if test="property == 'shortCircuitFaultLogId'">
+            short_circuit_fault_log_id = null where short_circuit_fault_log_id = #{value}
+        </if>
+        <if test="property == 'testingIcFaultLogId'">
+            testing_ic_fault_log_id = null where testing_ic_fault_log_id = #{value}
+        </if>
+        <if test="property == 'softwareLockingFaultLogId'">
+            software_locking_fault_log_id = null where software_locking_fault_log_id = #{value}
+        </if>
+        <if test="property == 'hitFaultLogId'">
+            hit_fault_log_id = null where hit_fault_log_id = #{value}
+        </if>
+        <if test="property == 'dismantleFaultLogId'">
+            dismantle_fault_log_id = null where dismantle_fault_log_id = #{value}
+        </if>
+        <if test="property == 'dischargeLockingFaultLogId'">
+            discharge_locking_fault_log_id = null where discharge_locking_fault_log_id = #{value}
+        </if>
+        <if test="property == 'chargeMosFaultLogId'">
+            charge_mos_fault_log_id = null where charge_mos_fault_log_id = #{value}
+        </if>
+        <if test="property == 'dischargeMosFaultLogId'">
+            discharge_mos_fault_log_id = null where discharge_mos_fault_log_id = #{value}
+        </if>
+        <if test="property == 'signVolLowLogId'">
+            sign_vol_low_log_id = null where sign_vol_low_log_id = #{value}
+        </if>
+        <if test="property == 'maxVolDiffLogId'">
+            max_vol_diff_log_id = null where max_vol_diff_log_id = #{value}
+        </if>
+    </update>
+
+    <update id="updateFullVolume">
+        update hdg_battery set
+            charge_complete_volume = #{chargeCompleteVolume}
+        where id = #{id}
+    </update>
+
+    <update id="updateQrcode">
+        update hdg_battery set
+        qrcode = #{qrcode}
+        where id = #{id}
+    </update>
+
+    <update id="updateShellCode">
+        update hdg_battery set
+        shell_code = #{shellCode}
+        where id = #{id}
+    </update>
+
+    <update id="updateCode">
+        update hdg_battery set
+        code = #{code}
+        where id = #{id}
+    </update>
+
+    <update id="updateCellCount">
+        update hdg_battery set
+        cell_count = #{cellCount}
+        where id = #{id}
+    </update>
+
+    <update id="updateIsNormal">
+        update hdg_battery set
+        is_normal = #{isNormal},
+        abnormal_cause = #{abnormalCause},
+        operator = #{operator},
+        operator_time = #{operatorTime}
+        where id = #{id}
+    </update>
+
+    <update id="updateUpLineStatus">
+        update hdg_battery set
+        agent_id = #{agentId},
+        lock_switch = 0,
+        up_line_status = #{upLineStatus},
+        up_line_time = #{upLineTime}
+        where id = #{id}
+    </update>
+
+    <update id="updateRescueStatus">
+        update hdg_battery set
+        rescue_status = #{rescueStatus}
+        where id = #{id}
+    </update>
+
+    <update id="updateShopId">
+        update hdg_battery set
+        shop_id = #{shopId},
+        shop_name = #{shopName}
+        where id = #{id}
+    </update>
+
+    <update id="changeIsNormal">
+        update hdg_battery set
+        <if test="isNormal != null and isNormal == 0">
+             is_normal = 1,
+        </if>
+        <if test="isNormal != null and isNormal == 1">
+            is_normal = 0,
+        </if>
+        <if test="operator != null">
+            operator= #{operator},
+        </if>
+        <if test="operatorTime !=null">
+            operator_time=#{operatorTime},
+        </if>
+        abnormal_cause = #{abnormalCause}
+        where id = #{id}
+    </update>
+
+    <update id="updateBatteryCustomer">
+        update hdg_battery set
+        customer_id = #{customerId},
+        customer_mobile = #{customerMobile},
+        customer_fullname = #{customerFullname}
+        where id = #{id}
+    </update>
+
+    <update id="updateStatus">
+        update hdg_battery set
+        status = #{status}
+        where id = #{id}
+    </update>
+
+    <delete id="delete">
+        delete from hdg_battery where id = #{id}
+    </delete>
+
+</mapper>

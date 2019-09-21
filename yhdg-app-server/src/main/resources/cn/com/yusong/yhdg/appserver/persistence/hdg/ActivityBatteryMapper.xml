@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.appserver.persistence.hdg.ActivityBatteryMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.hdg.ActivityBattery">
+        select * from hdg_activity_battery where activity_id = #{activityId} and battery_type = #{batteryType}
+    </select>
+
+    <select id="findByCustomer" resultType="cn.com.yusong.yhdg.common.domain.hdg.ActivityBattery">
+        select
+            price,
+            day_count,
+            activity_id
+        from
+        hdg_activity_battery
+        where activity_id in (
+            <![CDATA[
+                select
+                t1.id
+                from  hdg_activity t1 inner join hdg_activity_link_price_group t2 on t1.id = t2.activity_id
+                WHERE t1.type = 1
+                and t2.price_group_id = #{priceGroupId}
+                and t1.begin_time <= #{now}
+                and t1.end_time >= #{now}
+                and t1.begin_time <= #{registerTime}
+                and t1.end_time >= #{registerTime}
+                and not exists (
+                    select * from hdg_activity_customer where activity_id = t1.id and customer_id = #{customerId}
+                )
+                union
+                select
+                t1.id
+                from  hdg_activity t1 inner join hdg_activity_link_price_group t2 on t1.id = t2.activity_id
+                WHERE t1.type = 2
+                and t2.price_group_id = #{priceGroupId}
+                and t1.begin_time <= #{now}
+                and t1.end_time >= #{now}
+                and not exists (
+                    select * from hdg_activity_customer where activity_id = t1.id and customer_id = #{customerId}
+                )
+            ]]>
+        ) and battery_type = #{batteryType}
+    </select>
+
+</mapper>

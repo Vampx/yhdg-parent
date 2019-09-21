@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.zc.VehicleOnlineStatsMapper">
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.zc.VehicleOnlineStats" resultType="int">
+        select count(*) from zc_vehicle_online_stats
+        where 1 = 1
+        <if test="vehicleId != null">
+            and vehicle_id = #{vehicleId}
+        </if>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.zc.VehicleOnlineStats" resultType="cn.com.yusong.yhdg.common.domain.zc.VehicleOnlineStats">
+        select
+            hvos.*,
+            zv.vin_no AS vinNo
+        from zc_vehicle_online_stats AS hvos LEFT JOIN zc_vehicle AS zv ON hvos.vehicle_id = zv.id
+        where 1 = 1
+        <if test="vehicleId != null">
+            and hvos.vehicle_id = #{vehicleId}
+        </if>
+        order by begin_time desc
+        limit ${beginIndex}, ${rows}
+    </select>
+
+</mapper>

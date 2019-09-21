@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.serviceserver.persistence.basic.MobileMessageMapper">
+    <select id="findCountByType" resultType="int">
+        select count(*) from (
+            select
+                id
+            from bas_mobile_message
+            where source_type = #{sourceType} and source_id = #{sourceId} and type = #{type} limit 2
+        ) as t
+    </select>
+
+    <select id="findByType" resultType="long">
+        select
+            id
+        from bas_mobile_message
+        <![CDATA[where create_time <= #{createTime}]]>
+        and source_type in
+        <foreach item="item" index="index" collection="sourceType" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        limit ${limit}
+    </select>
+
+    <select id="findBySource" resultType="cn.com.yusong.yhdg.common.domain.basic.MobileMessage">
+        select
+          id,
+          partner_id as partnerId,
+          source_id as sourceId,
+          source_type as sourceType,
+          content,
+          mobile,
+          status,
+          sender_id as senderId,
+          handle_time as handleTime,
+          create_time as createTime
+        from bas_mobile_message
+        where source_type = #{sourceType} and source_id = #{sourceId}
+    </select>
+
+    <select id="findList" resultType="cn.com.yusong.yhdg.common.domain.basic.MobileMessage">
+        select
+            id,
+            partner_id as partnerId,
+            content,
+            mobile,
+            status,
+            delay,
+            variable,
+            template_code as templateCode,
+            create_time as createTime
+        from bas_mobile_message
+        where status = #{status}
+        limit ${offset}, ${limit}
+    </select>
+
+    <update id="complete">
+        update bas_mobile_message set status = #{status}, handle_time = #{handleTime}, sender_id = #{senderId} where id = #{id}
+    </update>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.MobileMessage" useGeneratedKeys="true" keyProperty="id">
+        insert into bas_mobile_message(partner_id, source_id, source_type, content, mobile, variable, template_code, status, sender_id, type, delay, handle_time, create_time, msg_id)
+        values(#{partnerId}, #{sourceId}, #{sourceType}, #{content}, #{mobile}, #{variable}, #{templateCode}, #{status}, #{senderId}, #{type}, #{delay}, #{handleTime}, #{createTime}, #{msgId})
+    </insert>
+
+    <update id="updateMsgId">
+        update bas_mobile_message set msg_id = #{msgId} where id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="long">
+        delete from bas_mobile_message where id = #{id}
+    </delete>
+
+    <delete id="deleteBySource">
+        delete from bas_mobile_message where source_type = #{sourceType} and source_id = #{sourceId}
+    </delete>
+</mapper>

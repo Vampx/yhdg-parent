@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.staticserver.persistence.zd.CustomerRentBatteryMapper">
+    <select id="findListByCustomer" parameterType="long" resultType="cn.com.yusong.yhdg.common.domain.zd.CustomerRentBattery">
+        select
+        *
+        from zd_customer_rent_battery
+        where customer_id = #{customerId}
+    </select>
+
+    <select id="existsByCustomer" resultType="int">
+        select
+        count(1)
+        from zd_customer_rent_battery
+        where customer_id = #{customerId} and  battery_id = #{batteryId}
+    </select>
+
+
+    <select id="exists" parameterType="long" resultType="int">
+        select
+        count(1)
+        from zd_customer_rent_battery
+        where customer_id = #{customerId}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.CustomerExchangeBattery">
+        insert into zd_customer_rent_battery(customer_id, agent_id, battery_id, battery_type, rent_order_id)
+        values(#{customerId}, #{agentId}, #{batteryId}, #{batteryType}, #{rentOrderId})
+    </insert>
+
+
+    <delete id="clearBattery">
+        delete from zd_customer_rent_battery where customer_id = #{customerId} and battery_id = #{batteryId}
+    </delete>
+
+</mapper>

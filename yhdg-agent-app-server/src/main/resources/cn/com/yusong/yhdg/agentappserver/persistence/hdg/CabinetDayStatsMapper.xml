@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.agentappserver.persistence.hdg.CabinetDayStatsMapper">
+
+    <select id="findByCabinetList" resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetDayStats">
+        select
+        *
+        from hdg_cabinet_day_stats
+        where agent_id = #{agentId}
+        <if test="cabinetId != null and cabinetId != ''">
+            and cabinet_id = #{cabinetId}
+        </if>
+        <if test="beginDate != null and endDate != null">
+            AND stats_date BETWEEN #{beginDate} AND #{endDate}
+        </if>
+        <if test="keyword != null and keyword != ''">
+            <![CDATA[and (cabinet_id LIKE concat('%', #{keyword}, '%') or cabinet_name LIKE concat('%', #{keyword}, '%'))]]>
+        </if>
+        order by stats_date DESC
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="findTotalStatsListByCabinetId" resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetDayStats">
+        select
+        ifnull(sum(foregift_money), 0) as foregiftMoney,
+        ifnull(sum(refund_foregift_money), 0) as refundForegiftMoney,
+
+        ifnull(sum(packet_period_money), 0) as packetPeriodMoney,
+        ifnull(sum(refund_packet_period_money), 0) as refundPacketPeriodMoney,
+
+        ifnull(sum(insurance_money), 0) as insuranceMoney,
+        ifnull(sum(refund_insurance_money), 0) as refundInsuranceMoney,
+
+        ifnull(sum(foregift_count), 0) as foregiftCount,
+        ifnull(sum(order_count), 0) as orderCount,
+        ifnull(sum(active_customer_count), 0) as activeCustomerCount,
+
+        ifnull(sum(electric_degree), 0) as electricDegree,
+        ifnull(sum(electric_price), 0) as electricPrice
+
+        from hdg_cabinet_day_stats
+        where cabinet_id = #{cabinetId} and agent_id = #{agentId}
+        AND stats_date BETWEEN #{beginDate} AND #{endDate}
+    </select>
+
+
+    <select id="findTotalCabinetStatsList" resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetDayStats">
+        select
+        cabinet_id as cabinetId,
+        ifnull(sum(foregift_money), 0) as foregiftMoney,
+        ifnull(sum(refund_foregift_money), 0) as refundForegiftMoney,
+
+        ifnull(sum(packet_period_money), 0) as packetPeriodMoney,
+        ifnull(sum(refund_packet_period_money), 0) as refundPacketPeriodMoney,
+
+        ifnull(sum(insurance_money), 0) as insuranceMoney,
+        ifnull(sum(refund_insurance_money), 0) as refundInsuranceMoney,
+
+        ifnull(sum(electric_degree), 0) as electricDegree,
+        ifnull(sum(electric_price), 0) as electricPrice,
+
+        ifnull(sum(foregift_count), 0) as foregiftCount,
+        ifnull(sum(order_count), 0) as orderCount,
+        ifnull(sum(active_customer_count), 0) as activeCustomerCount
+
+        from hdg_cabinet_day_stats
+        where agent_id = #{agentId}
+        <if test="beginDate != null and endDate != null">
+            AND stats_date BETWEEN #{beginDate} AND #{endDate}
+        </if>
+        <if test="keyword != null and keyword != ''">
+            <![CDATA[and cabinet_name LIKE concat('%', #{keyword}, '%')]]>
+        </if>
+        GROUP BY cabinet_id
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="findListByCabinetId" resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetDayStats">
+        select
+        *
+        from hdg_cabinet_day_stats
+        where cabinet_id = #{cabinetId} and agent_id = #{agentId}
+    </select>
+
+    <select id="findForStats" resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetDayStats">
+        select
+         *
+        from hdg_cabinet_day_stats
+        where agent_id = #{agentId}
+        <if test="statsDate != null and statsDate != ''">
+            and stats_date = #{statsDate}
+        </if>
+        <if test="keyword != null and keyword != ''">
+            <![CDATA[and (cabinet_id LIKE concat('%', #{keyword}, '%') or cabinet_name LIKE concat('%', #{keyword}, '%'))]]>
+        </if>
+        limit #{offset}, #{limit}
+    </select>
+
+    <select id="findForCabinet" resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetDayStats">
+        select
+        *
+        from hdg_cabinet_day_stats
+        where  cabinet_id = #{cabinetId}
+        and stats_date = #{statsDate}
+        limit 1
+    </select>
+
+    <select id="findTotalByStats" resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetDayStats">
+        select
+        sum(active_customer_count) as activeCustomerCount,
+        sum(order_count) as orderCount,
+        sum(foregift_count) as foregiftCount,
+        sum(foregift_money) as foregiftMoney,
+        sum(packet_period_money) as packetPeriodMoney
+        from hdg_cabinet_day_stats
+        where stats_date = #{statsDate} and agent_id = #{agentId}
+    </select>
+
+</mapper>

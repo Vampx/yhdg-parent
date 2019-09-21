@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.cabinetserver.persistence.hdg.BatteryOrderMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.hdg.BatteryOrder">
+        select
+            *
+        from hdg_battery_order
+        where id = #{id}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.BatteryOrder">
+        INSERT
+        INTO
+            hdg_battery_order
+            (
+                id,
+                partner_id,
+                agent_id,
+                province_id,
+                city_id,
+                district_id,
+                battery_id,
+                take_cabinet_id,
+                take_cabinet_name,
+                take_box_num,
+                take_time,
+                init_volume,
+                put_cabinet_id,
+                put_cabinet_name,
+                put_box_num,
+                put_time,
+                pay_time,
+                pay_type,
+                price,
+                money,
+                current_volume,
+                current_distance,
+                customer_id,
+                customer_mobile,
+                customer_fullname,
+                order_status,
+                refund_status,
+                refund_time,
+                refund_money,
+                address,
+                ticket_name,
+                ticket_money,
+                coupon_ticket_id,
+                packet_period_order_id,
+                create_time
+            )
+            VALUES
+            (
+                #{id},
+                #{partnerId},
+                #{agentId},
+                #{provinceId},
+                #{cityId},
+                #{districtId},
+                #{batteryId},
+                #{takeCabinetId},
+                #{takeCabinetName},
+                #{takeBoxNum},
+                #{takeTime},
+                #{initVolume},
+                #{putCabinetId},
+                #{putCabinetName},
+                #{putBoxNum},
+                #{putTime},
+                #{payTime},
+                #{payType},
+                #{price},
+                #{money},
+                #{currentVolume},
+                #{currentDistance},
+                #{customerId},
+                #{customerMobile},
+                #{customerFullname},
+                #{orderStatus},
+                #{refundStatus},
+                #{refundTime},
+                #{refundMoney},
+                #{address},
+                #{ticketName},
+                #{ticketMoney},
+                #{couponTicketId},
+                #{packetPeriodOrderId},
+                #{createTime}
+            )
+    </insert>
+
+    <update id="putBattery" >
+        update hdg_battery_order set
+            current_Volume = #{currentVolume},
+            order_status = #{orderStatus},
+            put_shop_id = #{putShopId},
+            put_shop_name = #{putShopName},
+            put_cabinet_id = #{putCabinetId},
+            put_cabinet_name = #{putCabinetName},
+            put_box_num = #{putBoxNum},
+            current_capacity = #{currentCapacity},
+            put_time = #{putTime}
+        where id = #{id}
+    </update>
+
+    <update id="takeOldBattery" >
+        update hdg_battery_order set
+        order_status = #{orderStatus},
+        current_Volume = null,
+        current_capacity = null,
+        put_cabinet_id = null,
+        put_cabinet_name = null,
+        put_box_num = null,
+        put_time = null,
+        pay_timeout_fault_log_id = null
+        where id = #{id}
+    </update>
+
+    <update id="takeNewBattery" >
+        update hdg_battery_order set
+        order_status = #{orderStatus},
+        take_time = #{takeTime},
+        not_take_timeout_fault_log_id = null
+        where id = #{id}
+    </update>
+
+    <update id="backOk">
+        update hdg_battery_order
+        set
+            order_status = #{orderStatus},
+            pay_type = #{payType},
+            pay_time = #{payTime},
+            price = #{price},
+            money = #{money},
+            current_volume = #{currentVolume},
+            current_capacity = #{currentCapacity},
+            put_cabinet_id = #{putCabinetId},
+            put_cabinet_name = #{putCabinetName},
+            put_box_num = #{putBoxNum},
+            put_time = #{putTime},
+            pay_timeout_fault_log_id = null
+        where id = #{id}
+    </update>
+
+    <update id="updatePrice">
+        update hdg_battery_order
+        set
+            price = #{price},
+            money = #{money}
+        where id = #{id}
+    </update>
+
+    <update id="payOk">
+        update hdg_battery_order
+        set
+        order_status = #{orderStatus},
+        pay_type = #{payType},
+        pay_time = #{payTime},
+        packet_period_order_id = #{packetPeriodOrderId},
+        price = #{price},
+        money = #{money},
+        pay_timeout_fault_log_id = null
+        where id = #{id}
+    </update>
+
+    <update id="updateErrorMessage">
+        update hdg_battery_order set
+        error_message = #{errorMessage}, error_time = #{errorTime}
+        where id = #{id}
+    </update>
+</mapper>

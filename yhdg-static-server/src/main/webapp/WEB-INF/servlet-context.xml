@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/mvc"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:beans="http://www.springframework.org/schema/beans"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
+
+	<beans:bean id="freemarkerConfig"
+				class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+		<beans:property name="templateLoaderPath" value="/WEB-INF/views" />
+		<beans:property name="freemarkerSettings">
+			<beans:map>
+				<beans:entry key="locale" value="zh_CN" />
+				<beans:entry key="date_format" value="yyyy-MM-dd" />
+				<beans:entry key="time_format" value="HH:mm:ss" />
+				<beans:entry key="datetime_format" value="yyyy-MM-dd HH:mm:ss" />
+				<beans:entry key="number_format" value="#.######" />
+				<beans:entry key="boolean_format" value="true,false" />
+				<beans:entry key="whitespace_stripping" value="true" />
+				<beans:entry key="default_encoding" value="utf-8" />
+				<beans:entry key="tag_syntax" value="auto_detect" />
+				<beans:entry key="url_escaping_charset" value="utf-8" />
+				<beans:entry key="output_encoding" value="utf-8" />
+				<beans:entry key="auto_import" value="/security/lib.ftl as app" />
+			</beans:map>
+		</beans:property>
+	</beans:bean>
+	<beans:bean
+			class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+		<beans:property name="prefix" value="" />
+		<beans:property name="suffix" value=".ftl" />
+		<beans:property name="contentType" value="text/html;charset=utf-8" />
+		<beans:property name="exposeRequestAttributes" value="true" />
+		<beans:property name="exposeSessionAttributes" value="true" />
+		<beans:property name="exposeSpringMacroHelpers" value="true" />
+		<beans:property name="allowSessionOverride" value="true"/>
+		<beans:property name="viewClass"
+						value="org.springframework.web.servlet.view.freemarker.FreeMarkerView" />
+	</beans:bean>
+
+	<!-- Only needed because we require fileupload in the org.springframework.samples.mvc.fileupload 
+		package -->
+	<beans:bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver" />
+
+	<beans:import resource="controllers.xml" />
+</beans:beans>

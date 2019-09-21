@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.appserver.persistence.zd.RentInsuranceOrderMapper">
+
+
+    <select id="findList" resultType="cn.com.yusong.yhdg.common.domain.zd.RentInsuranceOrder">
+        select
+        *
+        FROM
+        zd_rent_insurance_order
+        where
+        customer_id = #{customerId}
+        <if test ="agentId != null ">
+            and agent_id = #{agentId}
+        </if>
+        <if test ="status != null ">
+            and status = #{status}
+        </if>
+        order by id DESC
+        limit #{offset},#{limit}
+    </select>
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.zd.RentInsuranceOrder">
+        select
+        *
+        FROM
+        zd_rent_insurance_order
+        where
+        id = #{id}
+    </select>
+
+    <select id="findByCustomerId" resultType="cn.com.yusong.yhdg.common.domain.zd.RentInsuranceOrder">
+        select
+        *
+        FROM
+        zd_rent_insurance_order
+        where
+        customer_id = #{customerId}
+        <if test ="batteryType != null ">
+            and battery_type = #{batteryType}
+        </if>
+        and status = #{status}
+        limit 1
+    </select>
+
+    <select id="findListByCustomerIdAndStatus" resultType="cn.com.yusong.yhdg.common.domain.zd.RentInsuranceOrder">
+        select
+        *
+        FROM zd_rent_insurance_order
+        where customer_id = #{customerId} and status = #{status}
+        order by id DESC
+    </select>
+
+    <select id="findOneEnabled" resultType="cn.com.yusong.yhdg.common.domain.zd.RentInsuranceOrder">
+        select
+            *
+        FROM
+            zd_rent_insurance_order
+        where customer_id = #{customerId}
+        and status = #{status}
+        and agent_id = #{agentId}
+        limit 1
+    </select>
+
+    <insert id="insert">
+        insert into zd_rent_insurance_order (
+              id,
+              partner_id,
+              agent_id,
+              agent_name,
+              battery_type,
+              month_count,
+              begin_time,
+              end_time,
+              status,
+              customer_id,
+              customer_mobile,
+              customer_fullname,
+              pay_type,
+              pay_time,
+              price,
+              paid,
+              money,
+              consume_deposit_balance,
+              consume_gift_balance,
+              create_time )
+        VALUES (
+              #{id},
+              #{partnerId},
+              #{agentId},
+              #{agentName},
+              #{batteryType},
+              #{monthCount},
+              #{beginTime},
+              #{endTime},
+              #{status},
+              #{customerId},
+              #{customerMobile},
+              #{customerFullname},
+              #{payType},
+              #{payTime},
+              #{price},
+              #{paid},
+              #{money},
+              #{consumeDepositBalance},
+              #{consumeGiftBalance},
+              #{createTime})
+    </insert>
+
+    <update id="updateRefund">
+        update zd_rent_insurance_order
+        set status = #{toStatus}
+        where id = #{id}
+        <if test="fromStatus != null">
+            and status = #{fromStatus}
+        </if>
+    </update>
+
+    <update id="updateOrderStatus">
+        update zd_rent_insurance_order
+        set status = #{toStatus}
+        where id = #{id}
+        and status = #{fromStatus}
+    </update>
+
+    <update id="updatePaidMoney">
+        update zd_rent_insurance_order
+        set money = (select ifnull(sum(insurance_money), 0) from bas_customer_installment_record_pay_detail where record_id = #{recordId} and status = #{status})
+        where id = #{id}
+    </update>
+
+    <update id="updateCompleteInstallmentTime">
+        update zd_rent_insurance_order
+        set complete_installment_time = #{completeInstallmentTime},
+        pay_time = #{payTime}
+        where id = #{id}
+    </update>
+
+    <update id="payOk">
+        update zd_rent_insurance_order set status = #{toStatus}, pay_time = #{payTime} where id = #{id} and status = #{fromStatus}
+    </update>
+
+</mapper>

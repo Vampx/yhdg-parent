@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.basic.WeixinmaMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.basic.Weixinma">
+        select *
+        from bas_weixinma
+        where id=#{id}
+    </select>
+
+    <select id="findAll" resultType="cn.com.yusong.yhdg.common.domain.basic.Weixinma">
+        select *
+        from bas_weixinma
+    </select>
+
+    <select id="findByPartnerId" resultType="cn.com.yusong.yhdg.common.domain.basic.Agent">
+        select
+        *
+        from bas_weixinma
+        where partner_id = #{partnerId}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.basic.Weixinma" resultType="int">
+        select count(id)
+        from bas_weixinma
+        <trim prefix="where" prefixOverrides="and">
+            <if test="id != null">and id = #{id} </if>
+            <if test="partnerId != null">and partner_id = #{partnerId} </if>
+            <if test="appName != null">and app_name = #{appName} </if>
+            <if test="systemTel != null">and system_tel = #{systemTel} </if>
+            <if test="createTime != null">and create_time = #{createTime} </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.basic.Weixinma" resultType="cn.com.yusong.yhdg.common.domain.basic.Weixinma">
+        select
+        bas_weixinma.*,bas_partner.partner_name
+        from bas_weixinma
+        left join bas_partner on bas_weixinma.partner_id = bas_partner.id
+        <trim prefix="where" prefixOverrides="and">
+            <if test="id != null">and bas_weixinma.id = #{id} </if>
+            <if test="partnerId != null">and bas_weixinma.partner_id = #{partnerId} </if>
+            <if test="appName != null">and bas_weixinma.app_name = #{appName} </if>
+            <if test="systemTel != null">and bas_weixinma.system_tel = #{systemTel} </if>
+            <if test="createTime != null">and bas_weixinma.create_time = #{createTime} </if>
+        </trim>
+        order by bas_weixinma.id desc
+        limit #{beginIndex}, #{rows}
+    </select>
+
+    <select id="findList" parameterType="cn.com.yusong.yhdg.common.domain.basic.Weixinma"
+            resultType="cn.com.yusong.yhdg.common.domain.basic.Weixinma">
+        select
+        *
+        from bas_weixinma
+        <trim prefix="where" prefixOverrides="and">
+            <if test="partnerId != null">
+                and partner_id = #{partnerId}
+            </if>
+        </trim>
+        order by id
+    </select>
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.Weixinma" keyProperty="id" useGeneratedKeys="true">
+        insert into bas_weixinma (
+        id, partner_id, app_name, app_id, app_secret, partner_code, system_tel, auth_type, create_time, logo_image_path, partner_key, subscribe_url, logo_path, page_type)
+        values (
+        #{id},#{partnerId},#{appName},#{appId},#{appSecret},#{partnerCode},#{systemTel},#{authType},#{createTime},#{logoImagePath},#{partnerKey},#{subscribeUrl},#{logoPath},#{pageType})
+    </insert>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.basic.Weixinma">
+        update bas_weixinma
+        <trim prefix="set" suffixOverrides="," suffix=" where id = #{id} ">
+            <if test="partnerId != null"> partner_id = #{partnerId}, </if>
+            <if test="appName != null"> app_name = #{appName}, </if>
+            <if test="systemTel != null"> system_tel = #{systemTel}, </if>
+            <if test="authType != null"> auth_type = #{authType}, </if>
+            <if test="createTime != null"> create_time = #{createTime}, </if>
+            <if test="logoImagePath != null"> logo_image_path = #{logoImagePath}, </if>
+            <if test="appId != null"> app_id = #{appId}, </if>
+            <if test="appSecret != null"> app_secret = #{appSecret}, </if>
+            <if test="partnerCode != null"> partner_code = #{partnerCode}, </if>
+            <if test="partnerKey != null"> partner_key = #{partnerKey}, </if>
+            <if test="subscribeUrl != null"> subscribe_url = #{subscribeUrl}, </if>
+            <if test="logoPath != null"> logo_path = #{logoPath}, </if>
+            <if test="pageType != null"> page_type = #{pageType}, </if>
+        </trim>
+    </update>
+
+
+    <delete id="delete">
+        delete from bas_weixinma
+        where id=#{id}
+    </delete>
+</mapper>

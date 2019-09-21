@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.staticserver.persistence.hdg.BatteryOrderMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.hdg.BatteryOrder">
+        select *
+        from
+        hdg_battery_order
+        WHERE
+        id = #{id}
+    </select>
+
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.BatteryOrder">
+        INSERT INTO hdg_battery_order (
+        id,
+        partner_id,
+        agent_id,
+        battery_type,
+        province_id,
+        city_id,
+        district_id,
+        battery_id,
+        take_shop_id,
+        take_shop_name,
+        take_agent_company_id,
+        take_agent_company_name,
+        take_cabinet_id,
+        take_cabinet_name,
+        take_box_num,
+        take_time,
+        init_volume,
+        put_cabinet_id,
+        put_cabinet_name,
+        put_box_num,
+        put_time,
+        pay_time,
+        pay_type,
+        price,
+        MONEY,
+        current_volume,
+        current_distance,
+        customer_id,
+        customer_mobile,
+        customer_fullname,
+        order_status,
+        refund_status,
+        refund_time,
+        refund_money,
+        address,
+        init_capacity,
+        current_capacity,
+        ticket_name,
+        ticket_money,
+        coupon_ticket_id,
+        packet_period_order_id,
+        create_time
+        )
+        VALUES
+        (
+        #{id},
+        #{partnerId},
+        #{agentId},
+         #{batteryType},
+        #{provinceId},
+        #{cityId},
+        #{districtId},
+        #{batteryId},
+        #{takeShopId},
+        #{takeShopName},
+        #{takeAgentCompanyId},
+        #{takeAgentCompanyName},
+        #{takeCabinetId},
+        #{takeCabinetName},
+        #{takeBoxNum},
+        #{takeTime},
+        #{initVolume},
+        #{putCabinetId},
+        #{putCabinetName},
+        #{putBoxNum},
+        #{putTime},
+        #{payTime},
+        #{payType},
+        #{price},
+        #{money},
+        #{currentVolume},
+        #{currentDistance},
+        #{customerId},
+        #{customerMobile},
+        #{customerFullname},
+        #{orderStatus},
+        #{refundStatus},
+        #{refundTime},
+        #{refundMoney},
+        #{address},
+        #{initCapacity},
+        #{currentCapacity},
+        #{ticketName},
+        #{ticketMoney},
+        #{couponTicketId},
+        #{packetPeriodOrderId},
+        #{createTime}
+        )
+    </insert>
+
+    <update id="payOk">
+        update hdg_battery_order set
+            pay_time = #{payTime},
+            order_status = #{toStatus}
+        where id = #{id} and order_status = #{fromStatus}
+    </update>
+
+</mapper>

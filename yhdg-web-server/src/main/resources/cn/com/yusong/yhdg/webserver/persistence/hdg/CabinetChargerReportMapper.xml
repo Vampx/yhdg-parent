@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.hdg.CabinetChargerReportMapper">
+    <select id="findTableExist" parameterType="string" resultType="String" >
+        show tables like #{tableName};
+    </select>
+
+    <select id="find" parameterType="string" resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetChargerReport">
+        select
+        *
+        from hdg_cabinet_charger_report_${suffix}
+        where cabinet_id = #{cabinetId}
+        and box_num = #{boxNum}
+        and create_time = #{createTime}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.hdg.CabinetChargerReport" resultType="int">
+        select
+        count(*)
+        from hdg_cabinet_charger_report_${suffix}
+        where cabinet_id = #{cabinetId} and box_num = #{boxNum}
+        <if test="createTime != null and createTime != ''">
+            and DATE_FORMAT(create_time, '%Y-%m-%d' ) = DATE_FORMAT( #{createTime}, '%Y-%m-%d')
+        </if>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.hdg.CabinetChargerReport"
+            resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetChargerReport">
+        select
+        *
+        from hdg_cabinet_charger_report_${suffix}
+        where cabinet_id = #{cabinetId} and box_num = #{boxNum}
+        <if test="createTime != null and createTime != ''">
+            and DATE_FORMAT(create_time, '%Y-%m-%d' ) = DATE_FORMAT( #{createTime}, '%Y-%m-%d')
+        </if>
+        order by create_time desc
+        limit ${beginIndex}, ${rows}
+    </select>
+
+</mapper>

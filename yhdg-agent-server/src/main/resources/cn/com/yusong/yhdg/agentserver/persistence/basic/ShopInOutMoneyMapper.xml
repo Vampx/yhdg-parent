@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.basic.ShopInOutMoneyMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.basic.ShopInOutMoney">
+        select *
+        from bas_shop_in_out_money
+        where id=#{id}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.basic.ShopInOutMoney" resultType="int">
+        select
+            count(*)
+        from bas_shop_in_out_money
+        <trim prefix="where" prefixOverrides="and">
+            <if test="shopId !=null">
+                and shop_id = #{shopId}
+            </if>
+            <if test="bizType !=null">
+                and biz_type = #{bizType}
+            </if>
+            <if test="type !=null">
+                and type = #{type}
+            </if>
+            <if test="queryTime !=null and queryTime != ''">
+                and DATE_FORMAT(create_time, '%Y-%c') =#{queryTime}
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.basic.ShopInOutMoney" resultType="cn.com.yusong.yhdg.common.domain.basic.ShopInOutMoney">
+        select
+           *
+        from bas_shop_in_out_money
+        <trim prefix="where" prefixOverrides="and">
+            <if test="shopId !=null">
+                and shop_id = #{shopId}
+            </if>
+            <if test="bizType !=null">
+                and biz_type = #{bizType}
+            </if>
+            <if test="type !=null">
+                and type = #{type}
+            </if>
+            <if test="queryTime !=null and queryTime != ''">
+                and DATE_FORMAT(create_time, '%Y-%c') =#{queryTime}
+            </if>
+        </trim>
+        order by id desc
+        limit ${beginIndex}, ${rows}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.ShopInOutMoney">
+        insert into bas_shop_in_out_money(shop_id, biz_type, biz_id, money, create_time, type, balance, operator)
+        values(#{shopId}, #{bizType}, #{bizId}, #{money}, #{createTime}, #{type}, #{balance}, #{operator})
+    </insert>
+
+</mapper>

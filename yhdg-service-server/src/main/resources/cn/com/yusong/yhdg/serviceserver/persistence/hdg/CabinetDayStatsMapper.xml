@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.serviceserver.persistence.hdg.CabinetDayStatsMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetDayStats">
+        select
+            *
+        from hdg_cabinet_day_stats
+        where cabinet_id = #{cabinetId}
+        and stats_date = #{statsDate}
+        and agent_id = #{agentId}
+    </select>
+
+    <select id="sumMonth" resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetMonthStats">
+        select
+            ifnull(sum(money), 0) as money,
+            ifnull(sum(foregift_money), 0) as foregiftMoney,
+            ifnull(sum(refund_foregift_money), 0) as refundForegiftMoney,
+            ifnull(sum(packet_period_money), 0) as packetPeriodMoney,
+            ifnull(sum(refund_packet_period_money), 0) as refundPacketPeriodMoney,
+            ifnull(sum(exchange_money), 0) as exchangeMoney,
+            ifnull(sum(insurance_money), 0) as insuranceMoney,
+
+            ifnull(sum(agent_money), 0) as agentMoney,
+            ifnull(sum(agent_exchange_money), 0) as agentExchangeMoney,
+            ifnull(sum(agent_packet_period_money), 0) as agentPacketPeriodMoney,
+            ifnull(sum(agent_refund_packet_period_money), 0) as agentRefundPacketPeriodMoney,
+
+            ifnull(sum(shop_money), 0) as shopMoney,
+            ifnull(sum(shop_exchange_money), 0) as shopExchangeMoney,
+            ifnull(sum(shop_packet_period_money), 0) as shopPacketPeriodMoney,
+            ifnull(sum(shop_refund_packet_period_money), 0) as shopRefundPacketPeriodMoney,
+
+            ifnull(sum(agent_company_money), 0) as agentCompanyMoney,
+            ifnull(sum(agent_company_exchange_money), 0) as agentCompanyExchangeMoney,
+            ifnull(sum(agent_company_packet_period_money), 0) as agentCompanyPacketPeriodMoney,
+            ifnull(sum(agent_company_refund_packet_period_money), 0) as agentCompanyRefundPacketPeriodMoney,
+
+            ifnull(sum(foregift_count), 0) as foregiftCount,
+            ifnull(sum(refund_foregift_count), 0) as refundForegiftCount,
+            ifnull(sum(packet_period_count), 0) as packetPeriodCount,
+            ifnull(sum(refund_packet_period_count), 0) as refundPacketPeriodCount,
+            ifnull(sum(order_count), 0) as orderCount,
+            ifnull(sum(insurance_count), 0) as insuranceCount,
+
+            ifnull(sum(refund_insurance_money), 0) as refundInsuranceMoney,
+            ifnull(sum(refund_insurance_count), 0) as refundInsuranceCount,
+
+            ifnull(sum(active_customer_count), 0) as activeCustomerCount,
+
+            ifnull(sum(electric_degree), 0) as electricDegree,
+            ifnull(sum(electric_price), 0) as electricPrice
+
+        from hdg_cabinet_day_stats
+        where cabinet_id = #{cabinetId}
+         and agent_id = #{agentId}
+        and stats_date LIKE concat(#{statsMonth}, '%')
+    </select>
+
+    <select id="sumTotal" resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetTotalStats">
+        select
+        ifnull(sum(money), 0) as money,
+        ifnull(sum(foregift_money), 0) as foregiftMoney,
+        ifnull(sum(refund_foregift_money), 0) as refundForegiftMoney,
+        ifnull(sum(packet_period_money), 0) as packetPeriodMoney,
+        ifnull(sum(refund_packet_period_money), 0) as refundPacketPeriodMoney,
+        ifnull(sum(exchange_money), 0) as exchangeMoney,
+        ifnull(sum(insurance_money), 0) as insuranceMoney,
+
+        ifnull(sum(agent_money), 0) as agentMoney,
+        ifnull(sum(agent_exchange_money), 0) as agentExchangeMoney,
+        ifnull(sum(agent_packet_period_money), 0) as agentPacketPeriodMoney,
+        ifnull(sum(agent_refund_packet_period_money), 0) as agentRefundPacketPeriodMoney,
+
+        ifnull(sum(shop_money), 0) as shopMoney,
+        ifnull(sum(shop_exchange_money), 0) as shopExchangeMoney,
+        ifnull(sum(shop_packet_period_money), 0) as shopPacketPeriodMoney,
+        ifnull(sum(shop_refund_packet_period_money), 0) as shopRefundPacketPeriodMoney,
+
+        ifnull(sum(agent_company_money), 0) as agentCompanyMoney,
+        ifnull(sum(agent_company_exchange_money), 0) as agentCompanyExchangeMoney,
+        ifnull(sum(agent_company_packet_period_money), 0) as agentCompanyPacketPeriodMoney,
+        ifnull(sum(agent_company_refund_packet_period_money), 0) as agentCompanyRefundPacketPeriodMoney,
+
+        ifnull(sum(foregift_count), 0) as foregiftCount,
+        ifnull(sum(refund_foregift_count), 0) as refundForegiftCount,
+        ifnull(sum(packet_period_count), 0) as packetPeriodCount,
+        ifnull(sum(refund_packet_period_count), 0) as refundPacketPeriodCount,
+        ifnull(sum(order_count), 0) as orderCount,
+        ifnull(sum(insurance_count), 0) as insuranceCount,
+
+        ifnull(sum(refund_insurance_money), 0) as refundInsuranceMoney,
+        ifnull(sum(refund_insurance_count), 0) as refundInsuranceCount,
+
+        ifnull(sum(electric_degree), 0) as electricDegree,
+        ifnull(sum(electric_price), 0) as electricPrice
+        from hdg_cabinet_day_stats
+        where cabinet_id = #{cabinetId}
+        and agent_id = #{agentId}
+    </select>
+
+    <select id="perElectric" resultType="int">
+        select
+        ifnull(sum(ifnull(electric_price, 0)/active_customer_count) /count(1), 0)
+        from hdg_cabinet_day_stats
+        where cabinet_id = #{cabinetId}
+        and agent_id = #{agentId}
+        and active_customer_count > 0 and electric_price > 0
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.CabinetDayStats" >
+        insert into hdg_cabinet_day_stats (
+            cabinet_id,
+            cabinet_name,
+            stats_date,
+            agent_id,
+            agent_name,
+            money,
+            foregift_money,
+            refund_foregift_money,
+            packet_period_money,
+            refund_packet_period_money,
+            exchange_money,
+            insurance_money,
+            agent_money,
+            agent_exchange_money,
+            agent_packet_period_money,
+            agent_refund_packet_period_money,
+            shop_money,
+            shop_exchange_money,
+            shop_packet_period_money,
+            shop_refund_packet_period_money,
+            agent_company_money,
+            agent_company_exchange_money,
+            agent_company_packet_period_money,
+            agent_company_refund_packet_period_money,
+            foregift_count,
+            refund_foregift_count,
+            packet_period_count,
+            refund_packet_period_count,
+            order_count,
+            insurance_count,
+            active_customer_count,
+            electric_degree,
+            unit_price,
+            electric_price,
+            refund_insurance_money,
+            refund_insurance_count,
+            update_time
+        ) values (
+             #{cabinetId},
+             #{cabinetName},
+             #{statsDate},
+             #{agentId},
+             #{agentName},
+             #{money},
+             #{foregiftMoney},
+             #{refundForegiftMoney},
+             #{packetPeriodMoney},
+             #{refundPacketPeriodMoney},
+             #{exchangeMoney},
+             #{insuranceMoney},
+             #{agentMoney},
+             #{agentExchangeMoney},
+             #{agentPacketPeriodMoney},
+             #{agentRefundPacketPeriodMoney},
+             #{shopMoney},
+             #{shopExchangeMoney},
+             #{shopPacketPeriodMoney},
+             #{shopRefundPacketPeriodMoney},
+             #{agentCompanyMoney},
+             #{agentCompanyExchangeMoney},
+             #{agentCompanyPacketPeriodMoney},
+             #{agentCompanyRefundPacketPeriodMoney},
+             #{foregiftCount},
+             #{refundForegiftCount},
+             #{packetPeriodCount},
+             #{refundPacketPeriodCount},
+             #{orderCount},
+             #{insuranceCount},
+             #{activeCustomerCount},
+             #{electricDegree},
+             #{unitPrice},
+             #{electricPrice},
+             #{refundInsuranceMoney},
+             #{refundInsuranceCount},
+             #{updateTime}
+        )
+    </insert>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.hdg.CabinetDayStats">
+        update hdg_cabinet_day_stats
+        set
+            money = #{money},
+            foregift_money = #{foregiftMoney},
+            refund_foregift_money = #{refundForegiftMoney},
+            packet_period_money = #{packetPeriodMoney},
+            refund_packet_period_money = #{refundPacketPeriodMoney},
+            exchange_money = #{exchangeMoney},
+            insurance_money = #{insuranceMoney},
+            agent_money = #{agentMoney},
+            agent_exchange_money = #{agentExchangeMoney},
+            agent_packet_period_money = #{agentPacketPeriodMoney},
+            agent_refund_packet_period_money = #{agentRefundPacketPeriodMoney},
+            shop_money = #{shopMoney},
+            shop_exchange_money = #{shopExchangeMoney},
+            shop_packet_period_money = #{shopPacketPeriodMoney},
+            shop_refund_packet_period_money = #{shopRefundPacketPeriodMoney},
+            agent_company_money = #{agentCompanyMoney},
+            agent_company_exchange_money = #{agentCompanyExchangeMoney},
+            agent_company_packet_period_money = #{agentCompanyPacketPeriodMoney},
+            agent_company_refund_packet_period_money = #{agentCompanyPacketPeriodMoney},
+            foregift_count = #{foregiftCount},
+            refund_foregift_count = #{refundForegiftCount},
+            packet_period_count = #{packetPeriodCount},
+            refund_packet_period_count = #{refundPacketPeriodCount},
+            order_count = #{orderCount},
+            insurance_count = #{insuranceCount},
+            active_customer_count = #{activeCustomerCount},
+            electric_degree = #{electricDegree},
+            unit_price = #{unitPrice},
+            electric_price = #{electricPrice},
+            refund_insurance_money = #{refundInsuranceMoney},
+            refund_insurance_count = #{refundInsuranceCount},
+            update_time = #{updateTime}
+        where cabinet_id = #{cabinetId}
+        and stats_date = #{statsDate}
+        and agent_id = #{agentId}
+    </update>
+
+</mapper>

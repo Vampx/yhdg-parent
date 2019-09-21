@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+                "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.appserver.persistence.basic.AlipayPayOrderMapper">
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.AlipayPayOrder">
+        insert into bas_alipay_pay_order(id, partner_id, customer_id,  agent_id,money, source_type, source_id, order_status, memo, create_time)
+        values(#{id}, #{partnerId}, #{customerId}, #{agentId}, #{money}, #{sourceType}, #{sourceId}, #{orderStatus}, #{memo}, #{createTime})
+    </insert>
+</mapper>

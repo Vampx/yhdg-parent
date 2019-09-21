@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.agentappserver.persistence.hdg.StationBatteryTypeMapper">
+
+    <select id="findListByBatteryType" resultType="cn.com.yusong.yhdg.common.domain.hdg.StationBatteryType">
+        select * from hdg_station_battery_type
+        where battery_type = #{batteryType}
+        and station_id in (select id from hdg_station where agent_id =  #{agentId} )
+    </select>
+
+    <select id="findListByStation" resultType="cn.com.yusong.yhdg.common.domain.hdg.StationBatteryType">
+        select
+        *
+        from hdg_station_battery_type
+        where station_id = #{stationId}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.StationBatteryType">
+        INSERT INTO hdg_station_battery_type(
+          station_id,
+          battery_type
+        ) VALUES (
+          #{stationId},
+          #{batteryType}
+        )
+    </insert>
+
+    <delete id="delete">
+        delete from hdg_station_battery_type
+        where station_id = #{stationId} and battery_type = #{batteryType}
+    </delete>
+
+</mapper>

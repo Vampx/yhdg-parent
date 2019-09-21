@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.yms.TerminalStrategyMapper">
+
+    <select id="find" parameterType="long" resultType="cn.com.yusong.yhdg.common.domain.yms.TerminalStrategy">
+        select
+            *
+        from yms_terminal_strategy
+        where id = #{id}
+    </select>
+
+    <select id="hasRecordByProperty" resultType="int">
+        select count(id) from yms_terminal_strategy where
+        <if test="property == 'agentId'">
+            agent_id = #{value}
+        </if>
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.yms.TerminalStrategy" resultType="int">
+        select
+            count(id)
+        from yms_terminal_strategy
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null and agentId != 0">
+                and agent_id = #{agentId}
+            </if>
+            <if test="strategyName != null and strategyName != ''">
+                <![CDATA[and strategy_name LIKE concat('%', #{strategyName}, '%')]]>
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.yms.TerminalStrategy" resultType="cn.com.yusong.yhdg.common.domain.yms.TerminalStrategy">
+        select
+            *
+        from yms_terminal_strategy
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null and agentId != 0">
+                and agent_id = #{agentId}
+            </if>
+            <if test="strategyName != null and strategyName != ''">
+                <![CDATA[and strategy_name LIKE concat('%', #{strategyName}, '%')]]>
+            </if>
+        </trim>
+        limit #{beginIndex}, #{rows}
+    </select>
+
+    <select id="findByAgent" resultType="cn.com.yusong.yhdg.common.domain.yms.TerminalStrategy">
+        select
+            *
+        from yms_terminal_strategy
+        where agent_id = #{agentId}
+        order by id desc
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.yms.TerminalStrategy" useGeneratedKeys="true" keyProperty="id">
+        insert into yms_terminal_strategy(agent_id, strategy_name, version, create_time) values(#{agentId}, #{strategyName}, #{version}, #{createTime})
+    </insert>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.yms.TerminalStrategy">
+        update yms_terminal_strategy set
+            strategy_name = #{strategyName},
+            version = version + 1
+        where id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="long">
+        delete from yms_terminal_strategy where id = #{id}
+    </delete>
+
+</mapper>

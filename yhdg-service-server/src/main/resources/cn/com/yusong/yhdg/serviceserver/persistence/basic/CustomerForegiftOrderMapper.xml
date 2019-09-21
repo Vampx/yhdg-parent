@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.serviceserver.persistence.basic.CustomerForegiftOrderMapper">
+    <select id="findIncrementCabinetExchange"  resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetDayStats">
+        select
+        cabinet_id as cabinetId,
+        agent_id as agentId,
+        ifnull(SUM(money),0) as foregiftMoney,
+        ifnull(count(id),0) as foregiftCount
+        from bas_customer_foregift_order
+        WHERE
+        pay_time &lt;= #{endTime}
+        AND pay_time &gt;= #{beginTime}
+        and cabinet_id is not null
+        group by cabinet_id,agent_id
+    </select>
+
+    <select id="findRefundCabinetExchange"  resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetDayStats">
+        select
+        cabinet_id as cabinetId,
+        agent_id as agentId,
+        ifnull(SUM(refund_money),0) as refundForegiftMoney,
+        ifnull(count(id),0) as refundForegiftCount
+        from bas_customer_foregift_order
+        WHERE
+        refund_time >= #{beginTime}
+        and refund_time &lt;= #{endTime}
+        and cabinet_id is not null
+        and pay_time is not null
+        group by cabinet_id,agent_id
+    </select>
+
+    <select id="findIncrementShopExchange"  resultType="cn.com.yusong.yhdg.common.domain.hdg.ShopDayStats">
+        select
+        shop_id as shopId,
+        ifnull(SUM(money),0) as agentForegiftMoney,
+        ifnull(count(id),0) as agentForegiftCount
+        from bas_customer_foregift_order
+        WHERE
+        pay_time &lt;= #{endTime}
+        AND pay_time &gt;= #{beginTime}
+        and cabinet_id is null and shop_id is not null
+        group by shop_id
+    </select>
+
+    <select id="findIncrementAgentCompanyExchange"  resultType="cn.com.yusong.yhdg.common.domain.basic.AgentCompanyDayStats">
+        select
+        agent_company_id as agentCompanyId,
+        ifnull(SUM(money),0) as agentForegiftMoney,
+        ifnull(count(id),0) as agentForegiftCount
+        from bas_customer_foregift_order
+        WHERE
+        pay_time &lt;= #{endTime}
+        AND pay_time &gt;= #{beginTime}
+        and agent_company_id is not null
+        group by agent_company_id
+    </select>
+
+    <select id="findRefundShopExchange"  resultType="cn.com.yusong.yhdg.common.domain.hdg.ShopDayStats">
+        select
+        shop_id as shopId,
+        ifnull(SUM(refund_money),0) as agentRefundForegiftMoney,
+        ifnull(count(id),0) as agentRefundForegiftCount
+        from bas_customer_foregift_order
+        WHERE
+        refund_time >= #{beginTime}
+        and refund_time &lt;= #{endTime}
+        and cabinet_id is null and shop_id is not null
+        and pay_time is not null
+        group by shop_id
+    </select>
+
+    <select id="findRefundAgentCompanyExchange"  resultType="cn.com.yusong.yhdg.common.domain.basic.AgentCompanyDayStats">
+        select
+        agent_company_id as agentCompanyId,
+        ifnull(SUM(refund_money),0) as agentRefundForegiftMoney,
+        ifnull(count(id),0) as agentRefundForegiftCount
+        from bas_customer_foregift_order
+        WHERE
+        refund_time >= #{beginTime}
+        and refund_time &lt;= #{endTime}
+        and agent_company_id is not null
+        and pay_time is not null
+        group by agent_company_id
+    </select>
+
+    <select id="findIncrementExchange"  resultType="java.util.Map">
+        select
+        agent_id as agentId,
+        ifnull(SUM(money),0) as incrementForegiftMoney,
+        ifnull(count(id),0) as incrementForegiftCount
+        from bas_customer_foregift_order
+        WHERE
+        pay_time &lt;= #{endTime}
+        AND pay_time &gt;= #{beginTime}
+        group by agent_id
+    </select>
+
+    <select id="findRefund" resultType="java.util.Map">
+        select
+        agent_id as agentId,
+        ifnull(SUM(refund_money),0) as foregiftRefundMoney,
+        ifnull(count(id),0) as foregiftRefundCount
+        from bas_customer_foregift_order
+        where
+        refund_time >= #{beginTime}
+        and refund_time &lt;= #{endTime}
+       and pay_time is not null
+        group by agent_id
+    </select>
+
+
+    <select id="findIncrement"  resultType="cn.com.yusong.yhdg.common.domain.hdg.PlatformDayStats">
+        select
+        ifnull(SUM(money),0) as incrementForegiftMoney,
+        ifnull(count(*),0) as incrementForegiftCount
+        from bas_customer_foregift_order
+        WHERE
+            pay_time &lt;= #{endTime}
+        AND pay_time &gt;= #{beginTime}
+        AND status = #{status}
+    </select>
+
+    <select id="findTotal"  resultType="cn.com.yusong.yhdg.common.domain.hdg.PlatformDayStats">
+        select
+        ifnull(SUM(money),0) as totalForegiftMoney,
+        ifnull(count(*),0) as totalForegiftCount
+        from bas_customer_foregift_order
+        WHERE
+            status = #{status}
+    </select>
+
+    <select id="findIncrementRefund" resultType="cn.com.yusong.yhdg.common.domain.hdg.PlatformDayStats">
+        select
+        ifnull(SUM(refund_money),0) as incrementRefundForegiftMoney,
+        ifnull(count(*),0) as incrementRefundForegiftCount
+        FROM
+        bas_customer_foregift_order
+        WHERE
+        refund_time &lt;= #{endTime}
+        AND refund_time &gt;= #{beginTime}
+        AND status = #{status}
+    </select>
+
+    <select id="findTotalRefund" resultType="cn.com.yusong.yhdg.common.domain.hdg.PlatformDayStats">
+        select
+        ifnull(SUM(refund_money),0) as totalRefundForegiftMoney,
+        ifnull(count(*),0) as totalRefundForegiftCount
+        FROM
+        bas_customer_foregift_order
+        WHERE
+        status = #{status}
+    </select>
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.basic.CustomerForegiftOrder">
+        select * from bas_customer_foregift_order where id = #{id}
+    </select>
+</mapper>

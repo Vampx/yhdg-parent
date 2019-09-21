@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.basic.BatchWeixinmpTemplateMessageDetailMapper">
+
+    <select id="find" parameterType="long" resultType="cn.com.yusong.yhdg.common.domain.basic.BatchWeixinmpTemplateMessageDetail">
+        select
+        *
+        from bas_batch_weixinmp_template_message_detail
+        where batch_id = #{batchId}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.basic.BatchWeixinmpTemplateMessageDetail" resultType="int">
+        select count(*)
+        from bas_batch_weixinmp_template_message_detail
+        <trim prefix="where" prefixOverrides="and">
+            <if test="batchId != null">
+                and batch_id = #{batchId}
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.basic.BatchWeixinmpTemplateMessageDetail" resultType="cn.com.yusong.yhdg.common.domain.basic.BatchWeixinmpTemplateMessageDetail">
+        select
+        *
+        from bas_batch_weixinmp_template_message_detail
+        <trim prefix="where" prefixOverrides="and">
+            <if test="batchId != null">
+                and batch_id = #{batchId}
+            </if>
+        </trim>
+        limit ${beginIndex}, ${rows}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.BatchWeixinmpTemplateMessageDetail">
+        insert into bas_batch_weixinmp_template_message_detail(batch_id, mobile, open_id)
+        values(#{batchId}, #{mobile}, #{openId})
+    </insert>
+
+</mapper>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.staticserver.persistence.zc.VehicleForegiftOrderMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.zc.VehicleForegiftOrder">
+        SELECT
+        *
+        FROM
+        zc_vehicle_foregift_order
+        WHERE id = #{id}
+    </select>
+
+    <update id="payOk">
+        update zc_vehicle_foregift_order
+        set status = #{toStatus},
+        pay_time = #{payTime}
+        where id = #{id}
+        and status = #{fromStatus}
+    </update>
+
+    <select id="findCountByCustomerId" resultType="int">
+        select count(*)
+        from  zc_vehicle_foregift_order
+        where customer_id = #{customerId}
+        and agent_id = #{agentId}
+        and status != #{status} and id != #{id}
+    </select>
+
+</mapper>

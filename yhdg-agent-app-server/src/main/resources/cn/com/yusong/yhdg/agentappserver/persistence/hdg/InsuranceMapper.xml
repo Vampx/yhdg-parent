@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.agentappserver.persistence.hdg.InsuranceMapper">
+
+    <select id="find" parameterType="long" resultType="cn.com.yusong.yhdg.common.domain.hdg.Insurance">
+        SELECT
+        *
+        FROM hdg_insurance
+        WHERE id = #{id}
+    </select>
+
+    <select id="findByAgent" parameterType="integer" resultType="cn.com.yusong.yhdg.common.domain.hdg.Insurance">
+        SELECT
+        *
+        FROM hdg_insurance
+        WHERE agent_id = #{agentId}
+        order by id desc
+        limit ${offset}, ${limit}
+    </select>
+
+    <select id="findListByBatteryType" resultType="cn.com.yusong.yhdg.common.domain.hdg.Insurance">
+        SELECT
+        *
+        FROM hdg_insurance
+        WHERE battery_type = #{batteryType} and agent_id = #{agentId}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.Insurance" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO hdg_insurance(
+        agent_id,
+        insurance_name,
+        is_active,
+        battery_type,
+        price,
+        paid,
+        memo,
+        month_count,
+        create_time
+        ) VALUES (
+        #{agentId},
+        #{insuranceName},
+        #{isActive},
+        #{batteryType},
+        #{price},
+        #{paid},
+        #{memo},
+        #{monthCount},
+        #{createTime}
+        )
+    </insert>
+
+    <delete id="delete">
+        delete from hdg_insurance where agent_id = #{agentId} and battery_type = #{batteryType}
+    </delete>
+
+</mapper>

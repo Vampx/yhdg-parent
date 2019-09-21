@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.serviceserver.persistence.hdg.AgentBatteryRentRecordMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.hdg.AgentBatteryRentRecord">
+        select
+            *
+        from hdg_agent_battery_rent_record
+        where agent_id = #{agentId} and battery_id = #{batteryId}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.AgentBatteryRentRecord">
+        insert into hdg_agent_battery_rent_record (
+            agent_id,
+            agent_name,
+            agent_code,
+            battery_id,
+            money,
+            status,
+            period_type,
+            begin_time,
+            end_time,
+            material_day_stats_id,
+            create_time
+        ) values (
+             #{agentId},
+             #{agentName},
+             #{agentCode},
+             #{batteryId},
+             #{money},
+             #{status},
+             #{periodType},
+             #{beginTime},
+             #{endTime},
+             #{materialDayStatsId},
+             #{createTime}
+        )
+    </insert>
+</mapper>

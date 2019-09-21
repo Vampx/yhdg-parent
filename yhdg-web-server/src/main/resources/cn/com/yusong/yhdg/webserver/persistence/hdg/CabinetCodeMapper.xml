@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.hdg.CabinetCodeMapper">
+
+    <select id="find" parameterType="string" resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetCode">
+        select id, code from hdg_cabinet_code where id = #{id}
+    </select>
+
+    <select id="findByCode" parameterType="string" resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetCode">
+        select id, code from hdg_cabinet_code where code = #{code}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.hdg.CabinetCode" resultType="int">
+        select
+        count(*)
+        from hdg_cabinet_code
+        <trim prefix="where" prefixOverrides="and">
+            <if test="id != null and id != ''">
+                <![CDATA[and id LIKE concat('%', #{id}, '%')]]>
+            </if>
+
+            <if test="code != null and code != ''">
+                <![CDATA[and code LIKE concat('%', #{code}, '%')]]>
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.hdg.CabinetCode" resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetCode">
+        select
+        *
+        from hdg_cabinet_code
+        <trim prefix="where" prefixOverrides="and">
+            <if test="id != null and id != ''">
+                <![CDATA[and id LIKE concat('%', #{id}, '%')]]>
+            </if>
+
+            <if test="code != null and code != ''">
+                <![CDATA[and code LIKE concat('%', #{code}, '%')]]>
+            </if>
+        </trim>
+        limit #{beginIndex}, #{rows}
+    </select>
+
+    <update id="update">
+        update hdg_cabinet_code set code = #{code} where id = #{id}
+    </update>
+   
+</mapper>

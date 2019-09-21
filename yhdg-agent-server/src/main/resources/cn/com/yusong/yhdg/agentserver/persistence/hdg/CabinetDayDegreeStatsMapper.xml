@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.hdg.CabinetDayDegreeStatsMapper">
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.hdg.CabinetDayDegreeStats" resultType="int">
+        select count(*)
+        from hdg_cabinet_day_degree_stats
+        <trim prefix="where" prefixOverrides="and">
+            <if test="cabinetName != null and cabinetName != ''">
+                <![CDATA[and cabinet_name LIKE concat('%', #{cabinetName}, '%')]]>
+            </if>
+            <if test="cabinetId != null and cabinetId != ''">
+                <![CDATA[and cabinet_id LIKE concat('%', #{cabinetId}, '%')]]>
+            </if>
+            <if test="statsDate != null and statsDate != ''">
+                and stats_date = #{statsDate}
+            </if>
+            <if test="agentId != null and agentId != ''">
+                and cabinet_id in (select id from hdg_cabinet where agent_id = #{agentId})
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.hdg.CabinetDayDegreeStats" resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetDayDegreeStats">
+        select *
+        from hdg_cabinet_day_degree_stats
+        <trim prefix="where" prefixOverrides="and">
+            <if test="cabinetName != null and cabinetName != ''">
+                <![CDATA[and cabinet_name LIKE concat('%', #{cabinetName}, '%')]]>
+            </if>
+            <if test="cabinetId != null and cabinetId != ''">
+                <![CDATA[and cabinet_id LIKE concat('%', #{cabinetId}, '%')]]>
+            </if>
+            <if test="statsDate != null and statsDate != ''">
+                and stats_date = #{statsDate}
+            </if>
+            <if test="agentId != null and agentId != ''">
+                and cabinet_id in (select id from hdg_cabinet where agent_id = #{agentId})
+            </if>
+        </trim>
+        order by stats_date DESC
+        limit ${beginIndex}, ${rows}
+    </select>
+
+    <select id="findByCabinetId" parameterType="string" resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetDayDegreeStats">
+        select * from hdg_cabinet_day_degree_stats
+        where cabinet_id = #{cabinetId}
+        order by id desc
+        limit 1
+    </select>
+
+    <select id="findLast"  resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetDayDegreeStats">
+        SELECT
+        *
+        FROM hdg_cabinet_day_degree_stats
+        where cabinet_id = #{cabinetId}
+        order by stats_date DESC
+        limit 1
+    </select>
+
+</mapper>

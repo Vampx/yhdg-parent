@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.appserver.persistence.basic.SystemConfigMapper">
+
+    <select id="findConfigValue" parameterType="string" resultType="string">
+        SELECT config_value
+        FROM bas_system_config
+        WHERE id=#{id}
+    </select>
+
+    <select id="findAll" resultType="cn.com.yusong.yhdg.common.domain.basic.SystemConfig">
+        select
+            id,
+            category_type as categoryType,
+            category_name as categoryName,
+            config_name as configName,
+            config_value as configValue,
+            is_read_only as isReadOnly,
+            is_show as isShow,
+            value_type as valueType
+        from bas_system_config
+    </select>
+
+</mapper>

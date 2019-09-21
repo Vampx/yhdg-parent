@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.batteryserver.persistence.basic.BatteryUpgradePackMapper">
+
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.basic.BatteryUpgradePack">
+        select
+        *
+        from  bas_battery_upgrade_pack
+        where id = #{id}
+    </select>
+
+    <select id="findByOldVersion" resultType="cn.com.yusong.yhdg.common.domain.basic.BatteryUpgradePack">
+        select
+        *
+        from  bas_battery_upgrade_pack
+        where old_version = #{oldVersion}
+        <if test="packType != null">
+            and pack_type = #{packType}
+        </if>
+    </select>
+
+</mapper>

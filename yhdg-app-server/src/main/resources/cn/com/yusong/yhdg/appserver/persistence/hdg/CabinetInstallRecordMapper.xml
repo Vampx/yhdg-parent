@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.appserver.persistence.hdg.CabinetInstallRecordMapper">
+
+    <select id="findByCabinetId" parameterType="long" resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetInstallRecord">
+        select * from chg_cabinet_install_record where cabinet_id = #{cabinetId}
+    </select>
+
+    <select id="find" parameterType="int" resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetInstallRecord">
+        select * from chg_cabinet_install_record where id = #{id}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.hdg.CabinetInstallRecord" resultType="int">
+        select
+        count(id)
+        from chg_cabinet_install_record
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null">
+                and agent_id = #{agentId}
+            </if>
+            <if test="agentName != null and agentName != ''">
+                <![CDATA[and agent_name LIKE concat('%', #{agentName}, '%')]]>
+            </if>
+            <if test="cabinetId != null">
+                and cabinet_id = #{cabinetId}
+            </if>
+            <if test="cabinetName != null and cabinetName != ''">
+                <![CDATA[and cabinet_name LIKE  concat('%', #{cabinetName}, '%')]]>
+            </if>
+            <if test="status != null and status != ''">
+                and status = #{status}
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.hdg.CabinetInstallRecord" resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetInstallRecord">
+        select
+        *
+        from chg_cabinet_install_record
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null">
+                and agent_id = #{agentId}
+            </if>
+            <if test="agentName != null and agentName != ''">
+                <![CDATA[and agent_name LIKE concat('%', #{agentName}, '%')]]>
+            </if>
+            <if test="cabinetId != null">
+                and cabinet_id = #{cabinetId}
+            </if>
+            <if test="cabinetName != null and cabinetName != ''">
+                <![CDATA[and cabinet_name LIKE  concat('%', #{cabinetName}, '%')]]>
+            </if>
+            <if test="status != null and status != ''">
+                and status = #{status}
+            </if>
+        </trim>
+        limit ${beginIndex}, ${rows}
+    </select>
+
+    <select id="findByAgent" resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetInstallRecord">
+        select * from chg_cabinet_install_record
+        where 1 = 1
+        <if test="agentId != null">
+            and agent_id = #{agentId}
+        </if>
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.CabinetInstallRecord">
+        insert into chg_cabinet_install_record(
+        agent_id,
+        agent_name,
+        agent_code,
+        operator,
+        cabinet_id,
+        cabinet_name,
+        total_box,
+        province_id,
+        city_id,
+        district_id,
+        street,
+        address,
+        terminal_id,
+        price,
+        lng,
+        lat,
+        memo,
+        mac,
+        broker,
+        tel,
+        salesman,
+        permit_exchange_volume,
+        charge_full_volume,
+        foregift_money,
+        rent_money,
+        rent_period_type,
+        rent_expire_time,
+        status,
+        create_time
+        )
+        values(
+        #{agentId},
+        #{agentName},
+        #{agentCode},
+        #{operator},
+        #{cabinetId},
+        #{cabinetName},
+        #{totalBox},
+        #{provinceId},
+        #{cityId},
+        #{districtId},
+        #{street},
+        #{address},
+        #{terminalId},
+        #{price},
+        #{lng},
+        #{lat},
+        #{memo},
+        #{mac},
+        #{broker},
+        #{tel},
+        #{salesman},
+        #{permitExchangeVolume},
+        #{chargeFullVolume},
+        #{foregiftMoney},
+        #{rentMoney},
+        #{rentPeriodType},
+        #{rentExpireTime},
+        #{status},
+        #{createTime}
+        )
+    </insert>
+
+    <update id="updateUpline" parameterType="cn.com.yusong.yhdg.common.domain.hdg.CabinetInstallRecord">
+        update chg_cabinet_install_record set
+        foregift_money = #{foregiftMoney},
+        rent_money = #{rentMoney},
+        rent_period_type = #{rentPeriodType},
+        rent_expire_time = #{rentExpireTime},
+        status = #{status}
+        where id = #{id}
+    </update>
+
+</mapper>

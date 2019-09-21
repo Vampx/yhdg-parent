@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.appserver.persistence.hdg.BatteryChargeRecordFaultMapper">
+
+    <select id="findList" resultType="cn.com.yusong.yhdg.common.domain.hdg.BatteryChargeRecordFault">
+        SELECT
+        *
+        FROM
+        hdg_battery_charge_record_fault
+        WHERE
+        id = #{id}
+        order by create_time DESC
+    </select>
+
+</mapper>

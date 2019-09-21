@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.agentappserver.persistence.hdg.ShopMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.hdg.Shop">
+        select * from hdg_shop
+        where id = #{id}
+    </select>
+
+    <select id="findMaxId" parameterType="String" resultType="String">
+        select
+        id
+        from hdg_shop
+        where
+        <![CDATA[id LIKE concat(#{id}, '%')]]>
+        ORDER BY id DESC
+        limit 1
+    </select>
+
+    <select id="findList" resultType="cn.com.yusong.yhdg.common.domain.hdg.Shop">
+        select *
+        FROM hdg_shop
+        where 1 = 1
+        <if test="keyword != null and keyword != ''">
+            <![CDATA[and keyword LIKE concat('%', #{keyword}, '%')]]>
+        </if>
+        <if test="agentId != null">
+            and agent_id = #{agentId}
+        </if>
+        ORDER BY id
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="findByAgentId" resultType="cn.com.yusong.yhdg.common.domain.hdg.Shop">
+        select
+            *,
+            floor(6378.138*2*ASIN(SQRT(POW(SIN((${lat}*PI()/180-lat*PI()/180)/2),2)+COS(${lat}*PI()/180)*COS(lat*PI()/180)*POW(SIN((${lng}*PI()/180-lng*PI()/180)/2),2)))*1000) AS distance
+        FROM hdg_shop
+        where agent_id = #{agentId}
+        <if test="keyword != null and keyword != ''">
+            <![CDATA[and keyword LIKE concat('%', #{keyword}, '%')]]>
+        </if>
+        ORDER BY id
+        limit #{offset}, #{limit}
+    </select>
+
+    <select id="findHdVipShopList" resultType="cn.com.yusong.yhdg.common.domain.hdg.Shop">
+        select *
+        FROM hdg_shop
+        where active_status = 1
+        <if test="keyword != null and keyword != ''">
+            <![CDATA[and (id LIKE concat('%', #{keyword}, '%') or shop_name LIKE concat('%', #{keyword}, '%'))]]>
+        </if>
+        <if test="agentId != null">
+            and agent_id = #{agentId}
+        </if>
+        and id not in (select shop_id from hdg_vip_price_shop)
+        limit #{offset}, #{limit}
+    </select>
+
+    <select id="findShopCount" resultType="int">
+        select
+        ifnull(count(1), 0)
+        from hdg_shop
+        where 1=1
+        <if test="agentId != null">
+            and agent_id = #{agentId}
+        </if>
+    </select>
+
+    <select id="findZdVipShopList" resultType="cn.com.yusong.yhdg.common.domain.hdg.Shop">
+        select *
+        FROM hdg_shop
+        where active_status = 1
+        <if test="keyword != null and keyword != ''">
+            <![CDATA[and (id LIKE concat('%', #{keyword}, '%') or shop_name LIKE concat('%', #{keyword}, '%'))]]>
+        </if>
+        <if test="agentId != null">
+            and agent_id = #{agentId}
+        </if>
+        and id not in (select shop_id from zd_vip_rent_price_shop)
+        limit #{offset}, #{limit}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.Shop">
+        insert into hdg_shop
+        (id,
+        agent_id,
+        shop_name,
+        province_id,
+        city_id,
+        district_id,
+        street,
+        lng,
+        lat,
+        geo_hash,
+        active_status,
+        image_path1,
+        image_path2,
+        image_path3,
+        work_time,
+        linkname,
+        tel,
+        address,
+        keyword,
+        platform_ratio,
+        agent_ratio,
+        province_agent_ratio,
+        city_agent_ratio,
+        shop_ratio,
+        balance,
+        create_time) VALUES
+        (#{id},
+        #{agentId},
+        #{shopName},
+        #{provinceId},
+        #{cityId},
+        #{districtId},
+        #{street},
+        #{lng},
+        #{lat},
+        #{geoHash},
+        #{activeStatus},
+        #{imagePath1},
+        #{imagePath2},
+        #{imagePath3},
+        #{workTime},
+        #{linkname},
+        #{tel},
+        #{address},
+        #{keyword},
+        #{platformRatio},
+        #{agentRatio},
+        #{provinceAgentRatio},
+        #{cityAgentRatio},
+        #{shopRatio},
+        #{balance},
+        #{createTime})
+    </insert>
+
+    <update id="updateInfo">
+        update hdg_shop set
+        <trim suffix="" suffixOverrides=",">
+            <if test="shopName != null and shopName != ''">
+                shop_name = #{shopName},
+            </if>
+            <if test="linkname != null and linkname != ''">
+                linkname = #{linkname},
+            </if>
+            <if test="tel != null and tel != ''">
+                tel = #{tel},
+            </if>
+            <if test="workTime != null and workTime != ''">
+                work_time = #{workTime},
+            </if>
+            <if test="payPeopleMobile != null and payPeopleMobile != ''">
+                pay_people_mobile = #{payPeopleMobile},
+            </if>
+            <if test="payPeopleName != null and payPeopleName != ''">
+                pay_people_name = #{payPeopleName},
+            </if>
+            <if test="payPeopleMpOpenId != null and payPeopleMpOpenId != ''">
+                pay_people_mp_open_id  = #{payPeopleMpOpenId},
+            </if>
+            <if test="payPeopleFwOpenId != null and payPeopleFwOpenId != ''">
+                pay_people_fw_open_id   = #{payPeopleFwOpenId},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="updateBalance">
+        <choose>
+            <when test="balance > 0">
+                update hdg_shop set balance = balance + #{balance} where id = #{id}
+            </when>
+            <otherwise>
+                <![CDATA[update hdg_shop set balance = balance + #{balance} where id = #{id} and balance + #{balance} >= 0 ]]>
+            </otherwise>
+        </choose>
+    </update>
+
+    <update id="updatePayPassword">
+        update hdg_shop set pay_password = #{payPassword} where id = #{id}
+    </update>
+
+    <delete id="delete">
+        delete from hdg_shop
+          where id = #{id}
+    </delete>
+
+</mapper>

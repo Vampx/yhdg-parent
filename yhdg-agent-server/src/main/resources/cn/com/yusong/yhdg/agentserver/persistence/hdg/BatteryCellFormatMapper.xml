@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.hdg.BatteryCellFormatMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.hdg.BatteryCellFormat">
+        SELECT
+        *
+        FROM hdg_battery_cell_format
+        WHERE id = #{id}
+    </select>
+
+    <select id="findByCellModelId" resultType="cn.com.yusong.yhdg.common.domain.hdg.BatteryCellFormat">
+        SELECT
+        *
+        FROM hdg_battery_cell_format
+        WHERE cell_model_id = #{cellModelId}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.hdg.BatteryCellFormat" resultType="int">
+        select
+        count(*)
+        from hdg_battery_cell_format
+        <trim prefix="where" prefixOverrides="and">
+            <if test="cellModel != null and cellModel != ''">
+                <![CDATA[and cell_model LIKE concat('%', #{cellModel}, '%')]]>
+            </if>
+            <if test="cellMfr != null and cellMfr != ''">
+                <![CDATA[and cell_mfr LIKE concat('%', #{cellMfr}, '%')]]>
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.hdg.BatteryCellFormat"
+            resultType="cn.com.yusong.yhdg.common.domain.hdg.BatteryCellFormat">
+        select
+        *
+        from hdg_battery_cell_format
+        <trim prefix="where" prefixOverrides="and">
+            <if test="cellModel != null and cellModel != ''">
+                <![CDATA[and cell_model LIKE concat('%', #{cellModel}, '%')]]>
+            </if>
+            <if test="cellMfr != null and cellMfr != ''">
+                <![CDATA[and cell_mfr LIKE concat('%', #{cellMfr}, '%')]]>
+            </if>
+        </trim>
+        order by id desc
+        limit #{beginIndex}, #{rows}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.BatteryCellFormat" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO hdg_battery_cell_format(
+         cell_model_id,
+         cell_mfr,
+         cell_model,
+         cell_format_name,
+         nominal_cap,
+         min_nominal_cap,
+         max_nominal_cap,
+         chg_cut_vol,
+         nominal_vol,
+         min_chg_temp,
+         max_chg_temp,
+         min_dsg_temp,
+         max_dsg_temp,
+         ac_resistance,
+         min_ac_resistance,
+         max_ac_resistance,
+         resilience_vol,
+         min_resilience_vol,
+         max_resilience_vol,
+         static_vol,
+         min_static_vol,
+         max_static_vol,
+         circle,
+         min_circle,
+         max_circle,
+         barcode_rule,
+         chg_rate,
+         chg_current,
+         chg_time,
+         max_continue_chg_current,
+         max_continue_dsg_current,
+         dsg_cut_vol,
+         memo,
+         operator,
+         create_time
+        ) VALUES (
+          #{cellModelId},
+          #{cellMfr},
+          #{cellModel},
+          #{cellFormatName},
+          #{nominalCap},
+          #{minNominalCap},
+          #{maxNominalCap},
+          #{chgCutVol},
+          #{nominalVol},
+          #{minChgTemp},
+          #{maxChgTemp},
+          #{minDsgTemp},
+          #{maxDsgTemp},
+          #{acResistance},
+          #{minAcResistance},
+          #{maxAcResistance},
+          #{resilienceVol},
+          #{minResilienceVol},
+          #{maxResilienceVol},
+          #{staticVol},
+          #{minStaticVol},
+          #{maxStaticVol},
+          #{circle},
+          #{minCircle},
+          #{maxCircle},
+          #{barcodeRule},
+          #{chgRate},
+          #{chgCurrent},
+          #{chgTime},
+          #{maxContinueChgCurrent},
+          #{maxContinueDsgCurrent},
+          #{dsgCutVol},
+          #{memo},
+          #{operator},
+          #{createTime}
+        )
+    </insert>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.hdg.BatteryCellFormat">
+        update hdg_battery_cell_format set
+              cell_model_id = #{cellModelId},
+              cell_mfr = #{cellMfr},
+              cell_model = #{cellModel},
+              cell_format_name = #{cellFormatName},
+              nominal_cap = #{nominalCap},
+              min_nominal_cap = #{minNominalCap},
+              max_nominal_cap = #{maxNominalCap},
+              chg_cut_vol = #{chgCutVol},
+              nominal_vol = #{nominalVol},
+              min_chg_temp = #{minChgTemp},
+              max_chg_temp = #{maxChgTemp},
+              min_dsg_temp = #{minDsgTemp},
+              max_dsg_temp = #{maxDsgTemp},
+              ac_resistance = #{acResistance},
+              min_ac_resistance = #{minAcResistance},
+              max_ac_resistance = #{maxAcResistance},
+              resilience_vol = #{resilienceVol},
+              min_resilience_vol = #{minResilienceVol},
+              max_resilience_vol = #{maxResilienceVol},
+              static_vol = #{staticVol},
+              min_static_vol = #{minStaticVol},
+              max_static_vol = #{maxStaticVol},
+              circle = #{circle},
+              min_circle = #{minCircle},
+              max_circle = #{maxCircle},
+              barcode_rule = #{barcodeRule},
+              chg_rate = #{chgRate},
+              chg_current = #{chgCurrent},
+              chg_time = #{chgTime},
+              max_continue_chg_current = #{maxContinueChgCurrent},
+              max_continue_dsg_current = #{maxContinueDsgCurrent},
+              dsg_cut_vol = #{dsgCutVol},
+              memo = #{memo},
+              operator = #{operator}
+        where id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="long">
+        delete from hdg_battery_cell_format where id = #{id}
+    </delete>
+
+</mapper>

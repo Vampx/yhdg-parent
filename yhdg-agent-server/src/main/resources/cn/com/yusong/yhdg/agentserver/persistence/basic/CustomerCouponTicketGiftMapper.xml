@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.basic.CustomerCouponTicketGiftMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.basic.CustomerCouponTicketGift">
+        select * from bas_customer_coupon_ticket_gift
+        where id = #{id}
+    </select>
+
+    <select id="findByAgentId" resultType="cn.com.yusong.yhdg.common.domain.basic.CustomerCouponTicketGift">
+        select * from bas_customer_coupon_ticket_gift
+        where agent_id = #{agentId}
+        and type = #{type}
+        and category = #{category}
+        and is_active = 1
+        <if test="payCount != null">
+            and pay_count = #{payCount}
+        </if>
+        <if test="dayCount != null">
+            and day_count = #{dayCount}
+        </if>
+        <if test="wagesDay != null">
+            and wages_day = #{wagesDay}
+        </if>
+        limit 1
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.basic.CustomerCouponTicketGift" resultType="int">
+        select count(*) from bas_customer_coupon_ticket_gift
+        where category = #{category}
+        <if test="agentId != null and agentId != ''">
+            and agent_id = #{agentId}
+        </if>
+        <if test="type != null and type != ''">
+            and type = #{type}
+        </if>
+        <if test="dayCount != null and dayCount != ''">
+            and day_count = #{dayCount}
+        </if>
+        <if test="isActive != null and isActive != ''">
+            and is_active = #{isActive}
+        </if>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.basic.CustomerCouponTicketGift"
+            resultType="cn.com.yusong.yhdg.common.domain.basic.CustomerCouponTicketGift">
+        select
+        *
+        from bas_customer_coupon_ticket_gift
+        where category = #{category}
+        <if test="agentId != null and agentId != ''">
+            and agent_id = #{agentId}
+        </if>
+        <if test="type != null and type != ''">
+            and type = #{type}
+        </if>
+        <if test="dayCount != null and dayCount != ''">
+            and day_count = #{dayCount}
+        </if>
+        <if test="isActive != null and isActive != ''">
+            and is_active = #{isActive}
+        </if>
+        order by id desc
+        limit ${beginIndex}, ${rows}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.CustomerCouponTicketGift" useGeneratedKeys="true" keyProperty="id">
+        insert into bas_customer_coupon_ticket_gift(
+        agent_id,
+        category,
+        type,
+        pay_count,
+        day_count,
+        money,
+        is_active,
+        wages_day
+        ) values (
+        #{agentId},
+        #{category},
+        #{type},
+        #{payCount},
+        #{dayCount},
+        #{money},
+        #{isActive},
+        #{wagesDay}
+        )
+    </insert>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.basic.CustomerCouponTicketGift">
+        update  bas_customer_coupon_ticket_gift set
+        <trim suffix="" suffixOverrides=",">
+            <if test="agentId != null">
+                agent_id = #{agentId},
+            </if>
+            <if test="newType != null">
+                type = #{newType},
+            </if>
+            <if test="payCount != null">
+                pay_count = #{payCount},
+            </if>
+            <if test="dayCount != null">
+                day_count = #{dayCount},
+            </if>
+            <if test="money != null">
+                money = #{money},
+            </if>
+            <if test="isActive != null">
+                is_active = #{isActive},
+            </if>
+            <if test="wagesDay != null">
+                wages_day = #{wagesDay}
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="delete">
+        delete from bas_customer_coupon_ticket_gift where id = #{id}
+    </delete>
+
+</mapper>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.basic.CustomerInstallmentRecordOrderDetailMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.basic.CustomerInstallmentRecordOrderDetail">
+        select * from bas_customer_installment_record_order_detail where source_id = #{sourceId} and source_type = #{sourceType} and category = #{category}
+    </select>
+
+    <select id="findOrderBySourceId" resultType="cn.com.yusong.yhdg.common.domain.basic.CustomerInstallmentRecordOrderDetail">
+        select * from bas_customer_installment_record_order_detail where source_id = #{sourceId} and category = #{category}
+    </select>
+
+</mapper>

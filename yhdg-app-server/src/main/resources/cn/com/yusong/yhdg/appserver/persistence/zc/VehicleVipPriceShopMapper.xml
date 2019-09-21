@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.appserver.persistence.zc.VehicleVipPriceShopMapper">
+
+    <select id="findByShopId" parameterType="string" resultType="cn.com.yusong.yhdg.common.domain.zc.VehicleVipPriceShop">
+        select
+        *
+        from zc_vehicle_vip_price_shop
+        where shop_id = #{shopId}
+    </select>
+
+</mapper>

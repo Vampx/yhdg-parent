@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.serviceserver.persistence.hdg.CabinetConfigHistoryMapper">
+    <select id="exist" resultType="string">
+        show tables like 'hdg_cabinet_config_history_${suffix}'
+    </select>
+
+    <update id="createTable">
+        create table hdg_cabinet_config_history_${suffix} (
+        cabinet_id char(12) not null, /*设备id*/
+        stats_date char(10) not null, /*统计日期*/
+        cabinet_name varchar(40) not null, /*设备名称*/
+        agent_id int unsigned not null, /*运营商id*/
+        agent_name varchar(40), /*运营商名称*/
+        create_time datetime not null,
+        primary key (cabinet_id, stats_date)
+        ) engine=innodb default charset=utf8;
+    </update>
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetConfigHistory">
+        select
+        *
+        from hdg_cabinet_config_history_${suffix}
+        where cabinet_id = #{cabinetId} and stats_date = #{statsDate}
+    </select>
+
+    <insert id="insert">
+        insert into hdg_cabinet_config_history_${suffix} (cabinet_id, stats_date, cabinet_name, agent_id,
+         agent_name, create_time)
+        values (#{cabinetId}, #{statsDate}, #{cabinetName}, #{agentId}, #{agentName}, #{createTime})
+    </insert>
+</mapper>

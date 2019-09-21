@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.weixinserver.persistence.basic.AlipayfwSubscribeMapper">
+
+    <select id="findByOpenId" resultType="cn.com.yusong.yhdg.common.domain.basic.AlipayfwSubscribe">
+        select
+        *
+        from bas_alipayfw_subscribe
+        where alipayfw_id = #{alipayfwId} and open_id = #{openId}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.AlipayfwSubscribe">
+        insert into bas_alipayfw_subscribe(alipayfw_id, open_id, create_time)
+        values(#{alipayfwId}, #{openId}, #{createTime})
+    </insert>
+
+    <delete id="delete">
+        delete from bas_alipayfw_subscribe where alipayfw_id = #{alipayfwId} and open_id = #{openId}
+    </delete>
+</mapper>

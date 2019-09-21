@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.basic.PartnerInOutMoneyMapper">
+    <select id="find" parameterType="long"
+            resultType="cn.com.yusong.yhdg.common.domain.basic.PartnerInOutMoney">
+        select
+        *
+        from bas_partner_in_out_money
+        where id = #{id}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.PartnerInOutMoney">
+        insert into bas_partner_in_out_money(partner_type, partner_id, biz_type, biz_id, type, money, operator, create_time)
+        values(#{partnerType}, #{partnerId}, #{bizType}, #{bizId}, #{type}, #{money}, #{operator}, #{createTime})
+    </insert>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.basic.PartnerInOutMoney" resultType="int">
+        select
+        count(id)
+        from bas_partner_in_out_money
+        <trim prefix="where" prefixOverrides="and">
+            <if test="partnerId != null">
+                and partner_id = #{partnerId}
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.basic.PartnerInOutMoney"
+            resultType="cn.com.yusong.yhdg.common.domain.basic.PartnerInOutMoney">
+        select
+        *
+        from bas_partner_in_out_money
+        <trim prefix="where" prefixOverrides="and">
+            <if test="partnerId != null">
+                and partner_id = #{partnerId}
+            </if>
+        </trim>
+        order by id desc
+        limit #{beginIndex}, #{rows}
+    </select>
+</mapper>

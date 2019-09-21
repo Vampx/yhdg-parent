@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.appserver.persistence.basic.PublicNoticeMapper">
+
+    <select id="findListByUnread" resultType="cn.com.yusong.yhdg.common.domain.basic.PublicNotice">
+        select
+        *
+        from bas_public_notice
+        where
+        notice_type = #{noticeType}
+        <if test="agentId != null  ">
+            and (agent_id is null or agent_id = #{agentId})
+        </if>
+        <if test="agentId == null  ">
+            and agent_id is null
+        </if>
+        <foreach collection="ids" item="id" open="and id not in (" close=")" separator=",">
+            #{id}
+        </foreach>
+        limit #{offset},#{limit}
+    </select>
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.basic.CustomerNoticeMessage">
+        SELECT
+        id,
+        title,
+        content,
+        create_time as createTime
+        FROM
+        bas_public_notice
+        WHERE
+        notice_type = #{noticeType} and id = #{id}
+    </select>
+
+
+    <select id="findList" resultType="cn.com.yusong.yhdg.common.domain.basic.CustomerNoticeMessage">
+        SELECT
+        id,
+        title,
+        content,
+        create_time as createTime
+        FROM
+        bas_public_notice
+        WHERE
+        notice_type = #{noticeType}
+        <if test="agentId != null  ">
+            and (agent_id is null or agent_id = #{agentId})
+        </if>
+        <if test="agentId == null  ">
+            and agent_id is null
+        </if>
+        ORDER BY
+        create_time DESC
+        limit #{offset},#{limit}
+    </select>
+
+</mapper>

@@ -1,0 +1,87 @@
+html {
+  height: 100%;
+  /*font-size: 17px;*/
+}
+html body {
+  font-family: SimHei;
+  height: 100%;
+  background: #efefef;
+}
+html body .weui-tab__panel {
+  padding-bottom: 3.176rem;
+}
+html body .weui-cells {
+  background-color: #efefef;
+  margin-top: 0;
+}
+html body .weui-cells .person {
+  width: 100%;
+  height: 8.47rem;
+  background-color: #4CBFFF;
+}
+html body .weui-cells .person .img {
+  display: flex;
+  justify-content: center;
+  padding-top: 1.1rem;
+}
+html body .weui-cells .person .img img {
+  height: 4rem;
+  width: 4rem;
+  border-radius: 50%;
+}
+html body .weui-cells .person .user {
+  padding-top: .5rem;
+}
+html body .weui-cells .person .user p {
+  text-align: center;
+  color: #fff;
+  font-size: .82rem;
+}
+html body .weui-cells .weui-cell {
+  background: #fff;
+}
+html body .weui-cells .weui-cell .weui-cell__bd p {
+  color: #5C5C5C;
+  font-size: 1rem;
+}
+html body .weui-cells .weui-cell_access .weui-cell__hd img {
+  width: 1.176rem;
+  margin-right: 10px;
+  display: block;
+}
+html body .weui-cells .header {
+  padding: 0;
+}
+html body .weui-cells .header .weui-cell__ft:after {
+  height: 12px;
+  width: 12px;
+}
+html body .space {
+  margin-bottom: 1.17rem;
+}
+html body .weui-tabbar {
+  height: 3.176rem;
+  overflow: hidden;
+}
+html body .weui-tabbar .weui-tabbar__label {
+  font-size: 0.70588235rem;
+  color: #999999;
+}
+html body .weui-tabbar .weui-tabbar__icon {
+  width: 1.35294118rem;
+  height: 1.41176471rem;
+}
+html body .weui-tabbar .weui-tabbar__item {
+  padding: .59rem 0 0;
+}
+html body .weui-tabbar .weui-tabbar__item img {
+  height: 1.35294118rem;
+  width: 1.41176471rem;
+}
+html body .weui-tabbar .weui-tabbar__item .scan {
+  width: 3.17647059rem;
+  height: 3.17647059rem;
+}
+html body .weui-tabbar .weui-bar__item_on .slected {
+  color: #4CBFFF;
+}

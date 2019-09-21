@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.basic.LaxinPayOrderMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.basic.LaxinPayOrder">
+        select
+        *
+        from bas_laxin_pay_order
+        where id = #{id}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.basic.LaxinPayOrder" resultType="int">
+        select
+        count(id)
+        from bas_laxin_pay_order
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null ">
+                and  agent_id = #{agentId}
+            </if>
+            <if test="id != null and id != ''">
+                and id = #{id}
+            </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.basic.LaxinPayOrder"
+            resultType="cn.com.yusong.yhdg.common.domain.basic.LaxinPayOrder">
+        select
+        *
+        from bas_laxin_pay_order
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null ">
+                and  agent_id = #{agentId}
+            </if>
+            <if test="id != null and id != ''">
+                and id = #{id}
+            </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+        </trim>
+        order by id desc
+        limit #{beginIndex}, #{rows}
+    </select>
+</mapper>

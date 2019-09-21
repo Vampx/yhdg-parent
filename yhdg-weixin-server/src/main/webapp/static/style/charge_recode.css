@@ -1,0 +1,34 @@
+html {
+  height: 100%;
+}
+html body {
+  height: 100%;
+  background-color: #EFEFEF;
+  padding-top: 0.82352941rem;
+}
+html body .weui-cells {
+  margin-top: 0;
+}
+html body .weui-cells .weui-cell {
+  padding: 0.58823529rem 0.88235294rem;
+}
+html body .weui-cells .weui-cell .weui-cell__bd p {
+  color: #5C5C5C;
+  font-size: 1rem;
+}
+html body .weui-cells .weui-cell .weui-cell__bd p + p {
+  color: #999;
+  font-size: 0.76470588rem;
+}
+html body .weui-cells .weui-cell .weui-cell__ft p {
+  font-size: 1.17647059rem;
+  font-weight: bold;
+  color: #6CB8FF;
+}
+html body .weui-loadmore {
+  width: 65%;
+  margin: 1.5rem auto;
+  line-height: 1.6rem;
+  font-size: 0.82352941rem;
+  text-align: center;
+}

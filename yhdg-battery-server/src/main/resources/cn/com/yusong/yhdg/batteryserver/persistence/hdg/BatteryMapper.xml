@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.batteryserver.persistence.hdg.BatteryMapper">
+
+    <select id="findByCode" parameterType="string" resultType="cn.com.yusong.yhdg.common.domain.hdg.Battery">
+        select
+          *
+        from hdg_battery
+        where code = #{code}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.Battery">
+        insert into hdg_battery(
+        id,
+        code,
+        type,
+        category,
+        agent_id,
+        order_id,
+        volume,
+        status,
+        exchange_amount,
+        report_time,
+        order_distance,
+        total_distance,
+        is_active,
+        current_signal,
+        belong_city_id,
+        lng,
+        lat,
+        address,
+        health,
+        sim_memo,
+        brand,
+        voltage,
+        electricity,
+        use_count,
+        produce_date,
+        protect_state,
+        strand,
+        temp,
+        fet_status,
+        charge_status,
+        ready_charge_time,
+        customer_out_time,
+        customer_id,
+        customer_mobile,
+        customer_fullname,
+        in_box_time,
+        cabinet_id,
+        cabinet_name,
+        box_num,
+        keeper_out_time,
+        keeper_name,
+        free_out_time,
+        stay_heartbeat,
+        move_heartbeat,
+        electrify_heartbeat,
+        standby_heartbeat,
+        dormancy_heartbeat,
+        is_report_voltage,
+        is_online,
+        is_normal,
+        qrcode,
+        shell_code,
+        charge_complete_volume,
+        gps_switch,
+        lock_switch,
+        gprs_shutdown,
+        shutdown_voltage,
+        accelereted_speed,
+        repair_status,
+        up_line_status,
+        create_time
+        )
+        values(
+        #{id},
+        #{code},
+        #{type},
+        #{category},
+        #{agentId},
+        #{orderId},
+        #{volume},
+        #{status},
+        #{exchangeAmount},
+        #{reportTime},
+        #{orderDistance},
+        #{totalDistance},
+        #{isActive},
+        #{currentSignal},
+        #{belongCityId},
+        #{lng},
+        #{lat},
+        #{address},
+        #{health},
+        #{simMemo},
+        #{brand},
+        #{voltage},
+        #{electricity},
+        #{useCount},
+        #{produceDate},
+        #{protectState},
+        #{strand},
+        #{temp},
+        #{fetStatus},
+        #{chargeStatus},
+        #{readyChargeTime},
+        #{customerOutTime},
+        #{customerId},
+        #{customerMobile},
+        #{customerFullname},
+        #{inBoxTime},
+        #{cabinetId},
+        #{cabinetName},
+        #{boxNum},
+        #{keeperOutTime},
+        #{keeperName},
+        #{freeOutTime},
+        #{stayHeartbeat},
+        #{moveHeartbeat},
+        #{electrifyHeartbeat},
+        #{standbyHeartbeat},
+        #{dormancyHeartbeat},
+        #{isReportVoltage},
+        #{isOnline},
+        #{isNormal},
+        #{qrcode},
+        #{shellCode},
+        #{chargeCompleteVolume},
+        #{gpsSwitch},
+        #{lockSwitch},
+        #{gprsShutdown},
+        #{shutdownVoltage},
+        #{acceleretedSpeed},
+        #{repairStatus},
+        #{upLineStatus},
+        #{createTime}
+        )
+    </insert>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.hdg.Battery">
+        update hdg_battery set
+            charge_record_id = #{chargeRecordId},
+            type = #{type},
+            version = #{version},
+            voltage = #{voltage},
+            electricity = #{electricity},
+            volume = #{volume},
+            total_capacity = #{totalCapacity},
+            current_capacity = #{currentCapacity},
+            total_distance = #{totalDistance},
+            lng = #{lng},
+            lat = #{lat},
+            gps_update_time = #{gpsUpdateTime},
+            order_distance = #{orderDistance},
+            use_count = #{useCount},
+            produce_date = #{produceDate},
+            protect_state = #{protectState},
+            fet = #{fet},
+            strand = #{strand},
+            is_online = #{isOnline},
+            temp = #{temp},
+            fet_status = #{fetStatus},
+            sim_memo = #{simMemo},
+            report_time = #{reportTime},
+            current_signal = #{currentSignal},
+            signal_type = #{signalType},
+            material = #{material},
+            circle = #{circle},
+            <if test="stayHeartbeat != null">
+                stay_heartbeat = #{stayHeartbeat},
+            </if>
+            <if test="moveHeartbeat != null">
+                move_heartbeat = #{moveHeartbeat},
+            </if>
+            <if test="electrifyHeartbeat != null">
+                electrify_heartbeat = #{electrifyHeartbeat},
+            </if>
+            <if test="standbyHeartbeat != null">
+                standby_heartbeat = #{standbyHeartbeat},
+            </if>
+            <if test="dormancyHeartbeat != null">
+                dormancy_heartbeat = #{dormancyHeartbeat},
+            </if>
+            <if test="realVoltageDiff != null">
+                real_voltage_diff = #{realVoltageDiff},
+                real_voltage_diff_time = #{realVoltageDiffTime},
+            </if>
+            <if test="fullVoltageDiff != null">
+                full_voltage_diff = #{fullVoltageDiff},
+                full_voltage_diff_time = #{fullVoltageDiffTime},
+            </if>
+            <if test="dischargeVoltageDiff != null">
+                discharge_voltage_diff = #{dischargeVoltageDiff},
+                discharge_voltage_diff_time = #{dischargeVoltageDiffTime},
+            </if>
+            position_state = #{positionState},
+            charge_status = #{chargeStatus},
+            single_voltage = #{singleVoltage},
+            monomer_overvoltage_fault_log_id=#{monomerOvervoltageFaultLogId},
+            monomer_lowvoltage_fault_log_id=#{monomerLowvoltageFaultLogId},
+            whole_overvoltage_fault_log_id=#{wholeOvervoltageFaultLogId},
+            whole_lowvoltage_fault_log_id=#{wholeLowvoltageFaultLogId},
+            charge_overtemp_fault_log_id=#{chargeOvertempFaultLogId},
+            charge_lowtemp_fault_log_id=#{chargeLowtempFaultLogId},
+            discharge_overtemp_fault_log_id=#{dischargeOvertempFaultLogId},
+            discharge_lowtemp_fault_log_id=#{dischargeLowtempFaultLogId},
+            charge_overcurrent_fault_log_id=#{chargeOvercurrentFaultLogId},
+            discharge_overcurrent_fault_log_id=#{dischargeOvercurrentFaultLogId},
+            short_circuit_fault_log_id=#{shortCircuitFaultLogId},
+            testing_ic_fault_log_id=#{testingIcFaultLogId},
+            software_locking_fault_log_id=#{softwareLockingFaultLogId},
+
+            discharge_locking_fault_log_id=#{dischargeLockingFaultLogId},
+            charge_mos_fault_log_id=#{chargeMosFaultLogId},
+            discharge_mos_fault_log_id=#{dischargeMosFaultLogId},
+            max_vol_diff_log_id=#{maxVolDiffLogId},
+            sign_vol_low_log_id = #{signVolLowLogId},
+
+            low_volume_notice_time = #{lowVolumeNoticeTime},
+            hit_fault_log_id = #{hitFaultLogId},
+            dismantle_fault_log_id = #{dismantleFaultLogId},
+            low_volume_notice_volume = #{lowVolumeNoticeVolume}
+        where id = #{id}
+    </update>
+
+    <update id="updateStatus">
+        update hdg_battery set
+        free_out_time = now(),
+        status = #{toStatus}
+        where code = #{code} and
+        status = #{fromStatus}
+    </update>
+
+    <update id="updateRescueStatus">
+        update hdg_battery set
+        rescue_status = #{toStatus}
+        where id = #{id}
+        and rescue_status = #{fromStatus}
+    </update>
+
+    <update id="updateChargeStatus" parameterType="cn.com.yusong.yhdg.common.domain.hdg.Battery">
+        update hdg_battery set
+            charge_status = #{chargeStatus},
+            low_volume_notice_time = #{lowVolumeNoticeTime},
+            charge_record_id = #{chargeRecordId}
+        where code = #{code}
+    </update>
+
+    <update id="updateWaitCharge" parameterType="cn.com.yusong.yhdg.common.domain.hdg.Battery">
+        update hdg_battery set
+            charge_status = #{chargeStatus}
+        where code = #{code}
+    </update>
+
+</mapper>

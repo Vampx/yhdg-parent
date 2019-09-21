@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.serviceserver.persistence.hdg.AgentMonthStatsMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.hdg.AgentMonthStats">
+        select
+        *
+        from hdg_agent_month_stats
+        where  agent_id = #{agentId}
+        and stats_month = #{statsMonth}
+        and category = #{category}
+    </select>
+
+    <select id="sumAll" resultType="cn.com.yusong.yhdg.common.domain.hdg.PlatformDayStats">
+        select
+        ifnull(sum(platform_income), 0) as totalPlatformIncome,/*-------总收入------*/
+        ifnull(sum(exchange_money), 0) as totalExchangeMoney,/*-------总换电金额(单次) 按分计算------*/
+        ifnull(sum(packet_period_money), 0) as totalPacketPeriodMoney,/*总包时段订单(单次) 按分计算*/
+        ifnull(sum(refund_exchange_money), 0) as totalRefundExchangeMoney,/*总退款换电金额(单次) 按分计算*/
+        ifnull(sum(refund_packet_period_money), 0) as totalRefundPacketPeriodMoney,/*总包时段订单(单次)退款 按分计算*/
+        ifnull(sum(order_count), 0) as totalExchangeCount,/*当日总换电订单数*/
+        ifnull(sum(refund_exchange_count), 0) as totalRefundExchangeCount/*当日总退款换电订单数*/
+        from hdg_agent_month_stats
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.AgentMonthStats" >
+        insert into hdg_agent_month_stats
+        (
+            partner_id,
+            partner_name,
+            agent_id,
+            agent_name,
+            stats_month,
+            category,
+            income,
+            money,
+            order_count,
+            exchange_money,
+            packet_period_money,
+            refund_exchange_money,
+            refund_packet_period_money,
+            agent_exchange_money,
+            agent_packet_period_money,
+            agent_refund_exchange_money,
+            agent_refund_packet_period_money,
+            shop_money,
+            shop_exchange_money,
+            shop_packet_period_money,
+            shop_refund_packet_period_money,
+            agent_company_money,
+            agent_company_exchange_money,
+            agent_company_packet_period_money,
+            agent_company_refund_packet_period_money,
+            exchange_count,
+            packet_period_count,
+            refund_exchange_count,
+            packet_period_order_count,
+            refund_packet_period_order_count,
+            platform_income,
+            province_income,
+            city_income,
+            foregift_remain_money,
+            deduction_ticket_money,
+            laxin_pay_money,
+            cabinet_foregift_money,
+            cabinet_rent_money,
+            battery_rent_money,
+            id_card_auth_money,
+            active_customer_count,
+            foregift_money,
+            foregift_count,
+            foregift_refund_money,
+            foregift_refund_count,
+            insurance_money,
+            insurance_count,
+            insurance_refund_money,
+            insurance_refund_count,
+            cabinet_count,
+            battery_count,
+
+             electric_degree,
+            electric_price,
+            update_time
+        ) values (
+            #{partnerId},
+            #{partnerName},
+            #{agentId},
+            #{agentName},
+            #{statsMonth},
+             #{category},
+            #{income},
+            #{money},
+            #{orderCount},
+            #{exchangeMoney},
+            #{packetPeriodMoney},
+            #{refundExchangeMoney},
+            #{refundPacketPeriodMoney},
+            #{agentExchangeMoney},
+            #{agentPacketPeriodMoney},
+            #{agentRefundExchangeMoney},
+            #{agentRefundPacketPeriodMoney},
+             #{shopMoney},
+            #{shopExchangeMoney},
+            #{shopPacketPeriodMoney},
+            #{shopRefundPacketPeriodMoney},
+            #{agentCompanyMoney},
+            #{agentCompanyExchangeMoney},
+            #{agentCompanyPacketPeriodMoney},
+            #{agentCompanyRefundPacketPeriodMoney},
+            #{exchangeCount},
+            #{packetPeriodCount},
+            #{refundExchangeCount},
+            #{packetPeriodOrderCount},
+            #{refundPacketPeriodOrderCount},
+            #{platformIncome},
+            #{provinceIncome},
+            #{cityIncome},
+            #{foregiftRemainMoney},
+            #{deductionTicketMoney},
+            #{laxinPayMoney},
+            #{cabinetForegiftMoney},
+            #{cabinetRentMoney},
+            #{batteryRentMoney},
+            #{idCardAuthMoney},
+            #{activeCustomerCount},
+            #{foregiftMoney},
+            #{foregiftCount},
+            #{foregiftRefundMoney},
+            #{foregiftRefundCount},
+            #{insuranceMoney},
+            #{insuranceCount},
+            #{insuranceRefundMoney},
+            #{insuranceRefundCount},
+            #{cabinetCount},
+            #{batteryCount},
+
+             #{electricDegree},
+            #{electricPrice},
+            #{updateTime})
+    </insert>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.hdg.AgentMonthStats">
+        update hdg_agent_month_stats
+        set
+            income = #{income},
+            money = #{money},
+            order_count = #{orderCount},
+            exchange_money = #{exchangeMoney},
+            packet_period_money = #{packetPeriodMoney},
+            refund_exchange_money = #{refundExchangeMoney},
+            refund_packet_period_money = #{refundPacketPeriodMoney},
+            agent_exchange_money = #{agentExchangeMoney},
+            agent_packet_period_money = #{agentPacketPeriodMoney},
+            agent_refund_exchange_money = #{agentRefundExchangeMoney},
+            agent_refund_packet_period_money = #{agentRefundPacketPeriodMoney},
+            shop_money = #{shopMoney},
+            shop_exchange_money = #{shopExchangeMoney},
+            shop_packet_period_money = #{shopPacketPeriodMoney},
+            shop_refund_packet_period_money = #{shopRefundPacketPeriodMoney},
+            agent_company_money = #{agentCompanyMoney},
+            agent_company_exchange_money = #{agentCompanyExchangeMoney},
+            agent_company_packet_period_money = #{agentCompanyPacketPeriodMoney},
+            agent_company_refund_packet_period_money = #{agentCompanyRefundPacketPeriodMoney},
+            exchange_count = #{exchangeCount},
+            packet_period_count = #{packetPeriodCount},
+            refund_exchange_count = #{refundExchangeCount},
+            packet_period_order_count = #{packetPeriodOrderCount},
+            refund_packet_period_order_count = #{refundPacketPeriodOrderCount},
+            platform_income = #{platformIncome},
+            province_income = #{provinceIncome},
+            city_income = #{cityIncome},
+            foregift_remain_money = #{foregiftRemainMoney},
+            deduction_ticket_money = #{deductionTicketMoney},
+            laxin_pay_money = #{laxinPayMoney},
+            cabinet_foregift_money = #{laxinPayMoney},
+            cabinet_rent_money = #{cabinetForegiftMoney},
+            battery_rent_money = #{batteryRentMoney},
+            id_card_auth_money = #{idCardAuthMoney},
+            active_customer_count = #{activeCustomerCount},
+            foregift_money = #{foregiftMoney},
+            foregift_count = #{foregiftCount},
+            foregift_refund_money = #{foregiftRefundMoney},
+            foregift_refund_count = #{foregiftRefundCount},
+            insurance_money = #{insuranceMoney},
+            insurance_count = #{insuranceCount},
+            insurance_refund_money = #{insuranceRefundMoney},
+            insurance_refund_count = #{insuranceRefundCount},
+            cabinet_count = #{cabinetCount},
+            battery_count = #{batteryCount},
+            electric_degree = #{electricDegree},
+            electric_price = #{electricPrice},
+            update_time = #{updateTime}
+        where agent_id = #{agentId}
+        and stats_month = #{statsMonth}
+        and category = #{category}
+    </update>
+
+</mapper>

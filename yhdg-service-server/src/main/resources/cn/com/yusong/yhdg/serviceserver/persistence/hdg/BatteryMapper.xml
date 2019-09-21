@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.serviceserver.persistence.hdg.BatteryMapper">
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.hdg.Battery">
+        select
+        *
+        from
+        hdg_battery
+        where id = #{id}
+    </select>
+
+    <select id="findByCode" resultType="cn.com.yusong.yhdg.common.domain.hdg.Battery">
+        select
+        *
+        from hdg_battery
+        where code = #{code}
+    </select>
+
+    <select id="findAll" resultType="cn.com.yusong.yhdg.common.domain.hdg.Battery">
+        select
+        *
+        from
+        hdg_battery
+        order by create_time
+        limit ${offset}, ${limit}
+    </select>
+
+    <select id="findByAgent" resultType="cn.com.yusong.yhdg.common.domain.hdg.Battery">
+        select
+        id,
+        code,
+        voltage,
+        electricity,
+        volume,
+        status,
+        charge_status as chargeStatus,
+        type,
+        report_time as reportTime,
+        create_time as createTime,
+        box_num as boxNum,
+        agent_id as agentId,
+        customer_id as customerId,
+        customer_mobile as customerMobile,
+        customer_fullname as customerFullname,
+        lng,
+        lat
+        from
+        hdg_battery
+        WHERE agent_id = #{agentId}
+        order by create_time
+        limit ${offset}, ${limit}
+    </select>
+
+    <select id="findNotAgent" resultType="cn.com.yusong.yhdg.common.domain.hdg.Battery">
+        select
+        id,
+        code,
+        voltage,
+        electricity,
+        volume,
+        status,
+        charge_status as chargeStatus,
+        type,
+        report_time as reportTime,
+        create_time as createTime,
+        box_num as boxNum,
+        agent_id as agentId,
+        customer_id as customerId,
+        customer_mobile as customerMobile,
+        customer_fullname as customerFullname,
+        lng,
+        lat
+        from
+        hdg_battery
+        WHERE 1 = 1
+        <foreach collection="agentIdList" item="item" open=" AND agent_id not in (" separator="," close=")">
+            #{item}
+        </foreach>
+        order by create_time
+        limit ${offset}, ${limit}
+    </select>
+
+    <select id="findListByAgent" resultType="cn.com.yusong.yhdg.common.domain.hdg.BatteryParameter">
+        select
+        a.id,
+        a.type,
+        a.code,
+        b.sim_code as simCode,
+        b.version,
+        b.current_signal as currentSignal,
+        b.current_capacity as currentCapacity,
+        b.lng,
+        b.lat,
+        b.lbs,
+        b.voltage,
+        b.electricity,
+        b.serials,
+        b.single_voltage as singleVoltage,
+        b.volume,
+        b.circle,
+        b.mos,
+        b.temp,
+        b.fault,
+        b.short_report_time as shortReportTime,
+        b.long_report_time as longReportTime
+        from
+        hdg_battery a left join hdg_battery_parameter b on a.id = b.id
+        where a.agent_id = #{agentId}
+         and  b.short_report_time  is not null
+        order by a.id
+        limit ${offset}, ${limit}
+    </select>
+
+    <select id="findOnline" resultType="cn.com.yusong.yhdg.common.domain.hdg.Battery">
+        SELECT
+        *
+        FROM
+        hdg_battery
+        WHERE
+        is_online = #{isOnline}
+        AND (report_time &lt; #{reportTime}
+        OR report_time IS NULL)
+    </select>
+
+    <select id="findFreeOutTime" resultType="cn.com.yusong.yhdg.common.domain.hdg.Battery">
+        SELECT
+        agent_id as agentId,
+        count(id) as countByNotUse
+        FROM
+        hdg_battery
+        WHERE
+        status = #{status}
+        AND free_out_time is not null and free_out_time &lt; #{freeOutTime}
+        and up_line_status = 1
+        and category = 1
+        group by agentId
+    </select>
+
+    <select id="findLowVolume" resultType="string">
+        SELECT
+        b.cabinet_id
+        FROM
+        hdg_battery b,
+        hdg_cabinet s
+        WHERE
+        s.id = b.cabinet_id
+        AND b.volume &lt; #{volume}
+        AND b.`status` = #{status}
+        AND s.subtype = #{subtype}
+        GROUP BY
+        b.cabinet_id
+    </select>
+
+    <select id="findLowVolumeCount" resultType="int">
+        SELECT
+        count(*)
+        FROM
+        hdg_battery b,
+        hdg_cabinet s
+        WHERE
+        s.id = b.cabinet_id
+        AND b.cabinet_id= #{cabinetId}
+        AND b.volume &lt; #{volume}
+        AND b.`status` = #{status}
+        AND s.subtype = #{subtype}
+    </select>
+
+    <select id="findNotElectrify" resultType="cn.com.yusong.yhdg.common.domain.hdg.Battery">
+        SELECT
+        b.*
+        FROM
+        hdg_battery b, hdg_cabinet s
+        WHERE
+        s.id = b.cabinet_id
+        AND s.subtype = #{subtype}
+        AND b.status = #{status}
+        AND b.in_box_time &lt;= #{putTime}
+        AND b.position_state != #{positionState}
+        AND b.not_electrify_fault_log_id is null
+    </select>
+
+    <select id="findAgentIncrement" resultType="cn.com.yusong.yhdg.common.domain.hdg.AgentDayStats">
+        SELECT
+        agent_id AS agentId,
+        count(id) AS batteryCount
+        FROM
+        hdg_battery
+        WHERE  agent_id is not null and up_line_status = 1
+        and category = #{category}
+        group by agent_id
+    </select>
+
+    <select id="findNeedRentList" resultType="cn.com.yusong.yhdg.common.domain.hdg.Battery">
+        SELECT
+         a.*,
+         b.rent_period_type as rentPeriodType,
+         b.rent_period_money as rentPeriodMoney,
+         b.rent_expire_time as rentExpireTime
+        FROM
+        hdg_battery a left join hdg_battery_type_income_ratio b on a.agent_id = b.agent_id and a.type = b.battery_type
+        WHERE a.up_line_status = 1
+         AND a.up_line_time is not null and DATE_FORMAT(a.up_line_time, '%Y-%m-%d')  &lt;= #{statsTime}
+        AND b.rent_period_money > 0
+        and b.rent_period_type > 0
+        and (a.rent_record_time is null or a.rent_record_time &lt; #{statsTime})
+         and category = #{category}
+    </select>
+
+
+    <update id="updateReadyCharge">
+        UPDATE hdg_battery
+        SET charge_status = #{toChargeStatus},
+         ready_charge_time = #{readyChargeTime}
+        WHERE
+            charge_status = #{fromChargeStatus}
+        AND status = #{status}
+        AND volume &lt; charge_complete_volume
+        AND cabinet_id = #{cabinetId}
+        LIMIT #{chargeCount}
+    </update>
+
+    <update id="updateStatus" >
+        update hdg_battery set
+        status = #{toStatus}
+        where id = #{id} and status = #{fromStatus}
+    </update>
+
+    <update id="updateUseDay" >
+        update hdg_battery set
+        use_day = #{useDay}
+        where id = #{id}
+    </update>
+
+    <update id="updateNotElectrifyFaultLogId" >
+        update hdg_battery set
+        not_electrify_fault_log_id = #{notElectrifyFaultLogId}
+        where id = #{id}
+    </update>
+
+    <update id="updateOnline" >
+        update hdg_battery set
+        is_online = #{isOnline}
+        where id = #{id}
+    </update>
+
+    <update id="updateCustomerUse">
+        update hdg_battery set
+        status = #{status},
+        order_distance = 0,
+        order_id = #{orderId},
+        customer_out_time = #{customerOutTime},
+        exchange_amount = exchange_amount+1,
+        customer_id = #{customerId},
+        customer_mobile = #{customerMobile},
+        customer_fullname = #{customerFullname}
+        where id = #{id}
+    </update>
+
+    <update id="updateRentRecordTime">
+        update hdg_battery set rent_record_time = #{rentRecordTime} where id = #{id}
+    </update>
+
+    <update id="clearCustomer">
+        update hdg_battery
+        set
+        status = #{status},
+        order_id = null,
+        order_distance = 0,
+        customer_out_time = null,
+        customer_id = null,
+        customer_mobile = null,
+        customer_fullname = null,
+        rescue_status = null,
+        low_volume_notice_volume = null,
+        low_volume_notice_time = null
+        where id = #{id}
+    </update>
+</mapper>

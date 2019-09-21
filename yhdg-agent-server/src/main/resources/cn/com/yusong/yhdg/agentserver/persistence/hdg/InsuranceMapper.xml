@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.hdg.InsuranceMapper">
+
+    <select id="find" parameterType="long" resultType="cn.com.yusong.yhdg.common.domain.hdg.Insurance">
+        SELECT
+        *
+        FROM hdg_insurance
+        WHERE id = #{id}
+    </select>
+
+    <select id="findListByBatteryType" resultType="cn.com.yusong.yhdg.common.domain.hdg.Insurance">
+        SELECT
+        *
+        FROM hdg_insurance
+        WHERE battery_type = #{batteryType} and agent_id = #{agentId}
+    </select>
+
+    <select id="findPageCount" resultType="int" parameterType="cn.com.yusong.yhdg.common.domain.hdg.Insurance">
+        select count(*) from hdg_insurance
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null">
+                and agent_id = #{agentId}
+            </if>
+            <if test="insuranceName != null and insuranceName !='' ">
+                and insurance_name = #{insuranceName}
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" resultType="cn.com.yusong.yhdg.common.domain.hdg.Insurance" parameterType="cn.com.yusong.yhdg.common.domain.hdg.Insurance">
+        select * from hdg_insurance
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null">
+                and agent_id = #{agentId}
+            </if>
+            <if test="insuranceName != null and insuranceName !='' ">
+                and insurance_name = #{insuranceName}
+            </if>
+        </trim>
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.Insurance" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO hdg_insurance(
+        agent_id,
+        insurance_name,
+        battery_type,
+        price,
+        paid,
+        month_count,
+        is_active,
+        memo,
+        create_time
+        ) VALUES (
+        #{agentId},
+        #{insuranceName},
+        #{batteryType},
+        #{price},
+        #{paid},
+        #{monthCount},
+        #{isActive},
+        #{memo},
+        #{createTime}
+        )
+    </insert>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.hdg.Insurance">
+        update hdg_insurance SET
+        agent_id = #{agentId},
+        insurance_name = #{insuranceName},
+        battery_type = #{batteryType},
+        price = #{price},
+        paid = #{paid},
+        month_count = #{monthCount},
+        is_active = #{isActive},
+        memo = #{memo}
+        where id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="long">
+        delete from hdg_insurance where id = #{id}
+    </delete>
+
+</mapper>

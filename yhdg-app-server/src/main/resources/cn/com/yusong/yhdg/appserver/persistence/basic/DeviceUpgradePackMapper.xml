@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.appserver.persistence.basic.DeviceUpgradePackMapper">
+
+    <select id="findByDevice" resultType="cn.com.yusong.yhdg.common.domain.basic.DeviceUpgradePack">
+        select
+        *
+        from bas_device_upgrade_pack t1, bas_device_upgrade_pack_detail t2
+        where t1.id = t2.pack_id
+        and device_type = #{deviceType}
+        and old_version = #{oldVersion}
+        and device_id = #{deviceId}
+        limit 1
+    </select>
+
+</mapper>

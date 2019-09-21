@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.serviceserver.persistence.hdg.PartnerDayStatsMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.hdg.PartnerDayStats">
+        select
+        *
+        from hdg_partner_day_stats
+        where  partner_id = #{partnerId}
+        and stats_date = #{statsDate}
+        and category = #{category}
+        limit 1
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.PartnerDayStats" >
+        insert into hdg_partner_day_stats (
+            partner_id,
+            partner_name,
+            stats_date,
+            category,
+            income,
+            money,
+
+            exchange_money,
+            packet_period_money,
+            refund_packet_period_money,
+
+            partner_exchange_money,
+            partner_packet_period_money,
+            partner_refund_packet_period_money,
+
+            order_count,
+            packet_period_order_count,
+            refund_packet_period_order_count,
+
+            update_time
+        ) values (
+            #{partnerId},
+            #{partnerName},
+            #{statsDate},
+            #{category},
+
+            #{income},
+            #{money},
+
+            #{exchangeMoney},
+            #{packetPeriodMoney},
+            #{refundPacketPeriodMoney},
+
+            #{partnerExchangeMoney},
+            #{partnerPacketPeriodMoney},
+            #{partnerRefundPacketPeriodMoney},
+
+            #{orderCount},
+            #{packetPeriodOrderCount},
+            #{refundPacketPeriodOrderCount},
+
+            #{updateTime}
+        )
+    </insert>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.hdg.PartnerDayStats">
+        update hdg_partner_day_stats
+        set
+            income = #{income},
+            money = #{money},
+
+            exchange_money = #{exchangeMoney},
+            packet_period_money = #{packetPeriodMoney},
+            refund_packet_period_money = #{refundPacketPeriodMoney},
+
+            partner_exchange_money = #{partnerExchangeMoney},
+            partner_packet_period_money = #{partnerPacketPeriodMoney},
+            partner_refund_packet_period_money = #{partnerRefundPacketPeriodMoney},
+
+            order_count = #{orderCount},
+            packet_period_order_count = #{packetPeriodOrderCount},
+            refund_packet_period_order_count = #{refundPacketPeriodOrderCount},
+
+            update_time = #{updateTime}
+        where partner_id = #{partnerId}
+        and stats_date = #{statsDate}
+        and category = #{category}
+    </update>
+
+</mapper>

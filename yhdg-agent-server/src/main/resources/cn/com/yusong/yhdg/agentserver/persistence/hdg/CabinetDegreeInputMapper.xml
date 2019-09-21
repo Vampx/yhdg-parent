@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.hdg.CabinetDegreeInputMapper">
+    <select id="findAll" resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetDegreeInput">
+        select * from hdg_cabinet_degree_input
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.hdg.CabinetDegreeInput" resultType="int">
+        select
+        count(id)
+        from hdg_cabinet_degree_input
+        where 1 = 1
+        <if test="cabinetId != null and cabinetId != ''">
+            <![CDATA[and cabinet_id LIKE concat('%', #{cabinetId}, '%')]]>
+        </if>
+        <if test="agentId != null">
+            and agent_id = #{agentId}
+        </if>
+        <if test="cabinetName != null and cabinetName != ''">
+            <![CDATA[and cabinet_name LIKE concat('%',#{cabinetName}, '%')]]>
+        </if>
+        <if test="beginTime != null ">
+            <![CDATA[and begin_time >= #{beginTime}]]>
+        </if>
+        <if test="endTime != null ">
+            <![CDATA[and end_time <= #{endTime}]]>
+        </if>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.hdg.CabinetDegreeInput" resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetDegreeInput">
+        select
+        *
+        from hdg_cabinet_degree_input
+        where 1 = 1
+        <if test="cabinetId != null and cabinetId != ''">
+            <![CDATA[and cabinet_id LIKE concat('%', #{cabinetId}, '%')]]>
+        </if>
+        <if test="agentId != null">
+            and agent_id = #{agentId}
+        </if>
+        <if test="cabinetName != null and cabinetName != ''">
+            <![CDATA[and cabinet_name LIKE concat('%',#{cabinetName}, '%')]]>
+        </if>
+        <if test="beginTime != null ">
+            <![CDATA[and begin_time >= #{beginTime}]]>
+        </if>
+        <if test="endTime != null ">
+            <![CDATA[and end_time <= #{endTime}]]>
+        </if>
+        order by id desc
+        limit ${beginIndex}, ${rows}
+    </select>
+    <select id="findByCabinetId"  resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetDegreeInput">
+        select
+        *
+        from hdg_cabinet_degree_input
+        where 1 = 1
+        <if test="agentId !=null and agentId != ''">
+            and agent_id = #{agentId}
+        </if>
+        <if test="cabinetId != null and cabinetId != ''">
+            and cabinet_id = #{cabinetId}
+        </if>
+        <if test="cabinetId == null or cabinetId == ''">
+            and 1 = 0
+        </if>
+    </select>
+
+    <select id="findViewPageCount" parameterType="cn.com.yusong.yhdg.common.domain.hdg.CabinetDegreeInput" resultType="int">
+        select
+        count(id)
+        from hdg_cabinet_degree_input
+        where 1 = 1
+        <if test="cabinetId != null and cabinetId != ''">
+            and cabinet_id = #{cabinetId}
+        </if>
+        <if test="cabinetId == null and cabinetId == ''">
+            and 1 = 2
+        </if>
+        <if test="agentId !=null and agentId != ''">
+            and agent_id = #{agentId}
+        </if>
+    </select>
+
+    <select id="findViewPageResult" parameterType="cn.com.yusong.yhdg.common.domain.hdg.CabinetDegreeInput" resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetDegreeInput">
+        select
+        *
+        from hdg_cabinet_degree_input
+        where 1 = 1
+        <if test="cabinetId != null and cabinetId != ''">
+            and cabinet_id = #{cabinetId}
+        </if>
+        <if test="agentId !=null and agentId != ''">
+            and agent_id = #{agentId}
+        </if>
+        <if test="cabinetId == null or cabinetId == ''">
+            and 1 = 2
+        </if>
+        order by id desc
+        limit ${beginIndex}, ${rows}
+    </select>
+
+
+
+</mapper>

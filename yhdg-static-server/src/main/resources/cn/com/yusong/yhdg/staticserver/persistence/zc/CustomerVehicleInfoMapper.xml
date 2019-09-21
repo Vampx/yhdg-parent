@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.staticserver.persistence.zc.CustomerVehicleInfoMapper">
+
+    <select id="find" parameterType="long" resultType="cn.com.yusong.yhdg.common.domain.zc.CustomerVehicleInfo">
+        select
+        *
+        from zc_customer_vehicle_info
+        where id = #{id}
+    </select>
+
+    <select id="findByCustomerId" parameterType="long" resultType="cn.com.yusong.yhdg.common.domain.zc.CustomerVehicleInfo">
+        select
+        *
+        from zc_customer_vehicle_info
+        where id = #{customerId}
+    </select>
+
+    <insert id="insert">
+        insert into zc_customer_vehicle_info(
+        id,
+        agent_id,
+        model_id,
+        category,
+        vehicle_id,
+        vehicle_name,
+        battery_type,
+        foregift,
+        foregift_order_id,
+        rent_price_id,
+        vip_price_id,
+        balance_shop_id,
+        create_time)
+        values(
+        #{id},
+        #{agentId},
+        #{modelId},
+        #{category},
+        #{vehicleId},
+        #{vehicleName},
+        #{batteryType},
+        #{foregift},
+        #{foregiftOrderId},
+        #{rentPriceId},
+        #{vipPriceId},
+        #{balanceShopId},
+        #{createTime})
+    </insert>
+
+</mapper>

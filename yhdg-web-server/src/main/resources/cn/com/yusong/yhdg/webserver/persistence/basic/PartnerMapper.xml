@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.basic.PartnerMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.basic.Partner">
+        select
+            *
+        from bas_partner
+        where id = #{id}
+    </select>
+
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.basic.Partner" resultType="int">
+        select
+        count(id)
+        from bas_partner
+        <trim prefix="where" prefixOverrides="and">
+            <if test="partnerName != null and partnerName != ''">
+                and partner_name = #{partnerName}
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.basic.Partner"
+            resultType="cn.com.yusong.yhdg.common.domain.basic.Partner">
+        select
+        *
+        from bas_partner
+        <trim prefix="where" prefixOverrides="and">
+            <if test="partnerName != null and partnerName != ''">
+                and partner_name = #{partnerName}
+            </if>
+        </trim>
+        order by id desc
+        limit #{beginIndex}, #{rows}
+    </select>
+
+    <select id="findList" parameterType="cn.com.yusong.yhdg.common.domain.basic.Partner"
+            resultType="cn.com.yusong.yhdg.common.domain.basic.Partner">
+        select
+        *
+        from bas_partner
+        order by id
+    </select>
+
+    <select id="findAll" resultType="cn.com.yusong.yhdg.common.domain.basic.Partner">
+        select
+        *
+        from bas_partner
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.Partner" keyProperty="id" useGeneratedKeys="true">
+        insert into bas_partner (
+        id,partner_name,mp_app_name,mp_app_id,mp_app_secret,mp_partner_code,mp_partner_key,
+        ma_app_name,ma_app_id,ma_app_secret,ma_partner_code,ma_partner_key,
+        fw_app_name,fw_app_id,fw_pub_key,fw_pri_key,fw_ali_key,alipay_name,alipay_app_id,
+        alipay_pub_key,alipay_pri_key,alipay_ali_key,weixin_name,weixin_app_id,weixin_partner_code,weixin_partner_key,
+        create_time)
+        values (
+        #{id},#{partnerName},#{mpAppName},#{mpAppId},#{mpAppSecret},#{mpPartnerCode},#{mpPartnerKey},
+        #{maAppName},#{maAppId},#{maAppSecret},#{maPartnerCode},#{maPartnerKey},
+        #{fwAppName},#{fwAppId},#{fwPubKey},#{fwPriKey},#{fwAliKey},#{alipayName},#{alipayAppId},
+        #{alipayPubKey},#{alipayPriKey},#{alipayAliKey},#{weixinName},#{weixinAppId},#{weixinPartnerCode},#{weixinPartnerKey},
+        #{createTime})
+    </insert>
+
+    <insert id="insertSql">
+        ${sql}
+    </insert>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.basic.Partner">
+        update bas_partner
+        <trim prefix="set" suffixOverrides="," suffix=" where id = #{id} ">
+            <if test="partnerName != null"> partner_name = #{partnerName}, </if>
+            <if test="mpAppName != null"> mp_app_name = #{mpAppName}, </if>
+            <if test="mpAppId != null"> mp_app_id = #{mpAppId}, </if>
+            <if test="mpAppSecret != null"> mp_app_secret = #{mpAppSecret}, </if>
+            <if test="mpPartnerCode != null"> mp_partner_code = #{mpPartnerCode}, </if>
+            <if test="mpPartnerKey != null"> mp_partner_key = #{mpPartnerKey}, </if>
+            <if test="maAppName != null"> ma_app_name = #{maAppName}, </if>
+            <if test="maAppId != null"> ma_app_id = #{maAppId}, </if>
+            <if test="maAppSecret != null"> ma_app_secret = #{maAppSecret}, </if>
+            <if test="maPartnerCode != null"> ma_partner_code = #{maPartnerCode}, </if>
+            <if test="maPartnerKey != null"> ma_partner_key = #{maPartnerKey}, </if>
+            <if test="fwAppName != null"> fw_app_name = #{fwAppName}, </if>
+            <if test="fwAppId != null"> fw_app_id = #{fwAppId}, </if>
+            <if test="fwPubKey != null"> fw_pub_key = #{fwPubKey}, </if>
+            <if test="fwPriKey != null"> fw_pri_key = #{fwPriKey}, </if>
+            <if test="fwAliKey != null"> fw_ali_key = #{fwAliKey}, </if>
+            <if test="alipayName != null"> alipay_name = #{alipayName}, </if>
+            <if test="alipayAppId != null"> alipay_app_id = #{alipayAppId}, </if>
+            <if test="alipayPubKey != null"> alipay_pub_key = #{alipayPubKey}, </if>
+            <if test="alipayPriKey != null"> alipay_pri_key = #{alipayPriKey}, </if>
+            <if test="alipayAliKey != null"> alipay_ali_key = #{alipayAliKey}, </if>
+            <if test="weixinName != null"> weixin_name = #{weixinName}, </if>
+            <if test="weixinAppId != null"> weixin_app_id = #{weixinAppId}, </if>
+            <if test="weixinPartnerCode != null"> weixin_partner_code = #{weixinPartnerCode}, </if>
+            <if test="weixinPartnerKey != null"> weixin_partner_key = #{weixinPartnerKey}, </if>
+            <if test="createTime != null"> create_time = #{createTime}, </if>
+        </trim>
+    </update>
+
+    <delete id="delete" parameterType="int">
+        delete from bas_partner where id = #{id}
+    </delete>
+
+</mapper>

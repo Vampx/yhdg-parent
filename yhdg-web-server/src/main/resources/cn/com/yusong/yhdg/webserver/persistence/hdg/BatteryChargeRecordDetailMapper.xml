@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.hdg.BatteryChargeRecordDetailMapper">
+
+    <select id="findTable" resultType="String">
+        SHOW TABLES LIKE #{tableName}
+    </select>
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.hdg.BatteryChargeRecordDetail">
+        select * from hdg_battery_charge_record_detail_${suffix} where id = #{id}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.hdg.BatteryChargeRecordDetail" resultType="int">
+        select
+            count(*)
+        from hdg_battery_charge_record_detail_${suffix}
+        <trim prefix="where" prefixOverrides="and">
+            <if test="id != null">
+                and id = #{id}
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.hdg.BatteryChargeRecordDetail" resultType="cn.com.yusong.yhdg.common.domain.hdg.BatteryChargeRecordDetail">
+        select
+            *
+        from hdg_battery_charge_record_detail_${suffix}
+        <trim prefix="where" prefixOverrides="and">
+            <if test="id != null">
+                and id = #{id}
+            </if>
+        </trim>
+        limit ${beginIndex}, ${rows}
+    </select>
+</mapper>

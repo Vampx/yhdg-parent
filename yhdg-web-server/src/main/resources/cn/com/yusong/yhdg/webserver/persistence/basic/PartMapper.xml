@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.basic.PartMapper">
+
+    <select id="find" parameterType="int" resultType="cn.com.yusong.yhdg.common.domain.basic.Part">
+        select
+            *
+        from bas_part
+        where id = #{id}
+    </select>
+
+    <select id="findUnique" resultType="int">
+        select count(*) from bas_part where part_name = #{partName}
+        <if test="id != null">
+            and id != #{id}
+        </if>
+    </select>
+
+    <select id="findList" resultType="cn.com.yusong.yhdg.common.domain.basic.Part">
+        select
+            *
+        from bas_part
+        where mobile = #{mobile} and part_type = #{partType}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.basic.Part" resultType="int">
+        select count(*) from bas_part
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null and agentId != 0">
+                and agent_id = #{agentId}
+            </if>
+            <if test="mobile != null and mobile != ''">
+                <![CDATA[and mobile LIKE concat(#{mobile}, '%')]]>
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.basic.Part" resultType="cn.com.yusong.yhdg.common.domain.basic.Part">
+        select * from bas_part
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null and agentId != 0">
+                and agent_id = #{agentId}
+            </if>
+            <if test="mobile != null and mobile != ''">
+                <![CDATA[and mobile LIKE concat(#{mobile}, '%')]]>
+            </if>
+        </trim>
+        order by id desc
+        limit ${beginIndex}, ${rows}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.Part" useGeneratedKeys="true" keyProperty="id">
+        insert into bas_part(part_name, agent_id, mobile, part_type, memo, create_time)
+        values(#{partName}, #{agentId}, #{mobile}, #{partType}, #{memo}, #{createTime})
+    </insert>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.basic.Part">
+        update bas_part set
+        part_name = #{partName},
+        agent_id = #{agentId},
+        mobile = #{mobile},
+        part_type = #{partType},
+        memo = #{memo},
+        where id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="int">
+        delete from bas_part where id = #{id}
+    </delete>
+</mapper>

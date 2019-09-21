@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.frontserver.persistence.yms.TerminalOnlineMapper">
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.yms.TerminalOnline">
+        insert into yms_terminal_online(
+            id,
+            is_online,
+            is_normal,
+            heart_time
+        ) values(
+            #{id},
+            #{isOnline},
+            #{isNormal},
+            #{heartTime}
+        )
+    </insert>
+
+    <update id="updateHeartInfo">
+        update yms_terminal_online set
+            cpu = #{cpu},
+            memory = #{memory},
+            play_volume = #{playVolume},
+            card_capacity = #{cardCapacity},
+            rest_capacity = #{restCapacity},
+            heart_time = #{heartTime},
+            is_online = #{isOnline},
+            strategy_uid = #{strategyUid}
+        where id = #{id}
+    </update>
+
+    <update id="updateLoginInfo">
+        update yms_terminal_online set
+            is_online = #{isOnline},
+            heart_time = #{heartTime}
+        where id = #{id}
+    </update>
+
+    <update id="updatePlayFile">
+        update yms_terminal_online set play_file = #{playFile} where id = #{id}
+    </update>
+
+    <update id="updateDownloadPlaylistProgress">
+        update yms_terminal_online set
+            speed = #{speed},
+            download_progress = #{downloadProgress}
+        where id = #{id}
+    </update>
+
+    <update id="offline">
+        update yms_terminal_online set
+            is_online = #{isOnline}
+        where id = #{id}
+    </update>
+
+</mapper>

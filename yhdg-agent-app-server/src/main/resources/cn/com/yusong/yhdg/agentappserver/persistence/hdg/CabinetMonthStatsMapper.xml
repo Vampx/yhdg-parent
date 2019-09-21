@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.agentappserver.persistence.hdg.CabinetMonthStatsMapper">
+
+    <select id="findByCabinetList" resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetMonthStats">
+        select
+        *
+        from hdg_cabinet_month_stats
+        where 1=1
+        <if test="cabinetId != null and cabinetId != ''">
+            and cabinet_id = #{cabinetId}
+        </if>
+        <if test="agentId != null">
+            and agent_id = #{agentId}
+        </if>
+        order by stats_month DESC
+    </select>
+
+    <select id="findTotal" resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetMonthStats">
+        select
+        ifnull(sum(electric_price), 0) as electricPrice,
+        ifnull(sum(active_customer_count), 0) as activeCustomerCount,
+        ifnull(sum(order_count), 0) as orderCount,
+        ifnull(sum(foregift_count), 0) as foregiftCount,
+        ifnull(sum(foregift_money), 0) as foregiftMoney,
+        ifnull(sum(refund_foregift_money), 0) as refundForegiftMoney,
+        ifnull(sum(agent_refund_packet_period_money), 0) as agentRefundPacketPeriodMoney,
+        ifnull(sum(agent_packet_period_money), 0) as agentPacketPeriodMoney,
+        ifnull(sum(packet_period_money), 0) as packetPeriodMoney
+        from hdg_cabinet_month_stats
+        where cabinet_id = #{cabinetId}
+    </select>
+
+</mapper>

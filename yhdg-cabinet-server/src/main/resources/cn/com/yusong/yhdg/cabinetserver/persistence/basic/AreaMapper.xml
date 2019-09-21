@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.cabinetserver.persistence.basic.AreaMapper">
+
+
+    <select id="findAll" resultType="cn.com.yusong.yhdg.common.domain.basic.Area">
+        select
+            id,
+            area_level as areaLevel,
+            area_code as areaCode,
+            area_name as areaName,
+            parent_id as parentId,
+            baidu_id as baiduId,
+            letter,
+            longitude,
+            latitude
+        from bas_area order by area_code
+    </select>
+</mapper>

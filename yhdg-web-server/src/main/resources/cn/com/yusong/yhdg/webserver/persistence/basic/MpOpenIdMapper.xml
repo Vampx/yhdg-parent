@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.basic.MpOpenIdMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.basic.PartnerMpOpenId">
+        select
+            *
+        from bas_mp_open_id
+        where open_id = #{openId}
+    </select>
+
+    <select id="fingCustomerId" resultType="cn.com.yusong.yhdg.common.domain.basic.PartnerMpOpenId">
+        select
+        *
+        from bas_mp_open_id
+        where customer_id = #{customerId}
+    </select>
+
+    <update id="updateCustomerId">
+        update bas_mp_open_id set customer_id = #{customerId} where open_id = #{openId}
+    </update>
+
+</mapper>

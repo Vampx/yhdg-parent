@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.serviceserver.persistence.hdg.PushOrderMessageMapper">
+
+    <select id="findByStatus" resultType="int">
+        select
+        id
+        from hdg_push_order_message
+        where send_status in
+        <foreach item="item" index="index" collection="sendStatus" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        <![CDATA[and create_time <= #{createTime}]]>
+        limit 0, #{limit}
+    </select>
+
+    <select id="findList" resultType="cn.com.yusong.yhdg.common.domain.hdg.PushOrderMessage">
+        select
+        id,
+        agent_id as agentId,
+        send_status as sendStatus,
+        source_type as sourceType,
+        source_id as sourceId,
+        create_time as createTime,
+        handle_time as handleTime,
+        resend_num as resendNum
+        from hdg_push_order_message
+        where send_status = #{sendStatus}
+        order by id asc
+        limit #{offset}, #{limit}
+    </select>
+
+    <insert id="insert">
+        insert into hdg_push_order_message (agent_id, send_status, source_type, source_id, create_time)
+        values(#{agentId}, #{sendStatus}, #{sourceType}, #{sourceId},  #{createTime})
+    </insert>
+
+    <update id="complete">
+        update hdg_push_order_message set send_status = #{sendStatus}, handle_time = #{handleTime}, resend_num = #{resendNum} where id = #{id}
+    </update>
+
+
+    <delete id="delete" parameterType="int">
+        delete from hdg_push_order_message where id = #{id}
+    </delete>
+</mapper>

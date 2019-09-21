@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.basic.VoiceMessageMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.basic.VoiceMessage">
+        SELECT
+            *
+        FROM bas_voice_message
+        WHERE id = #{id}
+    </select>
+
+    <select id="findPageCount" resultType="int">
+        SELECT
+            COUNT(*)
+        FROM bas_voice_message
+        <trim prefix="where" prefixOverrides="and">
+            <if test="partnerId != null">
+                AND partner_id = #{partnerId}
+            </if>
+            <if test="sourceType != null">
+                <![CDATA[AND source_type = #{sourceType}]]>
+            </if>
+            <if test="calledNumber != null and calledNumber != ''">
+                <![CDATA[AND called_number LIKE concat(#{calledNumber}, '%')]]>
+            </if>
+            <if test="sourceId != null and sourceId != ''">
+                <![CDATA[AND source_id LIKE concat('%', #{sourceId}, '%')]]>
+            </if>
+            <if test="content != null and content != ''">
+                <![CDATA[AND content LIKE concat('%', #{content}, '%')]]>
+            </if>
+            <if test="status != null">
+                <![CDATA[AND status = #{status}]]>
+            </if>
+            <if test="senderId != null">
+                <![CDATA[AND sender_id = #{senderId}]]>
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" resultType="cn.com.yusong.yhdg.common.domain.basic.VoiceMessage">
+        SELECT
+            bas_voice_message.*,
+            (SELECT partner_name FROM bas_partner WHERE id = bas_voice_message.partner_id) as partnerName
+        FROM bas_voice_message
+        <trim prefix="where" prefixOverrides="and">
+            <if test="partnerId != null">
+                AND partner_id = #{partnerId}
+            </if>
+            <if test="sourceType != null">
+                <![CDATA[AND source_type = #{sourceType}]]>
+            </if>
+            <if test="calledNumber != null and calledNumber != ''">
+                <![CDATA[AND called_number LIKE concat(#{calledNumber}, '%')]]>
+            </if>
+            <if test="sourceId != null and sourceId != ''">
+                <![CDATA[AND source_id LIKE concat('%', #{sourceId}, '%')]]>
+            </if>
+            <if test="content != null and content != ''">
+                <![CDATA[AND content LIKE concat('%', #{content}, '%')]]>
+            </if>
+            <if test="status != null">
+                <![CDATA[AND status = #{status}]]>
+            </if>
+            <if test="senderId != null">
+                <![CDATA[AND sender_id = #{senderId}]]>
+            </if>
+        </trim>
+        ORDER BY id DESC
+        limit ${beginIndex}, ${rows}
+    </select>
+
+</mapper>

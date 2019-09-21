@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.zc.VehicleModelMapper">
+    <select id="find" parameterType="int" resultType="cn.com.yusong.yhdg.common.domain.zc.VehicleModel">
+        select
+        *
+        from zc_vehicle_model
+        where id = #{id}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.zc.VehicleModel" resultType="int">
+        select
+        count(*)
+        from zc_vehicle_model
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null">
+                and agent_id = #{agentId}
+            </if>
+            <if test="modelName != null and modelName != '' ">
+                <![CDATA[and model_name LIKE concat('%', #{modelName}, '%')]]>
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.zc.VehicleModel"
+            resultType="cn.com.yusong.yhdg.common.domain.zc.VehicleModel">
+        select
+        *
+        from zc_vehicle_model
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null">
+                and agent_id = #{agentId}
+            </if>
+            <if test="modelName != null and modelName != '' ">
+                <![CDATA[and model_name LIKE concat('%', #{modelName}, '%')]]>
+            </if>
+        </trim>
+        order by id desc
+        limit #{beginIndex}, #{rows}
+    </select>
+
+    <select id="findByAgent" resultType="cn.com.yusong.yhdg.common.domain.zc.VehicleModel">
+        select * from zc_vehicle_model where agent_id = #{agentId}
+    </select>
+
+    <select id="findAll" resultType="cn.com.yusong.yhdg.common.domain.zc.VehicleModel">
+        select * from zc_vehicle_model
+    </select>
+
+    <select id="findList" parameterType="cn.com.yusong.yhdg.common.domain.zc.VehicleModel"
+            resultType="cn.com.yusong.yhdg.common.domain.zc.VehicleModel">
+        select
+        *
+        from zc_vehicle_model
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null">
+                and agent_id = #{agentId}
+            </if>
+        </trim>
+        order by id
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.zc.VehicleModel">
+        insert into zc_vehicle_model(
+            agent_id,
+            agent_name,
+            agent_code,
+            model_name,
+            is_active,
+            model_image_path,
+            view_image_path1,
+            view_image_path2,
+            view_image_path3,
+            view_image_path4,
+            product_image_path1,
+            product_image_path2,
+            product_image_path3,
+            product_image_path4,
+            product_image_path5,
+            product_image_path6,
+            after_sale_image_path1,
+            after_sale_image_path2,
+            after_sale_image_path3,
+            after_sale_image_path4,
+            after_sale_image_path5,
+            after_sale_image_path6,
+            faq_image_path1,
+            faq_image_path2,
+            faq_image_path3,
+            faq_image_path4,
+            faq_image_path5,
+            faq_image_path6,
+            memo,
+            create_time
+        ) values (
+            #{agentId},
+            #{agentName},
+            #{agentCode},
+            #{modelName},
+            #{isActive},
+            #{modelImagePath},
+            #{viewImagePath1},
+            #{viewImagePath2},
+            #{viewImagePath3},
+            #{viewImagePath4},
+            #{productImagePath1},
+            #{productImagePath2},
+            #{productImagePath3},
+            #{productImagePath4},
+            #{productImagePath5},
+            #{productImagePath6},
+            #{afterSaleImagePath1},
+            #{afterSaleImagePath2},
+            #{afterSaleImagePath3},
+            #{afterSaleImagePath4},
+            #{afterSaleImagePath5},
+            #{afterSaleImagePath6},
+            #{faqImagePath1},
+            #{faqImagePath2},
+            #{faqImagePath3},
+            #{faqImagePath4},
+            #{faqImagePath5},
+            #{faqImagePath6},
+            #{memo},
+            #{createTime}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE zc_vehicle_model SET
+            agent_id = #{agentId},
+            agent_name = #{agentName},
+            agent_code = #{agentCode},
+            model_name = #{modelName},
+            is_active = #{isActive},
+            model_image_path = #{modelImagePath},
+            view_image_path1 = #{viewImagePath1},
+            view_image_path2 = #{viewImagePath2},
+            view_image_path3 = #{viewImagePath3},
+            view_image_path4 = #{viewImagePath4},
+            product_image_path1 = #{productImagePath1},
+            product_image_path2 = #{productImagePath2},
+            product_image_path3 = #{productImagePath3},
+            product_image_path4 = #{productImagePath4},
+            product_image_path5 = #{productImagePath5},
+            product_image_path6 = #{productImagePath6},
+            after_sale_image_path1 = #{afterSaleImagePath1},
+            after_sale_image_path2 = #{afterSaleImagePath2},
+            after_sale_image_path3 = #{afterSaleImagePath3},
+            after_sale_image_path4 = #{afterSaleImagePath4},
+            after_sale_image_path5 = #{afterSaleImagePath5},
+            after_sale_image_path6 = #{afterSaleImagePath6},
+            faq_image_path1 = #{faqImagePath1},
+            faq_image_path2 = #{faqImagePath2},
+            faq_image_path3 = #{faqImagePath3},
+            faq_image_path4 = #{faqImagePath4},
+            faq_image_path5 = #{faqImagePath5},
+            faq_image_path6 = #{faqImagePath6},
+            memo = #{memo}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="int">
+        delete from zc_vehicle_model where id = #{id}
+    </delete>
+
+</mapper>

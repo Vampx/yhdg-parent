@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.appserver.persistence.basic.LaxinRecordMapper">
+
+    <select id="findList" resultType="cn.com.yusong.yhdg.common.domain.basic.LaxinRecord">
+        select
+        t1.*
+        from bas_laxin_record t1
+        where  laxin_id = #{laxinId}
+        <if test="status != 0">
+            and status = #{status}
+        </if>
+        order by id desc
+        limit #{offset}, #{limit}
+    </select>
+
+    <select id="findByTargetMobile" resultType="cn.com.yusong.yhdg.common.domain.basic.LaxinRecord">
+        select
+          *
+        from bas_laxin_record
+        where  laxin_id = #{laxinId}
+        and target_mobile = #{targetMobile}
+        limit 1
+    </select>
+
+    <select id="totalMoneyByTransferTime" resultType="int">
+        select
+          ifnull(sum(laxin_money), 0)
+        from bas_laxin_record
+        where laxin_id = #{laxinId}
+        and status = #{status}
+        <if test="beginTime != null">
+            and transfer_time >= #{beginTime}
+        </if>
+        <if test="endTime != null">
+            <![CDATA[and transfer_time < #{endTime}]]>
+        </if>
+    </select>
+
+    <select id="totalCountByTransferTime" resultType="int">
+        select
+        count(*)
+        from bas_laxin_record
+        where laxin_id = #{laxinId}
+        and status = #{status}
+        <if test="beginTime != null">
+            and transfer_time >= #{beginTime}
+        </if>
+        <if test="endTime != null">
+            <![CDATA[and transfer_time < #{endTime}]]>
+        </if>
+    </select>
+
+    <select id="totalMoneyByStatus" resultType="int">
+        select
+        ifnull(sum(laxin_money), 0)
+        from bas_laxin_record
+        where laxin_id = #{laxinId}
+        <foreach collection="status" item="item" open=" and status in (" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.LaxinRecord">
+        insert into bas_laxin_record (id, agent_id, agent_name, agent_code, laxin_id, laxin_mobile, laxin_money,
+        target_customer_id, target_mobile, target_fullname, pay_type, status, pay_time, transfer_time, order_id,
+        income_type, foregift_money, packet_period_money, create_time) values (
+        #{id}, #{agentId}, #{agentName}, #{agentCode}, #{laxinId}, #{laxinMobile}, #{laxinMoney},
+        #{targetCustomerId}, #{targetMobile}, #{targetFullname}, #{payType}, #{status}, #{payTime}, #{transferTime}, #{orderId},
+        #{incomeType}, #{foregiftMoney}, #{packetPeriodMoney}, #{createTime}
+        )
+    </insert>
+</mapper>

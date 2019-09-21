@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.agentappserver.persistence.hdg.AgentMaterialDayStatsMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.hdg.AgentMaterialDayStats">
+        select
+        *
+        from hdg_agent_material_day_stats
+        where agent_id = #{agentId}
+        and stats_date = #{statsDate}
+        and category = #{category}
+        limit 1
+    </select>
+
+    <select id="findCountByStatus" resultType="int">
+        select
+        COUNT(id)
+        from hdg_agent_material_day_stats
+        where agent_id = #{agentId}
+        and status = #{status}
+        and money > 0
+    </select>
+
+    <select id="findTotalMoney" resultType="cn.com.yusong.yhdg.common.domain.hdg.AgentMaterialDayStats">
+        select
+        ifnull(sum(money), 0) as totalMoney
+        from hdg_agent_material_day_stats
+        where agent_id = #{agentId}
+        and category = #{category}
+    </select>
+
+    <select id="findTotalRentMoney" resultType="cn.com.yusong.yhdg.common.domain.hdg.AgentMaterialDayStats">
+        select
+        ifnull(sum(id_card_auth_money), 0) as idCardAuthMoney,
+        ifnull(sum(cabinet_rent_money), 0) as cabinetRentMoney,
+        ifnull(sum(battery_rent_money), 0) as batteryRentMoney
+        from hdg_agent_material_day_stats
+        where agent_id = #{agentId} and category = #{category}
+        and stats_date between #{beginDate} and #{endDate}
+    </select>
+
+</mapper>

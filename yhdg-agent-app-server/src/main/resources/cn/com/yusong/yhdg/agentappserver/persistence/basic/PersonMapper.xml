@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.agentappserver.persistence.basic.PersonMapper">
+
+    <select id="findByMobile"  resultType="cn.com.yusong.yhdg.common.domain.basic.Person">
+        select
+        *
+        from bas_person
+        where mobile = #{mobile}
+    </select>
+
+    <select id="find"  resultType="cn.com.yusong.yhdg.common.domain.basic.Person">
+        select
+        *
+        from bas_person
+        where id = #{id}
+    </select>
+
+    <update id="updatePassword">
+        update bas_person set password = #{newPassword} where id = #{id} and password = #{oldPassword}
+    </update>
+
+    <update id="updateLoginTime">
+        update bas_person set
+        last_login_time = #{lastLoginTime}
+        where id = #{id}
+    </update>
+
+</mapper>

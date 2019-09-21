@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.serviceserver.persistence.basic.CustomerMapper">
+
+    <select id="findAll" resultType="cn.com.yusong.yhdg.common.domain.basic.Customer">
+        select
+        *
+        from bas_customer
+        where push_token is not null
+        and push_type is not null
+        limit ${offset},${limit}
+    </select>
+
+    <select id="findAllByAgent" resultType="cn.com.yusong.yhdg.common.domain.basic.Customer">
+        select
+        *
+        from bas_customer
+        where push_token is not null
+        and push_type is not null
+        and agent_id = #{agentId}
+        limit ${offset},${limit}
+    </select>
+
+    <select id="findByWagesDay" resultType="cn.com.yusong.yhdg.common.domain.basic.Customer">
+        select
+        *
+        from bas_customer
+        where wages_day = #{wagesDay}
+        limit ${offset},${limit}
+    </select>
+
+    <select id="findByNotAgent" resultType="cn.com.yusong.yhdg.common.domain.basic.Customer">
+        select
+        *
+        from bas_customer
+        where mobile is not null
+        <foreach collection="agentIdList" item="item" open=" and (agent_id is null  or agent_id not in (" separator="," close="))">
+            #{item}
+        </foreach>
+        limit ${offset},${limit}
+    </select>
+
+    <select id="find" parameterType="Long" resultType="cn.com.yusong.yhdg.common.domain.basic.Customer">
+        select
+        *
+        from bas_customer
+        where id = #{id}
+    </select>
+
+    <select id="findByMobile" resultType="cn.com.yusong.yhdg.common.domain.basic.Customer">
+        select
+        *
+        from bas_customer
+        where partner_id = #{partnerId} and mobile = #{mobile}
+        limit 1
+    </select>
+
+    <select id="findPush" parameterType="Long" resultType="cn.com.yusong.yhdg.common.domain.basic.Customer">
+        select
+        push_token,
+        push_type
+        from bas_customer
+        where id = #{id}
+    </select>
+
+    <select id="findInfo" parameterType="int" resultType="cn.com.yusong.yhdg.common.domain.basic.CustomerInfo">
+        select
+            *
+        from bas_customer
+        where id = #{id}
+    </select>
+
+    <select id="findByBatteryId" parameterType="String" resultType="cn.com.yusong.yhdg.common.domain.basic.Customer">
+        select
+        *
+        from bas_customer
+        where battery_id = #{batteryId}
+    </select>
+
+    <select id="findBalance" parameterType="int" resultType="int">
+        select
+            balance
+        from
+        bas_customer
+        where id = #{id}
+    </select>
+
+    <select id="findTotal" resultType="int">
+        select ifnull(count(*),0) from bas_customer
+    </select>
+
+    <select id="findIncrement" resultType="int">
+        select ifnull(count(*),0) from bas_customer
+        WHERE create_time &lt;= #{endTime}
+        AND create_time &gt;= #{beginTime}
+    </select>
+
+    <select id="findCountByCreateTime" resultType="int">
+        select count(*) from bas_customer
+        <![CDATA[where create_time >= #{beginTime} and create_time < #{endTime}]]>
+        <choose>
+            <when test="type == 'has_mp_open_id'">
+                and mp_open_id is not null
+            </when>
+            <when test="type == 'has_fw_open_id'">
+                and fw_open_id is not null
+            </when>
+            <when test="type == 'only_has_mp_open_id'">
+                and mp_open_id is not null and fw_open_id is null
+            </when>
+            <when test="type == 'only_has_fw_open_id'">
+                and mp_open_id is null and fw_open_id is not null
+            </when>
+            <when test="type == 'app_customer_count'">
+                and register_type = 2
+            </when>
+        </choose>
+
+    </select>
+
+    <select id="findCountByToday" resultType="int">
+        SELECT
+        count(id)
+        FROM
+        bas_customer
+        <![CDATA[where date(create_time) = curdate() ]]>
+    </select>
+
+    <select id="findCountByTodayNotAgent" resultType="int">
+        SELECT
+        count(id)
+        FROM
+        bas_customer
+        <![CDATA[where date(create_time) = curdate() ]]>
+        <foreach collection="agentIdList" item="item" open=" AND agent_id not in (" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="findCountByTodayAndAgent" resultType="int">
+        SELECT
+        count(id)
+        FROM
+        bas_customer
+        <![CDATA[where date(create_time) = curdate() ]]>
+        AND agent_id = #{agentId}
+    </select>
+
+    <select id="findNotChargeCount" resultType="int">
+        select count(id) from bas_customer where id not in (select customer_id from hdg_customer_day_stats where stats_date = #{statsDate})
+    </select>
+
+    <update id="updateBalance">
+        <choose>
+            <when test="balance > 0">
+                update bas_customer set balance = balance + #{balance} where id = #{id}
+            </when>
+            <otherwise>
+                <![CDATA[update bas_customer set balance = balance + #{balance} where id = #{id} and balance + #{balance} >= 0]]>
+            </otherwise>
+        </choose>
+    </update>
+
+    <update id="updateStatsInfo">
+        update bas_customer set order_count = #{orderCount}, last_charge_time = #{lastChargeTime} where id = #{id}
+    </update>
+
+    <update id="updateBackBatteryOrderId">
+        update bas_customer set back_battery_order_id = #{backBatteryOrderId} where id = #{id}
+    </update>
+
+    <update id="updateBindingOvertimeFaultLogId" >
+        update bas_customer set
+        binding_overtime_fault_log_id = #{bindingOvertimeFaultLogId}
+        where id = #{id}
+    </update>
+
+    <update id="updateLowVolumeCount">
+        update bas_customer
+        set low_volume_count = #{lowVolumeCount}
+        where id = #{id}
+    </update>
+
+    <update id="updateGiveTime">
+        update bas_customer set give_time = #{giveTime} where id = #{id}
+    </update>
+
+</mapper>

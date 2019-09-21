@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.basic.ChargerUpgradePackMapper">
+
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.basic.ChargerUpgradePack">
+        select
+        id,
+        pack_type as packType,
+        upgrade_name as upgradeName,
+        file_name as fileName,
+        file_path as filePath,
+        old_version as oldVersion,
+        new_version as newVersion,
+        size,
+        md5_sum as md5Sum,
+        memo,
+        update_time as updateTime
+        from  bas_charger_upgrade_pack
+        where id = #{id}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.basic.ChargerUpgradePack" resultType="int">
+        select
+        count(id)
+        from bas_charger_upgrade_pack
+        <trim prefix="where" prefixOverrides="and">
+            <if test="upgradeName != null and upgradeName != ''">
+                <![CDATA[and upgrade_name LIKE concat('%', #{upgradeName}, '%')]]>
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" resultType="cn.com.yusong.yhdg.common.domain.basic.ChargerUpgradePack">
+        select
+        id,
+        pack_type as packType,
+        upgrade_name as upgradeName,
+        file_name as fileName,
+        file_path as filePath,
+        old_version as oldVersion,
+        new_version as newVersion,
+        size,
+        md5_sum as md5Sum,
+        memo,
+        update_time as updateTime
+        from  bas_charger_upgrade_pack
+        <trim prefix="where" prefixOverrides="and">
+            <if test="upgradeName != null and upgradeName != ''">
+                <![CDATA[and upgrade_name LIKE concat('%' ,  #{upgradeName} , '%')]]>
+            </if>
+        </trim>
+        limit ${beginIndex}, ${rows}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.ChargerUpgradePack" useGeneratedKeys="true" keyProperty="id">
+        insert into bas_charger_upgrade_pack(pack_type, upgrade_name, file_name, file_path, old_version, new_version, size, md5_sum, memo, update_time)
+        values(#{packType}, #{upgradeName}, #{fileName}, #{filePath}, #{oldVersion}, #{newVersion}, #{size}, #{md5Sum}, #{memo}, #{updateTime})
+    </insert>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.basic.ChargerUpgradePack">
+        update bas_charger_upgrade_pack set
+        pack_type = #{packType},
+        upgrade_name = #{upgradeName},
+        file_name = #{fileName},
+        file_path = #{filePath},
+        old_version = #{oldVersion},
+        new_version = #{newVersion},
+        size = #{size},
+        md5_sum = #{md5Sum},
+        memo = #{memo},
+        update_time = #{updateTime}
+        where id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="long">
+        delete from bas_charger_upgrade_pack where id = #{id}
+    </delete>
+</mapper>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.appserver.persistence.zc.VehicleMapper">
+
+    <select id="findByVinNo" parameterType="string" resultType="cn.com.yusong.yhdg.common.domain.zc.Vehicle">
+        select
+        *
+        from zc_vehicle
+        where vin_no = #{vinNo}
+    </select>
+
+    <update id="updateCustomerUse">
+        update zc_vehicle set
+        status = #{status},
+        customer_id = #{customerId},
+        customer_mobile = #{customerMobile},
+        customer_fullname = #{customerFullname}
+        where id = #{id}
+    </update>
+
+    <select id="find" parameterType="int" resultType="cn.com.yusong.yhdg.common.domain.zc.Vehicle">
+        select
+        *
+        from zc_vehicle
+        where id = #{id}
+    </select>
+
+</mapper>

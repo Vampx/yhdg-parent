@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.serviceserver.persistence.basic.SyncCustomerInfoMapper">
+
+    <select id="findList" resultType="cn.com.yusong.yhdg.common.domain.basic.SyncCustomerInfo">
+        select
+         *
+        from bas_sync_customer_info
+        where send_status = #{sendStatus}
+        order by id asc
+        limit #{offset}, #{limit}
+    </select>
+
+    <update id="complete">
+        update bas_sync_customer_info set send_status = #{sendStatus}, handle_time = #{handleTime}, resend_num = #{resendNum} where id = #{id}
+    </update>
+
+</mapper>

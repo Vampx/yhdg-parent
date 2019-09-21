@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.agentappserver.persistence.basic.UserMapper">
+
+    <select id="find" parameterType="long" resultType="cn.com.yusong.yhdg.common.domain.basic.User">
+        select
+        *
+        from bas_user
+        where id = #{id}
+    </select>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.basic.User">
+        update bas_user set
+        login_name = #{loginName},
+        <if test="password != null and password != ''">
+            password = #{password},
+        </if>
+        mobile = #{mobile},
+        fullname = #{fullname}
+        where id = #{id}
+    </update>
+
+    <update id="updateLoginTime">
+        update bas_user set
+        last_login_time = #{lastLoginTime}
+        where id = #{id}
+    </update>
+
+    <select id="findByMobile" resultType="cn.com.yusong.yhdg.common.domain.basic.User">
+        select
+        *
+        from bas_user
+        where mobile = #{mobile}
+    </select>
+
+    <select id="findListByMobile" resultType="cn.com.yusong.yhdg.common.domain.basic.User">
+        select
+        *
+        from bas_user
+        where mobile = #{mobile} and agent_id is not NULL and account_type = #{accountType}
+    </select>
+
+    <select id="findTypeUserList" resultType="cn.com.yusong.yhdg.common.domain.basic.User">
+        select
+        *
+        from bas_user
+        where mobile = #{mobile}
+        order by account_type
+    </select>
+
+    <select id="findShopListByMobile" resultType="cn.com.yusong.yhdg.common.domain.basic.User">
+        select
+        *
+        from bas_user
+        where mobile = #{mobile} and shop_id is not NULL and account_type = #{accountType}
+    </select>
+
+    <select id="findAgentCompanyListByMobile" resultType="cn.com.yusong.yhdg.common.domain.basic.User">
+        select
+        *
+        from bas_user
+        where mobile = #{mobile} and agent_company_id is not NULL and account_type = #{accountType}
+    </select>
+
+    <select id="findEstateListByMobile" resultType="cn.com.yusong.yhdg.common.domain.basic.User">
+        select
+        *
+        from bas_user
+        where mobile = #{mobile} and estate_id is not NULL and account_type = #{accountType}
+    </select>
+
+    <select id="findListByAgentId" resultType="cn.com.yusong.yhdg.common.domain.basic.User">
+        select
+        *
+        from bas_user
+        where agent_id = #{agentId}
+        and account_type = #{accountType}
+        and is_active = 1
+        <if test="shopId != null and shopId != ''">
+            and shop_id = #{shopId}
+        </if>
+        <if test="agentCompanyId != null and agentCompanyId != ''">
+            and agent_company_id = #{agentCompanyId}
+        </if>
+    </select>
+
+    <select id="findList" resultType="cn.com.yusong.yhdg.common.domain.basic.User">
+        select *
+        FROM bas_user
+        where agent_id = #{agentId} and account_type = 2 and is_active = 1
+        ORDER BY id
+        limit #{offset}, #{limit}
+    </select>
+
+    <select id="findAgentUserCount" resultType="int">
+        select
+        count(*)
+        from bas_user
+        where agent_id = #{agentId} and account_type = 2 and is_active = 1
+    </select>
+
+    <select id="findByLoginName" resultType="cn.com.yusong.yhdg.common.domain.basic.User">
+        select
+        *
+        from bas_user
+        where login_name = #{loginName}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.User" useGeneratedKeys="true" keyProperty="id">
+        insert into bas_user(agent_id, is_admin, is_protected, account_type, login_name, password, mobile, dept_id, memo, create_time, role_id, photo_path, is_active, fullname)
+        values(#{agentId}, #{isAdmin}, #{isProtected}, #{accountType}, #{loginName}, #{password}, #{mobile}, #{deptId}, #{memo}, #{createTime}, #{roleId}, #{photoPath}, #{isActive}, #{fullname})
+    </insert>
+
+    <update id="updatePassword">
+        update bas_user set password = #{newPassword} where id = #{id} and password = #{oldPassword}
+    </update>
+
+    <update id="updatePassword2">
+        update bas_user set password = #{newPassword} where id = #{id}
+    </update>
+
+    <update id="updateMobile">
+        update bas_user set mobile = #{mobile} where id = #{id}
+    </update>
+
+    <update id="updateInfo">
+        update bas_user set
+        <trim suffix="" suffixOverrides=",">
+            <if test="photoPath != null">photo_path = #{photoPath},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="updatePushToken">
+        update bas_user set push_type = #{pushType},push_token = #{pushToken} where id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="long">
+        delete from bas_user where id = #{id}
+    </delete>
+
+</mapper>

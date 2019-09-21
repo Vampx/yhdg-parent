@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.basic.AgentPermMapper">
+
+    <select id="findAllByClientType" resultType="cn.com.yusong.yhdg.common.domain.basic.AgentPerm">
+        select
+        *
+        from bas_agent_perm
+        where client_type = #{clientType}
+        order by order_num asc
+    </select>
+
+</mapper>

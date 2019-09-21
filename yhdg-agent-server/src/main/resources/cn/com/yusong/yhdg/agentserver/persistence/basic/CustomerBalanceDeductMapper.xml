@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.basic.CustomerBalanceDeductMapper">
+
+
+    <select id="find" parameterType="int" resultType="cn.com.yusong.yhdg.common.domain.basic.CustomerBalanceDeduct">
+        select
+        *
+        from bas_customer_balance_deduct
+        where id = #{id}
+    </select>
+
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.basic.CustomerBalanceDeduct" resultType="int">
+        select
+        count(id)
+        from bas_customer_balance_deduct
+        <trim prefix="where" prefixOverrides="and">
+            <if test="fullname != null and fullname != ''">
+                <![CDATA[and fullname LIKE concat('%', #{fullname}, '%')]]>
+            </if>
+            <if test="mobile != null and mobile != ''">
+                <![CDATA[and mobile LIKE concat('%', #{mobile}, '%')]]>
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.basic.CustomerBalanceDeduct" resultType="cn.com.yusong.yhdg.common.domain.basic.CustomerBalanceDeduct">
+        select
+        *
+        from bas_customer_balance_deduct
+        <trim prefix="where" prefixOverrides="and">
+            <if test="fullname != null and fullname != ''">
+                <![CDATA[and fullname LIKE concat('%', #{fullname}, '%')]]>
+            </if>
+            <if test="mobile != null and mobile != ''">
+                <![CDATA[and mobile LIKE concat('%', #{mobile}, '%')]]>
+            </if>
+        </trim>
+        order by create_time DESC
+        limit ${beginIndex}, ${rows}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.BatchMobileMessage" useGeneratedKeys="true" keyProperty="id">
+        insert into bas_customer_balance_deduct(customer_id, mobile, fullname, money, handler_name, memo, create_time)
+        values(#{customerId}, #{mobile}, #{fullname}, #{money}, #{handlerName}, #{memo},  #{createTime})
+    </insert>
+
+
+</mapper>

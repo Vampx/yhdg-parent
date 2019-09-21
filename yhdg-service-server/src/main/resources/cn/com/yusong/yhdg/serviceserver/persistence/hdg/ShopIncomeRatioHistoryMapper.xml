@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.serviceserver.persistence.hdg.ShopIncomeRatioHistoryMapper">
+    <select id="exist" resultType="string">
+        show tables like 'hdg_shop_income_ratio_history_${suffix}'
+    </select>
+
+    <update id="createTable">
+        create table hdg_shop_income_ratio_history_${suffix} (
+        agent_id int unsigned not null, /*运营商id*/
+        shop_id char(12) not null, /*门店id*/
+        stats_date char(10) not null, /*统计日期*/
+        agent_name varchar(40), /*运营商名称*/
+        ratio tinyint not null, /*分成比例*/
+        platform_deduct_money int, /*计入平台分成  每单从运营商收入里面扣除多少钱*/
+        shop_fixed_money int,
+        org_type tinyint not null, /*1 平台 2 运营商 3 省代 4 市代 5 门店*/
+        org_id bigint unsigned,/*对应的运营商id*/
+        org_name varchar(40),
+        create_time datetime not null,
+        primary key (agent_id, stats_date, shop_id, org_type)
+        ) engine=innodb default charset=utf8;
+    </update>
+
+    <select id="findList" resultType="cn.com.yusong.yhdg.common.domain.hdg.ShopIncomeRatioHistory">
+        select
+        *
+        from hdg_shop_income_ratio_history_${suffix}
+        where agent_id = #{agentId}
+        and shop_id = #{shopId}
+        and stats_date = #{statsDate}
+        order by field(org_type,1,3,4,5,2)
+    </select>
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.hdg.ShopIncomeRatioHistory">
+        select
+        *
+        from hdg_shop_income_ratio_history_${suffix}
+        where agent_id = #{agentId}
+        and shop_id = #{shopId}
+        and stats_date = #{statsDate}
+        and org_type = #{orgType}
+        limit 1
+    </select>
+
+    <insert id="insert">
+        insert into hdg_shop_income_ratio_history_${suffix} (agent_id, shop_id, stats_date, agent_name, ratio, platform_deduct_money, shop_fixed_money, org_type, org_id, org_name, create_time)
+        values ( #{agentId}, #{shopId}, #{statsDate}, #{agentName}, #{ratio}, #{platformDeductMoney}, #{shopFixedMoney}, #{orgType}, #{orgId}, #{orgName}, #{createTime})
+    </insert>
+
+</mapper>

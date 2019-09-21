@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.basic.AlipayfwMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.basic.Alipayfw">
+        select *
+        from bas_alipayfw
+        where id=#{id}
+    </select>
+
+    <select id="findAll" resultType="cn.com.yusong.yhdg.common.domain.basic.Alipayfw">
+        select *
+        from bas_alipayfw
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.basic.Alipayfw" resultType="int">
+        select count(id)
+        from bas_alipayfw
+        <trim prefix="where" prefixOverrides="and">
+                <if test="id != null">and id = #{id} </if>
+                <if test="partnerId != null">and partner_id = #{partnerId} </if>
+                <if test="appName != null">and app_name = #{appName} </if>
+                <if test="appId != null">and app_id = #{appId} </if>
+                <if test="pubKey != null">and pub_key = #{pubKey} </if>
+                <if test="priKey != null">and pri_key = #{priKey} </if>
+                <if test="aliKey != null">and ali_key = #{aliKey} </if>
+                <if test="userinfoVersion != null">and userinfo_version = #{userinfoVersion} </if>
+                <if test="subscribeUrl != null">and subscribe_url = #{subscribeUrl} </if>
+                <if test="logoPath != null">and logo_path = #{logoPath} </if>
+                <if test="createTime != null">and create_time = #{createTime} </if>
+                <if test="systemTel != null">and system_tel = #{systemTel} </if>
+                <if test="pageType != null">and page_type = #{pageType} </if>
+                <if test="alipayId != null">and alipay_id = #{alipayId} </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.basic.Alipayfw" resultType="cn.com.yusong.yhdg.common.domain.basic.Alipayfw">
+        select
+        bas_alipayfw.*,bas_partner.partner_name
+        from bas_alipayfw
+        left join bas_partner on bas_alipayfw.partner_id = bas_partner.id
+        <trim prefix="where" prefixOverrides="and">
+                <if test="id != null">and bas_alipayfw.id = #{id} </if>
+                <if test="partnerId != null">and bas_alipayfw.partner_id = #{partnerId} </if>
+                <if test="appName != null">and bas_alipayfw.app_name = #{appName} </if>
+                <if test="appId != null">and bas_alipayfw.app_id = #{appId} </if>
+                <if test="pubKey != null">and bas_alipayfw.pub_key = #{pubKey} </if>
+                <if test="priKey != null">and bas_alipayfw.pri_key = #{priKey} </if>
+                <if test="aliKey != null">and bas_alipayfw.ali_key = #{aliKey} </if>
+                <if test="userinfoVersion != null">and bas_alipayfw.userinfo_version = #{userinfoVersion} </if>
+                <if test="subscribeUrl != null">and bas_alipayfw.subscribe_url = #{subscribeUrl} </if>
+                <if test="logoPath != null">and bas_alipayfw.logo_path = #{logoPath} </if>
+                <if test="createTime != null">and bas_alipayfw.create_time = #{createTime} </if>
+                <if test="systemTel != null">and bas_alipayfw.system_tel = #{systemTel} </if>
+                <if test="pageType != null">and bas_alipayfw.page_type = #{pageType} </if>
+                <if test="alipayId != null">and alipay_id = #{alipayId} </if>
+        </trim>
+        order by bas_alipayfw.id desc
+        limit #{beginIndex}, #{rows}
+    </select>
+
+    <select id="findList" parameterType="cn.com.yusong.yhdg.common.domain.basic.Alipayfw"
+            resultType="cn.com.yusong.yhdg.common.domain.basic.Alipayfw">
+        select
+        *
+        from bas_alipayfw
+        <trim prefix="where" prefixOverrides="and">
+            <if test="partnerId != null">
+                and partner_id = #{partnerId}
+            </if>
+            <if test="alipayId != null">
+                and alipay_id = #{alipayId}
+            </if>
+        </trim>
+        order by id
+    </select>
+
+    <select id="findByPartnerId" parameterType="int"
+            resultType="cn.com.yusong.yhdg.common.domain.basic.Alipayfw">
+        select
+        *
+        from bas_alipayfw
+        where partner_id = #{partnerId}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.Alipayfw" keyProperty="id" useGeneratedKeys="true">
+        insert into bas_alipayfw (
+        id,partner_id,app_name,app_id,pub_key,pri_key,ali_key,
+        userinfo_version,subscribe_url,logo_path,create_time,system_tel,page_type,auth_type,
+        alipay_id,attention_image_path,logo_image_path
+        )
+        values (
+        #{id},#{partnerId},#{appName},#{appId},#{pubKey},#{priKey},#{aliKey},
+        #{userinfoVersion},#{subscribeUrl},#{logoPath},#{createTime},#{systemTel},#{pageType},#{authType},
+        #{alipayId},#{attentionImagePath},#{logoImagePath})
+    </insert>
+
+    <insert id="insertSql">
+        ${sql}
+    </insert>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.basic.Alipayfw">
+        update bas_alipayfw set
+        partner_id=#{partnerId},app_name=#{appName},
+        app_id=#{appId},pub_key=#{pubKey},pri_key=#{priKey},
+        ali_key=#{aliKey},userinfo_version=#{userinfoVersion},subscribe_url=#{subscribeUrl},
+        logo_path=#{logoPath},system_tel=#{systemTel},page_type=#{pageType},auth_type = #{authType},
+        alipay_id=#{alipayId},attention_image_path=#{attentionImagePath},logo_image_path=#{logoImagePath}
+        where id=#{id}
+    </update>
+
+    <delete id="delete">
+        delete from bas_alipayfw
+        where id=#{id}
+    </delete>
+</mapper>

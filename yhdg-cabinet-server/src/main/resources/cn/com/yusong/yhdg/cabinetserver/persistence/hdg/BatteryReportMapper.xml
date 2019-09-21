@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.cabinetserver.persistence.hdg.BatteryReportMapper">
+
+    <select id="findTable" resultType="String">
+        SHOW TABLES LIKE #{tableName}
+    </select>
+
+    <update id="createTable">
+        create table if not exists ${tableName} (
+            id int unsigned not null auto_increment,
+            battery_id char(12) not null,
+            code varchar(40) not null,
+            heart_type tinyint,/*心跳类型*/
+            sim_code varchar(40), /*sim卡号*/
+            version varchar(40),/*版本*/
+            link_status int,/*网络连接状态*/
+            loc_type tinyint,/*位置类型（1.GPS 2.CELL*/
+            current_signal smallint, /*当前信号*/
+            signal_type tinyint, /*信号类型 0:2g 1:3G 2:4G 3:NBIot*/
+            lbs varchar(100), /*基站信息“mcc,mnc,lac,cellid”*/
+            lng double, /*经度*/
+            lat double, /*纬度*/
+            voltage int, /*电压*/
+            electricity int, /*电流*/
+            serials smallint,
+            single_voltage varchar(100), /*电池每串单体电压*/
+            balance int, /*电芯的均衡状态0关闭,1开启*/
+            temp varchar(100), /*温度*/
+            current_capacity int, /*当前容量*/
+            volume tinyint,/*当前电量*/
+            circle int,/*循环次数*/
+            mos tinyint,
+            fault int,
+            heart_interval smallint, /*心跳间隔*/
+            is_motion tinyint,
+            uncap_state tinyint,/*开盖状态*/
+            mode tinyint,/*工作状态*/
+            protect varchar(100), /*保护次数*/
+            battery_lease int,
+            cell_model varchar(40),/*电池型号*/
+            cell_mfr varchar(40),/*电芯厂家*/
+            batt_mfr varchar(40),/*电池厂家*/
+            mfd varchar(40),/*生产日期*/
+            bms_model varchar(40),/*BMS型号*/
+            material tinyint, /*材质1.三元,2.磷酸铁锂,3.铅酸*/
+            batt_type tinyint,/*电池类型*/
+            nominal_capacity int, /*标准容量*/
+            circle_capacity int,/*循环容量*/
+            cell_full_vol int,
+            cell_cut_vol int,
+            self_dsg_rate int,
+            ocv_table varchar(150), /*路电压值*/
+            cell_ov_trip int,
+            cell_ov_resume int,
+            cell_ov_delay int,
+            cell_uv_trip int,
+            cell_uv_resume int,
+            cell_uv_delay int,
+            pack_ov_trip int,
+            pack_ov_resume int,
+            pack_ov_delay int,
+            pack_uv_trip int,
+            pack_uv_resume int,
+            pack_uv_delay int,
+            chg_ot_trip int,
+            chg_ot_resume int,
+            chg_ot_delay int,
+            chg_ut_trip int,
+            chg_ut_resume int,
+            chg_ut_delay int,
+            chg_oc_trip int,
+            chg_oc_delay int,
+            chg_oc_release int,
+            dsg_ot_trip int,
+            dsg_ot_resume int,
+            dsg_ot_delay int,
+            dsg_ut_trip int,
+            dsg_ut_resume int,
+            dsg_ut_delay int,
+            dsg_oc_trip int,
+            dsg_oc_delay int,
+            dsg_oc_release int,
+            rsns int,
+            hard_oc_trip int,
+            hard_oc_delay int,
+            sc_trip int,
+            sc_delay int,
+            hard_ov_trip int,
+            hard_ov_delay int,
+            hard_uv_trip int,
+            hard_uv_delay int,
+            sd_release int,
+            function int,
+            ntc_config int,
+            sample_r int,
+            motionless smallint,/*静止状态时心跳间隔*/
+            standby smallint, /*存储状态时心跳间隔*/
+            dormancy smallint, /*休眠状态时心跳间隔*/
+            cabinet_id char(12),/*柜子id*/
+            box_num varchar(10),/*格口编号*/
+            total_capacity int, /*总容量*/
+            distance int,
+            create_time datetime not null,/*创建时间*/
+            primary key (id),
+            index idx_battery_report_battery_id_create_time (battery_id, create_time),
+            index idx_battery_report_battery_id (battery_id)
+        ) engine=innodb default charset=utf8;
+    </update>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.BatteryReport">
+        INSERT INTO hdg_battery_report_${suffix}  (
+            battery_id,
+            code,
+            version,
+            link_status,
+            heart_type,
+            sim_code,
+            loc_type,
+            current_signal,
+            signal_type,
+            lng,
+            lat,
+            voltage,
+            electricity,
+            serials,
+            single_voltage,
+            balance,
+            temp,
+            current_capacity,
+            volume,
+            circle,
+            mos,
+            fault,
+            heart_interval,
+            is_motion,
+            uncap_state,
+            mode,
+            protect,
+            battery_lease,
+            cell_model,
+            cell_mfr,
+            batt_mfr,
+            mfd,
+            bms_model,
+            material,
+            batt_type,
+            nominal_capacity,
+            circle_capacity,
+            cell_full_vol,
+            cell_cut_vol,
+            self_dsg_rate,
+            ocv_table,
+            cell_ov_trip,
+            cell_ov_resume,
+            cell_ov_delay,
+            cell_uv_trip,
+            cell_uv_resume,
+            cell_uv_delay,
+            pack_ov_trip,
+            pack_ov_resume,
+            pack_ov_delay,
+            pack_uv_trip,
+            pack_uv_resume,
+            pack_uv_delay,
+
+            chg_ot_trip,
+            chg_ot_resume,
+            chg_ot_delay,
+            chg_ut_trip,
+            chg_ut_resume,
+            chg_ut_delay,
+            chg_oc_trip,
+            chg_oc_delay,
+            chg_oc_release,
+            dsg_ot_trip,
+            dsg_ot_resume,
+            dsg_ot_delay,
+            dsg_ut_trip,
+            dsg_ut_resume,
+            dsg_ut_delay,
+            dsg_oc_trip,
+            dsg_oc_delay,
+            dsg_oc_release,
+            rsns,
+            hard_oc_trip,
+            hard_oc_delay,
+            sc_trip,
+            sc_delay,
+            hard_ov_trip,
+            hard_ov_delay,
+            hard_uv_trip,
+            hard_uv_delay,
+            sd_release,
+            function,
+            ntc_config,
+            sample_r,
+            motionless,
+            standby,
+            dormancy,
+            cabinet_id,
+            box_num,
+            total_capacity,
+            distance,
+            create_time
+        ) values (
+            #{batteryId},
+            #{code},
+            #{version},
+            #{linkStatus},
+            #{heartType},
+            #{simCode},
+            #{locType},
+            #{currentSignal},
+            #{signalType},
+            #{lng},
+            #{lat},
+            #{voltage},
+            #{electricity},
+            #{serials},
+            #{singleVoltage},
+            #{balance},
+            #{temp},
+            #{currentCapacity},
+            #{volume},
+            #{circle},
+            #{mos},
+            #{fault},
+            #{heartInterval},
+            #{isMotion},
+            #{uncapState},
+            #{mode},
+            #{protect},
+            #{batteryLease},
+            #{cellModel},
+            #{cellMfr},
+            #{battMfr},
+            #{mfd},
+            #{bmsModel},
+            #{material},
+            #{battType},
+            #{nominalCapacity},
+            #{circleCapacity},
+            #{cellFullVol},
+            #{cellCutVol},
+            #{selfDsgRate},
+            #{ocvTable},
+            #{cellOvTrip},
+            #{cellOvResume},
+            #{cellOvDelay},
+            #{cellUvTrip},
+            #{cellUvResume},
+            #{cellUvDelay},
+            #{packOvTrip},
+            #{packOvResume},
+            #{packOvDelay},
+            #{packUvTrip},
+            #{packUvResume},
+            #{packUvDelay},
+            #{chgOtTrip},
+            #{chgOtResume},
+            #{chgOtDelay},
+            #{chgUtTrip},
+            #{chgUtResume},
+            #{chgUtDelay},
+            #{chgOcTrip},
+            #{chgOcDelay},
+            #{chgOcRelease},
+            #{dsgOtTrip},
+            #{dsgOtResume},
+            #{dsgOtDelay},
+            #{dsgUtTrip},
+            #{dsgUtResume},
+            #{dsgUtDelay},
+            #{dsgOcTrip},
+            #{dsgOcDelay},
+            #{dsgOcRelease},
+            #{rsns},
+            #{hardOcTrip},
+            #{hardOcDelay},
+            #{scTrip},
+            #{scDelay},
+            #{hardOvTrip},
+            #{hardOvDelay},
+            #{hardUvTrip},
+            #{hardUvDelay},
+            #{sdRelease},
+            #{function},
+            #{ntcConfig},
+            #{sampleR},
+            #{motionless},
+            #{standby},
+            #{dormancy},
+            #{cabinetId},
+            #{boxNum},
+            #{totalCapacity},
+            #{distance},
+            #{createTime}
+          )
+    </insert>
+
+</mapper>

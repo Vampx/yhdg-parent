@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.batteryserver.persistence.basic.UpgradePackDetailMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.basic.BatteryUpgradePackDetail">
+        select
+        *
+        from bas_battery_upgrade_pack_detail
+        where
+        upgrade_pack_id = #{upgradePackId}
+        and
+        battery_id = #{batteryId}
+    </select>
+
+
+</mapper>

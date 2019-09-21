@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.agentappserver.persistence.zd.RentInsuranceMapper">
+
+    <select id="findListByBatteryType" resultType="cn.com.yusong.yhdg.common.domain.zd.RentInsurance">
+        SELECT
+            *
+        FROM zd_rent_insurance
+        WHERE battery_type = #{batteryType}
+        AND agent_id = #{agentId}
+    </select>
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.zd.RentInsurance">
+        SELECT
+            *
+        FROM zd_rent_insurance
+        WHERE id = #{id}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.zd.RentInsurance" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO zd_rent_insurance(
+            agent_id,
+            insurance_name,
+            battery_type,
+            price,
+            paid,
+            month_count,
+            is_active,
+            memo,
+            create_time
+        ) VALUES (
+            #{agentId},
+            #{insuranceName},
+            #{batteryType},
+            #{price},
+            #{paid},
+            #{monthCount},
+            #{isActive},
+            #{memo},
+            #{createTime}
+        )
+    </insert>
+
+    <delete id="delete">
+        delete from zd_rent_insurance where agent_id = #{agentId} and battery_type = #{batteryType}
+    </delete>
+
+</mapper>
+

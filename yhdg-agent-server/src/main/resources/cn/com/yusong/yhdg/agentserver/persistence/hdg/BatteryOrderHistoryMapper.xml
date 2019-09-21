@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.hdg.BatteryOrderHistoryMapper">
+
+    <select id="find" parameterType="string" resultType="cn.com.yusong.yhdg.common.domain.hdg.BatteryOrder">
+        select
+        *
+        from hdg_battery_order_${suffix}
+        where id = #{id}
+    </select>
+    <select id="findTable" resultType="String">
+        SHOW TABLES LIKE #{tableName}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.hdg.BatteryOrder" resultType="int">
+        select
+        count(*)
+        from hdg_battery_order_${suffix}
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null">
+                and agent_id = #{agentId}
+            </if>
+            <if test="payType != null">
+                and pay_type = #{payType}
+            </if>
+            <if test="id != null and id != ''">
+                <![CDATA[and id LIKE concat(#{id}, '%')]]>
+            </if>
+            <if test="customerId != null">
+                and customer_id = #{customerId}
+            </if>
+            <if test="customerMobile != null and customerMobile != ''">
+                <![CDATA[and customer_mobile LIKE concat(#{customerMobile}, '%')]]>
+            </if>
+            <if test="customerFullname != null and customerFullname != ''">
+                <![CDATA[and customer_fullname LIKE concat(#{customerFullname}, '%')]]>
+            </if>
+            <if test="batteryId != null and batteryId != ''">
+                <![CDATA[and battery_id LIKE concat(#{batteryId}, '%')]]>
+            </if>
+            <if test="takeCabinetId != null and takeCabinetId != ''">
+                <![CDATA[and take_cabinet_id LIKE concat(#{takeCabinetId}, '%')]]>
+            </if>
+            <if test="putCabinetId != null and putCabinetId != ''">
+                <![CDATA[and put_cabinet_id LIKE concat(#{putCabinetId}, '%')]]>
+            </if>
+            <if test="queryBeginTime !=null">
+                and create_time &gt;= #{queryBeginTime}
+            </if>
+            <if test="queryEndTime !=null">
+                and create_time &lt;= #{queryEndTime}
+            </if>
+            <if test="takeBeginTime !=null">
+                and take_time &gt;= #{takeBeginTime}
+            </if>
+            <if test="takeEndTime !=null">
+                and take_time &lt;= #{takeEndTime}
+            </if>
+            <if test="putBeginTime !=null">
+                and put_time &gt;= #{putBeginTime}
+            </if>
+            <if test="putEndTime !=null">
+                and put_time &lt;= #{putEndTime}
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.hdg.BatteryOrder"
+            resultType="cn.com.yusong.yhdg.common.domain.hdg.BatteryOrder">
+        select
+        *
+        from hdg_battery_order_${suffix}
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null">
+                and agent_id = #{agentId}
+            </if>
+            <if test="payType != null">
+                and pay_type = #{payType}
+            </if>
+            <if test="id != null and id != ''">
+                <![CDATA[and id LIKE concat(#{id}, '%')]]>
+            </if>
+            <if test="customerId != null">
+                and customer_id = #{customerId}
+            </if>
+            <if test="customerMobile != null and customerMobile != ''">
+                <![CDATA[and customer_mobile LIKE concat(#{customerMobile}, '%')]]>
+            </if>
+            <if test="customerFullname != null and customerFullname != ''">
+                <![CDATA[and customer_fullname LIKE concat(#{customerFullname}, '%')]]>
+            </if>
+            <if test="batteryId != null and batteryId != ''">
+                <![CDATA[and battery_id LIKE concat(#{batteryId}, '%')]]>
+            </if>
+            <if test="takeCabinetId != null and takeCabinetId != ''">
+                <![CDATA[and take_cabinet_id LIKE concat(#{takeCabinetId}, '%')]]>
+            </if>
+            <if test="putCabinetId != null and putCabinetId != ''">
+                <![CDATA[and put_cabinet_id LIKE concat(#{putCabinetId}, '%')]]>
+            </if>
+            <if test="queryBeginTime !=null">
+                and create_time &gt;= #{queryBeginTime}
+            </if>
+            <if test="queryEndTime !=null">
+                and create_time &lt;= #{queryEndTime}
+            </if>
+            <if test="takeBeginTime !=null">
+                and take_time &gt;= #{takeBeginTime}
+            </if>
+            <if test="takeEndTime !=null">
+                and take_time &lt;= #{takeEndTime}
+            </if>
+            <if test="putBeginTime !=null">
+                and put_time &gt;= #{putBeginTime}
+            </if>
+            <if test="putEndTime !=null">
+                and put_time &lt;= #{putEndTime}
+            </if>
+        </trim>
+        order by id desc
+        limit ${beginIndex}, ${rows}
+    </select>
+</mapper>

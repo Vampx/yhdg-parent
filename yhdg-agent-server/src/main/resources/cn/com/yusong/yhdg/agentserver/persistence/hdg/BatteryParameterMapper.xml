@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.hdg.BatteryParameterMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.hdg.BatteryParameter">
+        select *
+        from hdg_battery_parameter
+        where id= #{id}
+    </select>
+
+    <update id="update">
+        update hdg_battery_parameter set
+        <trim suffix="" suffixOverrides=",">
+            <if test="code != null and code != ''">
+                code = #{code},
+            </if>
+            <if test="type != null">
+                type = #{type},
+            </if>
+            <if test="simCode != null and simCode != ''">
+                sim_code = #{simCode},
+            </if>
+            <if test="version != null  and version != ''">
+                version = #{version},
+            </if>
+            <if test="locType != null">
+                loc_type = #{locType},
+            </if>
+            <if test="currentSignal != null">
+                current_signal = #{currentSignal},
+            </if>
+            <if test="signalType != null">
+                signal_type = #{signalType},
+            </if>
+            <if test="lng != null">
+                lng = #{lng},
+            </if>
+            <if test="lat != null">
+                lat = #{lat},
+            </if>
+            <if test="voltage != null">
+                voltage = #{voltage},
+            </if>
+            <if test="electricity != null">
+                electricity = #{electricity},
+            </if>
+            <if test="serials != null">
+                serials = #{serials},
+            </if>
+            <if test="singleVoltage != null">
+                single_voltage = #{singleVoltage},
+            </if>
+            <if test="balance != null">
+                balance = #{balance},
+            </if>
+            <if test="temp != null">
+                temp = #{temp},
+            </if>
+            <if test="currentCapacity != null">
+                current_capacity = #{currentCapacity},
+            </if>
+            <if test="volume != null">
+                volume = #{volume},
+            </if>
+            <if test="circle != null">
+                circle = #{circle},
+            </if>
+            <if test="mos != null">
+                mos = #{mos},
+            </if>
+            <if test="fault != null">
+                fault = #{fault},
+            </if>
+            <if test="heartInterval != null">
+                heart_interval = #{heartInterval},
+            </if>
+            <if test="isMotion != null">
+                is_motion = #{isMotion},
+            </if>
+            <if test="uncapState != null">
+                uncap_state = #{uncapState},
+            </if>
+            <if test="mode != null">
+                mode = #{mode},
+            </if>
+            <if test="protect != null and protect != '' ">
+                protect = #{protect},
+            </if>
+            <if test="batteryLease != null and batteryLease != '' ">
+                battery_lease = #{batteryLease},
+            </if>
+            <if test="cellModel != null  and cellModel != ''">
+                cell_model = #{cellModel},
+            </if>
+            <if test="cellMfr != null  and cellMfr != ''">
+                cell_mfr = #{cellMfr},
+            </if>
+            <if test="battMfr != null  and battMfr != ''">
+                batt_mfr = #{battMfr},
+            </if>
+            <if test="mfd != null   and mfd != ''">
+                mfd = #{mfd},
+            </if>
+            <if test="bmsModel != null  and bmsModel != '' ">
+                bms_model = #{bmsModel},
+            </if>
+            <if test="material != null">
+                material = #{material},
+            </if>
+            <if test="battType != null">
+                batt_type = #{battType},
+            </if>
+            <if test="nominalCapacity != null">
+                nominal_capacity = #{nominalCapacity},
+            </if>
+            <if test="circleCapacity != null">
+                circle_capacity = #{circleCapacity},
+            </if>
+            <if test="cellFullVol != null">
+                cell_full_vol = #{cellFullVol},
+            </if>
+            <if test="cellCutVol != null">
+                cell_cut_vol = #{cellCutVol},
+            </if>
+            <if test="selfDsgRate != null">
+                self_dsg_rate = #{selfDsgRate},
+            </if>
+            <if test="ocvTable != null">
+                ocv_table = #{ocvTable},
+            </if>
+            <if test="cellOvTrip != null">
+                cell_ov_trip = #{cellOvTrip},
+            </if>
+            <if test="cellOvResume != null">
+                cell_ov_resume = #{cellOvResume},
+            </if>
+            <if test="cellOvDelay != null">
+                cell_ov_delay = #{cellOvDelay},
+            </if>
+            <if test="cellUvTrip != null">
+                cell_uv_trip = #{cellUvTrip},
+            </if>
+            <if test="cellUvResume != null">
+                cell_uv_resume = #{cellUvResume},
+            </if>
+            <if test="cellUvDelay != null">
+                cell_uv_delay = #{cellUvDelay},
+            </if>
+            <if test="packOvTrip != null">
+                pack_ov_trip = #{packOvTrip},
+            </if>
+            <if test="packOvResume != null">
+                pack_ov_resume = #{packOvResume},
+            </if>
+            <if test="packOvDelay != null">
+                pack_ov_delay = #{packOvDelay},
+            </if>
+            <if test="packUvTrip != null">
+                pack_uv_trip = #{packUvTrip},
+            </if>
+            <if test="packUvResume != null">
+                pack_uv_resume = #{packUvResume},
+            </if>
+            <if test="packUvDelay != null">
+                pack_uv_delay = #{packUvDelay},
+            </if>
+            <if test="chgOtTrip != null">
+                chg_ot_trip = #{chgOtTrip},
+            </if>
+            <if test="chgOtResume != null">
+                chg_ot_resume = #{chgOtResume},
+            </if>
+            <if test="chgOtDelay != null">
+                chg_ot_delay = #{chgOtDelay},
+            </if>
+            <if test="chgUtTrip != null">
+                chg_ut_trip = #{chgUtTrip},
+            </if>
+            <if test="chgUtResume != null">
+                chg_ut_resume = #{chgUtResume},
+            </if>
+            <if test="chgUtDelay != null">
+                chg_ut_delay = #{chgUtDelay},
+            </if>
+            <if test="chgOcTrip != null">
+                chg_oc_trip = #{chgOcTrip},
+            </if>
+            <if test="chgOcDelay != null">
+                chg_oc_delay = #{chgOcDelay},
+            </if>
+            <if test="chgOcRelease != null">
+                chg_oc_release = #{chgOcRelease},
+            </if>
+            <if test="dsgOtTrip != null">
+                dsg_ot_trip = #{dsgOtTrip},
+            </if>
+            <if test="dsgOtResume != null">
+                dsg_ot_resume = #{dsgOtResume},
+            </if>
+            <if test="dsgOtDelay != null">
+                dsg_ot_delay = #{dsgOtDelay},
+            </if>
+            <if test="dsgUtTrip != null">
+                dsg_ut_trip = #{dsgUtTrip},
+            </if>
+            <if test="dsgUtResume != null">
+                dsg_ut_resume = #{dsgUtResume},
+            </if>
+            <if test="dsgUtDelay != null">
+                dsg_ut_delay = #{dsgUtDelay},
+            </if>
+            <if test="dsgOcTrip != null">
+                dsg_oc_trip = #{dsgOcTrip},
+            </if>
+            <if test="dsgOcDelay != null">
+                dsg_oc_delay = #{dsgOcDelay},
+            </if>
+            <if test="dsgOcRelease != null">
+                dsg_oc_release = #{dsgOcRelease},
+            </if>
+            <if test="rsns != null">
+                rsns = #{rsns},
+            </if>
+            <if test="hardOcTrip != null">
+                hard_oc_trip = #{hardOcTrip},
+            </if>
+            <if test="hardOcDelay != null">
+                hard_oc_delay = #{hardOcDelay},
+            </if>
+            <if test="scTrip != null">
+                sc_trip = #{scTrip},
+            </if>
+            <if test="scDelay != null">
+                sc_delay = #{scDelay},
+            </if>
+            <if test="hardOvTrip != null">
+                hard_ov_trip = #{hardOvTrip},
+            </if>
+            <if test="hardOvDelay != null">
+                hard_ov_delay = #{hardOvDelay},
+            </if>
+            <if test="hardUvTrip != null">
+                hard_uv_trip = #{hardUvTrip},
+            </if>
+            <if test="hardUvDelay != null">
+                hard_uv_delay = #{hardUvDelay},
+            </if>
+            <if test="sdRelease != null">
+                sd_release = #{sdRelease},
+            </if>
+            <if test="function != null">
+                function = #{function},
+            </if>
+            <if test="ntcConfig != null">
+                ntc_config = #{ntcConfig},
+            </if>
+            <if test="sampleR != null">
+                sample_r = #{sampleR},
+            </if>
+            <if test="motionless != null">
+                motionless = #{motionless},
+            </if>
+            <if test="standby != null">
+                standby = #{standby},
+            </if>
+            <if test="dormancy != null">
+                dormancy = #{dormancy},
+            </if>
+            <if test="totalCapacity != null">
+                total_capacity = #{totalCapacity},
+            </if>
+            <if test="upBms != null">
+                up_bms = #{upBms},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+</mapper>

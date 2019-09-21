@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.yms.TerminalUploadLogMapper">
+
+    <select id="find" parameterType="long" resultType="cn.com.yusong.yhdg.common.domain.yms.TerminalUploadLog">
+        select
+            id,
+            agent_id as agentId,
+            terminal_id as terminalId,
+            type,
+            status,
+            file_path as filePath,
+            log_time as logTime,
+            upload_time as uploadTime,
+            create_time as createTime
+        from yms_terminal_upload_log
+        where id = #{id}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.yms.TerminalUploadLog" resultType="int">
+        select
+            count(id)
+        from yms_terminal_upload_log
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != 0 and agentId != null">
+                and agent_id = #{agentId}
+            </if>
+            <if test="terminalId != null and terminalId != ''">
+                and terminal_id = #{terminalId}
+            </if>
+            <if test="type != null ">
+                and type = #{type}
+            </if>
+            <if test="logTime != null and logTime != ''">
+                and log_time = #{logTime}
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.yms.TerminalUploadLog" resultType="cn.com.yusong.yhdg.common.domain.yms.TerminalUploadLog">
+        select
+            id,
+            agent_id as agentId,
+            terminal_id as terminalId,
+            type,
+            status,
+            file_path as filePath,
+            log_time as logTime,
+            upload_time as uploadTime,
+            create_time as createTime
+        from yms_terminal_upload_log
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != 0 and agentId != null">
+                and agent_id = #{agentId}
+            </if>
+            <if test="terminalId != null and terminalId != ''">
+                and terminal_id = #{terminalId}
+            </if>
+            <if test="type != null ">
+                and type = #{type}
+            </if>
+            <if test="logTime != null and logTime != ''">
+                and log_time = #{logTime}
+            </if>
+        </trim>
+        order by create_time desc
+        limit ${beginIndex}, ${rows}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.yms.TerminalUploadLog" useGeneratedKeys="true" keyProperty="id">
+        insert into yms_terminal_upload_log (
+            agent_id,
+            terminal_id,
+            type,
+            status,
+            file_path,
+            log_time,
+            upload_time,
+            create_time
+        ) values (
+            #{agentId},
+            #{terminalId},
+            #{type},
+            #{status},
+            #{filePath},
+            #{logTime},
+            #{uploadTime},
+            #{createTime}
+        )
+    </insert>
+
+    <delete id="delete" parameterType="long">
+        delete from yms_terminal_upload_log where id = #{id}
+    </delete>
+</mapper>

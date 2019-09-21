@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.hdg.CabinetIncomeTemplateMapper">
+
+    <select id="findByAgentId" parameterType="int" resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetIncomeTemplate">
+        SELECT
+            *
+        FROM hdg_cabinet_income_template
+        WHERE agent_id = #{agentId}
+    </select>
+
+    <select id="findByAgentIdCount" parameterType="int" resultType="integer">
+        SELECT
+        count(id)
+        FROM hdg_cabinet_income_template
+        WHERE agent_id = #{agentId}
+    </select>
+
+    <select id="find" parameterType="int" resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetIncomeTemplate">
+        SELECT
+        *
+        FROM hdg_cabinet_income_template
+        WHERE id = #{id}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.hdg.CabinetIncomeTemplate" resultType="int">
+        SELECT
+        count(*)
+        FROM hdg_cabinet_income_template
+        WHERE 1 = 1
+        <if test="agentId != null">
+            and agent_id = #{agentId}
+        </if>
+        <if test="periodType != null">
+            and period_type = #{periodType}
+        </if>
+        <if test="isReview != null">
+            and is_review = #{isReview}
+        </if>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.hdg.CabinetIncomeTemplate" resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetIncomeTemplate">
+        SELECT
+          *
+        FROM hdg_cabinet_income_template
+        WHERE 1 = 1
+        <if test="agentId != null">
+            and agent_id = #{agentId}
+        </if>
+        <if test="periodType != null">
+            and period_type = #{periodType}
+        </if>
+        <if test="isReview != null">
+            and is_review = #{isReview}
+        </if>
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.CabinetIncomeTemplate">
+        INSERT INTO hdg_cabinet_income_template(
+            agent_id,
+            foregift_money,
+            rent_money,
+            period_type,
+            rent_expire_time,
+            is_review,
+            create_time
+        )
+        VALUES (
+            #{agentId},
+            #{foregiftMoney},
+            #{rentMoney},
+            #{periodType},
+            #{rentExpireTime},
+            #{isReview},
+            #{createTime}
+        )
+    </insert>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.hdg.CabinetIncomeTemplate">
+        UPDATE hdg_cabinet_income_template SET
+            agent_id = #{agentId},
+            foregift_money = #{foregiftMoney},
+            rent_money = #{rentMoney},
+            period_type = #{periodType},
+            rent_expire_time = #{rentExpireTime},
+            is_review = #{isReview}
+        WHERE id = #{id}
+    </update>
+
+    <update id="delete" parameterType="int">
+        DELETE FROM hdg_cabinet_income_template
+        WHERE id = #{id}
+    </update>
+
+</mapper>

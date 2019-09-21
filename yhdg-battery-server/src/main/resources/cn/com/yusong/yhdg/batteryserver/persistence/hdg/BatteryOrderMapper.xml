@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.batteryserver.persistence.hdg.BatteryOrderMapper">
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.hdg.BatteryOrder">
+        select
+        *
+        from hdg_battery_order
+        where id = #{id}
+    </select>
+
+    <update id="update">
+        update hdg_battery_order set
+        current_volume = #{currentVolume},
+        current_capacity = #{currentCapacity},
+        current_distance = #{currentDistance}
+        where id = #{id}
+    </update>
+
+    <update id="updateOrderStatus">
+        update hdg_battery_order set
+        take_time = now(),
+        not_take_timeout_fault_log_id = null,
+        order_status = #{toOrderStatus}
+        where id = #{id} and
+        order_status = #{fromOrderStatus}
+    </update>
+
+</mapper>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.com.yusong.yhdg.appserver.persistence.basic.CustomerManualAuthRecordMapper">
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.CustomerManualAuthRecord" keyProperty="id" useGeneratedKeys="true">
+        insert into bas_customer_manual_auth_record (
+        customer_id, partner_id, fullname, mobile, id_card, id_card_face,
+        id_card_rear, auth_face_path, audit_time, audit_memo, audit_user,
+        status, create_time
+        )
+        values (
+        #{customerId}, #{partnerId}, #{fullname}, #{mobile}, #{idCard},
+        #{idCardFace}, #{idCardRear}, #{authFacePath}, #{auditTime}, #{auditMemo},
+        #{auditUser}, #{status}, #{createTime}
+        )
+    </insert>
+
+</mapper>

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.zc.CustomerVehicleInfoMapper">
+
+    <select id="find" parameterType="long" resultType="cn.com.yusong.yhdg.common.domain.zc.CustomerVehicleInfo">
+        select
+        *
+        from zc_customer_vehicle_info
+        where id = #{id}
+    </select>
+
+    <select id="findByVehicle" parameterType="long" resultType="cn.com.yusong.yhdg.common.domain.zc.CustomerVehicleInfo">
+        select
+        *
+        from zc_customer_vehicle_info
+        where vehicle_id = #{vehicleId}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.zc.CustomerVehicleInfo" resultType="int">
+        select
+        count(*)
+        from zc_customer_vehicle_info AS zcvi LEFT JOIN bas_customer bc ON zcvi.id = bc.id
+        LEFT JOIN bas_agent AS ba ON zcvi.agent_id = ba.id
+        LEFT JOIN hdg_shop AS hs ON zcvi.balance_shop_id = hs.id
+        LEFT JOIN zc_vehicle_model AS zvm ON zcvi.model_id = zvm.id
+        LEFT JOIN zc_vehicle AS zv ON zcvi.vehicle_id = zv.id
+        <trim prefix="where" prefixOverrides="and">
+            <if test="modelId != null and modelId != ''">
+                and zcvi.model_id = #{modelId}
+            </if>
+            <if test="agentId != null">
+                and zcvi.agent_id = #{agentId}
+            </if>
+            <if test="vehicleName != null and vehicleName != ''">
+                <![CDATA[and zcvi.vehicle_name LIKE concat('%', #{vehicleName}, '%')]]>
+            </if>
+            <if test="fullname != null and fullname != ''">
+                <![CDATA[and bc.fullname LIKE concat('%', #{fullname}, '%')]]>
+            </if>
+            <if test="mobile != null and mobile != ''">
+                <![CDATA[and bc.mobile LIKE concat('%', #{mobile}, '%')]]>
+            </if>
+            <if test="vinNo != null and vinNo != ''">
+                <![CDATA[and zv.vin_no LIKE concat('%', #{vinNo}, '%')]]>
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.zc.CustomerVehicleInfo"
+            resultType="cn.com.yusong.yhdg.common.domain.zc.CustomerVehicleInfo">
+        select
+        zcvi.*,
+        bc.fullname AS fullname,
+        bc.mobile AS mobile,
+        ba.agent_name AS agentName,
+        hs.shop_name AS shopName,
+        zvm.model_name AS modelName,
+        zv.vin_no AS vinNo
+        from zc_customer_vehicle_info AS zcvi LEFT JOIN bas_customer bc ON zcvi.id = bc.id
+        LEFT JOIN bas_agent AS ba ON zcvi.agent_id = ba.id
+        LEFT JOIN hdg_shop AS hs ON zcvi.balance_shop_id = hs.id
+        LEFT JOIN zc_vehicle_model AS zvm ON zcvi.model_id = zvm.id
+        LEFT JOIN zc_vehicle AS zv ON zcvi.vehicle_id = zv.id
+        <trim prefix="where" prefixOverrides="and">
+            <if test="modelId != null and modelId != ''">
+                and zcvi.model_id = #{modelId}
+            </if>
+            <if test="agentId != null">
+                and zcvi.agent_id = #{agentId}
+            </if>
+            <if test="vehicleName != null and vehicleName != ''">
+                <![CDATA[and zcvi.vehicle_name LIKE concat('%', #{vehicleName}, '%')]]>
+            </if>
+            <if test="fullname != null and fullname != ''">
+                <![CDATA[and bc.fullname LIKE concat('%', #{fullname}, '%')]]>
+            </if>
+            <if test="mobile != null and mobile != ''">
+                <![CDATA[and bc.mobile LIKE concat('%', #{mobile}, '%')]]>
+            </if>
+            <if test="vinNo != null and vinNo != ''">
+                <![CDATA[and zv.vin_no LIKE concat('%', #{vinNo}, '%')]]>
+            </if>
+        </trim>
+        order by id desc
+        limit #{beginIndex}, #{rows}
+    </select>
+
+    <delete id="delete" parameterType="long">
+        delete from zc_customer_vehicle_info where id = #{id}
+    </delete>
+
+</mapper>

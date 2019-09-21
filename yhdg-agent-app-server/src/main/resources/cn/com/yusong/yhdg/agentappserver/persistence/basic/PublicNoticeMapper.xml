@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.agentappserver.persistence.basic.PublicNoticeMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.basic.AgentNoticeMessage">
+        SELECT
+        id,
+        title,
+        content,
+        create_time as createTime
+        FROM
+        bas_public_notice
+        WHERE
+        notice_type = #{noticeType} and id = #{id}
+    </select>
+
+
+    <select id="findList" resultType="cn.com.yusong.yhdg.common.domain.basic.AgentNoticeMessage">
+        SELECT
+        id,
+        title,
+        content,
+        create_time as createTime
+        FROM
+        bas_public_notice
+        WHERE
+        notice_type = #{noticeType}
+        ORDER BY
+        create_time DESC
+        limit #{offset},#{limit}
+    </select>
+
+    <select id="findCompanyNotice" resultType="cn.com.yusong.yhdg.common.domain.basic.AgentCompanyNoticeMessage">
+        SELECT
+        id,
+        title,
+        content,
+        create_time as createTime
+        FROM
+        bas_public_notice
+        WHERE
+        notice_type = #{noticeType} and id = #{id}
+    </select>
+
+
+    <select id="findCompanyNoticeList" resultType="cn.com.yusong.yhdg.common.domain.basic.AgentCompanyNoticeMessage">
+        SELECT
+        id,
+        title,
+        content,
+        create_time as createTime
+        FROM
+        bas_public_notice
+        WHERE
+        notice_type = #{noticeType}
+        ORDER BY
+        create_time DESC
+        limit #{offset},#{limit}
+    </select>
+
+</mapper>

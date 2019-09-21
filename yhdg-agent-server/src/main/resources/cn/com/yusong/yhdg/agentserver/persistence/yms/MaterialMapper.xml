@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.yms.MaterialMapper">
+    <select id="find" parameterType="long" resultType="cn.com.yusong.yhdg.common.domain.yms.Material">
+        select
+            *
+        from yms_material
+        where id = #{id}
+    </select>
+
+    <select id="findUnique" resultType="int">
+        select count(*) from yms_material where file_path = #{filePath} and agent_id = #{agentId}
+    </select>
+
+    <select id="hasRecordByProperty" resultType="string">
+        select material_name from (select material_name from yms_material where
+        <if test="property == 'agentId'">
+            agent_id = #{value}
+        </if>
+        <if test="property == 'groupId'">
+            group_id = #{value}
+        </if>
+        <if test="property == 'materialId'">
+            material_id = #{value}
+        </if>
+        limit 1
+        ) t
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.yms.Material" resultType="int">
+        select
+            count(id)
+        from yms_material
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null and agentId != 0">
+                and agent_id = #{agentId}
+            </if>
+            <if test="materialType != null">
+                and material_type = #{materialType}
+            </if>
+            <if test="groupId != null">
+                and group_id = #{groupId}
+            </if>
+            <if test="materialName != null and materialName != ''">
+                <![CDATA[and material_name LIKE concat('%', #{materialName}, '%')]]>
+            </if>
+            <if test="ownerName != null and ownerName != ''">
+                <![CDATA[and owner_name LIKE concat('%', #{ownerName}, '%')]]>
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.yms.Material" resultType="cn.com.yusong.yhdg.common.domain.yms.Material">
+        select
+            *
+        from yms_material
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null and agentId != 0">
+                and agent_id = #{agentId}
+            </if>
+            <if test="materialType != null">
+                and material_type = #{materialType}
+            </if>
+            <if test="groupId != null">
+                and group_id = #{groupId}
+            </if>
+            <if test="materialName != null and materialName != ''">
+                <![CDATA[and material_name LIKE concat('%', #{materialName}, '%')]]>
+            </if>
+            <if test="ownerName != null and ownerName != ''">
+                <![CDATA[and owner_name LIKE concat('%', #{ownerName}, '%')]]>
+            </if>
+            <if test="convertStatus != null and convertStatus != ''">
+                <![CDATA[and convert_status = #{convertStatus}]]>
+            </if>
+        </trim>
+        order by id DESC
+        limit #{beginIndex}, #{rows}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.yms.Material">
+      insert into yms_material(id, agent_id, group_id, material_name,material_type, duration,md5_sum,version,cover_path,convert_status,convert_progress, file_path, size, width, height, owner_id, owner_name, create_time)
+      values (#{id}, #{agentId}, #{groupId}, #{materialName}, #{materialType},#{duration},#{md5Sum},#{version}, #{coverPath},#{convertStatus}, #{convertProgress},#{filePath}, #{size}, #{width}, #{height}, #{ownerId}, #{ownerName}, #{createTime})
+    </insert>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.yms.Material">
+        update yms_material set
+        <trim suffix="" suffixOverrides=",">
+            <if test="agentId != 0 and agentId != null">
+                agent_id = #{agentId},
+            </if>
+            <if test="groupId != 0 and groupId != null">
+                group_id = #{groupId},
+            </if>
+            <if test="materialName != null and materialName != ''">
+                material_name = #{materialName},
+            </if>
+            <if test="materialType != 0 and materialType != null">
+                material_type = #{materialType},
+            </if>
+            <if test="duration != 0 and duration != null">
+                duration = #{duration},
+            </if>
+            <if test="md5Sum != null and md5Sum != ''">
+                md5_sum = #{md5Sum},
+            </if>
+            <if test="version != 0 and version != null">
+                version = #{version},
+            </if>
+            <if test="coverPath != null and coverPath != ''">
+                cover_path = #{coverPath},
+            </if>
+            <if test="convertStatus != 0 and convertStatus != null">
+                convert_status = #{convertStatus},
+            </if>
+            <if test="convertProgress != 0 and convertStatus != null">
+                convert_progress = #{convertProgress},
+            </if>
+            <if test="filePath != null and filePath != ''">
+                file_path = #{filePath},
+            </if>
+            <if test="size != 0 and size != null">
+                size = #{size},
+            </if>
+            <if test="width != 0 and width != null">
+                width = #{width},
+            </if>
+            <if test="width != 0 and width != null">
+                height = #{height},
+            </if>
+            <if test="ownerId != 0 and ownerId != null">
+                owner_id = #{ownerId},
+            </if>
+            <if test="ownerName != null and ownerName != ''">
+                owner_name = #{ownerName},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="updateGroup" parameterType="long">
+        update yms_material set
+            group_id = #{groupId}
+        where id = #{id}
+    </update>
+
+    <update id="updateBasicInfo" parameterType="cn.com.yusong.yhdg.common.domain.yms.Material">
+        update yms_material set
+            group_id = #{groupId},
+            duration = #{duration},
+            version = #{version}
+        where id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="long">
+        delete from yms_material where id = #{id}
+    </delete>
+
+</mapper>

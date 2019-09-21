@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.com.yusong.yhdg.staticserver.persistence.basic.AgentForegiftWithdrawOrderMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.basic.AgentForegiftWithdrawOrder">
+        select *
+        from  bas_agent_foregift_withdraw_order
+        where id=#{id}
+    </select>
+
+    <select id="sumMoney" resultType="int">
+        select ifnull(SUM(money),0) as money
+        from  bas_agent_foregift_withdraw_order
+        where agent_id = #{agentId}
+         and  status =  #{status}
+         and  category =  #{category}
+    </select>
+
+</mapper>

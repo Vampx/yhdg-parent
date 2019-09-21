@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.staticserver.persistence.yms.MaterialIdGeneratorMapper">
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.yms.MaterialIdGenerator" useGeneratedKeys="true" keyProperty="id">
+        insert into yms_material_id_generator(id) values(#{id})
+    </insert>
+</mapper>

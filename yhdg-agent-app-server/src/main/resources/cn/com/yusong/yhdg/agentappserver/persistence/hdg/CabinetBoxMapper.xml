@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.agentappserver.persistence.hdg.CabinetBoxMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetBox">
+        select
+        *
+        from hdg_cabinet_box
+        where cabinet_id = #{cabinetId} and box_num = #{boxNum}
+    </select>
+
+    <select id="findByBatteryId" resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetBox">
+        select
+        *
+        from hdg_cabinet_box
+        where battery_id = #{batteryId}
+    </select>
+
+    <select id="findByCabinetId" resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetBox">
+        select
+        hsb.cabinet_id as cabinetId,
+        hsb.box_num as boxNum,
+        hsb.battery_id as batteryId,
+        hsb.is_active as isActive,
+        hsb.is_open as isOpen,
+        hsb.forbidden_cause as forbiddenCause,
+        hsb.power,
+        hb.up_line_status as upLineStatus,
+        hb.volume,
+        hb.is_normal as isNormal,
+        hb.abnormal_cause as abnormalCause,
+        hb.shell_code as shellCode,
+        hb.code as imei,
+        hb.customer_id as customerId,
+        ifnull(hc.charge_full_volume,90) as batteryFullVolume,
+        hb.charge_status as chargeStatus,
+        hb.status as batteryStatus,
+        hsb.box_status as boxStatus
+        from hdg_cabinet_box hsb
+        left join hdg_battery hb on hsb.battery_id = hb.id
+        left join hdg_cabinet hc on hc.id = hb.cabinet_id
+        where hsb.cabinet_id = #{cabinetId}
+        order by hsb.cabinet_id, hsb.box_num
+    </select>
+
+    <update id="updateChargeFullVolume">
+        update hdg_cabinet_box set
+        charge_full_volume = #{chargeFullVolume}
+        where cabinet_id = #{cabinetId}
+    </update>
+
+    <update id="updateBoxActive">
+        update hdg_cabinet_box set
+        is_active = #{isActive},forbidden_cause = #{forbiddenCause}
+        <if test="operator != null">
+            ,operator = #{operator}
+        </if>
+        <if test="operatorTime != null">
+            ,operator_time = #{operatorTime}
+        </if>
+        where cabinet_id = #{cabinetId} and box_num = #{boxNum}
+    </update>
+
+    <update id="unlockBox">
+        update hdg_cabinet_box
+        set
+        lock_time = null,
+        open_type = null,
+        opener_id = null,
+        box_status = #{toStatus}
+        where cabinet_id = #{cabinetId}
+        and box_num = #{boxNum}
+        and box_status = #{fromStatus}
+    </update>
+
+    <select id="statsBoxCountByStatus" resultType="int">
+        select
+        count(*)
+        from hdg_cabinet_box
+        where cabinet_id = #{cabinetId}
+        and box_status in (4,5,6)
+    </select>
+
+    <select id="statsCompleteChargeCount" resultType="int">
+        select
+        count(*)
+        from hdg_cabinet_box t1 inner join hdg_battery t2 on t1.battery_id = t2.id
+        inner join hdg_cabinet t3 on t3.id = t1.cabinet_id
+        where t1.cabinet_id = #{cabinetId}
+        and t2.volume >= t3.charge_full_volume
+        and t2.status = #{batteryStatus}
+    </select>
+
+</mapper>

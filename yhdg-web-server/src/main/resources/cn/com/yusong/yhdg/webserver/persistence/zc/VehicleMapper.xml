@@ -1,0 +1,440 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.zc.VehicleMapper">
+
+    <select id="findCountByModelId" resultType="int">
+        select
+        count(*)
+        from zc_vehicle
+        where model_id = #{modelId}
+    </select>
+
+    <select id="find" parameterType="int" resultType="cn.com.yusong.yhdg.common.domain.zc.Vehicle">
+        select
+        *
+        from zc_vehicle
+        where id = #{id}
+    </select>
+
+    <select id="findByVinNo" parameterType="string" resultType="cn.com.yusong.yhdg.common.domain.zc.Vehicle">
+        select
+        *
+        from zc_vehicle
+        where vin_no = #{vinNo}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.zc.Vehicle" resultType="int">
+        select
+        count(*)
+        from zc_vehicle
+        <trim prefix="where" prefixOverrides="and">
+            <if test="modelId != null and modelId != ''">
+                and model_id = #{modelId}
+            </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+            <if test="agentId != null">
+                and agent_id = #{agentId}
+            </if>
+            <if test="vinNo != null and vinNo != ''">
+                <![CDATA[and vin_no LIKE concat('%', #{vinNo}, '%')]]>
+            </if>
+            <if test="vehicleName != null and vehicleName != ''">
+                <![CDATA[and vehicle_name LIKE concat('%', #{vehicleName}, '%')]]>
+            </if>
+            <if test="shopName != null and shopName != ''">
+                <![CDATA[and shop_name LIKE concat('%', #{shopName}, '%')]]>
+            </if>
+            <if test="shopId != null and shopId != ''">
+                <![CDATA[and shop_id LIKE concat('%', #{shopId}, '%')]]>
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.zc.Vehicle"
+            resultType="cn.com.yusong.yhdg.common.domain.zc.Vehicle">
+        select
+        *
+        from zc_vehicle
+        <trim prefix="where" prefixOverrides="and">
+            <if test="modelId != null and modelId != ''">
+                and model_id = #{modelId}
+            </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+            <if test="agentId != null">
+                and agent_id = #{agentId}
+            </if>
+            <if test="vinNo != null and vinNo != ''">
+                <![CDATA[and vin_no LIKE concat('%', #{vinNo}, '%')]]>
+            </if>
+            <if test="vehicleName != null and vehicleName != ''">
+                <![CDATA[and vehicle_name LIKE concat('%', #{vehicleName}, '%')]]>
+            </if>
+            <if test="shopName != null and shopName != ''">
+                <![CDATA[and shop_name LIKE concat('%', #{shopName}, '%')]]>
+            </if>
+            <if test="shopId != null and shopId != ''">
+                <![CDATA[and shop_id LIKE concat('%', #{shopId}, '%')]]>
+            </if>
+        </trim>
+        order by id desc
+        limit #{beginIndex}, #{rows}
+    </select>
+
+    <select id="findInShop" parameterType="cn.com.yusong.yhdg.common.domain.zc.Vehicle" resultType="int">
+        select
+        count(*)
+        from zc_vehicle
+        WHERE status = 2
+            <if test="modelId != null and modelId != ''">
+                and model_id = #{modelId}
+            </if>
+            <if test="agentId != null">
+                and agent_id = #{agentId}
+            </if>
+            <if test="vinNo != null and vinNo != ''">
+                <![CDATA[and vin_no LIKE concat('%', #{vinNo}, '%')]]>
+            </if>
+            <if test="vehicleName != null and vehicleName != ''">
+                <![CDATA[and vehicle_name LIKE concat('%', #{vehicleName}, '%')]]>
+            </if>
+            <if test="shopName != null and shopName != ''">
+                <![CDATA[and shop_name LIKE concat('%', #{shopName}, '%')]]>
+            </if>
+            <if test="shopId != null and shopId != ''">
+                <![CDATA[and shop_id LIKE concat('%', #{shopId}, '%')]]>
+            </if>
+    </select>
+
+    <select id="findInUse" parameterType="cn.com.yusong.yhdg.common.domain.zc.Vehicle" resultType="int">
+        select
+        count(*)
+        from zc_vehicle
+        WHERE status = 3
+            <if test="modelId != null and modelId != ''">
+                and model_id = #{modelId}
+            </if>
+            <if test="agentId != null">
+                and agent_id = #{agentId}
+            </if>
+            <if test="vinNo != null and vinNo != ''">
+                <![CDATA[and vin_no LIKE concat('%', #{vinNo}, '%')]]>
+            </if>
+            <if test="vehicleName != null and vehicleName != ''">
+                <![CDATA[and vehicle_name LIKE concat('%', #{vehicleName}, '%')]]>
+            </if>
+            <if test="shopName != null and shopName != ''">
+                <![CDATA[and shop_name LIKE concat('%', #{shopName}, '%')]]>
+            </if>
+            <if test="shopId != null and shopId != ''">
+                <![CDATA[and shop_id LIKE concat('%', #{shopId}, '%')]]>
+            </if>
+    </select>
+
+    <select id="findLeisure" parameterType="cn.com.yusong.yhdg.common.domain.zc.Vehicle" resultType="int">
+        select
+        count(*)
+        from zc_vehicle
+        WHERE status = 1
+        <if test="modelId != null and modelId != ''">
+            and model_id = #{modelId}
+        </if>
+        <if test="agentId != null">
+            and agent_id = #{agentId}
+        </if>
+        <if test="vinNo != null and vinNo != ''">
+            <![CDATA[and vin_no LIKE concat('%', #{vinNo}, '%')]]>
+        </if>
+        <if test="vehicleName != null and vehicleName != ''">
+            <![CDATA[and vehicle_name LIKE concat('%', #{vehicleName}, '%')]]>
+        </if>
+        <if test="shopName != null and shopName != ''">
+            <![CDATA[and shop_name LIKE concat('%', #{shopName}, '%')]]>
+        </if>
+        <if test="shopId != null and shopId != ''">
+            <![CDATA[and shop_id LIKE concat('%', #{shopId}, '%')]]>
+        </if>
+    </select>
+
+    <select id="findByShopPageCount" parameterType="cn.com.yusong.yhdg.common.domain.zc.Vehicle" resultType="int">
+        select
+        count(*)
+        from zc_vehicle
+        where shop_id IS NOT NULL
+        <if test="modelId != null and modelId != ''">
+            and model_id = #{modelId}
+        </if>
+        <if test="status != null">
+            and status = #{status}
+        </if>
+        <if test="agentId != null">
+            and agent_id = #{agentId}
+        </if>
+        <if test="vinNo != null and vinNo != ''">
+            <![CDATA[and vin_no LIKE concat('%', #{vinNo}, '%')]]>
+        </if>
+        <if test="vehicleName != null and vehicleName != ''">
+            <![CDATA[and vehicle_name LIKE concat('%', #{vehicleName}, '%')]]>
+        </if>
+        <if test="shopName != null and shopName != ''">
+            <![CDATA[and shop_name LIKE concat('%', #{shopName}, '%')]]>
+        </if>
+        <if test="shopId != null and shopId != ''">
+            <![CDATA[and shop_id LIKE concat('%', #{shopId}, '%')]]>
+        </if>
+        <if test="customerMobile != null and customerMobile != ''">
+            <![CDATA[and customer_mobile LIKE concat('%', #{customerMobile}, '%')]]>
+        </if>
+        <if test="customerFullname != null and customerFullname != ''">
+            <![CDATA[and customer_fullname LIKE concat('%', #{customerFullname}, '%')]]>
+        </if>
+    </select>
+
+    <select id="findByShopPageResult" parameterType="cn.com.yusong.yhdg.common.domain.zc.Vehicle"
+            resultType="cn.com.yusong.yhdg.common.domain.zc.Vehicle">
+        select
+        *
+        from zc_vehicle
+        where shop_id IS NOT NULL
+        <if test="modelId != null and modelId != ''">
+            and model_id = #{modelId}
+        </if>
+        <if test="status != null">
+            and status = #{status}
+        </if>
+        <if test="agentId != null">
+            and agent_id = #{agentId}
+        </if>
+        <if test="vinNo != null and vinNo != ''">
+            <![CDATA[and vin_no LIKE concat('%', #{vinNo}, '%')]]>
+        </if>
+        <if test="vehicleName != null and vehicleName != ''">
+            <![CDATA[and vehicle_name LIKE concat('%', #{vehicleName}, '%')]]>
+        </if>
+        <if test="shopName != null and shopName != ''">
+            <![CDATA[and shop_name LIKE concat('%', #{shopName}, '%')]]>
+        </if>
+        <if test="shopId != null and shopId != ''">
+            <![CDATA[and shop_id LIKE concat('%', #{shopId}, '%')]]>
+        </if>
+        <if test="customerMobile != null and customerMobile != ''">
+            <![CDATA[and customer_mobile LIKE concat('%', #{customerMobile}, '%')]]>
+        </if>
+        <if test="customerFullname != null and customerFullname != ''">
+            <![CDATA[and customer_fullname LIKE concat('%', #{customerFullname}, '%')]]>
+        </if>
+        order by id desc
+        limit #{beginIndex}, #{rows}
+    </select>
+
+    <select id="findByShopInShop" parameterType="cn.com.yusong.yhdg.common.domain.zc.Vehicle" resultType="int">
+        select
+        count(*)
+        from zc_vehicle
+        WHERE status = 2 AND shop_id IS NOT NULL
+        <if test="modelId != null and modelId != ''">
+            and model_id = #{modelId}
+        </if>
+        <if test="agentId != null">
+            and agent_id = #{agentId}
+        </if>
+        <if test="vinNo != null and vinNo != ''">
+            <![CDATA[and vin_no LIKE concat('%', #{vinNo}, '%')]]>
+        </if>
+        <if test="vehicleName != null and vehicleName != ''">
+            <![CDATA[and vehicle_name LIKE concat('%', #{vehicleName}, '%')]]>
+        </if>
+        <if test="shopName != null and shopName != ''">
+            <![CDATA[and shop_name LIKE concat('%', #{shopName}, '%')]]>
+        </if>
+        <if test="shopId != null and shopId != ''">
+            <![CDATA[and shop_id LIKE concat('%', #{shopId}, '%')]]>
+        </if>
+    </select>
+
+    <select id="findByShopInUse" parameterType="cn.com.yusong.yhdg.common.domain.zc.Vehicle" resultType="int">
+        select
+        count(*)
+        from zc_vehicle
+        WHERE status = 3 AND shop_id IS NOT NULL
+        <if test="modelId != null and modelId != ''">
+            and model_id = #{modelId}
+        </if>
+        <if test="agentId != null">
+            and agent_id = #{agentId}
+        </if>
+        <if test="vinNo != null and vinNo != ''">
+            <![CDATA[and vin_no LIKE concat('%', #{vinNo}, '%')]]>
+        </if>
+        <if test="vehicleName != null and vehicleName != ''">
+            <![CDATA[and vehicle_name LIKE concat('%', #{vehicleName}, '%')]]>
+        </if>
+        <if test="shopName != null and shopName != ''">
+            <![CDATA[and shop_name LIKE concat('%', #{shopName}, '%')]]>
+        </if>
+        <if test="shopId != null and shopId != ''">
+            <![CDATA[and shop_id LIKE concat('%', #{shopId}, '%')]]>
+        </if>
+    </select>
+
+    <select id="findByShopLeisure" parameterType="cn.com.yusong.yhdg.common.domain.zc.Vehicle" resultType="int">
+        select
+        count(*)
+        from zc_vehicle
+        WHERE status = 1 AND shop_id IS NOT NULL
+        <if test="modelId != null and modelId != ''">
+            and model_id = #{modelId}
+        </if>
+        <if test="agentId != null">
+            and agent_id = #{agentId}
+        </if>
+        <if test="vinNo != null and vinNo != ''">
+            <![CDATA[and vin_no LIKE concat('%', #{vinNo}, '%')]]>
+        </if>
+        <if test="vehicleName != null and vehicleName != ''">
+            <![CDATA[and vehicle_name LIKE concat('%', #{vehicleName}, '%')]]>
+        </if>
+        <if test="shopName != null and shopName != ''">
+            <![CDATA[and shop_name LIKE concat('%', #{shopName}, '%')]]>
+        </if>
+        <if test="shopId != null and shopId != ''">
+            <![CDATA[and shop_id LIKE concat('%', #{shopId}, '%')]]>
+        </if>
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.zc.Vehicle">
+        insert into zc_vehicle(
+        id,
+        vin_no,
+        model_id,
+        vehicle_name,
+        agent_id,
+        agent_name,
+        agent_code,
+        shop_id,
+        shop_name,
+        battery_id,
+        active_status,
+        status,
+        customer_id,
+        customer_mobile,
+        customer_fullname,
+        lock_switch,
+        lock_status,
+        up_line_status,
+        up_line_time,
+        is_online,
+        is_active,
+        report_time,
+        memo,
+        create_time
+        ) values (
+        #{id},
+        #{vinNo},
+        #{modelId},
+        #{vehicleName},
+        #{agentId},
+        #{agentName},
+        #{agentCode},
+        #{shopId},
+        #{shopName},
+        #{batteryId},
+        #{activeStatus},
+        #{status},
+        #{customerId},
+        #{customerMobile},
+        #{customerFullname},
+        #{lockSwitch},
+        #{lockStatus},
+        #{upLineStatus},
+        #{upLineTime},
+        #{isOnline},
+        #{isActive},
+        #{reportTime},
+        #{memo},
+        #{createTime}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE zc_vehicle SET
+        agent_id = #{agentId},
+        agent_name = #{agentName},
+        vin_no = #{vinNo},
+        model_id = #{modelId},
+        memo = #{memo},
+        up_line_status = #{upLineStatus},
+        is_active = #{isActive}
+        <if test="vehicleName != null and vehicleName != ''">
+            ,vehicle_name = #{vehicleName}
+        </if>
+        <if test="lockSwitch != null and lockSwitch != ''">
+            ,lock_switch = #{lockSwitch}
+        </if>
+        <if test="lockStatus != null and lockStatus != ''">
+            ,lock_status = #{lockStatus}
+        </if>
+        <if test="upLineTime != null and upLineTime != ''">
+            ,up_line_time = #{upLineTime}
+        </if>
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateLockStatus">
+        UPDATE zc_vehicle SET
+        lock_switch = #{lockSwitch},
+        lock_status = #{lockStatus}
+        WHERE id = #{id}
+    </update>
+
+
+    <update id="updateUpLineStatus">
+        UPDATE zc_vehicle SET
+        agent_id = #{agentId},
+        agent_name = #{agentName},
+        model_id = #{modelId},
+        up_line_status = #{upLineStatus},
+        up_line_time = #{upLineTime}
+        WHERE id = #{id}
+    </update>
+
+    <update id="setShopId">
+        UPDATE zc_vehicle SET
+        shop_id = #{shopId},
+        shop_name = #{shopName},
+        status = #{status}
+        WHERE id = #{id}
+    </update>
+
+    <update id="clearUpLineTime">
+        UPDATE zc_vehicle SET
+            up_line_time = NULL
+        WHERE id = #{id}
+    </update>
+
+    <update id="clearShop">
+        UPDATE zc_vehicle SET
+        shop_id = NULL,
+        shop_name = NULL
+        WHERE id = #{id}
+    </update>
+
+    <update id="clearCustomer">
+        update zc_vehicle set
+        status = #{status},
+        customer_id = NULL,
+        customer_mobile = NULL,
+        customer_fullname = NULL
+        where id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="int">
+        delete from zc_vehicle where id = #{id}
+    </delete>
+
+</mapper>

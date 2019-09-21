@@ -1,0 +1,24 @@
+html {
+  height: 100%;
+}
+html body {
+  height: 100%;
+  background-color: #EFEFEF;
+}
+html body .weui-cells .weui-cell {
+  padding: 0.58823529rem 0.88235294rem;
+}
+html body .weui-cells .weui-cell .weui-icon-cancel {
+  color: #d5d5d5;
+}
+html body .weui-cells .weui-cell .weui-btn {
+  padding-left: 0;
+  padding-right: 0;
+  width: 100%;
+  background-color: #4CBFFF;
+  line-height: 2.4;
+}
+html body .weui-cells .btn {
+  padding-top: 1.11764706rem;
+  background-color: #EFEFEF;
+}

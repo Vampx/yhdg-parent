@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.basic.UserNoticeMessageMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.basic.UserNoticeMessage">
+        select
+          *
+       from bas_user_notice_message
+       where id = #{id}
+    </select>
+    
+    <select id="findPageCount" resultType="int">
+        select count(*) from bas_user_notice_message
+        <trim prefix="where" prefixOverrides="and">
+            <if test="type != null">
+                <![CDATA[and type = #{type}]]>
+            </if>
+            <if test="title != null and title !=''">
+                <![CDATA[and title LIKE concat('%', #{title}, '%')]]>
+            </if>
+            <if test="content != null and content !=''">
+                <![CDATA[and content LIKE concat('%', #{content}, '%')]]>
+            </if>
+            <if test="userMobile !=null and userMobile !=''">
+                <![CDATA[and user_mobile LIKE concat(#{userMobile}, '%')]]>
+            </if>
+            <if test="userFullname != null and userFullname !=''">
+                <![CDATA[and user_fullname LIKE concat(#{userFullname}, '%')]]>
+            </if>
+        </trim>
+    </select>
+    
+    <select id="findPageResult" resultType="cn.com.yusong.yhdg.common.domain.basic.UserNoticeMessage">
+        select
+           *
+        from bas_user_notice_message
+        <trim prefix="where" prefixOverrides="and">
+            <if test="type != null">
+                <![CDATA[and type = #{type}]]>
+            </if>
+            <if test="title != null and title !=''">
+                <![CDATA[and title LIKE concat('%', #{title}, '%')]]>
+            </if>
+            <if test="content != null and content !=''">
+                <![CDATA[and content LIKE concat('%', #{content}, '%')]]>
+            </if>
+            <if test="userMobile !=null and userMobile !=''">
+                <![CDATA[and user_mobile LIKE concat(#{userMobile}, '%')]]>
+            </if>
+            <if test="userFullname != null and userFullname !=''">
+                <![CDATA[and user_fullname LIKE concat(#{userFullname}, '%')]]>
+            </if>
+        </trim>
+        order by id desc
+        limit ${beginIndex}, ${rows}
+    </select>
+
+</mapper>

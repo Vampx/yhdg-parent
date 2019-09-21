@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.hdg.CabinetSimReplaceRecordMapper">
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.hdg.CabinetSimReplaceRecord" resultType="int">
+        select count(*) from hdg_cabinet_sim_replace_record
+        where 1 = 1
+        <if test="cabinetId != null">
+            and cabinet_id = #{cabinetId}
+        </if>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.hdg.CabinetSimReplaceRecord" resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetSimReplaceRecord">
+        select
+            *
+        from hdg_cabinet_sim_replace_record
+        where 1 = 1
+        <if test="cabinetId != null">
+            and cabinet_id = #{cabinetId}
+        </if>
+        order by create_time desc
+        limit ${beginIndex}, ${rows}
+    </select>
+
+</mapper>

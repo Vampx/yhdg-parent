@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.appserver.persistence.hdg.VipPriceCabinetMapper">
+
+
+    <select id="findListByPriceId" parameterType="long" resultType="cn.com.yusong.yhdg.common.domain.hdg.VipPriceCabinet">
+        SELECT
+        *
+        FROM hdg_vip_price_cabinet
+        where price_id = #{priceId}
+    </select>
+
+    <select id="findByCabinetId"  resultType="cn.com.yusong.yhdg.common.domain.hdg.VipPriceCabinet">
+        SELECT
+        *
+        FROM hdg_vip_price_cabinet
+        where cabinet_id = #{cabinetId}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.VipPriceCabinet" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO hdg_vip_price_cabinet(
+          cabinet_id,
+          price_id
+        ) VALUES (
+          #{cabinetId},
+          #{priceId}
+        )
+    </insert>
+
+    <delete id="delete">
+        delete from hdg_vip_price_cabinet where id = #{id}
+    </delete>
+
+    <delete id="deleteByPriceId">
+        delete from hdg_vip_price_cabinet where price_id = #{priceId}
+    </delete>
+
+</mapper>

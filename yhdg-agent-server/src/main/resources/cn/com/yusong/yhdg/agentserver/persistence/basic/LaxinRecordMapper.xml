@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.basic.LaxinRecordMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.basic.LaxinRecord">
+        select
+        *
+        from bas_laxin_record
+        where id = #{id}
+    </select>
+
+    <select id="findExistByLaxinId" parameterType="long" resultType="int">
+        select count(*) from (
+            select
+            *
+            from bas_laxin_record
+            where laxin_id = #{laxinId}
+            limit 1
+        ) as t
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.basic.LaxinRecord" resultType="int">
+        select
+        count(id)
+        from bas_laxin_record t1
+        <if test="orderId != null and orderId != ''">
+            inner join bas_laxin_pay_order_detail t2 on t1.id = t2.record_id
+        </if>
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null ">
+                and  agent_id = #{agentId}
+            </if>
+            <if test="laxinMobile != null and laxinMobile != ''">
+                <![CDATA[and laxin_mobile LIKE concat(#{laxinMobile}, '%')]]>
+            </if>
+            <if test="targetMobile != null and targetMobile != ''">
+                <![CDATA[and target_mobile LIKE concat(#{targetMobile}, '%')]]>
+            </if>
+            <if test="orderId != null and orderId != ''">
+                and t2.order_id = #{orderId}
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.basic.LaxinRecord"
+            resultType="cn.com.yusong.yhdg.common.domain.basic.LaxinRecord">
+        select
+        t1.*
+        from bas_laxin_record t1
+        <if test="orderId != null and orderId != ''">
+            inner join bas_laxin_pay_order_detail t2 on t1.id = t2.record_id
+        </if>
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null ">
+                and  agent_id = #{agentId}
+            </if>
+            <if test="laxinMobile != null and laxinMobile != ''">
+                <![CDATA[and laxin_mobile LIKE concat(#{laxinMobile}, '%')]]>
+            </if>
+            <if test="targetMobile != null and targetMobile != ''">
+                <![CDATA[and target_mobile LIKE concat(#{targetMobile}, '%')]]>
+            </if>
+            <if test="orderId != null and orderId != ''">
+                and t2.order_id = #{orderId}
+            </if>
+        </trim>
+        order by id desc
+        limit #{beginIndex}, #{rows}
+    </select>
+
+    <update id="resetAccount">
+        update bas_laxin_record set
+            status = #{toStatus},
+            mp_open_id = #{mpOpenId},
+            account_name = #{accountName}
+        where id = #{id} and status = #{fromStatus}
+    </update>
+
+    <update id="updateCancel">
+        update bas_laxin_record set
+        status = #{status},
+        cancel_canuse = #{cancelCanuse}
+        where id = #{id}
+    </update>
+</mapper>

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.hdg.FaultFeedbackMapper">
+
+    <select id="find" parameterType="long" resultType="cn.com.yusong.yhdg.common.domain.hdg.FaultFeedback">
+        select
+            *
+        from hdg_fault_feedback
+        where id = #{id}
+    </select>
+
+    <select id="findCountByCabinet" resultType="int">
+        select
+        count(*)
+        from hdg_fault_feedback
+        where cabinet_id = #{cabinetId}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.hdg.FaultFeedback" resultType="int">
+        select
+        count(id)
+        from hdg_fault_feedback
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null">
+                and agent_id = #{agentId}
+            </if>
+            <if test="handleStatus != null and handleStatus != 0">
+                and handle_status = #{handleStatus}
+            </if>
+            <if test="handleStatus == null and defaultHandleStatus != null and defaultHandleStatus != 0">
+                and handle_status = #{defaultHandleStatus}
+            </if>
+            <if test="customerName != null and customerName != ''">
+                <![CDATA[and customer_name LIKE concat(#{customerName}, '%')]]>
+            </if>
+            <if test="content != null and content != ''">
+                <![CDATA[and content LIKE concat('%', #{content}, '%')]]>
+            </if>
+            <if test="faultType != null and faultType != 0">
+                and fault_type = #{faultType}
+            </if>
+            <if test="faultType == null and defaultFaultType != null and defaultFaultType != 0">
+                and fault_type = #{defaultFaultType}
+            </if>
+        </trim>
+
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.hdg.FaultFeedback" resultType="cn.com.yusong.yhdg.common.domain.hdg.FaultFeedback">
+        select
+            *
+        from hdg_fault_feedback
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null">
+                and agent_id = #{agentId}
+            </if>
+            <if test="handleStatus != null and handleStatus != 0">
+                and handle_status = #{handleStatus}
+            </if>
+            <if test="handleStatus == null and defaultHandleStatus != null and defaultHandleStatus != 0">
+                and handle_status = #{defaultHandleStatus}
+            </if>
+            <if test="customerName != null and customerName != ''">
+                <![CDATA[and customer_name LIKE concat(#{customerName}, '%')]]>
+            </if>
+            <if test="content != null and content != ''">
+                <![CDATA[and content LIKE concat('%', #{content}, '%')]]>
+            </if>
+            <if test="faultType != null and faultType != 0">
+                and fault_type = #{faultType}
+            </if>
+            <if test="faultType == null and defaultFaultType != null and defaultFaultType != 0">
+                and fault_type = #{defaultFaultType}
+            </if>
+        </trim>
+        order by id desc
+        limit ${beginIndex}, ${rows}
+    </select>
+
+    <update id="updateBasicInfo">
+        update hdg_fault_feedback set
+             handle_time = #{handleTime},
+             handle_result = #{handleResult},
+             handle_status = #{handleStatus},
+             handler_name = #{handlerName}
+        where id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="long">
+        delete from hdg_fault_feedback where id = #{id}
+    </delete>
+
+    <select id="findFaultFeedbackCount" resultType="int">
+        select count(*) from hdg_fault_feedback
+        where handle_status = #{handleStatus}
+        and fault_type = #{faultType}
+    </select>
+
+    <delete id="deleteByCustomerId">
+        delete from hdg_fault_feedback where customer_id = #{customerId}
+    </delete>
+
+</mapper>

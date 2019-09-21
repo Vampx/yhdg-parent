@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.appserver.persistence.basic.LaxinCustomerMapper">
+
+    <select id="findByTargetMobile" resultType="cn.com.yusong.yhdg.common.domain.basic.LaxinCustomer">
+        select
+            *
+        from bas_laxin_customer
+        where partner_id = #{partnerId} and target_mobile = #{targetMobile}
+    </select>
+
+    <select id="sumPayForegiftCount" resultType="int">
+        select count(*) from bas_laxin_customer where laxin_id = #{laxinId} and foregift_time is not null
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.LaxinCustomer" useGeneratedKeys="true" keyProperty="id">
+        insert into bas_laxin_customer (partner_id, agent_id, agent_name, agent_code, laxin_id, laxin_mobile, laxin_money,
+          packet_period_money, packet_period_month, packet_period_expire_time, income_type, target_customer_id, target_mobile, target_fullname, foregift_time, create_time)
+        values (#{partnerId}, #{agentId}, #{agentName}, #{agentCode}, #{laxinId}, #{laxinMobile}, #{laxinMoney},
+          #{packetPeriodMoney}, #{packetPeriodMonth}, #{packetPeriodExpireTime}, #{incomeType}, #{targetCustomerId}, #{targetMobile}, #{targetFullname}, #{foregiftTime}, #{createTime})
+    </insert>
+
+    <update id="updateByTimes">
+        update bas_laxin_customer set
+            income_type = #{incomeType},
+            laxin_money = #{laxinMoney},
+            target_customer_id = #{targetCustomerId},
+            target_fullname = #{targetFullname},
+            exchange_time = #{exchangeTime},
+            foregift_time = #{foregiftTime}
+        where id = #{id}
+    </update>
+
+    <update id="updateByMonth">
+        update bas_laxin_customer set
+            income_type = #{incomeType},
+            packet_period_money = #{packetPeriodMoney},
+            packet_period_month = #{packetPeriodMonth},
+            packet_period_expire_time = #{packetPeriodExpireTime},
+            target_customer_id = #{targetCustomerId},
+            target_fullname = #{targetFullname},
+            exchange_time = #{exchangeTime},
+            foregift_time = #{foregiftTime}
+        where id = #{id}
+    </update>
+
+    <delete id="delete">
+        delete from bas_laxin_customer where id = #{id}
+    </delete>
+
+</mapper>

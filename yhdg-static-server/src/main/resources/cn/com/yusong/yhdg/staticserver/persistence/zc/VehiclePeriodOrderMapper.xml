@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.staticserver.persistence.zc.VehiclePeriodOrderMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.zc.VehiclePeriodOrder">
+        select
+        *
+        FROM
+        zc_vehicle_period_order
+        where
+        id = #{id}
+    </select>
+
+    <select id="findOneEnabled" resultType="cn.com.yusong.yhdg.common.domain.zc.VehiclePeriodOrder">
+        select
+        *
+        FROM
+        zc_vehicle_period_order
+        where customer_id = #{customerId}
+        and status = #{status}
+        and agent_id = #{agentId}
+        and model_id = #{modelId}
+        limit 1
+    </select>
+
+    <update id="payOk">
+        update zc_vehicle_period_order
+        set status = #{toStatus}
+        <if test="beginTime != null">
+            , begin_time = #{beginTime}
+        </if>
+        <if test="endTime != null">
+            , end_time = #{endTime}
+        </if>
+        <if test="payTime != null">
+            , pay_time = #{payTime}
+        </if>
+        where id = #{id} and status = #{fromStatus}
+    </update>
+
+</mapper>

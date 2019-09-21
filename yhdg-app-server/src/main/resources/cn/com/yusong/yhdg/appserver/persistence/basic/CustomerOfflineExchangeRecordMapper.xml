@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.appserver.persistence.basic.CustomerOfflineExchangeRecordMapper">
+
+    <select id="find" parameterType="long" resultType="cn.com.yusong.yhdg.common.domain.basic.CustomerOfflineExchangeRecord">
+        select
+        *
+        from bas_customer_offline_exchange_record
+        where id = #{id}
+    </select>
+
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.CustomerOfflineExchangeRecord" useGeneratedKeys="true" keyProperty="id">
+        insert into bas_customer_offline_exchange_record(
+            customer_id,
+            customer_mobile,
+            customer_fullname,
+            put_cabinet_id,
+            put_cabinet_code,
+            put_box_num,
+            put_battery_id,
+            put_battery_code,
+            take_cabinet_id,
+            take_cabinet_code,
+            take_box_num,
+            take_battery_id,
+            take_battery_code,
+            exchange_time,
+            status,
+            create_time
+        ) values (
+            #{customerId},
+            #{customerMobile},
+            #{customerFullname},
+            #{putCabinetId},
+            #{putCabinetCode},
+            #{putBoxNum},
+            #{putBatteryId},
+            #{putBatteryCode},
+
+            #{takeCabinetId},
+            #{takeCabinetCode},
+            #{takeBoxNum},
+            #{takeBatteryId},
+            #{takeBatteryCode},
+
+            #{exchangeTime},
+            #{status},
+            #{createTime}
+        )
+    </insert>
+
+
+</mapper>

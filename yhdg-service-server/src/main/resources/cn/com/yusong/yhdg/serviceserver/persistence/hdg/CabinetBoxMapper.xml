@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.serviceserver.persistence.hdg.CabinetBoxMapper">
+
+    <select id="findLockList" resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetBox">
+        SELECT
+        *
+        FROM
+        hdg_cabinet_box
+        WHERE lock_time &lt;= #{lockTime}
+        AND box_status IN
+        <foreach collection="boxStatusList" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="findOneEmptyBoxNum" resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetBox">
+        select
+        *
+        from hdg_cabinet_box
+        where cabinet_id = #{cabinetId}
+        and box_status = #{boxStatus}
+        and is_active = 1
+        and is_online = 1
+        LIMIT 1
+    </select>
+
+    <select id="findAll" resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetBox">
+        SELECT
+        cabinet_id as cabinetId,
+        box_num as boxNum,
+        agent_id as agentId,
+        box_status as boxStatus,
+        battery_id as batteryId
+        from hdg_cabinet_box
+        limit ${offset}, ${limit}
+    </select>
+
+    <select id="findAllByAgent" resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetBox">
+        SELECT
+        cabinet_id as cabinetId,
+        box_num as boxNum,
+        agent_id as agentId,
+        box_status as boxStatus,
+        battery_id as batteryId
+        from hdg_cabinet_box
+        WHERE agent_id = #{agentId}
+        limit ${offset}, ${limit}
+    </select>
+
+    <select id="findByNotAgent" resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetBox">
+        SELECT
+        cabinet_id as cabinetId,
+        box_num as boxNum,
+        agent_id as agentId,
+        box_status as boxStatus,
+        battery_id as batteryId
+        from hdg_cabinet_box
+        WHERE 1 = 1
+        <foreach collection="agentIdList" item="item" open=" AND agent_id not in (" separator="," close=")">
+            #{item}
+        </foreach>
+        limit ${offset}, ${limit}
+    </select>
+
+    <select id="findEmptyBox" resultType="string">
+        SELECT
+        IF (count(*) > 1, cabinet_id, NULL)
+        FROM
+            hdg_cabinet_box
+        WHERE
+            box_status = #{boxStatus}
+        GROUP BY
+            cabinet_id;
+    </select>
+
+    <select id="findEmptyBoxCount" resultType="int">
+        select count(*) from hdg_cabinet_box where cabinet_id = #{cabinetId} and box_status = #{boxStatus}
+    </select>
+
+    <update id="updateOnline">
+        update hdg_cabinet_box set is_online = #{isOnline} where cabinet_id = #{cabinetId}
+    </update>
+
+    <update id="updateStatus">
+        update hdg_cabinet_box set
+        box_status = #{toStatus},
+        open_type = null,
+        opener_id = null
+        where cabinet_id = #{cabinetId} and box_num = #{boxNum} and box_status = #{fromStatus}
+    </update>
+
+</mapper>

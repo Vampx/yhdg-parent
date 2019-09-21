@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.basic.CustomerWhitelistMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.basic.CustomerWhitelist">
+        select
+        *
+        from bas_customer_whitelist
+        where id = #{id}
+    </select>
+
+    <select id="findUnique" resultType="int">
+        select count(*) from bas_customer_whitelist where mobile = #{mobile}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.basic.CustomerWhitelist" resultType="int">
+        select count(*) from bas_customer_whitelist
+        where 1 = 1
+        <if test="partnerId != null ">
+            and  partner_id = #{partnerId}
+        </if>
+        <if test="agentId != null">
+            and agent_id = #{agentId}
+        </if>
+        <if test="mobile != null and mobile !='' ">
+            <![CDATA[and mobile LIKE concat('%',#{mobile}, '%')]]>
+        </if>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.basic.CustomerWhitelist"
+            resultType="cn.com.yusong.yhdg.common.domain.basic.CustomerWhitelist">
+        select
+        *
+        from bas_customer_whitelist
+        where 1 = 1
+        <if test="partnerId != null ">
+            and  partner_id = #{partnerId}
+        </if>
+        <if test="agentId != null">
+            and agent_id = #{agentId}
+        </if>
+        <if test="mobile != null and mobile !='' ">
+            <![CDATA[and mobile LIKE concat('%',#{mobile}, '%')]]>
+        </if>
+        order by create_time desc
+        limit ${beginIndex}, ${rows}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.CustomerWhitelist" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO bas_customer_whitelist(
+        partner_id,
+        agent_id,
+        agent_name,
+        mobile,
+        memo,
+        create_time
+        ) VALUES (
+        #{partnerId},
+        #{agentId},
+        #{agentName},
+        #{mobile},
+        #{memo},
+        #{createTime}
+        )
+    </insert>
+
+    <update id="update">
+        update bas_customer_whitelist set
+        partner_id = #{partnerId},
+        agent_id = #{agentId},
+        agent_name = #{agentName},
+        mobile = #{mobile},
+        memo = #{memo}
+        where id = #{id}
+    </update>
+
+    <delete id="delete">
+        delete from bas_customer_whitelist where id = #{id}
+    </delete>
+
+</mapper>

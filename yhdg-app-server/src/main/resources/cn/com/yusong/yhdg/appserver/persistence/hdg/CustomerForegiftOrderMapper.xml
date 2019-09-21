@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.appserver.persistence.hdg.CustomerForegiftOrderMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.basic.CustomerForegiftOrder">
+        SELECT
+        *
+        FROM
+        bas_customer_foregift_order
+        WHERE id = #{id}
+    </select>
+
+    <select id="findCountByCustomerId" resultType="int">
+        select count(*)
+        from  bas_customer_foregift_order
+        where customer_id = #{customerId}
+        and agent_id = #{agentId}
+        and status != #{status} and id != #{id}
+    </select>
+
+    <select id="sumMoneyByAgent" resultType="int">
+        select ifnull(SUM(money),0) as money
+        from  bas_customer_foregift_order
+        where agent_id = #{agentId}
+        <foreach collection="status" item="item" open=" AND status in (" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="findListByCustomerIdAndStatus" resultType="cn.com.yusong.yhdg.common.domain.basic.CustomerForegiftOrder">
+        select *
+        from  bas_customer_foregift_order
+        where customer_id = #{customerId} and status = #{status}
+        order by id DESC
+    </select>
+
+    <insert id="insert"  parameterType="cn.com.yusong.yhdg.common.domain.basic.CustomerForegiftOrder" >
+        INSERT INTO
+        bas_customer_foregift_order
+        (
+            id,
+            partner_id,
+            agent_id,
+            agent_name,
+            shop_id,
+            shop_name,
+            station_id,
+            station_name,
+            agent_company_id,
+            agent_company_name,
+            cabinet_id,
+            battery_type,
+            price,
+            money,
+            consume_deposit_balance,
+            consume_gift_balance,
+            customer_id,
+            customer_mobile,
+            customer_fullname,
+            status,
+            handle_time,
+            memo,
+            pay_time,
+            pay_type,
+            ticket_name,
+            ticket_money,
+            coupon_ticket_id,
+            deduction_ticket_name,
+            deduction_ticket_money,
+            deduction_ticket_id,
+            apply_refund_time,
+            refund_time,
+            refund_money,
+            refund_photo,
+            refund_operator,
+            foregift_id,
+            reduce_money,
+            vehicle_order_flag,
+            create_time
+        )
+        VALUES
+        (
+            #{id},
+            #{partnerId},
+            #{agentId},
+            #{agentName},
+            #{shopId},
+            #{shopName},
+            #{stationId},
+            #{stationName},
+            #{agentCompanyId},
+            #{agentCompanyName},
+            #{cabinetId},
+            #{batteryType},
+            #{price},
+            #{money},
+            #{consumeDepositBalance},
+            #{consumeGiftBalance},
+            #{customerId},
+            #{customerMobile},
+            #{customerFullname},
+            #{status},
+            #{handleTime},
+            #{memo},
+            #{payTime},
+            #{payType},
+            #{ticketName},
+            #{ticketMoney},
+            #{couponTicketId},
+            #{deductionTicketName},
+            #{deductionTicketMoney},
+            #{deductionTicketId},
+            #{applyRefundTime},
+            #{refundTime},
+            #{refundMoney},
+            #{refundPhoto},
+            #{refundOperator},
+            #{foregiftId},
+            #{reduceMoney},
+            #{vehicleOrderFlag},
+            #{createTime}
+        )
+    </insert>
+
+    <update id="refund">
+        update bas_customer_foregift_order
+        set status = #{toStatus},
+        apply_refund_time = #{applyRefundTime},
+        refund_time = #{refundTime},
+        refund_money = #{refundMoney}
+        where id = #{id} and status = #{fromStatus}
+    </update>
+
+    <update id="updateRefund">
+        update bas_customer_foregift_order
+        set status = #{toStatus},
+        apply_refund_time = #{applyRefundTime}
+        where id = #{id}
+        <if test="fromStatus != null">
+            and status = #{fromStatus}
+        </if>
+    </update>
+
+    <update id="updateOrderStatus">
+        update bas_customer_foregift_order
+        set status = #{toStatus}
+        where id = #{id}
+        and status = #{fromStatus}
+    </update>
+
+    <update id="updatePaidMoney">
+        update bas_customer_foregift_order
+        set money = (select ifnull(sum(foregift_money), 0) from bas_customer_installment_record_pay_detail where record_id = #{recordId} and status = #{status})
+        where id = #{id}
+    </update>
+
+    <update id="payOk">
+        update bas_customer_foregift_order set status = #{toStatus}, handle_time = #{handleTime}, pay_time = #{handleTime} where id = #{id} and status = #{fromStatus}
+    </update>
+
+    <update id="payMultiOk">
+        update bas_customer_foregift_order
+        set status = #{toStatus},
+        <if test="payTime != null">
+            pay_time = #{payTime},
+        </if>
+        handle_time = #{handleTime}
+        where id = #{id}
+        and status = #{fromStatus}
+    </update>
+
+    <update id="updateCompleteInstallmentTime">
+        update bas_customer_foregift_order
+        set complete_installment_time = #{completeInstallmentTime},
+        pay_time = #{payTime}
+        where id = #{id}
+    </update>
+
+</mapper>

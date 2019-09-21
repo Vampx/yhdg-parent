@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.basic.PlatformAccountMapper">
+
+    <select id="find" parameterType="int" resultType="cn.com.yusong.yhdg.common.domain.basic.PlatformAccount">
+        select * from bas_platform_account
+        where id = #{id}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.basic.PlatformAccount" resultType="int">
+        select count(id) from bas_platform_account
+        where 1 = 1
+        <if test="partnerName != null and partnerName !='' ">
+            <![CDATA[and partner_name LIKE concat('%',#{partnerName}, '%')]]>
+        </if>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.basic.PlatformAccount"
+            resultType="cn.com.yusong.yhdg.common.domain.basic.PlatformAccount">
+        select
+        *
+        from bas_platform_account
+        where 1 = 1
+        <if test="partnerName != null and partnerName !='' ">
+            <![CDATA[and partner_name LIKE concat('%',#{partnerName}, '%')]]>
+        </if>
+        order by create_time desc
+        limit ${beginIndex}, ${rows}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.PlatformAccount" useGeneratedKeys="true" keyProperty="id">
+        insert into bas_platform_account (id, partner_name, balance, create_time)
+        values (#{id}, #{partnerName}, #{balance}, #{createTime})
+    </insert>
+
+    <update id="updateBalance">
+        <choose>
+            <when test="balance > 0">
+                update bas_platform_account set balance = balance + #{balance} where id = #{id}
+            </when>
+            <otherwise>
+                <![CDATA[update bas_platform_account set balance = balance + #{balance} where id = #{id} and balance + #{balance} >= 0]]>
+            </otherwise>
+        </choose>
+    </update>
+
+    <update id="updateAccount">
+        update bas_platform_account
+        <trim prefix="set" suffixOverrides="," suffix=" where id = #{id}">
+            <if test="mpAccountName != null">mp_account_name=#{mpAccountName} ,</if>
+            <if test="mpOpenId != null">mp_open_id=#{mpOpenId} ,</if>
+            <if test="alipayAccountName != null">alipay_account_name=#{alipayAccountName},</if>
+            <if test="alipayAccount != null">alipay_account=#{alipayAccount},</if>
+        </trim>
+    </update>
+
+    <delete id="delete" parameterType="int">
+        delete from bas_platform_account where id = #{id}
+    </delete>
+
+</mapper>

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.yms.PlaylistDetailMaterialMapper">
+
+    <select id="findByAreaAndDetail" resultType="cn.com.yusong.yhdg.common.domain.yms.Material">
+        select
+            ym.id,
+            ym.agent_id as agentId,
+            ym.group_id as groupId,
+            ym.version,
+            ym.material_type as materialType,
+            ym.material_name as materialName,
+            ym.cover_path as coverPath,
+            ym.file_path as filePath,
+            ym.convert_status as convertStatus,
+            ym.convert_progress as convertProgress,
+            ym.size,
+            ym.width,
+            ym.height,
+            ym.md5_sum as md5Sum,
+            ym.owner_id as ownerId,
+            ym.owner_name as ownerName,
+            ym.create_time as createTime,
+            ym.duration,
+            ypdm.order_num as num
+        from yms_material ym
+        right outer join yms_playlist_detail_material ypdm on ypdm.material_id=ym.id
+        where ypdm.detail_id = #{detailId} and ym.convert_status=3 order by ypdm.order_num asc
+    </select>
+
+    <select id="findByDetail" resultType="cn.com.yusong.yhdg.common.domain.yms.PlaylistDetailMaterial">
+        select
+            id,
+            material_id as materialId,
+            detail_id as detailId,
+            order_num as orderNum,
+            duration
+        from yms_playlist_detail_material
+        where detail_id = #{detailId}
+    </select>
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.yms.PlaylistDetailMaterial" parameterType="cn.com.yusong.yhdg.common.domain.yms.PlaylistDetailMaterial">
+        select
+            id,
+            material_id as materialId,
+            detail_id as detailId,
+            order_num as orderNum
+        from yms_playlist_detail_material
+        where detail_id = #{detailId} and material_id = #{materialId}
+    </select>
+
+    <select id="hasRecordByProperty" resultType="int">
+        select id from yms_playlist_detail_material where
+        <if test="property == 'materialId'">
+            material_id = #{value}
+        </if>
+         limit 1
+    </select>
+
+    <select id="findByInfo" resultType="cn.com.yusong.yhdg.common.domain.yms.PlaylistDetailMaterial" parameterType="cn.com.yusong.yhdg.common.domain.yms.PlaylistDetailMaterial">
+        select
+        id,
+        material_id as materialId,
+        detail_id as detailId,
+        order_num as orderNum,
+        duration
+        from yms_playlist_detail_material
+        where detail_id = #{detailId}
+    </select>
+
+    <select id="findCountByDetail" resultType="int">
+        select count(id) from yms_playlist_detail_material where detail_id = #{detailId}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.yms.PlaylistDetailMaterial" useGeneratedKeys="true" keyProperty="id">
+        insert into yms_playlist_detail_material(material_id, detail_id,order_num,duration)
+        values(#{materialId}, #{detailId}, #{orderNum},#{duration})
+    </insert>
+
+    <delete id="deleteByDetail">
+        delete from yms_playlist_detail_material where detail_id = #{detailId}
+    </delete>
+
+    <delete id="deleteByMaterial">
+        delete from yms_playlist_detail_material where  material_id = #{materialId}
+    </delete>
+
+</mapper>

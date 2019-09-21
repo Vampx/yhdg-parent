@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.serviceserver.persistence.hdg.BackBatteryOrderMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.hdg.BackBatteryOrder">
+        select *
+        from hdg_back_battery_order
+        where id = #{id}
+    </select>
+
+    <select id="findStatus" resultType="cn.com.yusong.yhdg.common.domain.hdg.BackBatteryOrder">
+        select *
+        from hdg_back_battery_order
+        WHERE expire_time &lt;= #{expireTime}
+        and  order_status = #{orderStatus}
+    </select>
+
+    <update id="updateStatus">
+        update hdg_back_battery_order set order_status = #{toStatus} where id = #{id} and order_status = #{fromStatus}
+    </update>
+</mapper>

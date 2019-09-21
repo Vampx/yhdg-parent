@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.agentappserver.persistence.basic.AgentSystemConfigMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.basic.AgentSystemConfig">
+        select
+            *
+        from bas_agent_system_config
+        where id = #{id} and agent_id = #{agentId}
+    </select>
+
+    <select id="findConfigValue" resultType="string">
+        SELECT config_value
+        FROM bas_agent_system_config
+        where id = #{id} and agent_id = #{agentId}
+    </select>
+
+    <insert id="insert">
+        ${sql}
+    </insert>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.basic.AgentSystemConfig">
+        update bas_agent_system_config set config_value = #{configValue} where id = #{id} and agent_id = #{agentId}
+    </update>
+
+    <delete id="deleteByAgentId" parameterType="int">
+        delete from bas_agent_system_config where agent_id = #{agentId}
+    </delete>
+
+</mapper>

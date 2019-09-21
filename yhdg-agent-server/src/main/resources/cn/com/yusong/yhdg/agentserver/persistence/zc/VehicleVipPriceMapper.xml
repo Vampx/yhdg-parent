@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.zc.VehicleVipPriceMapper">
+
+    <select id="findCountByModelId"  resultType="int" >
+        select count(*) from zc_vehicle_vip_price
+        where model_id = #{modelId}
+    </select>
+
+    <select id="find"  resultType="cn.com.yusong.yhdg.common.domain.zc.VehicleVipPrice" >
+        select * from zc_vehicle_vip_price
+        where id = #{id}
+    </select>
+
+    <select id="findByRentPriceId" resultType="cn.com.yusong.yhdg.common.domain.zc.VehicleVipPrice">
+        select * from zc_vehicle_vip_price
+        where rent_price_id = #{rentPriceId}
+    </select>
+
+    <insert id="insert"  parameterType="cn.com.yusong.yhdg.common.domain.zc.VehicleVipPrice" >
+        INSERT INTO
+        zc_vehicle_vip_price
+        (
+        id,
+        agent_id,
+        model_id,
+        battery_type,
+        price_name,
+        price_setting_id,
+        rent_price_id,
+        foregift_price,
+        vehicle_foregift_price,
+        battery_foregift_price,
+        rent_price,
+        day_count,
+        vehicle_rent_price,
+        battery_rent_price,
+        begin_time,
+        end_time,
+        shop_count,
+        agent_company_count,
+        customer_count,
+        is_active,
+        create_time
+        )
+        VALUES
+        (
+        #{id},
+        #{agentId},
+        #{modelId},
+        #{batteryType},
+        #{priceName},
+        #{priceSettingId},
+        #{rentPriceId},
+        #{foregiftPrice},
+        #{vehicleForegiftPrice},
+        #{batteryForegiftPrice},
+        #{rentPrice},
+        #{dayCount},
+        #{vehicleRentPrice},
+        #{batteryRentPrice},
+        #{beginTime},
+        #{endTime},
+        #{shopCount},
+        #{agentCompanyCount},
+        #{customerCount},
+        #{isActive},
+        #{createTime}
+        )
+    </insert>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.zc.VehicleVipPrice" resultType="int">
+        select
+        count(*)
+        from zc_vehicle_vip_price
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null">
+                and agent_id = #{agentId}
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.zc.VehicleVipPrice"
+            resultType="cn.com.yusong.yhdg.common.domain.zc.VehicleVipPrice">
+        select
+        *
+        from zc_vehicle_vip_price
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null">
+                and agent_id = #{agentId}
+            </if>
+        </trim>
+        order by id desc
+        limit #{beginIndex}, #{rows}
+    </select>
+
+    <update id="update">
+        update zc_vehicle_vip_price set
+            foregift_price = #{foregiftPrice},
+            vehicle_foregift_price = #{vehicleForegiftPrice},
+            battery_foregift_price = #{batteryForegiftPrice},
+            rent_price = #{rentPrice},
+            day_count = #{dayCount},
+            vehicle_rent_price = #{vehicleRentPrice},
+            battery_rent_price = #{batteryRentPrice},
+            is_active = #{isActive}
+            where id = #{id}
+    </update>
+
+
+    <update id="updateCustomerCount">
+        update zc_vehicle_vip_price set
+        customer_count = #{customerCount}
+        where id = #{id}
+    </update>
+
+    <update id="updateShopCount">
+        update zc_vehicle_vip_price set
+        shop_count = #{shopCount}
+        where id = #{id}
+    </update>
+
+    <delete id="delete">
+        delete from zc_vehicle_vip_price where id = #{id}
+    </delete>
+
+</mapper>

@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.cabinetserver.persistence.hdg.CabinetMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.hdg.Cabinet">
+        select
+            *
+        from hdg_cabinet
+        where id = #{id}
+    </select>
+
+    <select id="findMaxId" parameterType="string" resultType="string">
+        select
+        id
+        from hdg_cabinet
+        where
+        <![CDATA[id LIKE concat(#{id}, '%')]]>
+        ORDER BY id DESC
+        limit 1
+    </select>
+
+    <update id="updateOperationFlag">
+        UPDATE
+          hdg_cabinet
+        SET
+          operation_flag = #{operationFlag}
+        WHERE id = #{id}
+    </update>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.Cabinet">
+        INSERT INTO hdg_cabinet (
+                id,
+                agent_id,
+                cabinet_name,
+                permit_exchange_volume,
+                province_id,
+                city_id,
+                district_id,
+                street,
+                lng,
+                lat,
+                geo_hash,
+                charge_full_volume,
+                recoil_volume,
+                active_status,
+                image_path1,
+                image_path2,
+                image_path3,
+                work_time,
+                linkname,
+                tel,
+                dispatcher_id,
+                address,
+                keyword,
+                terminal_id,
+                operation_flag,
+                all_full_count,
+                all_full_fault_log_id,
+                login_token,
+                dynamic_code,
+                price,
+                subtype,
+                network_type,
+                current_signal,
+                ip,
+                mac,
+                version,
+                max_charge_power,
+                box_max_power,
+                box_min_power,
+                box_trickle_time,
+                enable_wifi,
+                enable_bluetooth,
+                enable_voice,
+                heart_time,
+                is_online,
+                status_info,
+                temp1,
+                temp2,
+                power,
+                sim_memo,
+                max_charge_count,
+                fault_type,
+                offline_fault_log_id,
+                temp_fault_log_id,
+                active_fan_temp,
+                is_fp_open,
+                fan_speed,
+                water_level,
+                smoke_state,
+                ac_voltage_state,
+                ac_voltage,
+                up_line_status,
+                foregift_money,
+                rent_money,
+                rent_period_type,
+                rent_expire_time,
+                view_type,
+                create_time
+            ) VALUES (
+                #{id},
+                #{agentId},
+                #{cabinetName},
+                #{permitExchangeVolume},
+                #{provinceId},
+                #{cityId},
+                #{districtId},
+                #{street},
+                #{lng},
+                #{lat},
+                #{geoHash},
+                #{chargeFullVolume},
+                #{recoilVolume},
+                #{activeStatus},
+                #{imagePath1},
+                #{imagePath2},
+                #{imagePath3},
+                #{workTime},
+                #{linkname},
+                #{tel},
+                #{dispatcherId},
+                #{address},
+                #{keyword},
+                #{terminalId},
+                #{operationFlag},
+                #{allFullCount},
+                #{allFullFaultLogId},
+                #{loginToken},
+                #{dynamicCode},
+                #{price},
+                #{subtype},
+                #{networkType},
+                #{currentSignal},
+                #{ip},
+                #{mac},
+                #{version},
+                #{maxChargePower},
+                #{boxMaxPower},
+                #{boxMinPower},
+                #{boxTrickleTime},
+                #{enableWifi},
+                #{enableBluetooth},
+                #{enableVoice},
+                #{heartTime},
+                #{isOnline},
+                #{statusInfo},
+                #{temp1},
+                #{temp2},
+                #{power},
+                #{simMemo},
+                #{maxChargeCount},
+                #{faultType},
+                #{offlineFaultLogId},
+                #{tempFaultLogId},
+                #{activeFanTemp},
+                #{isFpOpen},
+                #{fanSpeed},
+                #{waterLevel},
+                #{smokeState},
+                #{acVoltageState},
+                #{acVoltage},
+                #{upLineStatus},
+                #{foregiftMoney},
+                #{rentMoney},
+                #{rentPeriodType},
+                #{rentExpireTime},
+                #{viewType},
+                #{createTime}
+            )
+    </insert>
+
+
+    <update id="updateHeart">
+        update hdg_cabinet set
+        version = #{version},
+        mac = #{mac},
+        is_online = #{isOnline},
+        heart_time = #{heartTime},
+        <if test="networkType != null">
+            network_type = #{networkType},
+        </if>
+        current_signal = #{currentSignal},
+        offline_fault_log_id = null,
+        fan_speed = #{fanSpeed},
+        water_level = #{waterLevel},
+        smoke_state = #{smokeState},
+        is_fp_open = #{isFpOpen},
+        ac_voltage_state = #{acVoltageState},
+        ac_voltage = #{acVoltage},
+        temp1 = #{temp1},
+        temp2 = #{temp2},
+        temp_fault_log_id = #{tempFaultLogId}
+        where id = #{id}
+    </update>
+
+    <update id="updateOnline">
+        update hdg_cabinet set is_online = #{isOnline} where id = #{id}
+    </update>
+    <update id="updatePower">
+        update hdg_cabinet set power = #{power}, battery_num = #{batteryNum}, charge_battery_num = #{chargeBatteryNum} where id = #{id}
+    </update>
+
+    <update id="cleanFaultLogId">
+        update hdg_cabinet set offline_fault_log_id = NULL where id = #{id}
+    </update>
+
+</mapper>

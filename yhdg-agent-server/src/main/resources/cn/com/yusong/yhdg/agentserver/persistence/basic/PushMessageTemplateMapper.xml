@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.basic.PushMessageTemplateMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.basic.PushMessageTemplate">
+        select
+            id,
+            title,
+            content,
+            receiver,
+            variable,
+            is_play as isPlay
+       from bas_push_message_template
+       where id = #{id}
+    </select>
+
+    <select id="findPageResult" resultType="cn.com.yusong.yhdg.common.domain.basic.PushMessageTemplate">
+        select
+            id,
+            title,
+            content,
+            receiver,
+            variable,
+            is_play as isPlay
+        from bas_push_message_template
+        <trim prefix="where" prefixOverrides="and">
+            <if test="title != null and title !=''">
+                <![CDATA[and title LIKE concat('%', #{title}, '%')]]>
+            </if>
+        </trim>
+        limit ${beginIndex}, ${rows}
+    </select>
+
+    <select id="findPageCount" resultType="int">
+        select count(*) from bas_push_message_template
+        <trim prefix="where" prefixOverrides="and">
+            <if test="title != null and title !=''">
+                <![CDATA[and title LIKE concat('%', #{title}, '%')]]>
+            </if>
+        </trim>
+    </select>
+
+    <update id="update">
+        update bas_push_message_template
+        set content = #{content},
+        variable = #{variable},
+        is_play = #{isPlay}
+        where id = #{id}
+    </update>
+
+</mapper>

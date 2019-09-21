@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.serviceserver.persistence.basic.AgentDayBalanceRecordMapper">
+
+    <select id="find" parameterType="long" resultType="cn.com.yusong.yhdg.common.domain.basic.AgentDayBalanceRecord">
+        select
+        *
+        from bas_agent_day_balance_record
+        where id = #{id}
+    </select>
+
+    <select id="findByBalanceDate" resultType="cn.com.yusong.yhdg.common.domain.basic.AgentDayBalanceRecord">
+        select
+        *
+        from bas_agent_day_balance_record
+        where agent_id = #{agentId}
+        and balance_date = #{balanceDate}
+        limit 1
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.AgentDayBalanceRecord" >
+        insert into bas_agent_day_balance_record
+        (
+          balance_date,
+          biz_type,
+          agent_id,
+          agent_name,
+          income,
+          money,
+          packet_money,
+          exchange_money,
+          refund_packet_money,
+          refund_exchange_money,
+          memo,
+          status,
+          create_time
+        ) values (
+        #{balanceDate},
+        #{bizType},
+        #{agentId},
+        #{agentName},
+        #{income},
+        #{money},
+        #{packetMoney},
+        #{exchangeMoney},
+        #{refundPacketMoney},
+        #{refundExchangeMoney},
+        #{memo},
+        #{status},
+        #{createTime}
+        )
+    </insert>
+
+</mapper>

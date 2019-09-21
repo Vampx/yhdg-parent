@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.yms.PublishedPlaylistDetailMapper">
+
+    <select id="findByPlaylist" resultType="cn.com.yusong.yhdg.common.domain.yms.PublishedPlaylistDetail">
+        select
+            *
+        from yms_published_playlist_detail
+        where playlist_id = #{playlistId}
+    </select>
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.yms.PublishedPlaylistDetail" parameterType="long">
+        select
+            *
+        from yms_published_playlist_detail
+        where id = #{id}
+    </select>
+
+    <select id="hasRecordByProperty" resultType="int" parameterType="int">
+        select id from yms_published_playlist_detail where tempalte_num = #{num} limit 1
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.yms.PublishedPlaylistDetail" useGeneratedKeys="true" keyProperty="id">
+        insert into yms_published_playlist_detail(
+            detail_id,
+            playlist_id,
+            detail_name,
+            begin_time,
+            end_time,
+            create_time
+          )
+        values (
+            #{detailId},
+            #{playlistId},
+            #{detailName},
+            #{beginTime},
+            #{endTime},
+            #{createTime}
+          )
+    </insert>
+
+    <delete id="deleteByPlaylist" >
+        delete from yms_published_playlist_detail
+        where playlist_id = #{playlistId}
+    </delete>
+</mapper>

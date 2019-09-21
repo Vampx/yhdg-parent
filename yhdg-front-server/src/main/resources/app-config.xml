@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Config>
+  <Entry key="zk.url">localhost:2181</Entry>
+  <Entry key="zk.name">server</Entry>
+  <Entry key="server.version">v1.0.0</Entry>
+  <Entry key="server.name">广告测试（201701219）</Entry>
+  <Entry key="server.ip">192.9.198.191</Entry>
+  <Entry key="server.port">12030</Entry>
+  <Entry key="server.weight">1</Entry>
+  <Entry key="db.driver">com.mysql.jdbc.Driver</Entry>
+  <Entry key="db.url"><![CDATA[jdbc:mysql://localhost:3306/yhdg?useUnicode=true&characterEncoding=UTF-8]]></Entry>
+  <Entry key="db.user">root</Entry>
+  <Entry key="db.password">root</Entry>
+  <Entry key="memcached.url">localhost:11211</Entry>
+</Config>

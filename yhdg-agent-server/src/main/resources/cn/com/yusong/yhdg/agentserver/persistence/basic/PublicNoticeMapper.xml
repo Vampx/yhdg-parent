@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.basic.PublicNoticeMapper">
+
+    <select id="find" parameterType="long" resultType="cn.com.yusong.yhdg.common.domain.basic.PublicNotice">
+        select
+        *
+        from bas_public_notice
+        where id = #{id}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.basic.PublicNotice" resultType="int">
+        select
+        count(id)
+        from bas_public_notice
+        <trim prefix="where" prefixOverrides="and">
+            <if test="title != null and title != '' ">
+                <![CDATA[and title LIKE concat('%', #{title}, '%')]]>
+            </if>
+            <if test="agentId != null">
+                and agent_id = #{agentId}
+            </if>
+            <if test="noticeType != null">
+                and notice_type = #{noticeType}
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.basic.PublicNotice" resultType="cn.com.yusong.yhdg.common.domain.basic.PublicNotice">
+        select
+          *
+        from bas_public_notice
+        <trim prefix="where" prefixOverrides="and">
+            <if test="title != null and title != '' ">
+                <![CDATA[and title LIKE concat('%', #{title}, '%')]]>
+            </if>
+            <if test="agentId != null">
+                and agent_id = #{agentId}
+            </if>
+            <if test="noticeType != null">
+                and notice_type = #{noticeType}
+            </if>
+        </trim>
+        order by id desc
+        limit #{beginIndex}, #{rows}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.PublicNotice" useGeneratedKeys="true" keyProperty="id">
+        insert into bas_public_notice(agent_id, title, content, notice_type, create_time)
+        values(#{agentId}, #{title}, #{content}, #{noticeType}, #{createTime})
+    </insert>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.basic.PublicNotice">
+        update bas_public_notice set
+        title = #{title},
+        content = #{content},
+        notice_type = #{noticeType}
+        where id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="long">
+        delete from bas_public_notice where id = #{id}
+    </delete>
+
+</mapper>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.hdg.PlatformMonthStatsMapper">
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.hdg.PlatformMonthStats" resultType="int">
+        select count(*)
+        from hdg_platform_month_stats
+        <trim prefix="where" prefixOverrides="and">
+            <if test="statsMonth != null and statsMonth != ''">
+                <![CDATA[and stats_month = #{statsMonth} ]]>
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.hdg.PlatformMonthStats" resultType="cn.com.yusong.yhdg.common.domain.hdg.PlatformMonthStats">
+        select
+        *
+        from hdg_platform_month_stats
+        <trim prefix="where" prefixOverrides="and">
+            <if test="statsMonth != null and statsMonth != ''">
+                <![CDATA[and stats_month = #{statsMonth} ]]>
+            </if>
+        </trim>
+        order by stats_month desc
+        limit ${beginIndex}, ${rows}
+    </select>
+
+</mapper>

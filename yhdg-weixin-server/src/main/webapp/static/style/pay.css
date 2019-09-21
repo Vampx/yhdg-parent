@@ -1,0 +1,78 @@
+html {
+  height: 100%;
+}
+html body {
+  height: 100%;
+  background-color: #EFEFEF;
+}
+html body .canPay {
+  display: block;
+  height: 100%;
+  box-sizing: border-box;
+  padding-top: 1.17rem;
+  position: relative;
+}
+html body .canPay .weui-cells {
+  margin-top: 0;
+}
+html body .canPay .weui-cells .weui-cell {
+  padding: 0.58823529rem 0.88235294rem;
+}
+html body .canPay .weui-cells .weui-cell .charge_num,
+html body .canPay .weui-cells .weui-cell .weui-label {
+  font-size: 0.82352941rem;
+  color: #5C5C5C;
+}
+html body .canPay .weui-cells .space {
+  margin-bottom: 1.17rem;
+}
+html body .canPay .weui-cells .space p {
+  font-size: 1rem;
+  color: #999;
+}
+html body .canPay .weui-cells .choices {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  background-color: #fff;
+  padding: 0.58823529rem 0.88235294rem;
+}
+html body .canPay .weui-cells .choices .choice {
+  box-sizing: border-box;
+  width: 31%;
+  padding: .5rem 0em;
+  border: 1px solid #E0E0E0;
+  margin: .3rem 1.16%;
+  border-radius: 5px;
+}
+html body .canPay .weui-cells .choices .choice p {
+  text-align: center;
+  color: #5C5C5C;
+  font-size: 1rem;
+}
+html body .canPay .weui-cells .choices .choiced {
+  border: 1px solid #4EC6F7;
+}
+html body .canPay .weui-cells .choices .choiced p {
+  color: #4EC6F7;
+}
+html body .canPay .weui-cells .btn {
+  margin-top: 1.8em;
+  padding: 0 15px;
+}
+html body .canPay .weui-cells .btn .weui-btn_blue {
+  background-color: #12B7F5;
+}
+html body .canPay .foot {
+  width: 100%;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  bottom: 1rem;
+  right: 0;
+  left: 0;
+}
+html body .canPay .foot a {
+  color: #798BA2;
+  font-size: 0.82352941rem;
+}

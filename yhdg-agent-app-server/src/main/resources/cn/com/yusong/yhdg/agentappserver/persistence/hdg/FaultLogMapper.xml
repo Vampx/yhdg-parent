@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.agentappserver.persistence.hdg.FaultLogMapper">
+
+    <select id="findByBatteryId" resultType="cn.com.yusong.yhdg.common.domain.hdg.FaultLog">
+        select * from hdg_fault_log
+        WHERE agent_id = #{agentId}
+        and battery_id = #{batteryId}
+        order by id desc
+        limit ${offset}, ${limit}
+    </select>
+
+    <select id="findCountByAgent" resultType="int">
+        select count(id) from hdg_fault_log
+        WHERE agent_id = #{agentId}
+        and fault_type = #{faultType}
+        and status = #{status}
+    </select>
+
+    <select id="findByAgent" resultType="cn.com.yusong.yhdg.common.domain.hdg.FaultLog">
+        select * from hdg_fault_log
+        WHERE agent_id = #{agentId}
+        and fault_type = #{faultType}
+        and status = #{status}
+        order by create_time desc
+        limit ${offset}, ${limit}
+    </select>
+
+    <select id="findByCabinetId" resultType="cn.com.yusong.yhdg.common.domain.hdg.FaultLog">
+        select * from hdg_fault_log
+        WHERE agent_id = #{agentId}
+        and cabinet_id = #{cabinetId}
+        order by id desc
+        limit ${offset}, ${limit}
+    </select>
+
+</mapper>

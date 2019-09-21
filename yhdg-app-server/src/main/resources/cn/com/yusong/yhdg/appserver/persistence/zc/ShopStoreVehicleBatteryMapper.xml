@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.appserver.persistence.zc.ShopStoreVehicleBatteryMapper">
+
+    <select id="findByStoreVehicle" parameterType="long" resultType="cn.com.yusong.yhdg.common.domain.zc.ShopStoreVehicleBattery">
+        select *
+        from zc_shop_store_vehicle_battery
+        where store_vehicle_id = #{storeVehicleId}
+    </select>
+
+    <select id="existBattery" resultType="int">
+        select count(battery_id)
+        from zc_shop_store_vehicle_battery
+        where battery_id = #{batteryId}
+    </select>
+
+    <delete id="clearVehicleBattery">
+        delete from zc_shop_store_vehicle_battery where store_vehicle_id = #{storeVehicleId}
+    </delete>
+
+</mapper>

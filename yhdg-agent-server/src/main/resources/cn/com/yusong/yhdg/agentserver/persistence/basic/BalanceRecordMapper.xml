@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.basic.BalanceRecordMapper">
+
+    <select id="find" parameterType="long" resultType="cn.com.yusong.yhdg.common.domain.basic.BalanceRecord">
+        select * from bas_balance_record where id = #{id}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.basic.BalanceRecord" resultType="int">
+        select count(*) from bas_balance_record
+        <trim prefix="where" prefixOverrides="and">
+            <if test="orderId != null and orderId != ''">
+                <![CDATA[and order_id = #{orderId} ]]>
+            </if>
+            <if test="agentId != null">
+                <![CDATA[and agent_id = #{agentId} ]]>
+            </if>
+            <if test="bizType != null">
+                <![CDATA[and biz_type = #{bizType}]]>
+            </if>
+            <if test="status != null">
+                <![CDATA[and status = #{status}]]>
+            </if>
+            <if test="shopName != null and shopName != ''">
+                <![CDATA[and shop_name LIKE concat('%', #{shopName}, '%')]]>
+            </if>
+            <if test="balanceDate != null and balanceDate != ''">
+                <![CDATA[and balance_date = #{balanceDate} ]]>
+            </if>
+            <if test="category != null ">
+                and category = #{category}
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.basic.BalanceRecord" resultType="cn.com.yusong.yhdg.common.domain.basic.BalanceRecord">
+        select
+        *
+        from bas_balance_record
+        <trim prefix="where" prefixOverrides="and">
+            <if test="orderId != null and orderId != ''">
+                <![CDATA[and order_id = #{orderId} ]]>
+            </if>
+            <if test="agentId != null">
+                <![CDATA[and agent_id = #{agentId} ]]>
+            </if>
+            <if test="bizType != null">
+                <![CDATA[and biz_type = #{bizType}]]>
+            </if>
+            <if test="status != null">
+                <![CDATA[and status = #{status}]]>
+            </if>
+            <if test="shopName != null and shopName != ''">
+                <![CDATA[and shop_name LIKE concat('%', #{shopName}, '%')]]>
+            </if>
+            <if test="balanceDate != null and balanceDate != ''">
+                <![CDATA[and balance_date = #{balanceDate} ]]>
+            </if>
+            <if test="category != null ">
+                and category = #{category}
+            </if>
+        </trim>
+        ORDER by balance_date DESC
+        limit ${beginIndex}, ${rows}
+    </select>
+
+    <update id="confirm">
+        update bas_balance_record
+        set status = #{toStatus},
+        confirm_time = #{confirmTime},
+        confirm_operator = #{confirmOperator}
+        where id = #{id} and status = #{fromStatus}
+    </update>
+
+</mapper>

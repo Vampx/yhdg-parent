@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.basic.WeixinmpMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.basic.Weixinmp">
+        select *
+        from bas_weixinmp
+        where id=#{id}
+    </select>
+
+    <select id="findAll" resultType="cn.com.yusong.yhdg.common.domain.basic.Weixinmp">
+        select *
+        from bas_weixinmp
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.basic.Weixinmp" resultType="int">
+        select count(id)
+        from bas_weixinmp
+        <trim prefix="where" prefixOverrides="and">
+                <if test="id != null">and id = #{id} </if>
+                <if test="partnerId != null">and partner_id = #{partnerId} </if>
+                <if test="appName != null">and app_name = #{appName} </if>
+                <if test="appId != null">and app_id = #{appId} </if>
+                <if test="appSecret != null">and app_secret = #{appSecret} </if>
+                <if test="partnerCode != null">and partner_code = #{partnerCode} </if>
+                <if test="partnerKey != null">and partner_key = #{partnerKey} </if>
+                <if test="subscribeUrl != null">and subscribe_url = #{subscribeUrl} </if>
+                <if test="logoPath != null">and logo_path = #{logoPath} </if>
+                <if test="createTime != null">and create_time = #{createTime} </if>
+                <if test="systemTel != null">and system_tel = #{systemTel} </if>
+                <if test="pageType != null">and page_type = #{pageType} </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.basic.Weixinmp" resultType="cn.com.yusong.yhdg.common.domain.basic.Weixinmp">
+        select
+        bas_weixinmp.*,bas_partner.partner_name
+        from bas_weixinmp
+        left join bas_partner on bas_weixinmp.partner_id = bas_partner.id
+        <trim prefix="where" prefixOverrides="and">
+                <if test="id != null">and bas_weixinmp.id = #{id} </if>
+                <if test="partnerId != null">and bas_weixinmp.partner_id = #{partnerId} </if>
+                <if test="appName != null">and bas_weixinmp.app_name = #{appName} </if>
+                <if test="appId != null">and bas_weixinmp.app_id = #{appId} </if>
+                <if test="appSecret != null">and bas_weixinmp.app_secret = #{appSecret} </if>
+                <if test="partnerCode != null">and bas_weixinmp.partner_code = #{partnerCode} </if>
+                <if test="partnerKey != null">and bas_weixinmp.partner_key = #{partnerKey} </if>
+                <if test="subscribeUrl != null">and bas_weixinmp.subscribe_url = #{subscribeUrl} </if>
+                <if test="logoPath != null">and bas_weixinmp.logo_path = #{logoPath} </if>
+                <if test="createTime != null">and bas_weixinmp.create_time = #{createTime} </if>
+                <if test="systemTel != null">and bas_weixinmp.system_tel = #{systemTel} </if>
+                <if test="pageType != null">and bas_weixinmp.page_type = #{pageType} </if>
+        </trim>
+        order by bas_weixinmp.id desc
+        limit #{beginIndex}, #{rows}
+    </select>
+
+    <select id="findList" parameterType="cn.com.yusong.yhdg.common.domain.basic.Weixinmp"
+            resultType="cn.com.yusong.yhdg.common.domain.basic.Weixinmp">
+        select
+        *
+        from bas_weixinmp
+        <trim prefix="where" prefixOverrides="and">
+            <if test="partnerId != null">
+                and partner_id = #{partnerId}
+            </if>
+        </trim>
+        order by id
+    </select>
+
+    <select id="findByPartnerId" parameterType="int"
+            resultType="cn.com.yusong.yhdg.common.domain.basic.Weixinmp">
+        select
+        *
+        from bas_weixinmp
+        where partner_id = #{partnerId}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.Weixinmp" keyProperty="id" useGeneratedKeys="true">
+        insert into bas_weixinmp (
+        id,partner_id,app_name,app_id,app_secret,partner_code,partner_key,
+        subscribe_url,logo_path,create_time,system_tel,page_type)
+        values (
+        #{id},#{partnerId},#{appName},#{appId},#{appSecret},#{partnerCode},#{partnerKey},
+        #{subscribeUrl},#{logoPath},#{createTime},#{systemTel},#{pageType})
+    </insert>
+
+    <insert id="insertSql">
+        ${sql}
+    </insert>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.basic.Weixinmp">
+        update bas_weixinmp set
+        partner_id=#{partnerId},app_name=#{appName},
+        app_id=#{appId},app_secret=#{appSecret},partner_code=#{partnerCode},
+        partner_key=#{partnerKey},subscribe_url=#{subscribeUrl},logo_path=#{logoPath},
+        system_tel=#{systemTel},page_type=#{pageType}
+        where id=#{id}
+    </update>
+
+    <delete id="delete">
+        delete from bas_weixinmp
+        where id=#{id}
+    </delete>
+</mapper>

@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.hdg.BatteryOrderMapper">
+
+    <select id="findCountByTakeCabinet" resultType="int">
+        select
+        count(*)
+        from hdg_battery_order
+        where take_cabinet_id = #{takeCabinetId}
+    </select>
+
+    <select id="findCountByPutCabinet" resultType="int">
+        select
+        count(*)
+        from hdg_battery_order
+        where put_cabinet_id = #{putCabinetId}
+    </select>
+
+    <select id="findCountByAgentCompany" resultType="int">
+        select
+        count(*)
+        from hdg_battery_order
+        where agent_company_id = #{agentCompanyId}
+    </select>
+
+    <select id="find" parameterType="string" resultType="cn.com.yusong.yhdg.common.domain.hdg.BatteryOrder">
+        select
+        *
+        from hdg_battery_order
+        where id = #{id}
+    </select>
+
+    <select id="findOrderCount" resultType="int">
+        select
+        count(*)
+        from hdg_battery_order
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId !=null">
+                and agent_id = #{agentId}
+            </if>
+            <if test="beginPrefixId !=null">
+                and id &gt; #{beginPrefixId}
+            </if>
+            <if test="endPrefixId !=null">
+                and id &lt; #{endPrefixId}
+            </if>
+            <if test="takeCabinetId !=null and takeCabinetId !=''">
+                and take_cabinet_id = #{takeCabinetId}
+            </if>
+        </trim>
+    </select>
+
+    <select id="findDateOrderCount" resultType="cn.com.yusong.yhdg.common.entity.OrderDateCount">
+        select
+        count(*) as num,
+        DATE_FORMAT(create_time, '%Y-%m-%d') as `date`
+        from hdg_battery_order
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId !=null">
+                and agent_id = #{agentId}
+            </if>
+            <if test="beginPrefixId !=null">
+                and id &gt; #{beginPrefixId}
+            </if>
+            <if test="endPrefixId !=null">
+                and id &lt; #{endPrefixId}
+            </if>
+            <if test="takeCabinetId !=null and takeCabinetId !=''">
+                and take_cabinet_id = #{takeCabinetId}
+            </if>
+        </trim>
+        GROUP BY
+        DATE_FORMAT(create_time, '%Y-%m-%d')
+    </select>
+
+    <select id="hasRecordByProperty" resultType="int">
+        select count(id) from hdg_battery_order where
+        <if test="property == 'agentId'">
+            agent_id = #{value}
+        </if>
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.hdg.BatteryOrder" resultType="int">
+        select
+        count(*)
+        from hdg_battery_order
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null">
+                and agent_id = #{agentId}
+            </if>
+            <if test="partnerId != null">
+                and partner_id = #{partnerId}
+            </if>
+            <if test="takeShopId != null and takeShopId != ''">
+                and take_shop_id = #{takeShopId}
+            </if>
+            <if test="payType != null">
+                and pay_type = #{payType}
+            </if>
+            <if test="id != null and id != ''">
+                <![CDATA[and id LIKE concat(#{id}, '%')]]>
+            </if>
+            <if test="customerId != null">
+                and customer_id = #{customerId}
+            </if>
+            <if test="customerMobile != null and customerMobile != ''">
+                <![CDATA[and customer_mobile LIKE concat(#{customerMobile}, '%')]]>
+            </if>
+            <if test="customerFullname != null and customerFullname != ''">
+                <![CDATA[and customer_fullname LIKE concat(#{customerFullname}, '%')]]>
+            </if>
+            <if test="orderStatus != null">
+                and order_status = #{orderStatus}
+            </if>
+            <if test="batteryId != null and batteryId != ''">
+                <![CDATA[and battery_id LIKE concat(#{batteryId}, '%')]]>
+            </if>
+            <if test="takeCabinetId != null and takeCabinetId != ''">
+                <![CDATA[and take_cabinet_id LIKE concat(#{takeCabinetId}, '%')]]>
+            </if>
+            <if test="putCabinetId != null and putCabinetId != ''">
+                <![CDATA[and put_cabinet_id LIKE concat(#{putCabinetId}, '%')]]>
+            </if>
+            <if test="queryBeginTime !=null">
+                and create_time &gt;= #{queryBeginTime}
+            </if>
+            <if test="queryEndTime !=null">
+                and create_time &lt;= #{queryEndTime}
+            </if>
+            <if test="takeBeginTime !=null">
+                and take_time &gt;= #{takeBeginTime}
+            </if>
+            <if test="takeEndTime !=null">
+                and take_time &lt;= #{takeEndTime}
+            </if>
+            <if test="putBeginTime !=null">
+                and put_time &gt;= #{putBeginTime}
+            </if>
+            <if test="putEndTime !=null">
+                and put_time &lt;= #{putEndTime}
+            </if>
+            <if test="queryFlag != null and queryFlag == 1">
+                and (take_shop_id is not null and take_shop_id != "")
+            </if>
+            <if test="vehicleOrderFlag != null">
+                and  vehicle_order_flag = #{vehicleOrderFlag}
+            </if>
+            <if test="vehicleOrderFlag == null">
+                and  vehicle_order_flag = 0
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.hdg.BatteryOrder"
+            resultType="cn.com.yusong.yhdg.common.domain.hdg.BatteryOrder">
+        select
+        t1.*, t2.shell_code as shellCode
+        from hdg_battery_order t1 left join hdg_battery t2
+        on t1.battery_id = t2.id
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null">
+                and t1.agent_id = #{agentId}
+            </if>
+            <if test="partnerId != null">
+                and t1.partner_id = #{partnerId}
+            </if>
+            <if test="takeShopId != null and takeShopId != ''">
+                and t1.take_shop_id = #{takeShopId}
+            </if>
+            <if test="payType != null">
+                and t1.pay_type = #{payType}
+            </if>
+            <if test="id != null and id != ''">
+                <![CDATA[and t1.id LIKE concat(#{id}, '%')]]>
+            </if>
+            <if test="customerId != null">
+                and t1.customer_id = #{customerId}
+            </if>
+            <if test="customerMobile != null and customerMobile != ''">
+                <![CDATA[and t1.customer_mobile LIKE concat(#{customerMobile}, '%')]]>
+            </if>
+            <if test="customerFullname != null and customerFullname != ''">
+                <![CDATA[and t1.customer_fullname LIKE concat(#{customerFullname}, '%')]]>
+            </if>
+            <if test="orderStatus != null">
+                and t1.order_status = #{orderStatus}
+            </if>
+            <if test="batteryId != null and batteryId != ''">
+                <![CDATA[and t1.battery_id LIKE concat(#{batteryId}, '%')]]>
+            </if>
+            <if test="takeCabinetId != null and takeCabinetId != ''">
+                <![CDATA[and t1.take_cabinet_id LIKE concat(#{takeCabinetId}, '%')]]>
+            </if>
+            <if test="putCabinetId != null and putCabinetId != ''">
+                <![CDATA[and t1.put_cabinet_id LIKE concat(#{putCabinetId}, '%')]]>
+            </if>
+            <if test="queryBeginTime !=null">
+                and t1.create_time &gt;= #{queryBeginTime}
+            </if>
+            <if test="queryEndTime !=null">
+                and t1.create_time &lt;= #{queryEndTime}
+            </if>
+            <if test="takeBeginTime !=null">
+                and t1.take_time &gt;= #{takeBeginTime}
+            </if>
+            <if test="takeEndTime !=null">
+                and t1.take_time &lt;= #{takeEndTime}
+            </if>
+            <if test="putBeginTime !=null">
+                and t1.put_time &gt;= #{putBeginTime}
+            </if>
+            <if test="putEndTime !=null">
+                and t1.put_time &lt;= #{putEndTime}
+            </if>
+            <if test="queryFlag != null and queryFlag == 1">
+                and (t1.take_shop_id is not null and take_shop_id != "")
+            </if>
+            <if test="vehicleOrderFlag != 1">
+                and  t1.vehicle_order_flag = 0
+            </if>
+            <if test="vehicleOrderFlag == 1">
+                and  t1.vehicle_order_flag =1
+            </if>
+        </trim>
+        order by t1.id desc
+        limit ${beginIndex}, ${rows}
+    </select>
+
+    <select id="findPageForBalanceCount" parameterType="cn.com.yusong.yhdg.common.domain.hdg.BatteryOrder" resultType="int">
+        select
+          count(1)
+        from hdg_battery_order left join bas_customer on hdg_battery_order.customer_id = bas_customer.id
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null">
+                and hdg_battery_order.agent_id = #{agentId}
+            </if>
+            <if test="customerMobile != null and customerMobile != ''">
+                <![CDATA[and hdg_battery_order.customer_mobile LIKE concat(#{customerMobile}, '%')]]>
+            </if>
+            <if test="customerFullname != null and customerFullname != ''">
+                <![CDATA[and hdg_battery_order.customer_fullname LIKE concat(#{customerFullname}, '%')]]>
+            </if>
+            and hdg_battery_order.order_status in (5)
+            <if test="queryBeginTime !=null">
+                and pay_time &gt;= #{queryBeginTime}
+            </if>
+            <if test="queryEndTime !=null">
+                and pay_time &lt;= #{queryEndTime}
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageForBalanceResult" parameterType="cn.com.yusong.yhdg.common.domain.hdg.BatteryOrder"
+            resultType="cn.com.yusong.yhdg.common.domain.hdg.BatteryOrder">
+        select
+        *
+        from hdg_battery_order left join bas_customer on hdg_battery_order.customer_id = bas_customer.id
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null">
+                and hdg_battery_order.agent_id = #{agentId}
+            </if>
+            <if test="customerMobile != null and customerMobile != ''">
+                <![CDATA[and hdg_battery_order.customer_mobile LIKE concat(#{customerMobile}, '%')]]>
+            </if>
+            <if test="customerFullname != null and customerFullname != ''">
+                <![CDATA[and hdg_battery_order.customer_fullname LIKE concat(#{customerFullname}, '%')]]>
+            </if>
+              and hdg_battery_order.order_status in (5)
+            <if test="queryBeginTime !=null">
+                and pay_time &gt;= #{queryBeginTime}
+            </if>
+            <if test="queryEndTime !=null">
+                and pay_time &lt;= #{queryEndTime}
+            </if>
+        </trim>
+        order by hdg_battery_order.id desc
+        limit ${beginIndex}, ${rows}
+    </select>
+
+    <update id="updateStatus">
+        update hdg_battery_order set
+        refund_status = #{refundStatus},
+        refund_money = #{refundMoney},
+        refund_time = #{refundTime},
+        refund_reason = #{refundReason}
+        where id = #{id}
+    </update>
+
+    <select id="findList" resultType="cn.com.yusong.yhdg.common.domain.hdg.BatteryOrder">
+        select
+         *
+        from hdg_battery_order
+        where customer_id = #{customerId}
+    </select>
+
+    <update id="updateBatteryOrder">
+        update hdg_battery_order set
+        customer_id = #{customerId},
+        customer_mobile = #{customerMobile},
+        customer_fullname = #{customerFullname},
+        pay_type = #{payType},
+        create_time = #{createTime}
+        where id = #{id}
+    </update>
+
+    <update id="complete">
+        update hdg_battery_order
+        set
+        order_status = #{toStatus},
+        pay_type = #{payType},
+        pay_time = #{completeTime},
+        complete_time = #{completeTime},
+        price = 0,
+        money = 0
+        where id = #{id}
+    </update>
+
+    <update id="updateBattery">
+        update hdg_battery_order set battery_id = #{batteryId} where id = #{id}
+    </update>
+
+    <update id="updateFaultLog">
+        update hdg_battery_order set
+            <if test="property == 'payTimeoutFaultLogId'">
+                pay_timeout_fault_log_id = null where pay_timeout_fault_log_id = #{value}
+            </if>
+            <if test="property == 'notTakeTimeoutFaultLogId'">
+                not_take_timeout_fault_log_id = null where not_take_timeout_fault_log_id = #{value}
+            </if>
+    </update>
+
+    <delete id="deleteByCustomerId">
+        delete from hdg_battery_order where customer_id = #{customerId}
+    </delete>
+
+    <delete id="deleteByBatteryId">
+        delete from hdg_battery_order where battery_id = #{batteryId}
+    </delete>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.BatteryOrder">
+        insert into hdg_battery_order
+        (id, partner_id, agent_id,take_shop_id,take_shop_name, province_id, city_id, district_id, battery_id, pay_type, money, current_distance, customer_id, customer_mobile, order_status, create_time)
+        VALUES
+        (#{id}, #{partnerId}, #{agentId},#{takeShopId},#{takeShopName},#{provinceId},#{cityId},#{districtId},#{batteryId},#{payType},#{money},#{currentDistance},#{customerId},#{customerMobile},#{orderStatus},#{createTime})
+    </insert>
+</mapper>

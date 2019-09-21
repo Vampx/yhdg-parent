@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.hdg.FaultLogMapper">
+
+    <select id="find" parameterType="long" resultType="cn.com.yusong.yhdg.common.domain.hdg.FaultLog">
+        select * from hdg_fault_log where id = #{id}
+    </select>
+
+    <select id="findCount" resultType="int">
+        select count(*) from hdg_fault_log where status = #{status}
+    </select>
+
+    <select id="findCountByAgent" resultType="int">
+        select count(1) from bas_customer  where agent_id = #{agentId}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.hdg.FaultLog" resultType="int">
+        select
+            count(*)
+        from hdg_fault_log f LEFT  JOIN hdg_battery b on f.battery_id=b.id
+        <trim prefix="where" prefixOverrides="and">
+            <if test="faultLevel != null and faultLevel != 0 and faultLevel != -1 ">
+                and f.fault_level = #{faultLevel}
+            </if>
+            <if test="faultLevel == 0">
+                and f.fault_level in (2,3)
+            </if>
+            <if test="agentId != null">
+                and f.agent_id = #{agentId}
+            </if>
+            <if test="status != null and status != 0">
+                and f.status = #{status}
+            </if>
+            <if test="faultType != null">
+                and f.fault_type = #{faultType}
+            </if>
+            <if test="brand != null and brand != ''">
+                and b.brand = #{brand}
+            </if>
+            <if test="cabinetId != null and cabinetId != ''">
+                <![CDATA[and f.cabinet_id LIKE concat(#{cabinetId}, '%')]]>
+            </if>
+            <if test="batteryId != null and batteryId != ''">
+                <![CDATA[and f.battery_id LIKE concat(#{batteryId}, '%')]]>
+            </if>
+            <if test="orderId != null and orderId != ''">
+                <![CDATA[and f.order_id LIKE concat(#{orderId}, '%')]]>
+            </if>
+            <if test="batteryDetailFlag != null and batteryDetailFlag == 1 ">
+                <foreach collection="batteryFaultList" item="item" open=" AND f.fault_type in (" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.hdg.FaultLog" resultType="cn.com.yusong.yhdg.common.domain.hdg.FaultLog">
+        select f.*,b.brand from hdg_fault_log f LEFT  JOIN hdg_battery b on f.battery_id=b.id
+        <trim prefix="where" prefixOverrides="and">
+            <if test="faultLevel != null and faultLevel != 0 and faultLevel != -1 ">
+                and f.fault_level = #{faultLevel}
+            </if>
+            <if test="faultLevel == 0">
+                and f.fault_level in (2,3)
+            </if>
+            <if test="agentId != null">
+                and f.agent_id = #{agentId}
+            </if>
+            <if test="status != null and status != 0">
+                and f.status = #{status}
+            </if>
+            <if test="faultType != null">
+                and f.fault_type = #{faultType}
+            </if>
+            <if test="brand != null and brand != ''">
+                and b.brand = #{brand}
+            </if>
+            <if test="cabinetId != null and cabinetId != ''">
+                <![CDATA[and f.cabinet_id LIKE concat(#{cabinetId}, '%')]]>
+            </if>
+            <if test="batteryId != null and batteryId != ''">
+                <![CDATA[and f.battery_id LIKE concat(#{batteryId}, '%')]]>
+            </if>
+            <if test="orderId != null and orderId != ''">
+                <![CDATA[and f.order_id LIKE concat(#{orderId}, '%')]]>
+            </if>
+            <if test="batteryDetailFlag != null and batteryDetailFlag == 1 ">
+                <foreach collection="batteryFaultList" item="item" open=" AND f.fault_type in (" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </trim>
+        order by id desc
+        limit ${beginIndex}, ${rows}
+    </select>
+
+    <update id="handle" parameterType="cn.com.yusong.yhdg.common.domain.hdg.FaultLog">
+        update hdg_fault_log set
+        handle_type = #{handleType},
+        handle_memo = #{handleMemo},
+        handle_time =#{handleTime} ,
+        handler_name = #{handlerName},
+        status = #{status}
+        where id = #{id}
+    </update>
+
+</mapper>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.appserver.persistence.basic.PartnerMpOpenIdMapper">
+
+    <select id="findByOpenId" resultType="cn.com.yusong.yhdg.common.domain.basic.PartnerMpOpenId">
+        select
+            *
+        from bas_partner_mp_open_id
+        where partner_id = #{partnerId} and open_id = #{openId}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.PartnerMpOpenId">
+        insert into bas_partner_mp_open_id(partner_id, open_id, customer_id, nickname, photo_path, create_time)
+        values(#{partnerId}, #{openId}, #{customerId}, #{nickname}, #{photoPath}, #{createTime})
+    </insert>
+
+    <update id="update">
+        update bas_partner_mp_open_id set nickname = #{nickname}, photo_path = #{photoPath} where partner_id = #{partnerId} and  open_id = #{openId}
+    </update>
+
+    <update id="updateCustomerId">
+        update bas_partner_mp_open_id set customer_id = #{customerId} where partner_id = #{partnerId} and  open_id = #{openId}
+    </update>
+
+</mapper>

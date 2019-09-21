@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.hdg.BatteryUtilizeMapper">
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.hdg.BatteryUtilize" resultType="int">
+        select
+        count(*)
+        from hdg_battery_utilize
+        <trim prefix="where" prefixOverrides="and">
+            <if test="batteryId != null and batteryId != ''">
+                <![CDATA[and battery_id LIKE concat(#{batteryId}, '%')]]>
+            </if>
+            <if test="cabinetId != null and cabinetId != ''">
+                <![CDATA[and cabinet_id LIKE concat(#{cabinetId}, '%')]]>
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.hdg.BatteryUtilize"
+            resultType="cn.com.yusong.yhdg.common.domain.hdg.BatteryUtilize">
+        select
+        *
+        from hdg_battery_utilize
+        <trim prefix="where" prefixOverrides="and">
+            <if test="batteryId != null and batteryId != ''">
+                <![CDATA[and battery_id LIKE concat(#{batteryId}, '%')]]>
+            </if>
+            <if test="cabinetId != null and cabinetId != ''">
+                <![CDATA[and cabinet_id LIKE concat(#{cabinetId}, '%')]]>
+            </if>
+        </trim>
+        order by id desc
+        limit ${beginIndex}, ${rows}
+    </select>
+
+
+</mapper>

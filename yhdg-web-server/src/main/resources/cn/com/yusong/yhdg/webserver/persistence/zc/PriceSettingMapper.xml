@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.zc.PriceSettingMapper">
+
+    <select id="findCountByModelId" resultType="int">
+        select
+        count(*)
+        from zc_price_setting
+        where model_id = #{modelId}
+    </select>
+
+    <select id="find" parameterType="long" resultType="cn.com.yusong.yhdg.common.domain.zc.PriceSetting">
+        select
+        *
+        from zc_price_setting
+        where id = #{id}
+    </select>
+
+    <select id="findListByAgentId" resultType="cn.com.yusong.yhdg.common.domain.zc.PriceSetting">
+        select * from zc_price_setting
+        where agent_id = #{agentId}
+    </select>
+
+    <select id="findByAgentId" resultType="cn.com.yusong.yhdg.common.domain.zc.PriceSetting">
+        select * from zc_price_setting
+        where agent_id = #{agentId}
+        and category = #{category}
+        and model_id = #{modelId} and is_active = 1
+        limit 1
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.zc.PriceSetting" resultType="int">
+        select
+        count(*)
+        from zc_price_setting
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null">
+                and agent_id = #{agentId}
+            </if>
+            <if test="settingName != null and settingName != '' ">
+                <![CDATA[and setting_name LIKE concat('%', #{settingName}, '%')]]>
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.zc.PriceSetting"
+            resultType="cn.com.yusong.yhdg.common.domain.zc.PriceSetting">
+        select
+        *
+        from zc_price_setting
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null">
+                and agent_id = #{agentId}
+            </if>
+            <if test="settingName != null and settingName != '' ">
+                <![CDATA[and setting_name LIKE concat('%', #{settingName}, '%')]]>
+            </if>
+        </trim>
+        order by id desc
+        limit #{beginIndex}, #{rows}
+    </select>
+
+    <select id="findNotShopPricePageCount" parameterType="cn.com.yusong.yhdg.common.domain.zc.PriceSetting" resultType="int">
+        select
+        count(*)
+        from zc_price_setting
+        WHERE id NOT IN (SELECT price_setting_id FROM zc_shop_price_setting)
+            <if test="agentId != null">
+                and agent_id = #{agentId}
+            </if>
+            <if test="settingName != null and settingName != '' ">
+                <![CDATA[and setting_name LIKE concat('%', #{settingName}, '%')]]>
+            </if>
+    </select>
+
+    <select id="findNotShopPricePageResult" parameterType="cn.com.yusong.yhdg.common.domain.zc.PriceSetting"
+            resultType="cn.com.yusong.yhdg.common.domain.zc.PriceSetting">
+        select
+        *
+        from zc_price_setting
+        WHERE id NOT IN (SELECT price_setting_id FROM zc_shop_price_setting)
+            <if test="agentId != null">
+                and agent_id = #{agentId}
+            </if>
+            <if test="settingName != null and settingName != '' ">
+                <![CDATA[and setting_name LIKE concat('%', #{settingName}, '%')]]>
+            </if>
+        order by id desc
+        limit #{beginIndex}, #{rows}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.zc.PriceSetting" useGeneratedKeys="true" keyProperty="id">
+        insert into zc_price_setting(
+            setting_name,
+            agent_id,
+            agent_name,
+            agent_code,
+            model_id,
+            vehicle_name,
+            category,
+            battery_count,
+            min_price,
+            max_price,
+            is_active,
+            create_time
+        ) values (
+            #{settingName},
+            #{agentId},
+            #{agentName},
+            #{agentCode},
+            #{modelId},
+            #{vehicleName},
+            #{category},
+            #{batteryCount},
+            #{minPrice},
+            #{maxPrice},
+            #{isActive},
+            #{createTime}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE zc_price_setting SET
+            setting_name = #{settingName},
+            agent_id = #{agentId},
+            agent_name = #{agentName},
+            agent_code = #{agentCode},
+            model_id = #{modelId},
+            vehicle_name = #{vehicleName},
+            is_active = #{isActive},
+            category = #{category},
+            battery_type = #{batteryType},
+            battery_count = #{batteryCount},
+            is_active = #{isActive}
+        WHERE id = #{id}
+    </update>
+
+    <update id="updatePrice">
+        UPDATE zc_price_setting SET
+        min_price = #{minPrice},
+        max_price = #{maxPrice}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="long">
+        delete from zc_price_setting where id = #{id}
+    </delete>
+
+</mapper>

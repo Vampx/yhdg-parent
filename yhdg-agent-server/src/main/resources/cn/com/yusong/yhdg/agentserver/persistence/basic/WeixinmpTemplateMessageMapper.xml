@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.basic.WeixinmpTemplateMessageMapper">
+
+    <resultMap id="resultMap" type="cn.com.yusong.yhdg.common.domain.basic.WeixinmpTemplateMessage" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="agent_id" property="agentId" jdbcType="INTEGER" />
+        <result column="source_id" property="sourceId" jdbcType="INTEGER" />
+        <result column="source_type" property="sourceType" jdbcType="VARCHAR" />
+        <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+        <result column="open_id" property="openId" jdbcType="VARCHAR" />
+        <result column="handle_time" property="handleTime" jdbcType="DATE" />
+        <result column="create_time" property="createTime" jdbcType="DATE" />
+        <result column="status" property="status" jdbcType="INTEGER" />
+        <result column="type" property="type" jdbcType="INTEGER" />
+        <result column="resend_num" property="resendNum" jdbcType="INTEGER" />
+        <result column="delay" property="delay" jdbcType="INTEGER" />
+        <result column="variable" property="variable" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <sql id="column_list">
+       id,agent_id,source_id,source_type,mobile,open_id,handle_time,create_time,status,type,resend_num,delay,variable
+    </sql>
+
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.WeixinmpTemplateMessage" useGeneratedKeys="true" keyProperty="id">
+        insert into bas_weixinmp_template_message(agent_id, source_id, source_type, mobile, nickname,  weixinmp_id, open_id, handle_time, create_time, status, type, resend_num, delay, variable, url, read_count)
+        values( #{agentId},#{sourceId}, #{sourceType}, #{mobile}, #{nickname}, #{weixinmpId}, #{openId}, #{handleTime}, #{createTime}, #{status}, #{type}, #{resendNum}, #{delay}, #{variable}, #{url}, #{readCount})
+    </insert>
+
+    <select id="findPageResult" resultType="cn.com.yusong.yhdg.common.domain.basic.WeixinmpTemplateMessage" parameterType="cn.com.yusong.yhdg.common.domain.basic.WeixinmpTemplateMessage">
+        select
+          *
+        from bas_weixinmp_template_message
+        <trim prefix="where" prefixOverrides="and">
+            <if test="id != null and id != ''">
+                and id =#{id}
+            </if>
+            <if test="sourceType != null and sourceType != ''">
+                and source_type = #{sourceType}
+            </if>
+            <if test="mobile != null and mobile != ''">
+                <![CDATA[and mobile LIKE concat('%', #{mobile}, '%')]]>
+            </if>
+            <if test="status != null and status != ''">
+                and status = #{status}
+            </if>
+            <if test="type != null and type != ''">
+                and type = #{type}
+            </if>
+            <if test="sourceId != null and sourceId != ''">
+                <![CDATA[and  source_id LIKE concat(#{sourceId}, '%')]]>
+            </if>
+            <if test="weixinmpId != null">
+                and weixinmp_id = #{weixinmpId}
+            </if>
+        </trim>
+        order by create_time DESC
+        limit ${beginIndex}, ${rows}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.basic.WeixinmpTemplateMessage" resultType="int">
+        select
+        count(*)
+        from bas_weixinmp_template_message
+        <trim prefix="where" prefixOverrides="and">
+            <if test="id != null and id != ''">
+                and id =#{id}
+            </if>
+            <if test="sourceType != null and sourceType != ''">
+                and source_type = #{sourceType}
+            </if>
+            <if test="mobile != null and mobile != ''">
+                <![CDATA[and mobile LIKE concat('%', #{mobile}, '%')]]>
+            </if>
+            <if test="status != null and status != ''">
+                and status = #{status}
+            </if>
+            <if test="type != null and type != ''">
+                and type = #{type}
+            </if>
+            <if test="sourceId != null and sourceId != ''">
+                <![CDATA[and  source_id LIKE concat( #{sourceId}, '%')]]>
+            </if>
+            <if test="weixinmpId != null">
+                and weixinmp_id = #{weixinmpId}
+            </if>
+        </trim>
+    </select>
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.basic.WeixinmpTemplateMessage">
+        select
+        *
+        from  bas_weixinmp_template_message
+        where id = #{id}
+    </select>
+
+    <select id="findCount" resultType="int">
+        select
+        ifnull(count(1), 0)
+        from  bas_weixinmp_template_message
+        <trim prefix="where" prefixOverrides="and">
+            <if test="variable != null and variable != ''">
+                <![CDATA[and variable LIKE concat('%', #{variable}, '%')]]>
+            </if>
+            <if test="beginTime != null">
+                <![CDATA[ and create_time >= #{beginTime} ]]>
+            </if>
+            <if test="endTime != null">
+                <![CDATA[ and create_time < #{endTime} ]]>
+            </if>
+        </trim>
+    </select>
+
+    <update id="update">
+        update bas_weixinmp_template_message set code = #{code} where id = #{id}
+    </update>
+
+</mapper>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.basic.CustomerDepositGiftMapper">
+
+    <select id="findAll" resultType="cn.com.yusong.yhdg.common.domain.basic.CustomerDepositGift">
+        select
+            *
+        from bas_customer_deposit_gift
+        order by money asc
+    </select>
+
+    <select id="findPartnerId" resultType="cn.com.yusong.yhdg.common.domain.basic.CustomerDepositGift">
+        select
+            money,
+            gift
+        from bas_customer_deposit_gift
+        where 1 = 1
+        and partner_id = #{partnerId}
+        order by money asc
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.CustomerDepositGift">
+        insert into bas_customer_deposit_gift(partner_id, money, gift)
+        values(#{partnerId}, #{money}, #{gift})
+    </insert>
+
+    <delete id="delete" parameterType="int">
+        delete from bas_customer_deposit_gift
+        where partner_id = #{partnerId}
+    </delete>
+</mapper>

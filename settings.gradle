@@ -1,0 +1,16 @@
+rootProject.name = 'yhdg-parent'
+
+include 'yhdg-agent-server'
+include 'yhdg-agent-app-server'
+include 'yhdg-app-server'
+include 'yhdg-battery-server'
+include 'yhdg-cabinet-server'
+include 'yhdg-vehicle-server'
+include 'yhdg-common'
+include 'yhdg-front-server'
+include 'yhdg-route-server'
+include 'yhdg-service-server'
+include 'yhdg-static-server'
+include 'yhdg-web-server'
+include 'yhdg-weixin-server'
+

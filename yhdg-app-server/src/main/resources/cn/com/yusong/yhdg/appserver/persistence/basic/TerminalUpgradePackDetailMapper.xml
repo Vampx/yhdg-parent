@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.appserver.persistence.basic.TerminalUpgradePackDetailMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.basic.TerminalUpgradePackDetail">
+        select
+        *
+        from  bas_terminal_upgrade_pack_detail
+        where upgrade_pack_id = #{upgradePackId}
+        and terminal_id = #{terminalId}
+    </select>
+
+    <select id="findByUpgradePackId" resultType="cn.com.yusong.yhdg.common.domain.basic.TerminalUpgradePackDetail">
+        select
+        *
+        from  bas_terminal_upgrade_pack_detail
+        where upgrade_pack_id = #{upgradePackId}
+    </select>
+
+</mapper>

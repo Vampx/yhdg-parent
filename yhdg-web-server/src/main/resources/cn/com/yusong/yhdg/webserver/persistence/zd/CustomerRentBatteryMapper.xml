@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.zd.CustomerRentBatteryMapper">
+    <select id="findByCustomerId" parameterType="long" resultType="cn.com.yusong.yhdg.common.domain.zd.CustomerRentBattery">
+        select
+        *
+        from zd_customer_rent_battery
+        where customer_id = #{customerId}
+    </select>
+
+    <select id="exists" parameterType="long" resultType="int">
+        select
+        count(1)
+        from zd_customer_rent_battery
+        where customer_id = #{customerId}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.zd.CustomerRentBattery" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into zd_customer_rent_battery(
+        customer_id,
+        agent_id,
+        battery_id,
+        battery_type,
+        battery_order_id,
+        back_battery_order_id
+        ) values (
+        #{customerId},
+        #{agentId},
+        #{batteryId},
+        #{batteryType},
+        #{batteryOrderId},
+        #{backBatteryOrderId}
+        )
+    </insert>
+
+    <update id="updateVehicleInfo">
+        update zd_customer_rent_battery set
+        battery_id = #{batteryId},
+        battery_type = #{batteryType},
+        battery_order_id = #{batteryOrderId},
+        where customer_id = #{customerId}
+    </update>
+
+    <delete id="clearBattery">
+        delete from  zd_customer_rent_battery
+        where customer_id = #{customerId}
+        and battery_id = #{batteryId}
+    </delete>
+
+    <update id="updateBattery">
+        update zd_customer_rent_battery set
+        battery_id = #{batteryId}
+        where customer_id = #{customerId}
+    </update>
+
+    <delete id="deleteByCustomerId" parameterType="long">
+        delete from zd_customer_rent_battery where customer_id = #{customerId}
+    </delete>
+
+</mapper>

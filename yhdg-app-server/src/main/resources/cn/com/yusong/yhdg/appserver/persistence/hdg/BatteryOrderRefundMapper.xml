@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.appserver.persistence.hdg.BatteryOrderRefundMapper">
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.BatteryOrderRefund">
+        insert into hdg_battery_order_refund
+        (id, agent_id,cabinet_id, money, refund_time, refund_status, refund_reason, refund_money, refund_operator,
+        apply_refund_time, create_time, customer_id, customer_mobile, customer_fullname)
+        values
+        (#{id},#{agentId},#{cabinetId},#{money},#{refundTime},#{refundStatus},#{refundReason}
+        ,#{refundMoney},#{refundOperator},#{applyRefundTime},#{createTime},#{customerId},#{customerMobile},#{customerFullname})
+    </insert>
+</mapper>

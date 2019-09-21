@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.hdg.DistributionOperateMapper">
+
+    <select id="find" parameterType="long" resultType="cn.com.yusong.yhdg.common.domain.hdg.DistributionOperate">
+        select
+        *
+        from hdg_distribution_operate
+        where id = #{id}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.hdg.DistributionOperate" resultType="int">
+        select
+        count(*)
+        from hdg_distribution_operate
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null">
+                and agent_id = #{agentId}
+            </if>
+            <if test="isActive != null">
+                and is_active = #{isActive}
+            </if>
+            <if test="distributionName != null and distributionName != '' ">
+                <![CDATA[and distribution_name LIKE concat(#{distributionName}, '%')]]>
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.hdg.DistributionOperate"
+            resultType="cn.com.yusong.yhdg.common.domain.hdg.DistributionOperate">
+        select
+          *
+        from hdg_distribution_operate
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null">
+                and agent_id = #{agentId}
+            </if>
+            <if test="isActive != null">
+                and is_active = #{isActive}
+            </if>
+            <if test="distributionName != null and distributionName != '' ">
+                <![CDATA[and distribution_name LIKE concat(#{distributionName}, '%')]]>
+            </if>
+        </trim>
+        ORDER BY id DESC
+        limit #{beginIndex}, #{rows}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.DistributionOperate" useGeneratedKeys="true" keyProperty="id">
+        insert into hdg_distribution_operate (
+        agent_id,
+        agent_name,
+        agent_code,
+        is_active,
+        distribution_name,
+        login_name,
+        password,
+        fullname,
+        pay_people_mobile,
+        pay_people_name,
+        pay_people_mp_open_id,
+        pay_people_fw_open_id,
+        pay_password,
+        memo,
+        create_time
+        )
+        values(
+        #{agentId},
+        #{agentName},
+        #{agentCode},
+        #{isActive},
+        #{distributionName},
+        #{loginName},
+        #{password},
+        #{fullname},
+        #{payPeopleMobile},
+        #{payPeopleName},
+        #{payPeopleMpOpenId},
+        #{payPeopleFwOpenId},
+        #{payPassword},
+        #{memo},
+        #{createTime}
+        )
+    </insert>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.hdg.DistributionOperate">
+        update hdg_distribution_operate set
+        <trim suffix="" suffixOverrides=",">
+            <if test="agentId != null">
+                agent_id = #{agentId},
+            </if>
+            <if test="isActive != null">
+                is_active = #{isActive},
+            </if>
+            <if test="distributionName != null and distributionName != ''">
+                distribution_name = #{distributionName},
+            </if>
+            <if test="loginName != null and loginName != ''">
+                login_name = #{loginName},
+            </if>
+            <if test="password != null and password != ''">
+                password = #{password},
+            </if>
+            <if test="fullname != null and fullname != ''">
+                fullname = #{fullname},
+            </if>
+            <if test="payPeopleMobile != null and payPeopleMobile != ''">
+                pay_people_mobile = #{payPeopleMobile},
+            </if>
+            <if test="payPeopleName != null and payPeopleName != ''">
+                pay_people_name = #{payPeopleName},
+            </if>
+            <if test="payPeopleMpOpenId != null and payPeopleMpOpenId != ''">
+                pay_people_mp_open_id  = #{payPeopleMpOpenId},
+            </if>
+            <if test="payPeopleFwOpenId != null and payPeopleFwOpenId != ''">
+                pay_people_fw_open_id   = #{payPeopleFwOpenId},
+            </if>
+            <if test="memo != null and memo != ''">
+                memo   = #{memo},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="delete">
+        delete from hdg_distribution_operate where id = #{id}
+    </delete>
+
+</mapper>

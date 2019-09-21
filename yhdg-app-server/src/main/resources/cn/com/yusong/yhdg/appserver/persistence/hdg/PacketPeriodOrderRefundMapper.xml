@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.appserver.persistence.hdg.PacketPeriodOrderRefundMapper">
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.PacketPeriodOrderRefund">
+        insert into hdg_packet_period_order_refund (id, agent_id, money, customer_id,
+        customer_mobile, customer_fullname, refund_status, refund_reason, apply_refund_time, refund_time, refund_money, refund_photo, refund_operator, create_time)
+        VALUES (#{id}, #{agentId}, #{money}, #{customerId},
+          #{customerMobile}, #{customerFullname}, #{refundStatus}, #{refundReason}, #{applyRefundTime}, #{refundTime}, #{refundMoney}, #{refundPhoto}, #{refundOperator}, #{createTime}
+        )
+    </insert>
+</mapper>

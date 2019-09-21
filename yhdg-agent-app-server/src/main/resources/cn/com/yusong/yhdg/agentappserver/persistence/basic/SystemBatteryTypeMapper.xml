@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.agentappserver.persistence.basic.SystemBatteryTypeMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.basic.SystemBatteryType">
+        select
+        *
+        from bas_system_battery_type
+        where id = #{id}
+    </select>
+
+    <select id="findList" resultType="cn.com.yusong.yhdg.common.domain.basic.SystemBatteryType">
+        select *
+        FROM bas_system_battery_type
+        WHERE is_active = 1
+        <if test="typeName != null and typeName != ''">
+            <![CDATA[and type_name LIKE concat('%', #{typeName}, '%')]]>
+        </if>
+        ORDER BY id
+    </select>
+
+</mapper>

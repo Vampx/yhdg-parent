@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.frontserver.persistence.yms.PublishedPlaylistDetailMapper">
+
+    <select id="findByPlaylist" resultType="cn.com.yusong.yhdg.common.domain.yms.PublishedPlaylistDetail">
+        select
+            id,
+            detail_id as detailId,
+            playlist_id as playlistId,
+            detail_name as detailName,
+            begin_time as beginTime,
+            end_time as endTime,
+            create_time as createTime
+        from yms_published_playlist_detail
+        where playlist_id = #{playlistId}
+    </select>
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.yms.PublishedPlaylistDetail" parameterType="long">
+        select
+            id,
+            detail_id as detailId,
+            playlist_id as playlistId,
+            detail_name as detailName,
+            begin_time as beginTime,
+            end_time as endTime,
+            create_time as createTime
+        from yms_published_playlist_detail
+        where id = #{id}
+    </select>
+
+</mapper>

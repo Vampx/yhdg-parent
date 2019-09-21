@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.serviceserver.persistence.basic.AlipayfwPayOrderMapper">
+    <select id="findPartnerIncrement" resultType="cn.com.yusong.yhdg.common.domain.basic.AlipayfwPayOrder">
+      select
+        partner_id as partnerId,
+        sum(money) as money
+       from bas_alipayfw_pay_order
+      WHERE handle_time &lt;= #{endTime}
+        AND handle_time &gt;= #{beginTime}
+        group by partner_id
+    </select>
+</mapper>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.appserver.persistence.hdg.ExchangeInstallmentCountDetailMapper">
+
+    <select id="find" parameterType="long" resultType="cn.com.yusong.yhdg.common.domain.hdg.ExchangeInstallmentCountDetail">
+        select
+        *
+        from hdg_exchange_installment_count_detail
+        where id = #{id}
+    </select>
+
+    <select id="findCountId" parameterType="long" resultType="cn.com.yusong.yhdg.common.domain.hdg.ExchangeInstallmentCountDetail">
+        select
+        *
+        from hdg_exchange_installment_count_detail
+        where count_id = #{countId}
+        ORDER  BY num ASC
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.hdg.ExchangeInstallmentCountDetail" resultType="int">
+        select
+        count(id)
+        from hdg_exchange_installment_count_detail
+        where 1 = 1
+        <if test="estateName != null and estateName != ''">
+            <![CDATA[and estate_name LIKE concat('%', #{estateName}, '%')]]>
+        </if>
+        <if test="agentId != null">
+            and agent_id = #{agentId}
+        </if>
+        <if test="id != null and id != ''">
+            <![CDATA[and id LIKE concat(#{id}, '%')]]>
+        </if>
+    </select>
+
+</mapper>

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.hdg.VipPacketPeriodPriceMapper">
+
+    <select id="find" parameterType="long" resultType="cn.com.yusong.yhdg.common.domain.hdg.VipPacketPeriodPrice">
+        SELECT
+        *
+        FROM hdg_vip_packet_period_price
+        WHERE id = #{id}
+    </select>
+
+    <select id="findListByVipForegiftId"  resultType="cn.com.yusong.yhdg.common.domain.hdg.VipPacketPeriodPrice">
+        SELECT
+        *
+        FROM hdg_vip_packet_period_price
+        where vip_foregift_id = #{vipForegiftId} and vip_foregift_id != 0
+    </select>
+
+    <select id="findListByForegiftId"  resultType="cn.com.yusong.yhdg.common.domain.hdg.VipPacketPeriodPrice">
+        SELECT
+        *
+        FROM hdg_vip_packet_period_price
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null">
+                and agent_id = #{agentId}
+            </if>
+            <if test="batteryType != null">
+                and battery_type = #{batteryType}
+            </if>
+            <if test="foregiftId != null">
+                and foregift_id = #{foregiftId}
+            </if>
+            <if test="priceId != null and priceId != 0">
+                and price_id = #{priceId}
+            </if>
+            <if test="vipForegiftId != null and vipForegiftId != 0">
+                and vip_foregift_id = #{vipForegiftId}
+            </if>
+        </trim>
+    </select>
+
+    <select id="findByPriceIdAndForegiftId" resultType="cn.com.yusong.yhdg.common.domain.hdg.VipPacketPeriodPrice">
+        select *
+        from hdg_vip_packet_period_price
+        where price_id = #{priceId} and foregift_id = #{foregiftId}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.VipPacketPeriodPrice" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO hdg_vip_packet_period_price(
+          vip_foregift_id,
+          price_id,
+          agent_id,
+          agent_name,
+          agent_code,
+          foregift_id,
+          battery_type,
+          day_count,
+          price,
+          limit_count,
+          day_limit_count,
+          is_ticket,
+          memo,
+          create_time
+        ) VALUES (
+          #{vipForegiftId},
+          #{priceId},
+          #{agentId},
+          #{agentName},
+          #{agentCode},
+          #{foregiftId},
+          #{batteryType},
+          #{dayCount},
+          #{price},
+          #{limitCount},
+          #{dayLimitCount},
+          #{isTicket},
+          #{memo},
+          #{createTime}
+        )
+    </insert>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.hdg.VipPacketPeriodPrice">
+        update hdg_vip_packet_period_price SET
+          agent_name = #{agentName},
+          agent_code = #{agentCode},
+          day_count = #{dayCount},
+          price = #{price},
+          limit_count = #{limitCount},
+          day_limit_count = #{dayLimitCount},
+          is_ticket = #{isTicket},
+          memo = #{memo}
+          where id = #{id}
+    </update>
+
+    <update id="updatePriceId">
+        update hdg_vip_packet_period_price set
+        price_id = #{priceId}
+        where id = #{id}
+    </update>
+
+    <delete id="delete">
+        delete from hdg_vip_packet_period_price where id = #{id}
+    </delete>
+
+    <delete id="deleteByPriceId">
+        delete from hdg_vip_packet_period_price
+        where price_id = #{priceId}
+    </delete>
+
+</mapper>

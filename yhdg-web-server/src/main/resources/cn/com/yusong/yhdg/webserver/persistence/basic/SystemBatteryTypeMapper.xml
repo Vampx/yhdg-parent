@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.basic.SystemBatteryTypeMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.basic.SystemBatteryType">
+        select
+        *
+        from bas_system_battery_type
+        where id = #{id}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.basic.SystemBatteryType" resultType="int">
+        select count(*) from bas_system_battery_type
+        <trim prefix="where" prefixOverrides="and">
+            <if test="typeName != null and typeName != ''">
+                <![CDATA[and type_name LIKE concat('%', #{typeName}, '%')]]>
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.basic.SystemBatteryType"
+            resultType="cn.com.yusong.yhdg.common.domain.basic.SystemBatteryType">
+        select
+        *
+        from bas_system_battery_type
+        <trim prefix="where" prefixOverrides="and">
+            <if test="typeName != null and typeName != ''">
+                <![CDATA[and type_name LIKE concat('%', #{typeName}, '%')]]>
+            </if>
+        </trim>
+        order by create_time desc
+        limit ${beginIndex}, ${rows}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.SystemBatteryType" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO bas_system_battery_type(
+        type_name,
+        is_active,
+        memo,
+        rated_voltage,
+        rated_capacity,
+        create_time
+        ) VALUES (
+        #{typeName},
+        #{isActive},
+        #{memo},
+        #{ratedVoltage},
+        #{ratedCapacity},
+        #{createTime}
+        )
+    </insert>
+
+    <update id="update">
+        update bas_system_battery_type set
+        type_name = #{typeName},
+        rated_voltage = #{ratedVoltage},
+        rated_capacity = #{ratedCapacity},
+        is_active = #{isActive},
+        memo = #{memo}
+        where id = #{id}
+    </update>
+
+    <delete id="delete">
+        delete from bas_system_battery_type where id = #{id}
+    </delete>
+
+</mapper>

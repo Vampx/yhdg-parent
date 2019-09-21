@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.batteryserver.persistence.hdg.BatteryOrderBatteryReportLogMapper">
+
+    <update id="createTable">
+         create table if not exists ${tableName} (
+             order_id char(32) not null,
+             report_time datetime, /*上报时间*/
+             volume smallint(6), /*当前电量*/
+             temp varchar(40), /*温度*/
+             lng double, /*经度*/
+             lat double, /*纬度*/
+             coordinate_type varchar(10), /*经纬类型*/
+             distance int, /*距离*/
+             current_signal smallint, /*当前信号*/
+             address varchar(40), /*地址*/
+             primary key (order_id, report_time)
+            ) engine=innodb default charset=utf8;
+    </update>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.BatteryOrderBatteryReportLog">
+        INSERT INTO hdg_battery_order_battery_report_log_${suffix}  (`order_id`, `report_time`, `volume`, `temp`, `lng`, `lat`,`coordinate_type`, `distance`, `current_signal`, `address`)
+        VALUES (#{orderId}, #{reportTime}, #{volume}, #{temp}, #{lng}, #{lat}, #{coordinateType}, #{distance}, #{currentSignal}, #{address})
+    </insert>
+
+</mapper>

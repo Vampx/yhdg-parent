@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.cabinetserver.persistence.hdg.KeepTakeOrderMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.hdg.KeepTakeOrder">
+        select
+            *
+        from hdg_keep_take_order
+        where id = #{id}
+    </select>
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.KeepTakeOrder">
+        insert into hdg_keep_take_order(
+            id,
+            agent_id,
+            dispatcher_id,
+            cabinet_id,
+            cabinet_name,
+            order_count,
+            last_time,
+            create_time
+        )
+        values(
+          #{id},
+          #{agentId},
+          #{dispatcherId},
+          #{cabinetId},
+          #{cabinetName},
+          #{orderCount},
+          #{lastTime},
+          #{createTime}
+        )
+    </insert>
+
+    <update id="updateOrderCount">
+        update hdg_keep_take_order set
+            last_time = #{lastTime},
+            order_count = #{orderCount}
+        where id = #{id}
+    </update>
+
+</mapper>

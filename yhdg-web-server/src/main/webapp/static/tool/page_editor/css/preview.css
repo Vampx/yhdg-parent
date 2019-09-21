@@ -1,0 +1,10 @@
+table {
+    text-decoration: inherit;
+}
+.editor_control {
+    position:absolute;
+    overflow: hidden;
+}
+.editor_control_content {
+    position:absolute;
+}

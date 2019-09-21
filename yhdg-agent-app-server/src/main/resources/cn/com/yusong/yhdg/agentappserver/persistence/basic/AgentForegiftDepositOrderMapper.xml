@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.com.yusong.yhdg.agentappserver.persistence.basic.AgentForegiftDepositOrderMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.basic.AgentForegiftDepositOrder">
+        select *
+        from  bas_agent_foregift_deposit_order
+        where id=#{id}
+    </select>
+
+    <select id="findList" resultType="cn.com.yusong.yhdg.common.domain.basic.AgentForegiftDepositOrder">
+        select *
+        from  bas_agent_foregift_deposit_order
+        where agent_id = #{agentId}
+          and status =2
+          and category = #{category}
+        order by create_time desc
+        limit #{offset},#{limit}
+    </select>
+
+    <select id="sumMoney" resultType="int">
+        select ifnull(SUM(money),0) as money
+        from  bas_agent_foregift_deposit_order
+        where agent_id = #{agentId}
+         and  status =  #{status}
+         and category = #{category}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.AgentForegiftDepositOrder" keyProperty="id" useGeneratedKeys="true">
+        insert into bas_agent_foregift_deposit_order (
+        id,category,partner_id,agent_id,agent_name, agent_code,money,status,handle_time,pay_type,
+        operator,create_time)  values (
+        #{id},#{category},#{partnerId},#{agentId},#{agentName},
+        #{agentCode},#{money},#{status},#{handleTime},#{payType},#{operator},#{createTime})
+    </insert>
+
+</mapper>

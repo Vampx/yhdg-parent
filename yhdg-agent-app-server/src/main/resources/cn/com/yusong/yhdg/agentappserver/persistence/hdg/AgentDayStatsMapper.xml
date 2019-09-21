@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.agentappserver.persistence.hdg.AgentDayStatsMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.hdg.AgentDayStats">
+        select
+        *
+        from hdg_agent_day_stats
+        where  agent_id = #{agentId}
+        and stats_date = #{statsDate}
+        and category = #{category}
+        limit 1
+    </select>
+
+    <select id="findAgentDayTotal" resultType="cn.com.yusong.yhdg.common.domain.hdg.AgentDayStats">
+        select
+        ifnull(sum(foregift_count), 0) as foregiftCount,
+        ifnull(sum(refund_packet_period_order_count), 0) as refundPacketPeriodOrderCount,
+        ifnull(sum(foregift_refund_count), 0) as foregiftRefundCount,
+        ifnull(sum(insurance_refund_count), 0) as insuranceRefundCount,
+        ifnull(sum(deduction_ticket_money), 0) as deductionTicketMoney,
+        ifnull(sum(foregift_money), 0) as foregiftMoney,
+        ifnull(sum(foregift_refund_money), 0) as foregiftRefundMoney,
+        ifnull(sum(packet_period_money), 0) as packetPeriodMoney,
+        ifnull(sum(refund_packet_period_money), 0) as refundPacketPeriodMoney,
+        ifnull(sum(electric_degree), 0) as electricDegree,
+        ifnull(sum(electric_price), 0) as electricPrice,
+        ifnull(sum(active_customer_count), 0) as activeCustomerCount,
+        ifnull(sum(order_count), 0) as orderCount,
+        ifnull(sum(cabinet_count), 0) as cabinetCount,
+        ifnull(sum(shop_packet_period_money), 0) as shopPacketPeriodMoney,
+        ifnull(sum(shop_refund_packet_period_money), 0) as shopRefundPacketPeriodMoney,
+        ifnull(sum(insurance_money), 0) as insuranceMoney,
+        ifnull(sum(insurance_refund_money), 0) as insuranceRefundMoney
+        from hdg_agent_day_stats
+        where agent_id = #{agentId} and category = #{category}
+        and stats_date between #{beginDate} and #{endDate}
+    </select>
+
+</mapper>

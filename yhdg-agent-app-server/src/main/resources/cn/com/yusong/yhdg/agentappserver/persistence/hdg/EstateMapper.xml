@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.agentappserver.persistence.hdg.EstateMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.hdg.Estate">
+        select * from hdg_estate
+        where id = #{id}
+    </select>
+
+    <update id="updateBalance">
+        <choose>
+            <when test="balance > 0">
+                update hdg_estate set balance = balance + #{balance} where id = #{id}
+            </when>
+            <otherwise>
+                <![CDATA[update hdg_estate set balance = balance + #{balance} where id = #{id} and balance + #{balance} >= 0 ]]>
+            </otherwise>
+        </choose>
+    </update>
+
+    <update id="updatePayPassword">
+        update hdg_estate set pay_password = #{payPassword} where id = #{id}
+    </update>
+
+</mapper>

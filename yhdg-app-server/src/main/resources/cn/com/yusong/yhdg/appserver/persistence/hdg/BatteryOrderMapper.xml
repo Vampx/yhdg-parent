@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.appserver.persistence.hdg.BatteryOrderMapper">
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.BatteryOrder">
+        INSERT INTO hdg_battery_order (
+            id,
+            partner_id,
+            agent_id,
+            battery_type,
+            province_id,
+            city_id,
+            district_id,
+            battery_id,
+            take_shop_id,
+            take_shop_name,
+            take_agent_company_id,
+            take_agent_company_name,
+            take_cabinet_id,
+            take_cabinet_name,
+            take_box_num,
+            take_time,
+            init_volume,
+            put_cabinet_id,
+            put_cabinet_name,
+            put_agent_company_id,
+            put_agent_company_name,
+            put_box_num,
+            put_time,
+            pay_time,
+            pay_type,
+            price,
+            MONEY,
+            current_volume,
+            current_distance,
+            customer_id,
+            customer_mobile,
+            customer_fullname,
+            order_status,
+            refund_status,
+            refund_time,
+            refund_money,
+            address,
+            init_capacity,
+            current_capacity,
+            ticket_name,
+            ticket_money,
+            coupon_ticket_id,
+            packet_period_order_id,
+            vehicle_order_flag,
+            create_time
+        )
+        VALUES
+        (
+            #{id},
+            #{partnerId},
+            #{agentId},
+            #{batteryType},
+            #{provinceId},
+            #{cityId},
+            #{districtId},
+            #{batteryId},
+            #{takeShopId},
+            #{takeShopName},
+            #{takeAgentCompanyId},
+            #{takeAgentCompanyName},
+            #{takeCabinetId},
+            #{takeCabinetName},
+            #{takeBoxNum},
+            #{takeTime},
+            #{initVolume},
+            #{putCabinetId},
+            #{putCabinetName},
+            #{putAgentCompanyId},
+            #{putAgentCompanyName},
+            #{putBoxNum},
+            #{putTime},
+            #{payTime},
+            #{payType},
+            #{price},
+            #{money},
+            #{currentVolume},
+            #{currentDistance},
+            #{customerId},
+            #{customerMobile},
+            #{customerFullname},
+            #{orderStatus},
+            #{refundStatus},
+            #{refundTime},
+            #{refundMoney},
+            #{address},
+            #{initCapacity},
+            #{currentCapacity},
+            #{ticketName},
+            #{ticketMoney},
+            #{couponTicketId},
+            #{packetPeriodOrderId},
+            #{vehicleOrderFlag},
+            #{createTime}
+        )
+    </insert>
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.hdg.BatteryOrder">
+        SELECT
+        *
+        FROM
+        hdg_battery_order
+        WHERE
+        id=#{id}
+    </select>
+
+    <select id="findCountByCustomer" resultType="int">
+        SELECT
+        count(*)
+        FROM
+        hdg_battery_order
+        WHERE
+        customer_id = #{customerId}
+        and id like '${idPrefix}'
+    </select>
+
+    <select id="findListByCustomer" resultType="cn.com.yusong.yhdg.common.domain.hdg.BatteryOrder">
+        SELECT
+        a.*,
+        b.code as batteryCode,
+        b.shell_code
+        FROM
+        hdg_battery_order a left join hdg_battery b on a.battery_id = b.id
+        WHERE
+        a.customer_id = #{customerId}
+        <if test="orderStatus!=null">
+            and a.order_status = #{orderStatus}
+        </if>
+        order by a.take_time DESC
+        <if test="offset!=null and limit!=null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="findListByCustomerAndOrderId" resultType="cn.com.yusong.yhdg.common.domain.hdg.BatteryOrder">
+        SELECT
+        *
+        FROM
+        hdg_battery_order
+        where customer_id = #{customerId}
+        <if test="orderId != null and orderId != ''">
+            and id = #{orderId}
+        </if>
+        order by id DESC
+        limit #{offset},#{limit}
+    </select>
+
+    <select id="findByPacketOrderId" resultType="cn.com.yusong.yhdg.common.domain.hdg.BatteryOrder">
+        SELECT
+        *
+        FROM
+        hdg_battery_order
+        WHERE
+        customer_id = #{customerId}
+        and  packet_period_order_id = #{packetOrderId}
+        order by id desc
+        limit #{offset},#{limit}
+
+    </select>
+
+    <update id="updateMoney">
+        update hdg_battery_order
+        set
+            pay_type = #{payType},
+            price = #{price},
+            money = #{money},
+            ticket_name = #{ticketName},
+            ticket_money = #{ticketMoney},
+            coupon_ticket_id = #{couponTicketId}
+        where id = #{id}
+    </update>
+
+    <update id="payOk">
+        update hdg_battery_order
+        set
+        order_status = #{toStatus},
+        pay_type = #{payType},
+        pay_time = #{payTime},
+        complete_time = #{payTime},
+        price = #{price},
+        money = #{money},
+        ticket_name = #{ticketName},
+        ticket_money = #{ticketMoney},
+        coupon_ticket_id = #{couponTicketId},
+        pay_timeout_fault_log_id = null
+        where id = #{id}
+        <if test="fromStatus != null ">
+            and order_status = #{fromStatus}
+        </if>
+    </update>
+
+    <update id="payOk2">
+        update hdg_battery_order
+        set
+        order_status = #{orderStatus},
+        pay_type = #{payType},
+        pay_time = #{payTime},
+        packet_period_order_id = #{packetPeriodOrderId},
+        price = #{price},
+        money = #{money},
+        pay_timeout_fault_log_id = null
+        where id = #{id}
+    </update>
+
+    <update id="updateStatus">
+        update hdg_battery_order set
+        refund_status = #{refundStatus},
+        refund_money = #{refundMoney},
+        refund_time = #{refundTime},
+        refund_reason = #{refundReason}
+        where id = #{id}
+    </update>
+
+
+    <update id="updatePrice">
+        update hdg_battery_order
+        set
+        price = #{price},
+        money = #{money}
+        where id = #{id}
+    </update>
+
+    <update id="updateErrorMessage">
+        update hdg_battery_order set
+        error_message = #{errorMessage}, error_time = #{errorTime}
+        where id = #{id}
+    </update>
+
+    <update id="updateFaultLog">
+        update hdg_battery_order set
+            <if test="property == 'payTimeoutFaultLogId'">
+                pay_timeout_fault_log_id = null where pay_timeout_fault_log_id = #{value}
+            </if>
+            <if test="property == 'notTakeTimeoutFaultLogId'">
+                not_take_timeout_fault_log_id = null where not_take_timeout_fault_log_id = #{value}
+            </if>
+    </update>
+</mapper>

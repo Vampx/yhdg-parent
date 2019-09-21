@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.yms.TerminalPlayLogMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.yms.TerminalPlayLog">
+        select
+            id,
+            terminal_id as terminalId,
+            agent_id as agentId,
+            material_name as materialName,
+            duration,
+            area_num as areaNum,
+            begin_time as beginTime,
+            end_time as endTime,
+            create_time as createTime
+        from yms_terminal_play_log_${suffix}
+        where id = #{id}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.yms.TerminalPlayLog" resultType="int">
+        select
+            count(id)
+        from yms_terminal_play_log_${suffix}
+        <trim prefix="where" prefixOverrides="and">
+            <if test="materialName != null and materialName != ''">
+                <![CDATA[and material_name LIKE concat('%', #{materialName}, '%')]]>
+            </if>
+            <if test="terminalId != null and terminalId != ''">
+                <![CDATA[and terminal_id = #{terminalId}]]>
+            </if>
+            <if test="agentId != null and agentId != 0">
+                <![CDATA[and agent_id = #{agentId}]]>
+            </if>
+            <if test="queryBeginTime !=null and queryEndTime !=null">
+                <![CDATA[and begin_time BETWEEN  #{queryBeginTime} AND #{queryEndTime} ]]>
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.yms.TerminalPlayLog" resultType="cn.com.yusong.yhdg.common.domain.yms.TerminalPlayLog">
+        select
+            id,
+            terminal_id as terminalId,
+            agent_id as agentId,
+            material_name as materialName,
+            duration,
+            begin_time as beginTime,
+            area_num as areaNum,
+            end_time as endTime,
+            create_time as createTime,
+            '${suffix}' as suffix
+        from yms_terminal_play_log_${suffix}
+        <trim prefix="where" prefixOverrides="and">
+            <if test="materialName != null and materialName != ''">
+                <![CDATA[and material_name LIKE concat('%', #{materialName}, '%')]]>
+            </if>
+            <if test="terminalId != null and terminalId != ''">
+                <![CDATA[and terminal_id = #{terminalId}]]>
+            </if>
+            <if test="agentId != null and agentId != 0">
+                <![CDATA[and agent_id = #{agentId}]]>
+            </if>
+            <if test="queryBeginTime !=null and queryEndTime !=null">
+                <![CDATA[and begin_time BETWEEN  #{queryBeginTime} AND #{queryEndTime} ]]>
+            </if>
+        </trim>
+        order by create_time desc
+        limit #{beginIndex}, #{rows}
+    </select>
+
+    <select id="tableExist" resultType="string">
+        show tables like 'yms_terminal_play_log_${suffix}'
+    </select>
+
+    <select id="findTablelist" resultType="string">
+        SHOW TABLES LIKE 'yms_terminal_play_log_%'
+    </select>
+
+    <update id="createTable">
+        create table if not exists yms_terminal_play_log_${suffix} (
+          id int unsigned not null auto_increment,
+          terminal_id char(6),
+          agent_id smallint unsigned not null,/*运营商id*/
+          material_name varchar(40) not null,
+          area_num int unsigned,
+          duration int unsigned not null,
+          begin_time datetime not null,
+          end_time datetime not null,
+          create_time datetime not null,
+          primary key(id)
+        ) engine=innodb default charset=utf8
+    </update>
+
+
+
+    <update id="createFKAgentId">
+        alter table yms_terminal_play_log_${suffix} add constraint fk_terminal_play_log_${suffix}_agent_id
+        foreign key (agent_id) references bas_agent(id)
+    </update>
+
+    <update id="createFKTerminalId">
+        alter table yms_terminal_play_log_${suffix} add constraint fk_terminal_play_log_${suffix}_terminal_id
+        foreign key (terminal_id) references yms_terminal(id)
+    </update>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.yms.TerminalPlayLog">
+        insert into yms_terminal_play_log_${suffix}(agent_id, terminal_id, area_num, material_name, duration, create_time,begin_time,end_time)
+        values(#{agentId}, #{terminalId}, #{areaNum}, #{materialName}, #{duration}, #{createTime}, #{beginTime}, #{endTime})
+    </insert>
+
+    <delete id="deleteByTerminalId">
+        delete from yms_terminal_play_log_${suffix} where terminal_id = #{terminalId} limit #{limit}
+    </delete>
+
+</mapper>

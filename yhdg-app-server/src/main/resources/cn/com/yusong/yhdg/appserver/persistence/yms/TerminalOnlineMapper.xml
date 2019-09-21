@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.appserver.persistence.yms.TerminalOnlineMapper">
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.yms.TerminalOnline">
+        INSERT INTO `yms_terminal_online` (`id`,  `cpu`, `memory`, `play_volume`, `play_mode`, `card_capacity`, `rest_capacity`, `heart_time`, `newwork_signal`, `is_normal`, `is_online`, `status_info`, `page_uid`, `strategy_uid`, `play_file`, `speed`, `download_progress`)
+         VALUES (#{id},#{cpu},#{memory},#{playVolume},#{playMode},#{cardCapacity},#{restCapacity},#{heartTime},#{newworkSignal},#{isNormal},#{isOnline},#{statusInfo},#{pageUid},#{strategyUid},#{playFile},#{speed},#{downloadProgress})
+    </insert>
+</mapper>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.agentappserver.persistence.hdg.AgentMonthStatsMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.hdg.AgentMonthStats">
+        select
+        *
+        from hdg_agent_month_stats
+        where agent_id = #{agentId}
+        and stats_month = #{statsMonth}
+        and category = #{category}
+        limit 1
+    </select>
+
+    <select id="findList" resultType="cn.com.yusong.yhdg.common.domain.hdg.AgentMonthStats">
+        select
+        *
+        from hdg_agent_month_stats
+        where agent_id = #{agentId}
+        and category = #{category}
+        order by stats_month desc
+    </select>
+
+    <select id="findTotal" resultType="cn.com.yusong.yhdg.common.domain.hdg.AgentMonthStats">
+        select
+        ifnull(sum(foregift_count), 0) as foregiftCount,
+        ifnull(sum(refund_packet_period_order_count), 0) as refundPacketPeriodOrderCount,
+        ifnull(sum(foregift_refund_count), 0) as foregiftRefundCount,
+        ifnull(sum(insurance_refund_count), 0) as insuranceRefundCount,
+        ifnull(sum(deduction_ticket_money), 0) as deductionTicketMoney,
+        ifnull(sum(foregift_money), 0) as foregiftMoney,
+        ifnull(sum(foregift_refund_money), 0) as foregiftRefundMoney,
+        ifnull(sum(agent_packet_period_money), 0) as agentPacketPeriodMoney,
+        ifnull(sum(agent_refund_packet_period_money), 0) as agentRefundPacketPeriodMoney,
+        ifnull(sum(insurance_money), 0) as insuranceMoney,
+        ifnull(sum(insurance_refund_money), 0) as insuranceRefundMoney
+        from hdg_agent_month_stats
+        where agent_id = #{agentId} and category = #{category}
+    </select>
+
+</mapper>

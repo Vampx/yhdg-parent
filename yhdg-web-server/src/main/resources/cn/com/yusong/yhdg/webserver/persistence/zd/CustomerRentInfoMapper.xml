@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.zd.CustomerRentInfoMapper">
+    <select id="find" parameterType="long" resultType="cn.com.yusong.yhdg.common.domain.zd.CustomerRentInfo">
+        select
+        *
+        from zd_customer_rent_info
+        where id = #{id}
+    </select>
+
+    <update id="clearBatteryForegiftOrderId">
+        update zd_customer_rent_info set
+        foregift_order_id = null,
+        foregift = ifnull((select sum(money) from bas_customer_foregift_order
+        where status in
+        <foreach collection="statusList" item="item" open="(" separator="," close=")">#{item}</foreach>
+        AND customer_id = #{id}), 0)
+        where id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="long">
+        delete from zd_customer_rent_info where id = #{id}
+    </delete>
+
+</mapper>

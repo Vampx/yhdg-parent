@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.appserver.persistence.hdg.VipPacketPeriodPriceMapper">
+
+    <select id="find" parameterType="long" resultType="cn.com.yusong.yhdg.common.domain.hdg.VipPacketPeriodPrice">
+        SELECT
+        *
+        FROM hdg_vip_packet_period_price
+        WHERE id = #{id}
+    </select>
+
+    <select id="findCountByForegiftId" resultType="int">
+        select
+        count(*)
+        from hdg_vip_packet_period_price
+        where price_id = #{priceId} and foregift_id = #{foregiftId}
+    </select>
+
+    <select id="findByPriceIdAndForegiftId" resultType="cn.com.yusong.yhdg.common.domain.hdg.VipPacketPeriodPrice">
+        select *
+        from hdg_vip_packet_period_price
+        where price_id = #{priceId} and foregift_id = #{foregiftId}
+        order by day_count desc
+    </select>
+
+</mapper>

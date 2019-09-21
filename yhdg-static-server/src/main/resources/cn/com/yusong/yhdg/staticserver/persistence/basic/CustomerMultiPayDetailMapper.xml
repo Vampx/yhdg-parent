@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.com.yusong.yhdg.staticserver.persistence.basic.CustomerMultiPayDetailMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.basic.CustomerMultiPayDetail">
+        select *
+        from bas_customer_multi_pay_detail
+        where id=#{id}
+    </select>
+
+    <select id="sumMoneyByOrderIdAndStatus" resultType="int">
+        select sum(money)
+        from bas_customer_multi_pay_detail
+        where order_id = #{orderId} and status = #{status}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.CustomerMultiPayDetail" keyProperty="id" useGeneratedKeys="true">
+        insert into bas_customer_multi_pay_detail (
+        id,order_id,money,pay_type,pay_time,status,create_time,customer_id,customer_mobile,customer_fullname,partner_id,agent_id,agent_name
+        )
+        values (
+        #{id},#{orderId},#{money},#{payType},#{payTime},#{status},#{createTime},#{customerId},#{customerMobile},#{customerFullname},#{partnerId},#{agentId},#{agentName}
+        )
+    </insert>
+
+    <update id="payOk">
+        update bas_customer_multi_pay_detail set status = #{toStatus}, pay_time = #{payTime} where id = #{id} and status = #{fromStatus}
+    </update>
+
+</mapper>

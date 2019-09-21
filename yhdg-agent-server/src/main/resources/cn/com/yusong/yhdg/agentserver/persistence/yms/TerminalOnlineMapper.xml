@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.yms.TerminalOnlineMapper">
+
+    <select id="find" parameterType="string" resultType="cn.com.yusong.yhdg.common.domain.yms.TerminalOnline">
+        select
+            *
+        from yms_terminal_online
+        where id = #{id}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.yms.TerminalOnline" resultType="int">
+        select
+            count(*)
+        from hdg_cabinet hc
+        inner join yms_terminal_online yto on yto.id = hc.terminal_id
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != 0 and agentId != null">
+                and hc.agent_id = #{agentId}
+            </if>
+            <if test="id != null and id != ''">
+                <![CDATA[and yto.id LIKE concat('%', #{id})]]>
+            </if>
+            <if test="isOnline != null">
+                and yto.is_online = #{isOnline}
+            </if>
+            <if test="groupId != null">
+                and hc.group_id = #{groupId}
+            </if>
+            <if test="cabinetName != null and cabinetName != ''">
+                <![CDATA[and hc.cabinet_name LIKE concat('%', #{cabinetName})]]>
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.yms.TerminalOnline" resultType="cn.com.yusong.yhdg.common.domain.yms.TerminalOnline">
+        select
+            yto.id,
+            yto.cpu,
+            yto.memory,
+            yto.play_volume as playVolume,
+            yto.card_capacity as cardCapacity,
+            yto.rest_capacity as restCapacity,
+            yto.heart_time as heartTime,
+            yto.is_normal as isNormal,
+            yto.is_online as isOnline,
+            yto.status_info as statusInfo,
+            yto.strategy_uid as strategyUid,
+            yto.download_progress as downloadProgress,
+            yto.speed,
+            hc.id as cabinetId,
+            hc.cabinet_name as cabinetName,
+            hc.agent_id as agentId,
+            hc.address as address
+        from hdg_cabinet hc
+        inner join yms_terminal_online yto on yto.id = hc.terminal_id
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != 0 and agentId != null">
+                and hc.agent_id = #{agentId}
+            </if>
+            <if test="id != null and id != ''">
+                <![CDATA[and yto.id LIKE concat('%', #{id})]]>
+            </if>
+            <if test="isOnline != null">
+                and yto.is_online = #{isOnline}
+            </if>
+            <if test="groupId != null">
+                and hc.group_id = #{groupId}
+            </if>
+            <if test="cabinetName != null and cabinetName != ''">
+                <![CDATA[and hc.cabinet_name LIKE concat('%', #{cabinetName})]]>
+            </if>
+        </trim>
+        limit #{beginIndex}, #{rows}
+    </select>
+
+    <update id="offline">
+        update yms_terminal_online set
+        is_online = 0
+        where id = #{id}
+    </update>
+
+    <delete id="delete">
+        delete from yms_terminal_online where id =#{id}
+    </delete>
+
+</mapper>

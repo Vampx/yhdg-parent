@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.agentappserver.persistence.hdg.VipPriceMapper">
+
+    <select id="find" parameterType="long" resultType="cn.com.yusong.yhdg.common.domain.hdg.VipPrice">
+        SELECT
+        *
+        FROM hdg_vip_price
+        WHERE id = #{id}
+    </select>
+
+    <select id="findListByAgentId" resultType="cn.com.yusong.yhdg.common.domain.hdg.VipPrice">
+        select *
+        FROM hdg_vip_price
+        where 1 = 1
+        <if test="agentId != null">
+            and agent_id = #{agentId}
+        </if>
+        <if test="keyword != null and keyword != ''">
+            <![CDATA[and price_name LIKE concat('%', #{keyword}, '%')]]>
+        </if>
+        ORDER BY id desc
+        limit #{offset}, #{limit}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.VipPrice" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO hdg_vip_price(
+          agent_id,
+          battery_type,
+          price_name,
+          begin_time,
+          end_time,
+          cabinet_count,
+          customer_count,
+          is_active,
+          create_time
+        ) VALUES (
+          #{agentId},
+          #{batteryType},
+          #{priceName},
+          #{beginTime},
+          #{endTime},
+          #{cabinetCount},
+          #{customerCount},
+          #{isActive},
+          #{createTime}
+        )
+    </insert>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.hdg.VipPrice">
+        update hdg_vip_price set
+               agent_id = #{agentId},
+               battery_type = #{batteryType},
+               price_name = #{priceName},
+               begin_time = #{beginTime},
+               end_time = #{endTime},
+               is_active = #{isActive}
+        where id = #{id}
+    </update>
+
+    <update id="updateCustomerCount">
+        update hdg_vip_price set
+        customer_count = #{customerCount}
+        where id = #{id}
+    </update>
+
+    <update id="updateCabinetCount">
+        update hdg_vip_price set
+        cabinet_count = #{cabinetCount}
+        where id = #{id}
+    </update>
+
+    <update id="updateShopCount">
+        update hdg_vip_price set
+        shop_count = #{shopCount}
+        where id = #{id}
+    </update>
+
+    <update id="updateStationCount">
+        update hdg_vip_price set
+        station_count = #{stationCount}
+        where id = #{id}
+    </update>
+
+    <update id="updateAgentCompanyCount">
+        update hdg_vip_price set
+        agent_company_count = #{agentCompanyCount}
+        where id = #{id}
+    </update>
+
+    <delete id="delete">
+        delete from hdg_vip_price where id = #{id}
+    </delete>
+
+</mapper>

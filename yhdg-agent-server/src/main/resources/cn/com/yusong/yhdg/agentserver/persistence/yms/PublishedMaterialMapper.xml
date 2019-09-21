@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.yms.PublishedMaterialMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.yms.PublishedMaterial">
+        select
+            *
+        from yms_published_material
+        where material_id = #{materialId} and version = #{version}
+    </select>
+
+    <select id="findByPlaylist" parameterType="long" resultType="cn.com.yusong.yhdg.common.domain.yms.PublishedMaterial">
+        SELECT
+            t1.material_id as materialId,
+            t1.agent_id as agentId,
+            t1.group_id as groupId,
+            t1.material_name as materialName,
+            t1.material_type as materialType,
+            t1.duration,
+            t1.md5_sum as md5Sum,
+            t1.version,
+            t1.cover_path as coverPath,
+            t1.convert_status as convertStatus,
+            t1.convert_progress as convertProgress,
+            t1.file_path as filePath,
+            t1.size,
+            t1.width,
+            t1.height,
+            t1.owner_id as ownerId,
+            t1.owner_name as ownerName,
+            t1.create_time as createTime
+        FROM yms_published_material AS t1  JOIN
+        ( SELECT material_id, VERSION FROM yms_published_playlist_detail_material
+           where area_id in (
+              select id from yms_published_playlist_area
+              where playlist_id = #{playlistId}
+            )
+        ) AS t2 ON t2.material_id = t1.material_id AND  t2.version = t1.version;
+    </select>
+
+    <select id="findByAreaAndDetail" resultType="cn.com.yusong.yhdg.common.domain.yms.PublishedMaterial">
+        select
+            ypm.material_id as materialId,
+            ypm.agent_id as agentId,
+            ypm.group_id as groupId,
+            ypm.material_name as materialName,
+            ypm.material_type as materialType,
+            ypm.duration,
+            ypm.md5_sum as md5Sum,
+            ypm.version,
+            ypm.cover_path as coverPath,
+            ypm.convert_status as convertStatus,
+            ypm.convert_progress as convertProgress,
+            ypm.file_path as filePath,
+            ypm.size,
+            ypm.width,
+            ypm.height,
+            ypm.owner_id as ownerId,
+            ypm.owner_name as ownerName,
+            ypm.create_time as createTime,
+            yppam.order_num as orderNum
+        from yms_published_material ypm
+        right outer join yms_published_playlist_detail_material yppam on yppam.material_id = ypm.material_id
+        where yppam.detail_id = #{detailId} and ypm.version = yppam.version and ypm.convert_status=3 order by yppam.order_num asc
+    </select>
+
+    <select id="findCount" parameterType="long" resultType="int">
+        select count(*) from yms_published_material where material_id = #{materialId}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.yms.PublishedMaterial">
+        insert into yms_published_material(
+            material_id,
+            agent_id,
+            group_id,
+            material_name,
+            material_type,
+            duration,
+            md5_sum,
+            version,
+            cover_path,
+            convert_status,
+            convert_progress,
+            file_path,
+            size,
+            width,
+            height,
+            owner_id,
+            owner_name,
+            create_time
+        )
+        values (
+            #{materialId},
+            #{agentId},
+            #{groupId},
+            #{materialName},
+            #{materialType},
+            #{duration},
+            #{md5Sum},
+            #{version},
+            #{coverPath},
+            #{convertStatus},
+            #{convertProgress},
+            #{filePath},
+            #{size},
+            #{width},
+            #{height},
+            #{ownerId},
+            #{ownerName},
+            #{createTime}
+        )
+    </insert>
+
+
+</mapper>

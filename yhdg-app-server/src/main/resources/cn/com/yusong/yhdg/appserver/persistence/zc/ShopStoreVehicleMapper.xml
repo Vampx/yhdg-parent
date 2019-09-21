@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.appserver.persistence.zc.ShopStoreVehicleMapper">
+
+    <select id="findByVehicleId" resultType="cn.com.yusong.yhdg.common.domain.zc.ShopStoreVehicle">
+        select *
+        from zc_shop_store_vehicle
+        where vehicle_id  = #{vehicleId}
+    </select>
+
+    <select id="findByVehicleCount" resultType="int">
+        select
+        COUNT(id)
+        from zc_shop_store_vehicle
+        where shop_id = #{shopId}
+        <if test="settingId != null">
+            and price_setting_id = #{settingId}
+        </if>
+    </select>
+
+    <delete id="clearVehicle">
+        delete from zc_shop_store_vehicle where shop_id = #{shopId} and vehicle_id = #{vehicleId}
+    </delete>
+
+</mapper>

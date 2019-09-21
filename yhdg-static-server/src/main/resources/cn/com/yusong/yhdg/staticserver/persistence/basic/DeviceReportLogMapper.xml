@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.staticserver.persistence.basic.DeviceReportLogMapper">
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.DeviceReportLog" useGeneratedKeys="true" keyProperty="id">
+        insert into bas_device_report_log (device_type, device_id, url, log_date, create_time)
+        values(#{deviceType}, #{deviceId}, #{url}, #{logDate}, #{createTime})
+    </insert>
+
+</mapper>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.hdg.AgentBatteryRentRecordMapper">
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.hdg.AgentBatteryRentRecord" resultType="int">
+        select
+        count(id)
+        from hdg_agent_battery_rent_record
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null">
+                and agent_id = #{agentId}
+            </if>
+            <if test="materialDayStatsId != null">
+                and material_day_stats_id = #{materialDayStatsId}
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.hdg.AgentBatteryRentRecord" resultType="cn.com.yusong.yhdg.common.domain.hdg.AgentBatteryRentRecord">
+        select
+        *
+        from hdg_agent_battery_rent_record
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null">
+                and agent_id = #{agentId}
+            </if>
+            <if test="materialDayStatsId != null">
+                and material_day_stats_id = #{materialDayStatsId}
+            </if>
+        </trim>
+        limit ${beginIndex}, ${rows}
+    </select>
+
+    <update id="updateStatus">
+        update hdg_agent_battery_rent_record
+        set pay_type = #{payType},
+        pay_time = #{payTime},
+        status = #{toStatus}
+        where material_day_stats_id = #{materialDayStatsId} and status = #{fromStatus}
+    </update>
+
+</mapper>

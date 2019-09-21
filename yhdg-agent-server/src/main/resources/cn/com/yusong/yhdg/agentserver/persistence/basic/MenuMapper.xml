@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.basic.MenuMapper">
+
+    <select id="findRoots" resultType="string">
+        select
+            id
+        from bas_menu
+        where parent_id is null
+        order by menu_pos asc
+    </select>
+
+    <select id="findAll" resultType="cn.com.yusong.yhdg.common.domain.basic.Menu">
+        select
+            *
+        from bas_menu
+        order by menu_pos asc
+    </select>
+
+</mapper>

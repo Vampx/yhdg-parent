@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.basic.PartnerInOutCashMapper">
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.basic.PartnerInOutCash" resultType="int">
+        select
+        count(*)
+        from bas_partner_in_out_cash
+        <trim prefix="where" prefixOverrides="and">
+            <if test="statsDate != null and statsDate != ''">
+                <![CDATA[and stats_date LIKE concat(#{statsDate}, '%')]]>
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.basic.PartnerInOutCash"
+            resultType="cn.com.yusong.yhdg.common.domain.basic.PartnerInOutCash">
+        select
+        *
+        from bas_partner_in_out_cash
+        <trim prefix="where" prefixOverrides="and">
+            <if test="statsDate != null and statsDate != ''">
+                <![CDATA[and stats_date LIKE concat(#{statsDate}, '%')]]>
+            </if>
+        </trim>
+        order by partner_id desc
+        limit #{beginIndex}, #{rows}
+    </select>
+
+</mapper>

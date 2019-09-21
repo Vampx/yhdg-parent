@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.frontserver.persistence.yms.TerminalDownloadProgressMapper">
+
+    <select id="find" parameterType="String" resultType="cn.com.yusong.yhdg.common.domain.yms.TerminalDownloadProgress">
+        select * from yms_terminal_download_progress where id = #{id}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.yms.TerminalDownloadProgress">
+        insert into yms_terminal_download_progress(id, playlist_progress_info) values (#{id}, #{playlistProgressInfo});
+    </insert>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.yms.TerminalDownloadProgress">
+        update yms_terminal_download_progress set
+        playlist_progress_info = #{playlistProgressInfo}
+        where id = #{id}
+    </update>
+
+</mapper>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Config>
+  <Entry key="zk.url">localhost:2181</Entry>
+  <Entry key="zk.name">server</Entry>
+  <Entry key="server.version">v1.0.0</Entry>
+  <Entry key="server.ip">localhost</Entry>
+  <Entry key="server.port">12020</Entry>
+  <Entry key="server.weight">1</Entry>
+  <Entry key="db.driver">com.mysql.jdbc.Driver</Entry>
+  <Entry key="db.url"><![CDATA[jdbc:mysql://localhost:3306/yhdg_test?useUnicode=true&characterEncoding=UTF-8]]></Entry>
+  <Entry key="db.user">root</Entry>
+  <Entry key="db.password">root</Entry>
+
+  <Entry key="history.driver">com.mysql.jdbc.Driver</Entry>
+  <Entry key="history.url">
+    <![CDATA[jdbc:mysql://localhost:3306/yhdg_history_test?useUnicode=true&characterEncoding=UTF-8]]>
+  </Entry>
+  <Entry key="history.user">root</Entry>
+  <Entry key="history.password">root</Entry>
+
+  <Entry key="memcached.url">localhost:11211</Entry>
+</Config>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.staticserver.persistence.hdg.FaultLogMapper">
+
+    <update id="handle" parameterType="cn.com.yusong.yhdg.common.domain.hdg.FaultLog">
+        update hdg_fault_log set
+        handle_type = #{handleType},
+        handle_memo = #{handleMemo},
+        handle_time =#{handleTime} ,
+        handler_name = #{handlerName},
+        status = #{status}
+        where id = #{id}
+    </update>
+
+</mapper>

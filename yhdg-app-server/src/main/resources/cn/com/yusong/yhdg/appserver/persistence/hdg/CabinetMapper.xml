@@ -1,0 +1,374 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.appserver.persistence.hdg.CabinetMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.hdg.Cabinet">
+        select
+            *
+        from hdg_cabinet
+        where id = #{id}
+    </select>
+
+    <select id="findByTerminalId" resultType="cn.com.yusong.yhdg.common.domain.hdg.Cabinet">
+        select
+            *
+        from hdg_cabinet
+        where terminal_id = #{terminalId}
+        limit 1
+    </select>
+
+    <select id="findNearest" resultType="cn.com.yusong.yhdg.common.domain.hdg.Cabinet">
+        select
+            cabinet.*,
+            (
+                SELECT
+                    COUNT(*)
+                FROM
+                    hdg_cabinet_box as box
+                    inner join hdg_battery as battery on box.battery_id = battery.id
+                    inner join hdg_cabinet hc on hc.id = box.cabinet_id
+                WHERE
+                    box.cabinet_id = cabinet.id
+                    and battery.status = #{batteryStatus}
+                    and battery.is_normal = 1
+                    AND box.box_status = #{fullStatus}
+                    AND box.is_active = 1
+                    AND box.is_online = 1
+                    AND battery.volume >= hc.charge_full_volume
+            ) AS fullCount,
+            (
+                SELECT
+                    COUNT(*)
+                FROM
+                    hdg_cabinet_box as box
+                WHERE
+                    box.cabinet_id = cabinet.id
+                    AND box.box_status = #{emptyStatus}
+                    AND box.is_active = 1
+                    AND box.is_online = 1
+            ) AS emptyCount,
+            (
+                SELECT
+                COUNT(*)
+                FROM
+                hdg_cabinet_box AS box
+                INNER JOIN hdg_battery AS battery ON box.battery_id = battery.id
+                WHERE
+                box.cabinet_id = cabinet.id
+                And battery.charge_status = 3
+                AND battery.status = 3
+                AND box.box_status = 2
+                AND box.is_active = 1
+                AND box.is_online = 1
+            ) AS chargeCount,
+            (
+                SELECT
+                COUNT(*)
+                FROM
+                hdg_cabinet_box AS box
+                INNER JOIN hdg_cabinet as cabinet on cabinet.id = box.cabinet_id
+                WHERE
+                box.cabinet_id = cabinet.id
+                AND box.box_status in (3, 4, 5, 6, 7)
+            ) AS lockCount,
+            (
+                SELECT
+                COUNT(*)
+                FROM
+                hdg_cabinet_box AS box
+                INNER JOIN hdg_cabinet as cabinet on cabinet.id = box.cabinet_id
+                WHERE
+                box.cabinet_id = cabinet.id
+                AND box.box_status = 3
+            ) AS reserveCount
+        from
+          (
+            SELECT
+                *,
+                floor(6378.138*2*ASIN(SQRT(POW(SIN((${lat}*PI()/180-lat*PI()/180)/2),2)+COS(${lat}*PI()/180)*COS(lat*PI()/180)*POW(SIN((${lng}*PI()/180-lng*PI()/180)/2),2)))*1000) AS distance
+            FROM hdg_cabinet
+                where active_status = 1
+                <if test="keyword != null and keyword != ''">
+                    <![CDATA[and keyword LIKE concat('%', #{keyword}, '%')]]>
+                </if>
+                <if test="provinceId != null">
+                    and province_id = #{provinceId}
+                </if>
+                <if test="geoHash != null">
+                    <![CDATA[and geo_hash LIKE concat(#{geoHash}, '%')]]>
+                </if>
+                <if test="cityId != null">
+                    and city_id = #{cityId}
+                </if>
+                <if test="agentId != null">
+                    and agent_id in
+                    <foreach collection="agentId" index="index" item="item" open="(" separator="," close=")">
+                        #{item}
+                    </foreach>
+                </if>
+                <if test="upLineStatus != null">
+                    and up_line_status = #{upLineStatus}
+                </if>
+                <if test="viewType != null and unSharedCabinetId != null">
+                    and view_type = #{viewType}  and id = #{unSharedCabinetId}
+                </if>
+                <if test="viewType != null and unSharedCabinetId == null">
+                    and view_type = #{viewType}
+                </if>
+            ORDER BY
+                distance
+            limit #{offset}, #{limit}
+          ) as cabinet
+    </select>
+
+    <select id="findFullCount" resultType="int">
+        SELECT
+                COUNT(*)
+            FROM
+                hdg_cabinet_box as box
+                inner join hdg_battery as battery on box.battery_id = battery.id
+                inner join hdg_cabinet hc on hc.id = box.cabinet_id
+            WHERE
+                box.cabinet_id = hc.id
+                and battery.status = #{batteryStatus}
+                and battery.is_normal = 1
+                AND box.box_status = #{fullStatus}
+                AND box.is_active = 1
+                AND box.is_online = 1
+                AND battery.volume >= hc.charge_full_volume
+                and box.cabinet_id = #{cabinetId}
+    </select>
+
+    <select id="findList" resultType="cn.com.yusong.yhdg.common.domain.hdg.Cabinet">
+        select
+        *
+        from hdg_cabinet
+        where dispatcher_id = #{dispatcherId}
+    </select>
+
+    <select id="findAddressList" resultType="cn.com.yusong.yhdg.common.domain.hdg.Cabinet">
+        SELECT DISTINCT
+            province_id,
+            city_id
+        FROM
+            hdg_cabinet
+            where province_id is not null and city_id is not null
+    </select>
+
+    <select id="findCountByDispatcher" resultType="int">
+        select
+            count(*)
+        from hdg_cabinet
+        where dispatcher_id = #{dispatcherId}
+    </select>
+
+    <select id="findBatteryCountByCabinet" resultType="int">
+        select
+              count(1)
+        from hdg_cabinet as caninet
+        INNER JOIN hdg_cabinet_box as box on box.cabinet_id = caninet.id
+        INNER JOIN hdg_battery as battery on box.battery_id = battery.id
+        and caninet.id = #{cabinetId}
+    </select>
+
+    <select id="findNotFullBatteryCountByCabinet" resultType="int">
+        select
+        count(1)
+        from hdg_cabinet as caninet
+        INNER JOIN hdg_cabinet_box as box on box.cabinet_id = caninet.id
+        <![CDATA[INNER JOIN hdg_battery as battery on box.battery_id = battery.id and battery.volume < caninet.charge_full_volume]]>
+        and caninet.id = #{cabinetId}
+    </select>
+
+    <select id="findOnlineSubcabinetCountByCabinet" resultType="int">
+        select
+        count(1)
+        from hdg_cabinet where id = #{cabinetId} and is_online = 1
+    </select>
+
+    <select id="findOfflineSubcabinetCountByCabinet" resultType="int">
+        select
+        count(1)
+        from hdg_cabinet where id = #{cabinetId} and is_online = 0
+    </select>
+
+    <select id="findBatteryCountByDispatcher" resultType="int">
+        select
+        count(1)
+        from hdg_cabinet as caninet
+        INNER JOIN hdg_cabinet_box as box on box.cabinet_id = caninet.id
+        INNER JOIN hdg_battery as battery on box.battery_id = battery.id
+        and caninet.dispatcher_id = #{dispatcherId}
+    </select>
+
+    <select id="findNotFullBatteryCountByDispatcher" resultType="int">
+        select
+        count(1)
+        from hdg_cabinet as caninet
+        INNER JOIN hdg_cabinet_box as box on box.cabinet_id = caninet.id
+        <![CDATA[INNER JOIN hdg_battery as battery on box.battery_id = battery.id and battery.volume < caninet.charge_full_volume]]>
+        and caninet.dispatcher_id = #{dispatcherId}
+    </select>
+
+    <update id="updateLocation">
+        update hdg_cabinet
+        set
+        id = #{cabinetId}
+        <if test="provinceId != null">
+            ,province_id = #{provinceId}
+        </if>
+        <if test="cityId != null">
+            ,city_id = #{cityId}
+        </if>
+        <if test="districtId != null">
+            ,district_id = #{districtId}
+        </if>
+        <if test="geoHash != null">
+            ,geo_hash = #{geoHash}
+        </if>
+
+        <if test="address != null">
+            ,address = #{address}
+        </if>
+        <if test="keyword != null and keyword != '' ">
+            ,keyword = #{keyword}
+        </if>
+        <if test="cabinetName != null and cabinetName != '' ">
+            ,cabinet_name = #{cabinetName}
+        </if>
+        <if test="lng != null ">
+            ,lng = #{lng}
+        </if>
+        <if test="lat != null ">
+            ,lat = #{lat}
+        </if>
+
+        where id = #{cabinetId}
+    </update>
+
+    <update id="updateOperationFlag">
+        UPDATE
+        hdg_cabinet
+        SET
+        operation_flag = #{operationFlag}
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateFaultLog1">
+        update hdg_cabinet set
+            all_full_fault_log_id = null,
+            all_full_count = 0
+        where all_full_fault_log_id = #{allFullFaultLogId}
+    </update>
+
+    <update id="updateFaultLog2">
+        update hdg_cabinet set
+        <if test="property == 'offlineFaultLogId'">
+            offline_fault_log_id = null where offline_fault_log_id = #{value}
+        </if>
+        <if test="property == 'tempFaultLogId'">
+            temp_fault_log_id = null where temp_fault_log_id = #{value}
+        </if>
+    </update>
+
+    <update id="updateToken">
+         update hdg_cabinet set
+            login_token = #{loginToken}
+        where id = #{id}
+    </update>
+
+    <update id="updatePrice">
+        update hdg_cabinet set
+        min_price = #{minPrice},
+        max_price = #{maxPrice}
+        where id = #{id}
+    </update>
+
+    <select id="findIdByCabinet" resultType="cn.com.yusong.yhdg.common.domain.hdg.Cabinet">
+        select
+        *
+        from hdg_cabinet
+        where id = #{cabinetId}
+        and active_status = 1
+    </select>
+
+    <select id="findIdByCabinetId" resultType="string">
+        select
+        id
+        from hdg_cabinet
+        where id = #{cabinetId}
+        and active_status = 1
+    </select>
+
+    <update id="updateUpline" parameterType="cn.com.yusong.yhdg.common.domain.hdg.Cabinet">
+        update hdg_cabinet set
+        cabinet_name = #{cabinetName},
+        permit_exchange_volume = #{permitExchangeVolume},
+        address = #{address},
+        charge_full_volume = #{chargeFullVolume},
+        price = #{price},
+        terminal_id = #{terminalId},
+        up_line_status = #{upLineStatus},
+        up_line_time = #{upLineTime},
+        foregift_money = #{foregiftMoney},
+        rent_money = #{rentMoney},
+        rent_period_type = #{rentPeriodType},
+        rent_expire_time = #{rentExpireTime}
+        where id = #{id}
+    </update>
+
+
+    <update id="updateUpLineStatus" parameterType="cn.com.yusong.yhdg.common.domain.hdg.Cabinet">
+        update hdg_cabinet set
+        agent_id = #{agentId}
+        <if test="provinceId != null">
+            ,province_id = #{provinceId}
+        </if>
+        <if test="cityId != null">
+            ,city_id = #{cityId}
+        </if>
+        <if test="districtId != null">
+            ,district_id = #{districtId}
+        </if>
+        <if test="geoHash != null">
+            ,geo_hash = #{geoHash}
+        </if>
+        <if test="street != null ">
+            ,street = #{street}
+        </if>
+        <if test="address != null">
+            ,address = #{address}
+        </if>
+        <if test="cabinetName != null and cabinetName != '' ">
+            ,cabinet_name = #{cabinetName}
+        </if>
+        <if test="lng != null ">
+            ,lng = #{lng}
+        </if>
+        <if test="lat != null ">
+            ,lat = #{lat}
+        </if>
+        <if test="permitExchangeVolume != null ">
+            ,permit_exchange_volume = #{permitExchangeVolume}
+        </if>
+        <if test="chargeFullVolume != null ">
+            ,charge_full_volume = #{chargeFullVolume}
+        </if>
+        <if test="linkname != null ">
+            ,linkname = #{linkname}
+        </if>
+        <if test="tel != null ">
+            ,tel = #{tel}
+        </if>
+        <if test="price != null ">
+            ,price = #{price}
+        </if>
+        ,up_line_status = #{upLineStatus}
+        ,up_line_time = #{upLineTime}
+        where id = #{id}
+    </update>
+
+
+</mapper>

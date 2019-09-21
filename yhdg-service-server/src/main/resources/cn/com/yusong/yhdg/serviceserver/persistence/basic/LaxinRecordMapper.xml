@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.serviceserver.persistence.basic.LaxinRecordMapper">
+
+    <select id="findByStatus" resultType="cn.com.yusong.yhdg.common.domain.basic.LaxinRecord">
+        select
+        t1.*
+        from bas_laxin_record t1
+        where  status = #{status}
+        order by id
+        limit #{offset}, #{limit}
+    </select>
+
+    <update id="transfer">
+        update bas_laxin_record set status = #{toStatus}, transfer_time = #{transferTime} where id = #{id} and status = #{fromStatus}
+    </update>
+
+</mapper>

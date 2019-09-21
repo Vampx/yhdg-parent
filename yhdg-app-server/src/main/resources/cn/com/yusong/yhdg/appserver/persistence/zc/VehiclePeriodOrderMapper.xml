@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.appserver.persistence.zc.VehiclePeriodOrderMapper">
+
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.zc.VehiclePeriodOrder">
+        select
+        *
+        FROM
+        zc_vehicle_period_order
+        where
+        id = #{id}
+    </select>
+
+    <select id="findListByCustomerIdAndStatus" resultType="cn.com.yusong.yhdg.common.domain.zc.VehiclePeriodOrder">
+        select
+        *
+        FROM
+        zc_vehicle_period_order
+        where
+        customer_id = #{customerId}
+        and status = #{status}
+        order by id DESC
+    </select>
+
+    <select id="findList" resultType="cn.com.yusong.yhdg.common.domain.zc.VehiclePeriodOrder">
+        select
+        *
+        FROM
+        zc_vehicle_period_order
+        where
+        customer_id = #{customerId}
+        <if test="status != null">
+            and status = #{status}
+        </if>
+        order by id DESC
+        limit #{offset},#{limit}
+    </select>
+
+    <select id="findOneEnabled" resultType="cn.com.yusong.yhdg.common.domain.zc.VehiclePeriodOrder">
+        select
+        *
+        FROM
+        zc_vehicle_period_order
+        where customer_id = #{customerId}
+        and status = #{status}
+        and agent_id = #{agentId}
+        and model_id = #{modelId}
+        limit 1
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.zc.VehiclePeriodOrder">
+        insert into zc_vehicle_period_order (
+        id,
+        partner_id,
+        agent_id,
+        agent_name,
+        agent_code,
+        model_id,
+        shop_id,
+        shop_name,
+        battery_type,
+        price,
+        money,
+        day_count,
+        begin_time,
+        end_time,
+        status,
+        customer_id,
+        customer_mobile,
+        customer_fullname,
+        pay_type,
+        pay_time,
+        create_time )
+        VALUES (
+        #{id},
+        #{partnerId},
+        #{agentId},
+        #{agentName},
+        #{agentCode},
+        #{modelId},
+        #{shopId},
+        #{shopName},
+        #{batteryType},
+        #{price},
+        #{money},
+        #{dayCount},
+        #{beginTime},
+        #{endTime},
+        #{status},
+        #{customerId},
+        #{customerMobile},
+        #{customerFullname},
+        #{payType},
+        #{payTime},
+        #{createTime})
+    </insert>
+
+    <update id="payOk">
+        update zc_vehicle_period_order
+        set status = #{toStatus}
+        <if test="beginTime != null">
+            , begin_time = #{beginTime}
+        </if>
+        <if test="endTime != null">
+            , end_time = #{endTime}
+        </if>
+        <if test="payTime != null">
+            , pay_time = #{payTime}
+        </if>
+        where id = #{id} and status = #{fromStatus}
+    </update>
+
+    <update id="updateStatus">
+        update zc_vehicle_period_order
+        set
+        status = #{toStatus},
+        begin_time = #{beginTime},
+        end_time = #{endTime},
+        vehicle_name = #{vehicleName}
+        where id = #{id} and status = #{fromStatus}
+    </update>
+
+    <update id="updateRefund">
+        update zc_vehicle_period_order
+        set status = #{toStatus}
+        where id = #{id}
+        <if test="fromStatus != null">
+            and status = #{fromStatus}
+        </if>
+    </update>
+
+    <select id="findLastEndTime" resultType="cn.com.yusong.yhdg.common.domain.zc.VehiclePeriodOrder">
+        select
+        *
+        FROM
+        zc_vehicle_period_order
+        where
+        customer_id = #{customerId}
+        and status = #{status}
+        and end_time is not null
+        order by end_time DESC
+        limit 1
+    </select>
+
+</mapper>

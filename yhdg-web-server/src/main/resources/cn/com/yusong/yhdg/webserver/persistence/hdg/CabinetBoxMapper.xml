@@ -1,0 +1,424 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.hdg.CabinetBoxMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetBox">
+        select
+            *
+        from hdg_cabinet_box
+        where cabinet_id = #{cabinetId} and box_num = #{boxNum}
+    </select>
+    <select id="findById" resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetBox">
+        select
+        *
+        from hdg_cabinet_box
+        where id = #{id}
+    </select>
+
+    <select id="statsBoxCount" resultType="int">
+        select
+        count(*)
+        from hdg_cabinet_box
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null">
+                and agent_id = #{agentId}
+            </if>
+            <if test="cabinetId != null and cabinetId != ''">
+                and cabinet_id = #{cabinetId}
+            </if>
+        </trim>
+    </select>
+
+    <select id="statsBoxPage" parameterType="cn.com.yusong.yhdg.common.domain.hdg.CabinetBox"
+            resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetBox">
+        select
+            s.*,b.charge_status
+        from hdg_cabinet_box s LEFT  JOIN hdg_battery b on
+         s.battery_id = b.id where s.cabinet_id = #{cabinetId}
+        order by s.cabinet_id, s.box_num
+    </select>
+
+    <select id="statsBoxCountByStatus" resultType="int">
+        select
+        count(*)
+        from hdg_cabinet_box
+        where cabinet_id = #{cabinetId}
+        and box_status = #{boxStatus}
+    </select>
+
+    <select id="findUnActiveNum" resultType="int">
+        select
+        count(*)
+        from hdg_cabinet_box
+        where cabinet_id = #{cabinetId}
+        and is_active = 0
+    </select>
+
+    <select id="findBatteryCountByStatus" resultType="int">
+        select count(t2.id)
+        from hdg_cabinet_box t1
+        left join hdg_battery t2
+        on t1.battery_id = t2.id
+        where t1.cabinet_id = #{cabinetId} and t2.status = #{status}
+    </select>
+
+    <select id="statsBoxCountByStatusAndAgent" resultType="int">
+        select
+        count(*)
+        from hdg_cabinet_box
+        where box_status = #{boxStatus}
+        <if test="agentId!=null">
+            and agent_id = #{agentId}
+        </if>
+        <if test="type!=null">
+            and type = #{type}
+        </if>
+    </select>
+
+    <select id="statsBoxPageByStatus" parameterType="cn.com.yusong.yhdg.common.domain.hdg.CabinetBox"
+            resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetBox">
+        select
+            *
+        from hdg_cabinet_box
+        where cabinet_id = #{cabinetId}
+        and box_status = #{boxStatus}
+        order by cabinet_id, box_num
+    </select>
+
+    <select id="statsOpenBoxCount" resultType="int">
+        select
+        count(*)
+        from hdg_cabinet_box
+        where cabinet_id = #{cabinetId}
+        and is_open = #{isOpen}
+    </select>
+
+    <select id="statsOpenBoxPage" parameterType="cn.com.yusong.yhdg.common.domain.hdg.CabinetBox"
+            resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetBox">
+        select
+            *
+        from hdg_cabinet_box
+        where cabinet_id = #{cabinetId}
+        and is_open = #{isOpen}
+        order by cabinet_id, box_num
+    </select>
+
+    <select id="statsCountByChargeStatus" resultType="int">
+        select
+        count(*)
+        from hdg_cabinet_box t1 inner join hdg_battery t2 on t1.battery_id = t2.id
+        where t1.cabinet_id = #{cabinetId}
+        and t2.charge_status = #{chargeStatus}
+    </select>
+
+    <select id="statsCountByChargeStatusAndAgent" resultType="int">
+        select
+        count(*)
+        from hdg_cabinet_box t1 inner join hdg_battery t2 on t1.battery_id = t2.id
+        where t2.charge_status = #{chargeStatus}
+        <if test="agentId!=null">
+            and t1.agent_id = #{agentId}
+        </if>
+        <if test="type!=null">
+            and t1.type = #{type}
+        </if>
+    </select>
+
+    <select id="statsCountByChargeStatusPage" parameterType="cn.com.yusong.yhdg.common.domain.hdg.CabinetBox"
+            resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetBox">
+        select
+            t1.*
+        from hdg_cabinet_box t1 inner join hdg_battery t2 on t1.battery_id = t2.id
+        where t1.cabinet_id = #{cabinetId}
+        and t2.charge_status = #{chargeStatus}
+        order by t1.cabinet_id, t1.box_num
+    </select>
+
+    <select id="statsCompleteChargeCount" resultType="int">
+        select
+        count(*)
+        from hdg_cabinet_box t1 inner join hdg_battery t2 on t1.battery_id = t2.id
+        inner join hdg_cabinet t3 on t3.id = t1.cabinet_id
+        where t1.cabinet_id = #{cabinetId}
+        and t2.volume >= t3.charge_full_volume
+        and t2.status = #{batteryStatus}
+    </select>
+
+    <select id="statsCompleteChargeCountAndAgent" resultType="int">
+        select
+        count(*)
+        from hdg_cabinet_box t1 inner join hdg_battery t2 on t1.battery_id = t2.id
+        inner join hdg_cabinet t3 on t3.id = t1.cabinet_id
+        where t2.volume >= t3.charge_full_volume
+        and t2.status = #{batteryStatus}
+        <if test="agentId!=null">
+            and t1.agent_id = #{agentId}
+        </if>
+        <if test="type!=null">
+            and t1.type = #{type}
+        </if>
+    </select>
+
+    <select id="statsNotCompleteChargeCount" resultType="int">
+        select
+        count(*)
+        from hdg_cabinet_box t1 inner join hdg_battery t2 on t1.battery_id = t2.id
+        inner join hdg_cabinet t3 on t3.id = t1.cabinet_id
+        where t1.cabinet_id = #{cabinetId}
+        and t3.charge_full_volume > t2.volume
+        and t2.status = #{batteryStatus}
+    </select>
+
+    <select id="statsCountByStatus" resultType="int">
+        select
+        count(*)
+        from hdg_cabinet_box t1 inner join hdg_battery t2 on t1.battery_id = t2.id
+        where t1.cabinet_id = #{cabinetId}
+        and t2.status = #{batteryStatus}
+    </select>
+
+    <select id="statsCompleteChargePage" parameterType="cn.com.yusong.yhdg.common.domain.hdg.CabinetBox"
+            resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetBox">
+        select
+            *
+        from hdg_cabinet_box t1 inner join hdg_battery t2 on t1.battery_id = t2.id
+        inner join hdg_cabinet t3 on t3.id = t1.cabinet_id
+        where t1.cabinet_id = #{cabinetId}
+        and t2.volume >= t3.charge_full_volume
+        and t2.status = #{batteryStatus}
+        order by t1.cabinet_id, t1.box_num
+    </select>
+
+    <select id="statsNotCompleteChargePage" parameterType="cn.com.yusong.yhdg.common.domain.hdg.CabinetBox"
+            resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetBox">
+        select
+        *
+        from hdg_cabinet_box t1 inner join hdg_battery t2 on t1.battery_id = t2.id
+        inner join hdg_cabinet t3 on t3.id = t1.cabinet_id
+        where t1.cabinet_id = #{cabinetId}
+        and t3.charge_full_volume > t2.volume
+        and t2.status = #{batteryStatus}
+        order by t1.cabinet_id, t1.box_num
+    </select>
+
+    <select id="statsCountByStatusPage" parameterType="cn.com.yusong.yhdg.common.domain.hdg.CabinetBox"
+            resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetBox">
+        select
+        *
+        from hdg_cabinet_box t1 inner join hdg_battery t2 on t1.battery_id = t2.id
+        where t1.cabinet_id = #{cabinetId}
+        and t2.status = #{batteryStatus}
+        order by t1.cabinet_id, t1.box_num
+    </select>
+
+
+    <select id="findByIsActiveAllPage" parameterType="cn.com.yusong.yhdg.common.domain.hdg.CabinetBox"
+            resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetBox">
+        select
+        *
+        from hdg_cabinet_box
+        <trim prefix="where" prefixOverrides="and">
+            AND is_active= 0
+            <if test="agentId!=null">
+                and agent_id = #{agentId}
+            </if>
+            <if test="cabinetId!=null">
+                <![CDATA[and cabinet_id LIKE concat('%', #{cabinetId}, '%')]]>
+            </if>
+        </trim>
+        order by operator_time desc
+        limit #{beginIndex}, #{rows}
+    </select>
+    <select id="findByIsActiveAllCount" parameterType="cn.com.yusong.yhdg.common.domain.hdg.CabinetBox"
+            resultType="int">
+        select
+        count(*)
+        from hdg_cabinet_box
+        <trim prefix="where" prefixOverrides="and">
+            AND is_active= 0
+            <if test="agentId!=null">
+                and agent_id = #{agentId}
+            </if>
+            <if test="cabinetId!=null">
+                <![CDATA[and cabinet_id LIKE concat('%', #{cabinetId}, '%')]]>
+            </if>
+        </trim>
+    </select>
+    <select id="findByIsActiveAll" parameterType="cn.com.yusong.yhdg.common.domain.hdg.CabinetBox"
+            resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetBox">
+        select
+        *
+        from hdg_cabinet_box
+        <trim prefix="where" prefixOverrides="and">
+            AND is_active= 0
+            <if test="agentId!=null">
+                and agent_id = #{agentId}
+            </if>
+            <if test="cabinetId!=null">
+                <![CDATA[and cabinet_id LIKE concat('%', #{cabinetId}, '%')]]>
+            </if>
+        </trim>
+        order by operator_time desc
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.hdg.CabinetBox"
+            resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetBox">
+        select
+        s.*,
+        b.charge_status as chargeStatus,
+        b.volume
+        from hdg_cabinet_box s LEFT JOIN hdg_battery b on
+        s.battery_id = b.id
+        <trim prefix="where" prefixOverrides="and">
+        <if test="cabinetId != null and cabinetId != ''">
+            and s.cabinet_id = #{cabinetId}
+        </if>
+        </trim>
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.hdg.CabinetBox"
+            resultType="int">
+        select
+        count(1)
+        from hdg_cabinet_box
+        <trim prefix="where" prefixOverrides="and">
+            <if test="cabinetId != null and cabinetId != ''">
+                and cabinet_id = #{cabinetId}
+            </if>
+        </trim>
+    </select>
+
+    <select id="findBySubcabinet" parameterType="string"
+            resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetBox">
+        select * from hdg_cabinet_box where cabinet_id = #{cabinetId} order by box_num
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.CabinetBox">
+        insert into hdg_cabinet_box (
+            cabinet_id,
+            box_num,
+            type,
+            subtype,
+            is_active,
+            is_online,
+            box_status,
+            battery_id,
+            bespeak_time,
+            is_open,
+            open_time,
+            lock_time,
+            open_type,
+            charge_full_volume,
+            opener_id
+        )
+        values(
+            #{cabinetId},
+            #{boxNum},
+            #{type},
+            #{subtype},
+            #{isActive},
+            #{isOnline},
+            #{boxStatus},
+            #{batteryId},
+            #{bespeakTime},
+            #{isOpen},
+            #{openTime},
+            #{lockTime},
+            #{openType},
+            #{chargeFullVolume},
+            #{openerId}
+        )
+    </insert>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.hdg.CabinetBox">
+        update hdg_cabinet_box set
+            box_num = #{updateBoxNum},
+            type = #{type},
+            is_active = #{isActive}
+        where cabinet_id = #{cabinetId} and box_num = #{boxNum} and box_status = 1
+    </update>
+
+    <update id="updateIsActive" parameterType="cn.com.yusong.yhdg.common.domain.hdg.CabinetBox">
+        update hdg_cabinet_box set
+        is_active = #{isActive},
+        forbidden_cause = #{forbiddenCause},
+        operator = #{operator},
+        operator_time = #{operatorTime}
+        where cabinet_id = #{cabinetId} and box_num = #{boxNum}
+    </update>
+
+    <update id="updateFaultLog">
+        update hdg_cabinet_box set
+        <if test="property == 'smokeFaultLogId'">
+            smoke_fault_log_id = null where smoke_fault_log_id = #{value}
+        </if>
+    </update>
+
+    <update id="unlockBox">
+        update hdg_cabinet_box
+        set
+        lock_time = null,
+        open_type = null,
+        opener_id = null,
+        box_status = #{toStatus}
+        where cabinet_id = #{cabinetId}
+        and box_num = #{boxNum}
+        and box_status = #{fromStatus}
+    </update>
+
+    <update id="updateCabinetId" parameterType="cn.com.yusong.yhdg.common.domain.hdg.CabinetBox">
+        update hdg_cabinet_box set
+        <if test="agentId != null">
+            agent_id = #{agentId},
+        </if>
+        cabinet_id = #{cabinetId},
+        charge_full_volume = #{chargeFullVolume}
+        where cabinet_id = #{cabinetId}
+    </update>
+
+    <update id="updateAgentId">
+        update hdg_cabinet_box set
+            agent_id = #{agentId}
+        where cabinet_id = #{cabinetId}
+    </update>
+
+    <update id="updateChargeFullVolume">
+        update hdg_cabinet_box set
+        charge_full_volume = #{chargeFullVolume}
+        where cabinet_id = #{cabinetId}
+    </update>
+
+    <delete id="deleteBySubcabinet">
+        delete from hdg_cabinet_box where cabinet_id = #{cabinetId}
+    </delete>
+
+    <delete id="delete">
+        delete from hdg_cabinet_box where cabinet_id = #{cabinetId} and box_num = #{boxNum} and box_status = 1
+    </delete>
+
+    <select id="findCountByBatteryType" resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetState">
+        select
+        count(case when b.volume >= c.charge_full_volume then 1 else 0 end) as fullVolumeCount,
+        count(case when c.charge_full_volume > b.volume then 1 else 0 end) as waitTakeCount
+        from hdg_cabinet_box a inner join hdg_battery b on a.battery_id = b.id
+        inner join hdg_cabinet c on c.id = a.cabinet_id
+        where a.cabinet_id = #{cabinetId}
+        and b.status = #{status}
+        and b.type = #{batteryType}
+    </select>
+
+    <select id="findEmptyCountBatteryType" resultType="int">
+        select
+        count(*)
+        from hdg_cabinet_box
+        where cabinet_id = #{cabinetId}
+        and box_status = #{boxStatus}
+        and type in
+        <foreach collection="batteryTypeList" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </select>
+
+</mapper>

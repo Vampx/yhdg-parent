@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.appserver.persistence.hdg.BatteryOperateLogMapper">
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.BatteryOperateLog">
+          INSERT INTO `hdg_battery_operate_log`
+          (`id`, `battery_id`, `operate_type`, `customer_id`,
+           `customer_mobile`, `customer_fullname`, `cabinet_id`, `cabinet_name`,
+           `box_num`, `keeper_id`,
+           `keeper_name`, `keeper_mobile`, `volume`, `create_time`)
+          VALUES (#{id},#{batteryId},#{operateType},#{customerId},
+             #{customerMobile},#{customerFullname},#{cabinetId},#{cabinetName},
+             #{boxNum},#{keeperId},
+             #{keeperName},#{keeperMobile},#{volume},#{createTime})
+    </insert>
+
+    <select id="findList" resultType="cn.com.yusong.yhdg.common.domain.hdg.BatteryOperateLog">
+        select
+        *
+        FROM
+        hdg_battery_operate_log
+        order by id DESC
+        limit #{offset},#{limit}
+    </select>
+
+</mapper>

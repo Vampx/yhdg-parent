@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.basic.BatteryUpgradePackDetailMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.basic.BatteryUpgradePackDetail">
+        select
+          *
+        from bas_battery_upgrade_pack_detail
+        where
+        upgrade_pack_id = #{upgradePackId}
+        and
+        battery_id =#{batteryId}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.basic.BatteryUpgradePackDetail" resultType="int">
+        select
+        count(b.id)
+        from bas_battery_upgrade_pack_detail as a
+        left join hdg_battery as b
+        on a.battery_id = b.id
+        <trim prefix="where" prefixOverrides="and">
+            <if test="upgradePackId != null ">
+                and a.upgrade_pack_id = #{upgradePackId}
+            </if>
+
+        </trim>
+    </select>
+
+    <select id="findPageResult" resultType="cn.com.yusong.yhdg.common.domain.basic.BatteryUpgradePackDetail">
+        select
+        b.id,
+        b.code,
+        b.version,
+        b.bms_model
+        from bas_battery_upgrade_pack_detail as a
+        left join hdg_battery_parameter as b
+        on a.battery_id = b.id
+        <trim prefix="where" prefixOverrides="and">
+            a.upgrade_pack_id = #{upgradePackId}
+        </trim>
+        limit ${beginIndex}, ${rows}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.BatteryUpgradePackDetail">
+        INSERT INTO bas_battery_upgrade_pack_detail
+        (
+           upgrade_pack_id,
+           battery_id
+        ) VALUES (
+            #{upgradePackId},
+            #{batteryId}
+        )
+    </insert>
+
+    <delete id="delete" parameterType="cn.com.yusong.yhdg.common.domain.basic.BatteryUpgradePackDetail">
+        delete
+        from
+        bas_battery_upgrade_pack_detail
+        where
+        upgrade_pack_id = #{upgradePackId}
+        and
+        battery_id = #{batteryId}
+    </delete>
+
+
+</mapper>

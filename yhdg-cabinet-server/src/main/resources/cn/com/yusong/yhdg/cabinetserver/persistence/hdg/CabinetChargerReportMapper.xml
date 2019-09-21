@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.cabinetserver.persistence.hdg.CabinetChargerReportMapper">
+
+    <select id="findTable" resultType="String">
+        SHOW TABLES LIKE #{tableName}
+    </select>
+
+    <update id="createTable">
+        create table if not exists ${tableName} (
+            id bigint unsigned not null auto_increment,
+            cabinet_id char(12) not null,/*主柜id*/
+            box_num char(10) not null,/*格子编号*/
+            charger_version char(10) not null,/*充电器版本*/
+            charger_module char(10) not null,/*充电器型号*/
+            charge_state tinyint not null,/*充电状态*/
+            charge_stage tinyint not null,/*充电阶段 0:空闲 1:预充 2:恒流1 3:恒流2 4:恒压 5:充满 */
+            charge_time int not null,/*充电时长 */
+            charge_voltage int not null,/*充电器输出电压 */
+            battery_voltage int not null,/*电池端检测电压 */
+            charge_current int not null,/*充电器输出电流 */
+            transformer_temp int not null,/*变压器温度 */
+            heatsink_temp int not null,/*散热片温度 */
+            ambient_temp int not null,/*环境温度 */
+            charger_fault tinyint not null,/*充电器故障 */
+
+            enable_charge int not null,/*是否充电*/
+            enable_link int not null,/*是否开启电池数据连接*/
+            auto_swtich_mode int not null,/*自动选择充电电压*/
+            max_charge_voltage_of_stage1 int not null,/*阶段1(预充)最大充电电压*/
+            charge_current_of_stage1 int not null,/*阶段1(预充)充电电流*/
+            max_charge_voltage_of_stage2 int not null,/*阶段2(恒流1)最大充电电压U3*/
+            charge_current_of_stage2 int not null,/*阶段2(恒流1)充电电流*/
+            slope_voltage int not null,/*阶段3开始改变电流时电压*/
+            charge_current_of_stage3 int not null,/*阶段3(恒流2)充电电流*/
+            full_voltage int not null,/*电池满电电压*/
+            slope_current int not null,/*满电电压时斜率电流*/
+            min_current_of_stage4 int not null,/*阶段4最小充电电流*/
+            low_temperature_mode int not null,/*低温环境充电模式*/
+            box_forbidden tinyint not null,/*是否禁用格口 1禁用 0使用*/
+            other tinyint not null,/*bit0:是否异常,离线时通过蓝牙发送 1异常/0正常 bit1:使能NFC检测 1使能/0禁用*/
+
+            create_time datetime not null,/*创建时间*/
+        primary key (id),
+        index idx_cabinet_charger_report_cabinet_id_create_time(cabinet_id, create_time)
+        ) engine=innodb default charset=utf8;
+    </update>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.CabinetChargerReport" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO hdg_cabinet_charger_report_${suffix}  (
+            cabinet_id,
+            box_num,
+            charger_version,
+            charger_module,
+            charge_state,
+            charge_stage,
+            charge_time,
+            charge_voltage,
+            battery_voltage,
+            charge_current,
+            transformer_temp,
+            heatsink_temp,
+            ambient_temp,
+            charger_fault,
+            create_time,
+
+            enable_charge,
+            enable_link,
+            auto_swtich_mode,
+            max_charge_voltage_of_stage1,
+            charge_current_of_stage1,
+            max_charge_voltage_of_stage2,
+            charge_current_of_stage2,
+            slope_voltage,
+            charge_current_of_stage3,
+            full_voltage,
+            slope_current,
+            min_current_of_stage4,
+            low_temperature_mode,
+            box_forbidden,
+            other
+        ) values (
+            #{cabinetId},
+            #{boxNum},
+            #{chargerVersion},
+            #{chargerModule},
+            #{chargeState},
+            #{chargeStage},
+            #{chargeTime},
+            #{chargeVoltage},
+            #{batteryVoltage},
+            #{chargeCurrent},
+            #{transformerTemp},
+            #{heatsinkTemp},
+            #{ambientTemp},
+            #{chargerFault},
+            #{createTime},
+
+            #{enableCharge},
+            #{enableLink},
+            #{autoSwtichMode},
+            #{maxChargeVoltageOfStage1},
+            #{chargeCurrentOfStage1},
+            #{maxChargeVoltageOfStage2},
+            #{chargeCurrentOfStage2},
+            #{slopeVoltage},
+            #{chargeCurrentOfStage3},
+            #{fullVoltage},
+            #{slopeCurrent},
+            #{minCurrentOfStage4},
+            #{lowTemperatureMode},
+            #{boxForbidden},
+            #{other}
+          )
+    </insert>
+
+</mapper>

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.hdg.BatteryCellRegularMapper">
+
+    <select id="find" parameterType="long" resultType="cn.com.yusong.yhdg.common.domain.hdg.BatteryCellRegular">
+        SELECT
+        *
+        FROM hdg_battery_cell_regular
+        WHERE id = #{id}
+    </select>
+
+    <select id="findByRegularAndType" resultType="cn.com.yusong.yhdg.common.domain.hdg.BatteryCellRegular">
+        SELECT
+        *
+        FROM hdg_battery_cell_regular
+        WHERE regular = #{regular} and regular_type = #{regularType}
+    </select>
+
+    <select id="findByCellFormatIdAndType" resultType="cn.com.yusong.yhdg.common.domain.hdg.BatteryCellRegular">
+        SELECT
+        *
+        FROM hdg_battery_cell_regular
+        WHERE cell_format_id = #{cellFormatId} and regular_type = #{regularType}
+    </select>
+
+    <select id="findByBatteryFormatIdAndType" resultType="cn.com.yusong.yhdg.common.domain.hdg.BatteryCellRegular">
+        SELECT
+        *
+        FROM hdg_battery_cell_regular
+        WHERE battery_format_id = #{batteryFormatId} and regular_type = #{regularType}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.BatteryCellRegular" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO hdg_battery_cell_regular(
+          cell_format_id,
+          battery_format_id,
+          regular_type,
+          regular,
+          regular_name,
+          reset_type,
+          num,
+          create_time,
+          update_time
+        ) VALUES (
+          #{cellFormatId},
+          #{batteryFormatId},
+          #{regularType},
+          #{regular},
+          #{regularName},
+          #{resetType},
+          #{num},
+          #{updateTime},
+          #{createTime}
+        )
+    </insert>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.hdg.BatteryCellRegular">
+        update hdg_battery_cell_regular set
+        cell_format_id = #{cellFormatId},
+        battery_format_id = #{batteryFormatId},
+        regular_type = #{regularType},
+        regular = #{regular},
+        regular_name = #{regularName},
+        reset_type = #{resetType},
+        update_time = #{updateTime}
+        where 1 = 1
+        <if test="cellFormatId != null">
+            and cell_format_id = #{cellFormatId}
+        </if>
+        <if test="batteryFormatId != null">
+            and battery_format_id = #{batteryFormatId}
+        </if>
+        <if test="regularType != null">
+            and regular_type = #{regularType}
+        </if>
+    </update>
+
+    <update id="updateNumByCellFormatId">
+        update hdg_battery_cell_regular set
+           num = #{num}
+        where cell_format_id = #{cellFormatId}
+    </update>
+
+    <update id="updateNumByBatteryFormatId">
+        update hdg_battery_cell_regular set
+        num = #{num}
+        where battery_format_id = #{batteryFormatId}
+    </update>
+
+    <delete id="delete" parameterType="long">
+        delete from hdg_battery_cell_regular where id = #{id}
+    </delete>
+
+</mapper>

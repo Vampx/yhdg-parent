@@ -1,0 +1,368 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.agentappserver.persistence.hdg.BatteryMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.hdg.Battery">
+        select * from hdg_battery where id = #{id}
+    </select>
+
+    <select id="findByCode" resultType="cn.com.yusong.yhdg.common.domain.hdg.Battery">
+        select * from hdg_battery where code = #{code} or shell_code = #{code} or id = #{code}
+    </select>
+
+    <select id="findAgentBatteryList" resultType="cn.com.yusong.yhdg.common.domain.hdg.Battery">
+        select t1.*, t2.circle
+        FROM hdg_battery t1 left join hdg_battery_parameter t2 on t1.id = t2.id
+        WHERE 1=1
+        <if test="agentId != null">
+            and t1.agent_id = #{agentId}
+        </if>
+        <if test="keyword != null and keyword != ''">
+            and CONCAT(IFNULL(t1.id,''),IFNULL(t1.code,''),IFNULL(t1.customer_mobile,''),IFNULL(t1.shell_code,''))  LIKE CONCAT('%',#{keyword},'%')
+        </if>
+        <if test="isNormal != null">
+            and t1.is_normal in
+            <foreach collection="isNormal" index="index" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="status != null">
+            and t1.status in
+            <foreach collection="status" index="index" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="upLineStatus != null">
+            and t1.up_line_status in
+            <foreach collection="upLineStatus" index="index" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="lowDay != null and highDay != null">
+            <![CDATA[and t1.use_day >= #{lowDay} and t1.use_day <= #{highDay}]]>
+        </if>
+        <if test="lowCircle != null and highCircle != null">
+            <![CDATA[and t2.circle >= #{lowCircle} and t2.circle <= #{highCircle}]]>
+        </if>
+        and t1.category = #{category}
+        ORDER BY t1.id
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="findByImei" resultType="cn.com.yusong.yhdg.common.domain.hdg.Battery">
+        select * from hdg_battery where code = #{code} limit 1
+    </select>
+
+    <select id="findByShellCode" resultType="cn.com.yusong.yhdg.common.domain.hdg.Battery">
+        select * from hdg_battery where shell_code = #{shellCode} limit 1
+    </select>
+
+    <select id="shopStoreList" resultType="cn.com.yusong.yhdg.common.domain.hdg.Battery">
+        select
+        *
+        from hdg_battery t1, hdg_shop_store_battery t2
+        where t1.id = t2.battery_id
+        <if test="shopId != null and shopId != ''">
+            and t2.shop_id = #{shopId}
+        </if>
+        <if test="shopId == null and shopId == ''">
+            and t2.shop_id is not NULL
+        </if>
+        <if test="keyword != null and keyword != ''">
+            and t1.id like concat('%', #{keyword} ,'%')
+        </if>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="shopStoreCount" resultType="int">
+        select
+        COUNT(t2.battery_id)
+        from hdg_battery t1, hdg_shop_store_battery t2
+        where t1.id = t2.battery_id
+        <if test="shopId != null and shopId != ''">
+            and t2.shop_id = #{shopId}
+        </if>
+        <if test="shopId == null and shopId == ''">
+            and t2.shop_id is not null
+        </if>
+        and t2.agent_id = #{agentId}
+    </select>
+
+    <select id="shopCustomerUseList" resultType="cn.com.yusong.yhdg.common.domain.hdg.Battery">
+        select
+        t2.*
+        from
+        (
+        select
+        t2.battery_id
+        from bas_customer_exchange_info t1, bas_customer_exchange_battery t2
+        where t1.id = t2.customer_id
+        <if test="keyword != null and keyword != ''">
+            and t2.id like concat('%', #{keyword} ,'%')
+        </if>
+        <if test="shopId != null and shopId != ''">
+            and t1.balance_shop_id = #{shopId}
+        </if>
+        <if test="shopId == null and shopId == ''">
+            and t1.balance_shop_id is not NULL
+        </if>
+        union
+        select
+        t2.battery_id
+        from zd_customer_rent_info t1, zd_customer_rent_battery t2
+        where t1.id = t2.customer_id
+        <if test="keyword != null and keyword != ''">
+            and t2.id like concat('%', #{keyword} ,'%')
+        </if>
+        <if test="shopId != null and shopId != ''">
+            and t1.balance_shop_id = #{shopId}
+        </if>
+        <if test="shopId == null and shopId == ''">
+            and t1.balance_shop_id is not NULL
+        </if>
+        ) t1, hdg_battery t2
+        where t1.battery_id = t2.id
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="shopCustomerUseCount" resultType="int">
+        select
+        count(t2.id)
+        from
+        (
+        select
+        t2.battery_id
+        from bas_customer_exchange_info t1, bas_customer_exchange_battery t2
+        where t1.id = t2.customer_id
+        and t1.agent_id = #{agentId}
+        <if test="shopId != null and shopId != ''">
+            and t1.balance_shop_id = #{shopId}
+        </if>
+        <if test="shopId == null and shopId == ''">
+            and t1.balance_shop_id is not NULL
+        </if>
+        union
+        select
+        t2.battery_id
+        from zd_customer_rent_info t1, zd_customer_rent_battery t2
+        where t1.id = t2.customer_id
+        and t1.agent_id = #{agentId}
+        <if test="shopId != null and shopId != ''">
+            and t1.balance_shop_id = #{shopId}
+        </if>
+        <if test="shopId == null and shopId == ''">
+            and t1.balance_shop_id is not NULL
+        </if>
+        ) t1, hdg_battery t2
+        where t1.battery_id = t2.id
+    </select>
+
+    <select id="shopCabinetList" resultType="cn.com.yusong.yhdg.common.domain.hdg.Battery">
+        select
+        t2.*
+        from hdg_cabinet t1, hdg_battery t2
+        where t1.id = t2.cabinet_id
+        <if test="shopId != null and shopId != ''">
+            and t1.shop_id = #{shopId}
+        </if>
+        <if test="shopId == null and shopId == ''">
+            and t1.shop_id is not NULL
+        </if>
+        <if test="keyword != null and keyword != ''">
+            and t2.id like concat('%', #{keyword} ,'%')
+        </if>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="agentShopList" resultType="cn.com.yusong.yhdg.common.domain.hdg.Battery">
+        select
+        t1.*
+        from hdg_battery t1, hdg_shop_store_battery t2
+        where t1.id = t2.battery_id
+        and t2.shop_id in
+        (
+        SELECT id
+        FROM hdg_shop
+        )
+        and t1.agent_id = #{agentId} and t1.status = 1
+        and t1.category = #{category} and t1.is_normal = 1
+        <if test="keyword != null and keyword != ''">
+            and (t1.id like concat('%', #{keyword} ,'%')
+            or t1.customer_mobile like concat('%', #{keyword} ,'%')
+            or t1.customer_fullname like concat('%', #{keyword} ,'%'))
+        </if>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="agentRestsList" resultType="cn.com.yusong.yhdg.common.domain.hdg.Battery">
+        select
+        *
+        from
+        hdg_battery WHERE id NOT IN(
+        select
+        battery_id
+        from hdg_shop_store_battery
+        )
+        and agent_id = #{agentId}
+        and category = #{category} and status not in (2,3,5,6)
+        and is_normal = 1
+        <if test="keyword != null and keyword != ''">
+            and (id like concat('%', #{keyword} ,'%')
+            or customer_mobile like concat('%', #{keyword} ,'%')
+            or customer_fullname like concat('%', #{keyword} ,'%'))
+        </if>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="findQrcode" resultType="int">
+        select count(*) from hdg_battery where qrcode = #{qrcode}
+        <if test="id != null">
+            and id != #{id}
+        </if>
+    </select>
+
+    <select id="findUniqueCode" resultType="int">
+        select count(*) from hdg_battery where code = #{code}
+        <if test="id != null">
+            and id != #{id}
+        </if>
+    </select>
+
+    <select id="findFreeOutTimeCount" resultType="int">
+        SELECT
+         count(id)
+        FROM
+        hdg_battery
+        WHERE
+        status = #{status}
+        AND free_out_time is not null and free_out_time &lt; #{freeOutTime}
+        and up_line_status = 1
+        and category = 1
+        and agent_id = #{agentId}
+    </select>
+
+    <select id="findFreeOutTimeList" resultType="cn.com.yusong.yhdg.common.domain.hdg.Battery">
+        SELECT
+         *
+        FROM
+        hdg_battery
+        WHERE
+        status = #{status}
+        AND free_out_time is not null and free_out_time &lt; #{freeOutTime}
+        and up_line_status = 1
+        and category = 1
+        and agent_id = #{agentId}
+        order by free_out_time desc
+        limit #{offset}, #{limit}
+    </select>
+
+
+    <select id="countShopCabinetBattery" resultType="java.lang.Integer">
+        select count(*)
+        from hdg_battery t1, hdg_cabinet t2
+        where t2.shop_id = #{shopId}
+        and t1.cabinet_id = t2.id
+    </select>
+    <select id="countShopCustomerUseNum" resultType="java.lang.Integer">
+        select count(*)
+        from (
+            select
+                t2.battery_id
+            from bas_customer_exchange_info t1, bas_customer_exchange_battery t2
+            where t1.balance_shop_id = #{shopId}
+            and t1.id = t2.customer_id
+            union
+            select
+                t2.battery_id
+            from zd_customer_rent_info t1, zd_customer_rent_battery t2
+            where t1.balance_shop_id = #{shopId}
+            and t1.id = t2.customer_id
+        ) t
+    </select>
+
+    <update id="updateUpLineStatus">
+        update hdg_battery set
+        type = #{type},
+        agent_id = #{agentId},
+        lock_switch = 0,
+        up_line_status = #{upLineStatus},
+        category = #{category},
+        up_line_time = #{upLineTime}
+        where id = #{id}
+    </update>
+
+    <update id="updateLockSwitch">
+        UPDATE hdg_battery SET
+        lock_switch = #{lockSwitch}
+        WHERE id = #{id}
+    </update>
+
+    <update id="clearCustomer">
+        update hdg_battery
+        set
+        status = #{status},
+        order_id = null,
+        customer_out_time = null,
+        customer_id = null,
+        customer_mobile = null,
+        customer_fullname = null,
+        rescue_status = null,
+        low_volume_notice_volume = null,
+        low_volume_notice_time = null
+        where id = #{id}
+    </update>
+
+    <update id="updateOrderId">
+        update hdg_battery
+        set
+        status = #{status},
+        order_id = #{orderId},
+        customer_out_time = #{customerOutTime},
+        customer_id = #{customerId},
+        customer_mobile = #{customerMobile},
+        customer_fullname = #{customerFullname},
+        low_volume_notice_volume = null,
+        low_volume_notice_time = null
+        where id = #{id}
+    </update>
+
+    <update id="updateShopInfo">
+        update hdg_battery set
+        shop_id = #{shopId},
+        shop_name = #{shopName}
+        where id = #{id}
+    </update>
+
+    <update id="changeIsNormal">
+        update hdg_battery
+        <if test="isNormal != null and isNormal ==1 ">
+            set is_normal = 0,
+        </if>
+        <if test="isNormal != null and isNormal ==0 ">
+            set is_normal = 1,
+        </if>
+        <if test="operator != null">
+            operator = #{operator},
+        </if>
+        <if test="operatorTime != null ">
+            operator_time = #{operatorTime},
+        </if>
+        abnormal_cause = #{abnormalCause}
+        where id = #{id}
+    </update>
+
+</mapper>

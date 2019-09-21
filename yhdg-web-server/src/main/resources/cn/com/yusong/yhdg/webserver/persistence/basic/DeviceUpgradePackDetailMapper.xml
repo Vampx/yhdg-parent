@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.basic.DeviceUpgradePackDetailMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.basic.DeviceUpgradePackDetail">
+        select
+          a.*,bd.version AS deviceVersion
+        from bas_device_upgrade_pack_detail a
+        LEFT JOIN bas_device bd ON a.device_id = bd.device_id
+        where a.pack_id = #{packId}
+        and a.device_id = #{deviceId}
+        and EXISTS (SELECT 1 FROM bas_device_upgrade_pack bdup WHERE a.pack_id = bdup.id and bdup.device_type = bd.type)
+
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.basic.DeviceUpgradePackDetail" resultType="int">
+        select
+        count(*)
+        from bas_device_upgrade_pack_detail a
+        LEFT JOIN bas_device bd ON a.device_id = bd.device_id
+        <trim prefix="where" prefixOverrides="and">
+            <if test="packId != null ">
+                and a.pack_id = #{packId}
+            </if>
+            and EXISTS (SELECT 1 FROM bas_device_upgrade_pack bdup WHERE a.pack_id = bdup.id and bdup.device_type = bd.type)
+        </trim>
+    </select>
+
+    <select id="findPageResult" resultType="cn.com.yusong.yhdg.common.domain.basic.DeviceUpgradePackDetail">
+        select
+        a.*,
+        bd.version AS deviceVersion,
+        bd.heart_time AS heartTime
+        from bas_device_upgrade_pack_detail a
+        LEFT JOIN bas_device bd ON a.device_id = bd.device_id
+        <trim prefix="where" prefixOverrides="and">
+            <if test="packId != null ">
+                and a.pack_id = #{packId}
+            </if>
+            and EXISTS (SELECT 1 FROM bas_device_upgrade_pack bdup WHERE a.pack_id = bdup.id and bdup.device_type = bd.type)
+        </trim>
+        limit ${beginIndex}, ${rows}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.DeviceUpgradePackDetail">
+        INSERT INTO bas_device_upgrade_pack_detail
+        (
+           pack_id,
+           device_id
+        ) VALUES (
+            #{packId},
+            #{deviceId}
+        )
+    </insert>
+
+    <delete id="delete" parameterType="cn.com.yusong.yhdg.common.domain.basic.DeviceUpgradePackDetail">
+        delete from bas_device_upgrade_pack_detail where pack_id = #{packId} and device_id = #{deviceId}
+    </delete>
+
+</mapper>

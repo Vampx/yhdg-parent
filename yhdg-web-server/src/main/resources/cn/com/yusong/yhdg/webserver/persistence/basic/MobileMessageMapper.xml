@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.basic.MobileMessageMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.basic.MobileMessage">
+        select
+            *
+       from bas_mobile_message
+       where id = #{id}
+    </select>
+
+    <select id="findByMsgId" resultType="cn.com.yusong.yhdg.common.domain.basic.MobileMessage">
+        select
+            *
+       from bas_mobile_message
+       where msg_id = #{msgId}
+    </select>
+
+    <select id="findPageCount" resultType="int">
+        select count(*) from bas_mobile_message
+        <trim prefix="where" prefixOverrides="and">
+            <if test="partnerId != null">
+                and partner_id = #{partnerId}
+            </if>
+            <if test="sourceType != null">
+                <![CDATA[and source_type = #{sourceType}]]>
+            </if>
+            <if test="mobile != null and mobile != ''">
+                <![CDATA[and mobile LIKE concat(#{mobile}, '%')]]>
+            </if>
+            <if test="sourceId != null and sourceId != ''">
+                <![CDATA[and source_id LIKE concat('%', #{sourceId}, '%')]]>
+            </if>
+            <if test="content != null and content != ''">
+                <![CDATA[and content LIKE concat('%', #{content}, '%')]]>
+            </if>
+            <if test="status != null">
+                <![CDATA[and status = #{status}]]>
+            </if>
+            <if test="senderId != null">
+                <![CDATA[and sender_id = #{senderId}]]>
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" resultType="cn.com.yusong.yhdg.common.domain.basic.MobileMessage">
+        select
+            *
+        from bas_mobile_message
+        <trim prefix="where" prefixOverrides="and">
+            <if test="partnerId != null">
+                and partner_id = #{partnerId}
+            </if>
+            <if test="sourceType != null">
+                <![CDATA[and source_type = #{sourceType}]]>
+            </if>
+            <if test="mobile != null and mobile != ''">
+                <![CDATA[and mobile LIKE concat(#{mobile}, '%')]]>
+            </if>
+            <if test="sourceId != null and sourceId != ''">
+                <![CDATA[and source_id LIKE concat('%', #{sourceId}, '%')]]>
+            </if>
+            <if test="content != null and content != ''">
+                <![CDATA[and content LIKE concat('%', #{content}, '%')]]>
+            </if>
+            <if test="status != null">
+                <![CDATA[and status = #{status}]]>
+            </if>
+            <if test="senderId != null">
+                <![CDATA[and sender_id = #{senderId}]]>
+            </if>
+        </trim>
+        order by id desc
+        limit ${beginIndex}, ${rows}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.MobileMessage" useGeneratedKeys="true" keyProperty="id">
+        insert into bas_mobile_message(partner_id, source_id, source_type, content, mobile, variable, template_code, status, sender_id, type, delay, create_time)
+        values(#{partnerId}, #{sourceId}, #{sourceType}, #{content}, #{mobile}, #{variable}, #{templateCode}, #{status}, #{senderId}, #{type}, #{delay}, #{createTime})
+    </insert>
+
+    <update id="updateStatus">
+        update bas_mobile_message set status = #{status} where id = #{id}
+    </update>
+
+    <update id="updateCallbackStatus">
+        update bas_mobile_message set status = #{status}, callback_status = #{callbackStatus}, resend_num = #{resendNum} where id = #{id}
+    </update>
+</mapper>

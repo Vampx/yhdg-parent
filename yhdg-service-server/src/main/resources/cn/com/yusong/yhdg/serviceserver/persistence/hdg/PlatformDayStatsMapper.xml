@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.serviceserver.persistence.hdg.PlatformDayStatsMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.hdg.PlatformDayStats">
+        select
+            *
+        from hdg_platform_day_stats
+        where stats_date = #{statsDate}
+    </select>
+
+    <select id="sumMonth" resultType="cn.com.yusong.yhdg.common.domain.hdg.PlatformMonthStats">
+        select
+        ifnull(sum(increment_platform_income), 0) as incrementPlatformIncome,
+        ifnull(sum(increment_foregift_money), 0) as incrementForegiftMoney,
+        ifnull(sum(increment_exchange_money), 0) as incrementExchangeMoney,
+        ifnull(sum(increment_packet_period_money), 0) as incrementPacketPeriodMoney,
+        ifnull(sum(increment_deposit_money), 0) as incrementDepositMoney,
+        ifnull(sum(increment_deposit_count), 0) as incrementDepositCount,
+        ifnull(sum(increment_exchange_count), 0) as incrementExchangeCount,
+        ifnull(sum(increment_foregift_count), 0) as incrementForegiftCount,
+        ifnull(sum(increment_refund_money), 0) as incrementRefundMoney,
+        ifnull(sum(increment_refund_foregift_money), 0) as incrementRefundForegiftMoney,
+        ifnull(sum(increment_refund_exchange_money), 0) as incrementRefundExchangeMoney,
+        ifnull(sum(increment_refund_packet_period_money), 0) as incrementRefundPacketPeriodMoney,
+        ifnull(sum(increment_refund_deposit_money), 0) as incrementRefundDepositMoney,
+        ifnull(sum(increment_refund_deposit_count), 0) as incrementRefundDepositCount,
+        ifnull(sum(increment_refund_exchange_count), 0) as incrementRefundExchangeCount,
+        ifnull(sum(increment_refund_foregift_count), 0) as incrementRefundForegiftCount,
+        ifnull(sum(increment_cabinet_count), 0) as incrementCabinetCount,
+        ifnull(sum(increment_customer_count), 0) as incrementCustomerCount,
+        ifnull(sum(increment_feedback_count), 0) as incrementFeedbackCount,
+        ifnull(sum(agent_income), 0) as agentIncome
+        from hdg_platform_day_stats
+        where
+        <![CDATA[ stats_date LIKE concat('%', #{statsMonth}, '%')]]>
+    </select>
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.PlatformDayStats" >
+        INSERT INTO `hdg_platform_day_stats`
+        (`stats_date`, `total_platform_income`, `increment_platform_income`,
+        `total_foregift_money`, `increment_foregift_money`, `total_exchange_money`,
+        `increment_exchange_money`, `total_packet_period_money`, `increment_packet_period_money`,
+        `total_deposit_money`, `increment_deposit_money`, `total_deposit_count`,
+        `increment_deposit_count`, `total_exchange_count`, `increment_exchange_count`,
+        `total_foregift_count`, `increment_foregift_count`, `total_refund_money`,
+        `increment_refund_money`, `total_refund_foregift_money`, `increment_refund_foregift_money`,
+        `total_refund_exchange_money`, `increment_refund_exchange_money`, `total_refund_packet_period_money`,
+        `increment_refund_packet_period_money`, `total_refund_deposit_money`, `increment_refund_deposit_money`,
+        `total_refund_deposit_count`, `increment_refund_deposit_count`, `total_refund_exchange_count`,
+        `increment_refund_exchange_count`, `total_refund_foregift_count`, `increment_refund_foregift_count`,
+        `total_cabinet_count`, `increment_cabinet_count`, `total_customer_count`, `increment_customer_count`,
+        `total_feedback_count`, `increment_feedback_count`, `agent_income`, `not_use_count`, `update_time`)
+        VALUES (#{statsDate},#{totalPlatformIncome},#{incrementPlatformIncome},
+        #{totalForegiftMoney},#{incrementForegiftMoney},#{totalExchangeMoney},
+        #{incrementExchangeMoney},#{totalPacketPeriodMoney},#{incrementPacketPeriodMoney},
+        #{totalDepositMoney},#{incrementDepositMoney},#{totalDepositCount},
+        #{incrementDepositCount},#{totalExchangeCount},#{incrementExchangeCount},
+        #{totalForegiftCount},#{incrementForegiftCount},#{totalRefundMoney},
+        #{incrementRefundMoney},#{totalRefundForegiftMoney},#{incrementRefundForegiftMoney},
+        #{totalRefundExchangeMoney},#{incrementRefundExchangeMoney},#{totalRefundPacketPeriodMoney},
+        #{incrementRefundPacketPeriodMoney},#{totalRefundDepositMoney},#{incrementRefundDepositMoney},
+        #{totalRefundDepositCount},#{incrementRefundDepositCount},#{totalRefundExchangeCount},
+        #{incrementRefundExchangeCount},#{totalRefundForegiftCount},#{incrementRefundForegiftCount},
+        #{totalCabinetCount},#{incrementCabinetCount},#{totalCustomerCount},
+        #{incrementCustomerCount},#{totalFeedbackCount},#{incrementFeedbackCount},#{agentIncome},#{notUseCount},#{updateTime})
+    </insert>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.hdg.PlatformDayStats">
+        UPDATE `hdg_platform_day_stats`
+        SET `total_platform_income` = #{totalPlatformIncome},
+         `increment_platform_income` = #{incrementPlatformIncome},
+         `total_foregift_money` = #{totalForegiftMoney},
+         `increment_foregift_money` = #{incrementForegiftMoney},
+         `total_exchange_money` = #{totalExchangeMoney},
+         `increment_exchange_money` = #{incrementExchangeMoney},
+         `total_packet_period_money` = #{totalPacketPeriodMoney},
+         `increment_packet_period_money` = #{incrementPacketPeriodMoney},
+         `total_deposit_money` = #{totalDepositMoney},
+         `increment_deposit_money` = #{incrementDepositMoney},
+         `total_deposit_count` = #{totalDepositCount},
+         `increment_deposit_count` = #{incrementDepositCount},
+         `total_exchange_count` = #{totalExchangeCount},
+         `increment_exchange_count` = #{incrementExchangeCount},
+         `total_foregift_count` = #{totalForegiftCount},
+         `increment_foregift_count` = #{incrementForegiftCount},
+         `total_refund_money` = #{totalRefundMoney},
+         `increment_refund_money` = #{incrementRefundMoney},
+         `total_refund_foregift_money` = #{totalRefundForegiftMoney},
+         `increment_refund_foregift_money` = #{incrementRefundForegiftMoney},
+         `total_refund_exchange_money` = #{totalRefundExchangeMoney},
+         `increment_refund_exchange_money` = #{incrementRefundExchangeMoney},
+         `total_refund_packet_period_money` = #{totalRefundPacketPeriodMoney},
+         `increment_refund_packet_period_money` = #{incrementRefundPacketPeriodMoney},
+         `total_refund_deposit_money` = #{totalRefundDepositMoney},
+         `increment_refund_deposit_money` = #{incrementRefundDepositMoney},
+         `total_refund_deposit_count` = #{totalRefundDepositCount},
+         `increment_refund_deposit_count` = #{incrementRefundDepositCount},
+         `total_refund_exchange_count` = #{totalRefundExchangeCount},
+         `increment_refund_exchange_count` = #{incrementRefundExchangeCount},
+         `total_refund_foregift_count` = #{totalRefundForegiftCount},
+         `increment_refund_foregift_count` = #{incrementRefundForegiftCount},
+         `total_cabinet_count` = #{totalCabinetCount},
+         `increment_cabinet_count` = #{incrementCabinetCount},
+         `total_customer_count` = #{totalCustomerCount},
+         `increment_customer_count` = #{incrementCustomerCount},
+         `total_feedback_count` = #{totalFeedbackCount},
+         `increment_feedback_count` = #{incrementFeedbackCount},
+         `agent_income` = #{agentIncome},
+         `not_use_count` = #{notUseCount},
+         `update_time` = #{updateTime}
+        WHERE
+            `stats_date` = #{statsDate}
+    </update>
+
+</mapper>

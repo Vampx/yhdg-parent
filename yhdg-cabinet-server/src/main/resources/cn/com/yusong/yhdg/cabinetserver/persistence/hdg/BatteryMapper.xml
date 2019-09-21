@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.cabinetserver.persistence.hdg.BatteryMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.hdg.Battery">
+        select
+        *
+        from hdg_battery
+        where id = #{id}
+    </select>
+
+    <select id="findByCode" resultType="cn.com.yusong.yhdg.common.domain.hdg.Battery">
+        select
+        *
+        from hdg_battery
+        where code = #{code}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.Battery">
+        insert into hdg_battery(
+        id,
+        code,
+        type,
+        category,
+        agent_id,
+        order_id,
+        volume,
+        status,
+        exchange_amount,
+        report_time,
+        order_distance,
+        total_distance,
+        is_active,
+        current_signal,
+        belong_city_id,
+        lng,
+        lat,
+        address,
+        health,
+        sim_memo,
+        brand,
+        voltage,
+        electricity,
+        use_count,
+        produce_date,
+        protect_state,
+        strand,
+        temp,
+        fet_status,
+        charge_status,
+        ready_charge_time,
+        customer_out_time,
+        customer_id,
+        customer_mobile,
+        customer_fullname,
+        in_box_time,
+        cabinet_id,
+        cabinet_name,
+        box_num,
+        keeper_out_time,
+        keeper_name,
+        free_out_time,
+        stay_heartbeat,
+        move_heartbeat,
+        electrify_heartbeat,
+        is_report_voltage,
+        is_online,
+        is_normal,
+        qrcode,
+        shell_code,
+        charge_complete_volume,
+        gps_switch,
+        lock_switch,
+        gprs_shutdown,
+        shutdown_voltage,
+        accelereted_speed,
+        repair_status,
+        up_line_status,
+        create_time
+        )
+        values(
+        #{id},
+        #{code},
+        #{type},
+        #{category},
+        #{agentId},
+        #{orderId},
+        #{volume},
+        #{status},
+        #{exchangeAmount},
+        #{reportTime},
+        #{orderDistance},
+        #{totalDistance},
+        #{isActive},
+        #{currentSignal},
+        #{belongCityId},
+        #{lng},
+        #{lat},
+        #{address},
+        #{health},
+        #{simMemo},
+        #{brand},
+        #{voltage},
+        #{electricity},
+        #{useCount},
+        #{produceDate},
+        #{protectState},
+        #{strand},
+        #{temp},
+        #{fetStatus},
+        #{chargeStatus},
+        #{readyChargeTime},
+        #{customerOutTime},
+        #{customerId},
+        #{customerMobile},
+        #{customerFullname},
+        #{inBoxTime},
+        #{cabinetId},
+        #{cabinetName},
+        #{boxNum},
+        #{keeperOutTime},
+        #{keeperName},
+        #{freeOutTime},
+        #{stayHeartbeat},
+        #{moveHeartbeat},
+        #{electrifyHeartbeat},
+        #{isReportVoltage},
+        #{isOnline},
+        #{isNormal},
+        #{qrcode},
+        #{shellCode},
+        #{chargeCompleteVolume},
+        #{gpsSwitch},
+        #{lockSwitch},
+        #{gprsShutdown},
+        #{shutdownVoltage},
+        #{acceleretedSpeed},
+        #{repairStatus},
+        #{upLineStatus},
+        #{createTime}
+        )
+    </insert>
+
+    <update id="updateCabinetId">
+        update hdg_battery set
+        belong_cabinet_id = #{belongCabinetId},
+        agent_id = #{agentId}
+        where id = #{id}
+    </update>
+
+    <update id="updateInBox">
+        update hdg_battery set
+        <if test="volume != null">
+            volume = #{volume},
+        </if>
+        in_box_time = #{inBoxTime},
+        cabinet_id = #{cabinetId},
+        cabinet_name = #{cabinetName},
+        box_num = #{boxNum},
+        status = #{status},
+        free_out_time = #{freeOutTime},
+        charge_status = #{chargeStatus}
+        where id = #{id}
+    </update>
+
+    <update id="updateCustomerUse">
+        update hdg_battery set
+        status = #{status},
+        order_distance = 0,
+        order_id = #{orderId},
+        customer_out_time = #{customerOutTime},
+        customer_id = #{customerId},
+        customer_mobile = #{customerMobile},
+        customer_fullname = #{customerFullname},
+        keeper_out_time = null,
+        keeper_id = null,
+        keeper_name = null,
+        keeper_mobile = null,
+        in_box_time = null,
+        cabinet_id = null,
+        cabinet_name = null,
+        box_num = null
+        where id = #{id}
+    </update>
+
+    <update id="updateKeeperOut">
+        update hdg_battery set
+        status = #{status},
+        charge_status = #{chargeStatus},
+        order_id = #{orderId},
+        keeper_out_time = #{keeperOutTime},
+        free_out_time = #{keeperOutTime},
+        keeper_id = #{keeperId},
+        keeper_name = #{keeperName},
+        keeper_mobile = #{keeperMobile},
+        in_box_time = null,
+        cabinet_id = null,
+        cabinet_name = null,
+        box_num = null,
+        customer_out_time = null,
+        customer_id = null,
+        customer_mobile = null,
+        customer_fullname = null,
+        rescue_status = null,
+        low_volume_notice_volume = null,
+        low_volume_notice_time = null
+        where id = #{id}
+    </update>
+
+    <update id="updateFreeOut">
+        update hdg_battery set
+        status = #{status},
+        order_id = null,
+        in_box_time = null,
+        cabinet_id = null,
+        cabinet_name = null,
+        box_num = null,
+        free_out_time = #{freeOutTime}
+        where id = #{id}
+    </update>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.hdg.Battery">
+        update hdg_battery set
+        <if test="version != null">
+            version = #{version},
+        </if>
+        voltage = #{voltage},
+        electricity = #{electricity},
+        volume = #{volume},
+        total_capacity = #{totalCapacity},
+        current_capacity = #{currentCapacity},
+        lng = #{lng},
+        lat = #{lat},
+        gps_update_time = #{gpsUpdateTime},
+        protect_state = #{protectState},
+        fet = #{fet},
+        is_online = #{isOnline},
+        temp = #{temp},
+        link_status = #{linkStatus},
+        report_time = #{reportTime},
+        circle = #{circle},
+        <if test="realVoltageDiff != null">
+            real_voltage_diff = #{realVoltageDiff},
+            real_voltage_diff_time = #{realVoltageDiffTime},
+        </if>
+        <if test="fullVoltageDiff != null">
+            full_voltage_diff = #{fullVoltageDiff},
+            full_voltage_diff_time = #{fullVoltageDiffTime},
+        </if>
+        <if test="dischargeVoltageDiff != null">
+            discharge_voltage_diff = #{dischargeVoltageDiff},
+            discharge_voltage_diff_time = #{dischargeVoltageDiffTime},
+        </if>
+        <if test="dischargeVoltageDiff != null">
+            discharge_voltage_diff = #{dischargeVoltageDiff},
+            discharge_voltage_diff_time = #{dischargeVoltageDiffTime},
+        </if>
+
+        <if test="isNormal != null ">
+            is_normal =  #{isNormal},
+            operator = #{operator},
+            operator_time = #{operatorTime},
+            abnormal_cause = #{abnormalCause},
+        </if>
+
+        charge_status = #{chargeStatus},
+        single_voltage = #{singleVoltage},
+        monomer_overvoltage_fault_log_id=#{monomerOvervoltageFaultLogId},
+        monomer_lowvoltage_fault_log_id=#{monomerLowvoltageFaultLogId},
+        whole_overvoltage_fault_log_id=#{wholeOvervoltageFaultLogId},
+        whole_lowvoltage_fault_log_id=#{wholeLowvoltageFaultLogId},
+        charge_overtemp_fault_log_id=#{chargeOvertempFaultLogId},
+        charge_lowtemp_fault_log_id=#{chargeLowtempFaultLogId},
+        discharge_overtemp_fault_log_id=#{dischargeOvertempFaultLogId},
+        discharge_lowtemp_fault_log_id=#{dischargeLowtempFaultLogId},
+        charge_overcurrent_fault_log_id=#{chargeOvercurrentFaultLogId},
+        discharge_overcurrent_fault_log_id=#{dischargeOvercurrentFaultLogId},
+        short_circuit_fault_log_id=#{shortCircuitFaultLogId},
+        testing_ic_fault_log_id=#{testingIcFaultLogId},
+        software_locking_fault_log_id=#{softwareLockingFaultLogId},
+        discharge_locking_fault_log_id=#{dischargeLockingFaultLogId},
+        charge_mos_fault_log_id=#{chargeMosFaultLogId},
+        discharge_mos_fault_log_id=#{dischargeMosFaultLogId},
+        max_vol_diff_log_id=#{maxVolDiffLogId},
+        sign_vol_low_log_id = #{signVolLowLogId},
+        hit_fault_log_id = #{hitFaultLogId},
+        dismantle_fault_log_id = #{dismantleFaultLogId}
+        where id = #{id}
+    </update>
+
+    <update id="updateChargeStatus">
+        update hdg_battery set
+        charge_record_id = #{chargeRecordId}
+        where id = #{id}
+    </update>
+
+    <update id="updateUpLine">
+        update hdg_battery set
+        agent_id = #{agentId},
+        lock_switch = 0,
+        up_line_status = #{upLineStatus},
+        up_line_time = #{upLineTime}
+        where id = #{id}
+    </update>
+
+    <update id="clearCustomer">
+        update hdg_battery
+        set
+        status = #{status},
+        order_id = null,
+        order_distance = 0,
+        customer_out_time = null,
+        customer_id = null,
+        customer_mobile = null,
+        customer_fullname = null,
+        rescue_status = null,
+        low_volume_notice_volume = null,
+        low_volume_notice_time = null
+        where id = #{id}
+    </update>
+
+    <update id="clearOrderId">
+        update hdg_battery
+        set
+            order_distance = 0,
+            order_id = null
+        where id = #{id}
+    </update>
+
+    <update id="clearChargeRecord">
+        update hdg_battery
+        set
+        charge_record_id = null,
+        charge_status = #{chargeStatus}
+        where id = #{id}
+    </update>
+
+    <update id="changeIsNormal">
+        update hdg_battery
+        set is_normal =  #{isNormal},
+        operator = #{operator},
+        operator_time = #{operatorTime},
+        abnormal_cause = #{abnormalCause}
+        where id = #{id}
+    </update>
+
+
+
+</mapper>

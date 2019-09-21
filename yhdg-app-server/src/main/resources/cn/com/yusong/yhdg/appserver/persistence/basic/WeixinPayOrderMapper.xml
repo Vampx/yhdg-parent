@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+                "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.appserver.persistence.basic.WeixinPayOrderMapper">
+    
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.WeixinPayOrder">
+        insert into bas_weixin_pay_order(id, partner_id, agent_id, customer_id,money, source_type, source_id, order_status, handle_time, memo, create_time)
+        values(#{id}, #{partnerId}, #{agentId}, #{customerId}, #{money}, #{sourceType}, #{sourceId}, #{orderStatus}, #{handleTime}, #{memo}, #{createTime})
+    </insert>
+</mapper>

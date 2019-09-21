@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.basic.CustomerRefundRecordMapper">
+
+    <select id="find" parameterType="long"  resultType="cn.com.yusong.yhdg.common.domain.basic.CustomerRefundRecord">
+        select * from bas_customer_refund_record where id = #{id}
+    </select>
+
+    <select id="existHdRefund" parameterType="long"  resultType="int">
+        select count(1) from bas_customer_refund_record where customer_id = #{customerId} and status = 1 and source_type in (1, 2, 3)
+    </select>
+
+    <select id="existZdRefund" parameterType="long"  resultType="int">
+        select count(1) from bas_customer_refund_record where customer_id = #{customerId} and status = 1 and source_type in (4, 5, 6)
+    </select>
+
+    <select id="existZcRefund" parameterType="long"  resultType="int">
+        select count(1) from bas_customer_refund_record where customer_id = #{customerId} and status = 1 and source_type in (9)
+    </select>
+
+
+    <select id="findByCustomerId"  resultType="cn.com.yusong.yhdg.common.domain.basic.CustomerRefundRecord">
+        select * from bas_customer_refund_record
+        where customer_id = #{customerId} and status = #{status}
+    </select>
+
+    <select id="findOneByStatus"  resultType="cn.com.yusong.yhdg.common.domain.basic.CustomerRefundRecord">
+        select * from bas_customer_refund_record
+        where customer_id = #{customerId} and status = #{status}
+        and source_type = #{sourceType}
+        limit 1
+    </select>
+
+    <select id="findOneByCustomerId"  resultType="cn.com.yusong.yhdg.common.domain.basic.CustomerRefundRecord">
+        select * from bas_customer_refund_record
+        where customer_id = #{customerId} and status = #{status}
+         limit 1
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.basic.CustomerRefundRecord" resultType="int">
+        select count(id)
+        from bas_customer_refund_record
+        <trim prefix="where" prefixOverrides="and">
+            <if test="id != null">and id = #{id} </if>
+            <if test="partnerId != null">and partner_id = #{partnerId} </if>
+            <if test="agentId != null">and agent_id = #{agentId} </if>
+            <if test="agentName != null">and agent_name = #{agentName} </if>
+            <if test="agentCode != null">and agent_code = #{agentCode} </if>
+            <if test="orderId != null">and order_id = #{orderId} </if>
+            <if test="customerId != null">and customer_id = #{customerId} </if>
+            <if test="mobile != null">and mobile = #{mobile} </if>
+            <if test="fullname != null">and fullname = #{fullname} </if>
+            <if test="sourceType != null">and source_type = #{sourceType} </if>
+            <if test="sourceId != null">and source_id = #{sourceId} </if>
+            <if test="refundMoney != null">and refund_money = #{refundMoney} </if>
+            <if test="refundTime != null">and refund_time = #{refundTime} </if>
+            <if test="moneyInfo != null">and money_info = #{moneyInfo} </if>
+            <if test="status != null">and status = #{status} </if>
+            <if test="createTime != null">and create_time = #{createTime} </if>
+            <if test="refundType != null">and refund_type = #{refundType} </if>
+            <if test="ptPayOrderId != null">and pt_pay_order_id = #{ptPayOrderId} </if>
+            <if test="type == 1">
+                and source_type in (1,2,3,7)
+            </if>
+            <if test="type == 2">
+                and source_type in (4,5,6,8)
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.basic.CustomerRefundRecord" resultType="cn.com.yusong.yhdg.common.domain.basic.CustomerRefundRecord">
+        select *
+        from bas_customer_refund_record
+        <trim prefix="where" prefixOverrides="and">
+            <if test="id != null">and id = #{id} </if>
+            <if test="partnerId != null">and partner_id = #{partnerId} </if>
+            <if test="agentId != null">and agent_id = #{agentId} </if>
+            <if test="agentName != null">and agent_name = #{agentName} </if>
+            <if test="agentCode != null">and agent_code = #{agentCode} </if>
+            <if test="orderId != null">and order_id = #{orderId} </if>
+            <if test="customerId != null">and customer_id = #{customerId} </if>
+            <if test="mobile != null">and mobile = #{mobile} </if>
+            <if test="fullname != null">and fullname = #{fullname} </if>
+            <if test="sourceType != null">and source_type = #{sourceType} </if>
+            <if test="sourceId != null">and source_id = #{sourceId} </if>
+            <if test="refundMoney != null">and refund_money = #{refundMoney} </if>
+            <if test="refundTime != null">and refund_time = #{refundTime} </if>
+            <if test="moneyInfo != null">and money_info = #{moneyInfo} </if>
+            <if test="status != null">and status = #{status} </if>
+            <if test="createTime != null">and create_time = #{createTime} </if>
+            <if test="refundType != null">and refund_type = #{refundType} </if>
+            <if test="ptPayOrderId != null">and pt_pay_order_id = #{ptPayOrderId} </if>
+            <if test="type == 1">
+                and source_type in (1,2,3,7)
+            </if>
+            <if test="type == 2">
+                and source_type in (4,5,6,8)
+            </if>
+        </trim>
+        order by id desc
+        limit #{beginIndex}, #{rows}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.CustomerRefundRecord" keyProperty="id" useGeneratedKeys="true">
+        insert into bas_customer_refund_record (partner_id,agent_id,agent_name,agent_code,order_id,customer_id,
+        mobile,fullname,source_type,source_id,refund_money,refund_time,money_info,
+        status,create_time,refund_type,pt_pay_order_id)
+        values (#{partnerId},#{agentId},#{agentName},#{agentCode},#{orderId},#{customerId},
+        #{mobile},#{fullname},#{sourceType},#{sourceId},#{refundMoney},#{refundTime},#{moneyInfo},
+        #{status},#{createTime},#{refundType},#{ptPayOrderId})
+    </insert>
+
+    <update id="updateStatus">
+        update bas_customer_refund_record set
+        status = #{status},
+        refund_money = #{refundMoney},
+        refund_time = #{refundTime},
+        refund_type = #{refundType},
+        pt_pay_order_id = #{ptPayOrderId}
+        where id = #{id}
+    </update>
+
+    <update id="backStatus">
+        update bas_customer_refund_record set
+        status = #{status},
+        refund_money = #{refundMoney},
+        refund_time = #{refundTime},
+        where id = #{id}
+    </update>
+
+</mapper>

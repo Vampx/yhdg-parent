@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration monitorInterval="30">
+    <Appenders>
+        <Console name="Console">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+        </Console>
+    </Appenders>
+    <Loggers>
+        <Root level="ERROR">
+            <AppenderRef ref="Console"/>
+        </Root>
+
+        <logger name="cn.com.yusong.yhdg.common.tool.netty" level="DEBUG" additivity="false">
+            <AppenderRef ref="Console"/>
+        </logger>
+        <logger name="cn.com.yusong.yhdg.cabinetserver.comm.session" level="DEBUG" additivity="false">
+            <AppenderRef ref="Console"/>
+        </logger>
+        <logger name="cn.com.yusong.yhdg.cabinetserver.comm.server" level="DEBUG" additivity="false">
+            <AppenderRef ref="Console"/>
+        </logger>
+        <logger name="cn.com.yusong.yhdg.cabinetserver.biz" level="DEBUG" additivity="false">
+            <AppenderRef ref="Console"/>
+        </logger>
+        <logger name="cn.com.yusong.yhdg.cabinetserver.service" level="DEBUG" additivity="false">
+            <AppenderRef ref="Console"/>
+        </logger>
+        <logger name="cn.com.yusong.yhdg.cabinetserver.persistence" level="DEBUG" additivity="false">
+            <AppenderRef ref="Console"/>
+        </logger>
+
+
+    </Loggers>
+</Configuration>

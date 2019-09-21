@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.hdg.DispatcherAreaMapper">
+
+    <select id="find" parameterType="long" resultType="cn.com.yusong.yhdg.common.domain.hdg.DispatcherArea">
+        SELECT
+            id,
+            agent_id as agentId,
+            user_id as userId,
+            province_id as provinceId,
+            city_id as cityId,
+            district_id as districtId,
+            create_time as createTime
+        FROM hdg_dispatcher_area
+        WHERE id = #{id}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.hdg.DispatcherArea" resultType="int">
+        select
+        count(1)
+        from hdg_dispatcher_area
+        where 1 = 1
+        <if test="agentId != null">
+            and agent_id = #{agentId}
+        </if>
+        <if test="userId != null">
+            and user_id = #{userId}
+        </if>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.hdg.DispatcherArea"
+            resultType="cn.com.yusong.yhdg.common.domain.hdg.DispatcherArea">
+        select
+            id,
+            agent_id as agentId,
+            user_id as userId,
+            province_id as provinceId,
+            city_id as cityId,
+            district_id as districtId,
+            create_time as createTime
+        from hdg_dispatcher_area
+        where 1 = 1
+        <if test="agentId != null">
+            and agent_id= #{agentId}
+        </if>
+        <if test="userId != null">
+            and user_id = #{userId}
+        </if>
+        limit #{beginIndex}, #{rows}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.DispatcherArea" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO hdg_dispatcher_area(
+        agent_id,
+        user_id,
+        province_id,
+        city_id,
+        district_id,
+        create_time
+        ) VALUES (
+        #{agentId},
+        #{userId},
+        #{provinceId},
+        #{cityId},
+        #{districtId},
+        #{createTime}
+        )
+    </insert>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.hdg.DispatcherArea">
+        update hdg_dispatcher_area set
+        agent_id = #{agentId},
+        user_id = #{userId},
+        province_id = #{provinceId},
+        city_id = #{cityId},
+        district_id = #{districtId}
+        where id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="long">
+        delete from hdg_dispatcher_area where id = #{id}
+    </delete>
+
+</mapper>

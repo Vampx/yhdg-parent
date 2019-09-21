@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.staticserver.persistence.hdg.ActivityCustomerMapper">
+
+    <select id="exist" resultType="int">
+        select count(1) from hdg_activity_customer where activity_id = #{activityId} and customer_id = #{customerId}
+    </select>
+
+    <insert id="insert">
+        insert into hdg_activity_customer(activity_id, customer_id, mobile, fullname, create_time)
+        values(#{activityId}, #{customerId}, #{mobile}, #{fullname}, #{createTime})
+    </insert>
+
+</mapper>

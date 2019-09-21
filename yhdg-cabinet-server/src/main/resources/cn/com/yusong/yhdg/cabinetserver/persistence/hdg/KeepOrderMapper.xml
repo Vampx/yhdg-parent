@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.cabinetserver.persistence.hdg.KeepOrderMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.hdg.KeepOrder">
+        select
+            *
+        from hdg_keep_order
+        where id = #{id}
+    </select>
+
+    <select id="findCountByPutOrderId" resultType="int">
+        select
+            count(1)
+        from hdg_keep_order
+        where put_order_id = #{putOrderId}
+    </select>
+
+    <select id="findCountByTakeOrderId" resultType="int">
+        select
+        count(1)
+        from hdg_keep_order
+        where take_order_id = #{putOrderId}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.KeepOrder">
+        INSERT INTO hdg_keep_order
+            (
+                id,
+                agent_id,
+                battery_id,
+                take_order_id,
+                put_order_id,
+                take_cabinet_id,
+                take_cabinet_name,
+                take_box_num,
+                take_time,
+                init_volume,
+                put_cabinet_id,
+                put_cabinet_name,
+                put_box_num,
+                put_time,
+                current_volume,
+                take_user_id,
+                take_user_fullname,
+                take_user_mobile,
+                put_user_id,
+                put_user_fullname,
+                put_user_mobile,
+                order_status,
+                create_time
+            )
+            VALUES
+            (
+                #{id},
+                #{agentId},
+                #{batteryId},
+                #{takeOrderId},
+                #{putOrderId},
+                #{takeCabinetId},
+                #{takeCabinetName},
+                #{takeBoxNum},
+                #{takeTime},
+                #{initVolume},
+                #{putCabinetId},
+                #{putCabinetName},
+                #{putBoxNum},
+                #{putTime},
+                #{currentVolume},
+                #{takeUserId},
+                #{takeUserFullname},
+                #{takeUserMobile},
+                #{putUserId},
+                #{putUserFullname},
+                #{putUserMobile},
+                #{orderStatus},
+                #{createTime}
+            )
+    </insert>
+
+    <update id="putBattery">
+        update hdg_keep_order set
+            put_order_id = #{putOrderId},
+            put_cabinet_id = #{putCabinetId},
+            put_cabinet_name = #{putCabinetName},
+            put_cabinet_id = #{putCabinetId},
+            put_cabinet_name = #{putCabinetName},
+            put_time = #{putTime},
+            current_volume = #{currentVolume},
+            put_user_id = #{putUserId},
+            put_user_fullname = #{putUserFullname},
+            put_user_mobile = #{putUserMobile},
+            put_box_num = #{putBoxNum},
+            order_status = #{toStatus}
+        where id = #{id} and order_status= #{fromStatus}
+    </update>
+
+    <update id="takeBattery" >
+        update hdg_battery_order set
+        order_status = #{orderStatus},
+        take_time = #{takeTime}
+        where id = #{id}
+    </update>
+</mapper>

@@ -1,0 +1,538 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.basic.CustomerMapper">
+
+    <select id="find" parameterType="long" resultType="cn.com.yusong.yhdg.common.domain.basic.Customer">
+        select
+            *
+        from bas_customer
+        where id = #{id}
+    </select>
+
+    <select id="findOpenId" parameterType="string" resultType="cn.com.yusong.yhdg.common.domain.basic.Customer">
+        select
+        *
+        from bas_customer
+        where mobile = #{mobile}
+    </select>
+
+    <select id="findByMobile" parameterType="string" resultType="cn.com.yusong.yhdg.common.domain.basic.Customer">
+        select
+        *
+        from bas_customer
+        where mobile = #{mobile}
+    </select>
+
+    <select id="findByPartnerIdAndMobile" resultType="cn.com.yusong.yhdg.common.domain.basic.Customer">
+        select
+        *
+        from bas_customer
+        where partner_id = #{partnerId} and mobile = #{mobile}
+        limit 1
+    </select>
+
+    <select id="findUnique" resultType="int">
+        select count(*) from bas_customer where mobile = #{mobile}
+    </select>
+
+    <select id="findCount" resultType="int">
+        select
+        ifnull(count(1), 0)
+        from bas_customer
+    </select>
+
+    <select id="findTransferCustomerPageCount" parameterType="cn.com.yusong.yhdg.common.domain.basic.Customer"
+            resultType="int">
+        select count(*) from bas_customer
+        <trim prefix="where" prefixOverrides="and">
+            <if test="partnerId != null  ">
+                and partner_id = #{partnerId}
+            </if>
+            <if test="agentId != null">
+                and agent_id = #{agentId}
+            </if>
+            <if test="mobile !=null and mobile !=''">
+                <![CDATA[and mobile LIKE concat(#{mobile}, '%')]]>
+            </if>
+            <if test="fullname != null and fullname !=''">
+                <![CDATA[and fullname LIKE concat(#{fullname}, '%')]]>
+            </if>
+            and id not in (select customer_id from bas_customer_foregift_order where status = 2)
+            and id not in (select customer_id from bas_customer_installment_record where category = 1 and status in (1,2))
+            and id not in (select customer_id from bas_customer_multi_order where type = 1 and status in (1,2))
+        </trim>
+    </select>
+
+    <select id="findTransferCustomerPageResult" parameterType="cn.com.yusong.yhdg.common.domain.basic.Customer"
+            resultType="cn.com.yusong.yhdg.common.domain.basic.Customer">
+        select * from bas_customer
+        <trim prefix="where" prefixOverrides="and">
+            <if test="partnerId != null  ">
+                and partner_id = #{partnerId}
+            </if>
+            <if test="agentId != null">
+                and agent_id = #{agentId}
+            </if>
+            <if test="mobile !=null and mobile !=''">
+                <![CDATA[and mobile LIKE concat(#{mobile}, '%')]]>
+            </if>
+            <if test="fullname != null and fullname !=''">
+                <![CDATA[and fullname LIKE concat(#{fullname}, '%')]]>
+            </if>
+            and id not in (select customer_id from bas_customer_foregift_order where status = 2)
+            and id not in (select customer_id from bas_customer_installment_record where category = 1 and status in (1,2))
+            and id not in (select customer_id from bas_customer_multi_order where type = 1 and status in (1,2))
+        </trim>
+        order by id desc
+        limit ${beginIndex}, ${rows}
+    </select>
+
+    <select id="findWhitelistCustomerPageCount" parameterType="cn.com.yusong.yhdg.common.domain.basic.Customer"
+            resultType="int">
+        select count(*) from bas_customer
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId !=null">
+                and (agent_id = #{agentId} or agent_id is null)
+            </if>
+            <if test="mobile !=null and mobile !=''">
+                <![CDATA[and mobile LIKE concat(#{mobile}, '%')]]>
+            </if>
+            <if test="fullname != null and fullname !=''">
+                <![CDATA[and fullname LIKE concat(#{fullname}, '%')]]>
+            </if>
+            and id not in (select customer_id from hdg_exchange_whitelist )
+        </trim>
+    </select>
+
+    <select id="findWhitelistCustomerPageResult" parameterType="cn.com.yusong.yhdg.common.domain.basic.Customer"
+            resultType="cn.com.yusong.yhdg.common.domain.basic.Customer">
+        select * from bas_customer
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId !=null">
+                and (agent_id = #{agentId} or agent_id is null)
+            </if>
+            <if test="mobile !=null and mobile !=''">
+                <![CDATA[and mobile LIKE concat(#{mobile}, '%')]]>
+            </if>
+            <if test="fullname != null and fullname !=''">
+                <![CDATA[and fullname LIKE concat(#{fullname}, '%')]]>
+            </if>
+            and id not in (select customer_id from hdg_exchange_whitelist )
+        </trim>
+        order by id desc
+        limit ${beginIndex}, ${rows}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.basic.Customer" resultType="int">
+        select count(a.id) from bas_customer a
+        left join hdg_cabinet b on a.belong_cabinet_id = b.id
+        <trim prefix="where" prefixOverrides="and">
+            <if test="mobile !=null and mobile !=''">
+                <![CDATA[and a.mobile LIKE concat(#{mobile}, '%')]]>
+            </if>
+            <if test="fullname != null and fullname !=''">
+                <![CDATA[and a.fullname LIKE concat(#{fullname}, '%')]]>
+            </if>
+            <if test="partnerId != null  ">
+                and a.partner_id = #{partnerId}
+            </if>
+            <if test="agentId != null">
+                and a.agent_id = #{agentId}
+            </if>
+            <if test="isWhiteList != null">
+                and a.is_white_list = #{isWhiteList}
+            </if>
+            <if test="belongCabinetId !=null and belongCabinetId !=''">
+                <![CDATA[and a.belong_cabinet_id LIKE concat('%', #{belongCabinetId}, '%')]]>
+            </if>
+            <if test="belongCabinetName !=null and belongCabinetName !=''">
+                <![CDATA[and b.cabinet_name LIKE concat('%', #{belongCabinetName}, '%')]]>
+            </if>
+            <if test="unPaidForegiftFlag != null and unPaidForegiftFlag == 1">
+                and hd_foregift_status = 1 and zd_foregift_status = 1
+            </if>
+            <if test="hdPaidForegiftFlag != null and hdPaidForegiftFlag == 1">
+                and hd_foregift_status = 2
+            </if>
+            <if test="zdPaidForegiftFlag != null and zdPaidForegiftFlag == 1">
+                and zd_foregift_status = 2
+            </if>
+            <if test="zdRefundedForegiftFlag != null and zdRefundedForegiftFlag == 1">
+                and zd_foregift_status = 3
+            </if>
+            <if test="hdRefundedForegiftFlag != null and hdRefundedForegiftFlag == 1">
+                and hd_foregift_status = 3
+            </if>
+            <if test="unbindCompanyFlag != null and unbindCompanyFlag == 1">
+                and a.id not in (select customer_id from bas_agent_company_customer)
+            </if>
+            <if test="unbindCompanyFlag != null and unbindCompanyFlag == 0">
+                and a.id in (select customer_id from bas_agent_company_customer)
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.basic.Customer"
+            resultType="cn.com.yusong.yhdg.common.domain.basic.Customer">
+        select
+        a.*, b.cabinet_name as belongCabinetName
+        from bas_customer a
+        left join hdg_cabinet b on a.belong_cabinet_id = b.id
+        <trim prefix="where" prefixOverrides="and">
+            <if test="mobile !=null and mobile !=''">
+                <![CDATA[and a.mobile LIKE concat(#{mobile}, '%')]]>
+            </if>
+            <if test="fullname != null and fullname !=''">
+                <![CDATA[and a.fullname LIKE concat(#{fullname}, '%')]]>
+            </if>
+            <if test="partnerId != null">
+                and a.partner_id = #{partnerId}
+            </if>
+            <if test="agentId != null">
+                and a.agent_id = #{agentId}
+            </if>
+            <if test="isWhiteList != null">
+                and a.is_white_list = #{isWhiteList}
+            </if>
+            <if test="belongCabinetId !=null and belongCabinetId !=''">
+                <![CDATA[and a.belong_cabinet_id LIKE concat('%', #{belongCabinetId}, '%')]]>
+            </if>
+            <if test="belongCabinetName !=null and belongCabinetName !=''">
+                <![CDATA[and b.cabinet_name LIKE concat('%', #{belongCabinetName}, '%')]]>
+            </if>
+            <if test="unPaidForegiftFlag != null and unPaidForegiftFlag == 1">
+                and hd_foregift_status = 1 and zd_foregift_status = 1
+            </if>
+            <if test="hdPaidForegiftFlag != null and hdPaidForegiftFlag == 1">
+                and hd_foregift_status = 2
+            </if>
+            <if test="zdPaidForegiftFlag != null and zdPaidForegiftFlag == 1">
+                and zd_foregift_status = 2
+            </if>
+            <if test="hdRefundedForegiftFlag != null and hdRefundedForegiftFlag == 1">
+                and hd_foregift_status = 3
+            </if>
+            <if test="zdRefundedForegiftFlag != null and zdRefundedForegiftFlag == 1">
+                and zd_foregift_status = 3
+            </if>
+            <if test="unbindCompanyFlag != null and unbindCompanyFlag == 1">
+                and a.id not in (select customer_id from bas_agent_company_customer)
+            </if>
+            <if test="unbindCompanyFlag != null and unbindCompanyFlag == 0">
+                and a.id in (select customer_id from bas_agent_company_customer)
+            </if>
+        </trim>
+        order by a.id desc
+        limit ${beginIndex}, ${rows}
+    </select>
+
+    <select id="findPayeePageCount" parameterType="cn.com.yusong.yhdg.common.domain.basic.Customer" resultType="int">
+        select count(id) from bas_customer
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null">
+                and agent_id = #{agentId}
+            </if>
+            <if test="mobile !=null and mobile !=''">
+                <![CDATA[and mobile LIKE concat(#{mobile}, '%')]]>
+            </if>
+            <if test="fullname != null and fullname !=''">
+                <![CDATA[and fullname LIKE concat(#{fullname}, '%')]]>
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPayeePageResult" parameterType="cn.com.yusong.yhdg.common.domain.basic.Customer"
+            resultType="cn.com.yusong.yhdg.common.domain.basic.Customer">
+        select
+        *
+        from bas_customer
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null">
+                and agent_id = #{agentId}
+            </if>
+            <if test="mobile !=null and mobile !=''">
+                <![CDATA[and mobile LIKE concat(#{mobile}, '%')]]>
+            </if>
+            <if test="fullname != null and fullname !=''">
+                <![CDATA[and fullname LIKE concat(#{fullname}, '%')]]>
+            </if>
+        </trim>
+        order by id desc
+        limit ${beginIndex}, ${rows}
+    </select>
+
+    <select id="findPageCountByBindTime" parameterType="cn.com.yusong.yhdg.common.domain.basic.Customer"
+            resultType="int">
+        select count(*) from bas_customer
+        <trim prefix="where" prefixOverrides="and">
+            <if test="mobile !=null and mobile !=''">
+                <![CDATA[and bas_customer.mobile LIKE concat(#{mobile}, '%')]]>
+            </if>
+            <if test="fullname != null and fullname !=''">
+                <![CDATA[and fullname LIKE concat(#{fullname}, '%')]]>
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResultByBindTime" parameterType="cn.com.yusong.yhdg.common.domain.basic.Customer"
+            resultType="cn.com.yusong.yhdg.common.domain.basic.Customer">
+        select
+        *
+        from bas_customer
+        <trim prefix="where" prefixOverrides="and">
+            <if test="mobile !=null and mobile !=''">
+                <![CDATA[and bas_customer.mobile LIKE concat(#{mobile}, '%')]]>
+            </if>
+            <if test="fullname != null and fullname !=''">
+                <![CDATA[and fullname LIKE concat(#{fullname}, '%')]]>
+            </if>
+        </trim>
+        limit ${beginIndex}, ${rows}
+    </select>
+
+    <select id="findPageCounts" parameterType="cn.com.yusong.yhdg.common.domain.basic.Customer" resultType="int">
+        select count(*) from bas_customer
+        where mp_open_id is not null
+        <if test="nickname !=null and nickname !=''">
+            <![CDATA[and nickname LIKE concat('%', #{nickname}, '%')]]>
+        </if>
+        <if test="mobile !=null and mobile !=''">
+            <![CDATA[and mobile LIKE concat(#{mobile}, '%')]]>
+        </if>
+        <if test="districtId != null ">
+            and district_id = #{districtId}
+        </if>
+        <if test="cityId != null ">
+            and city_id = #{cityId}
+        </if>
+        <if test="provinceId != null ">
+            and province_id = #{provinceId}
+        </if>
+        <if test="agentId != null ">
+            and agent_id = #{agentId}
+        </if>
+    </select>
+
+    <select id="findPageResults" parameterType="cn.com.yusong.yhdg.common.domain.basic.Customer"
+            resultType="cn.com.yusong.yhdg.common.domain.basic.Customer">
+        select
+        *
+        from bas_customer
+        where mp_open_id is not null
+        <if test="nickname !=null and nickname !=''">
+            <![CDATA[and nickname LIKE concat('%', #{nickname}, '%')]]>
+        </if>
+        <if test="mobile !=null and mobile !=''">
+            <![CDATA[and mobile LIKE concat(#{mobile}, '%')]]>
+        </if>
+        <if test="districtId != null ">
+            and district_id = #{districtId}
+        </if>
+        <if test="cityId != null ">
+            and city_id = #{cityId}
+        </if>
+        <if test="provinceId != null ">
+            and province_id = #{provinceId}
+        </if>
+        <if test="agentId != null ">
+            and agent_id = #{agentId}
+        </if>
+        limit ${beginIndex}, ${rows}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.Customer" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into bas_customer(
+            partner_id,
+            mobile,
+            password,
+            balance,
+            photo_path,
+            nickname,
+            fullname,
+            ic_card,
+            id_card,
+            is_active,
+            register_type,
+            push_token,
+            gift_balance,
+            hd_foregift_status,
+            zd_foregift_status,
+            auth_status,
+            create_time
+        ) values (
+            #{partnerId},
+            #{mobile},
+            #{password},
+            #{balance},
+            #{photoPath},
+            #{nickname},
+            #{fullname},
+            #{icCard},
+            #{idCard},
+            #{isActive},
+            #{registerType},
+            #{pushToken},
+            #{giftBalance},
+            #{hdForegiftStatus},
+            #{zdForegiftStatus},
+            #{authStatus},
+            #{createTime}
+        )
+    </insert>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.basic.Customer">
+        update bas_customer set
+        mobile = #{mobile},
+        <if test="password !=null and password != '' ">
+            password = #{password},
+        </if>
+        <if test="agentId !=null">
+            agent_id = #{agentId},
+        </if>
+        photo_path = #{photoPath},
+        ic_card = #{icCard},
+        id_card = #{idCard},
+        is_active = #{isActive},
+        register_type = #{registerType},
+        auth_status = #{authStatus},
+        fullname = #{fullname},
+        nickname = #{nickname}
+        where id = #{id}
+    </update>
+
+    <update id="updateBalance">
+        <choose>
+            <when test="balance > 0 and giftBalance > 0 ">
+                update bas_customer set balance = balance + #{balance},gift_balance = gift_balance +
+                #{giftBalance} where id = #{id}
+            </when>
+            <otherwise>
+                <![CDATA[update bas_customer set balance = balance + #{balance},gift_balance = gift_balance + #{giftBalance} where id = #{id} and balance + #{balance} >= 0 and gift_balance + #{giftBalance} >= 0 ]]>
+            </otherwise>
+        </choose>
+    </update>
+
+
+    <update id="updateIcCard" parameterType="cn.com.yusong.yhdg.common.domain.basic.Customer">
+        update bas_customer set
+        ic_card = #{icCard}
+        where id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="long">
+        delete from bas_customer where id = #{id}
+    </delete>
+
+    <update id="updateHdRefundStatus">
+        update bas_customer set
+        hd_refund_status = #{hdRefundStatus}
+        where id = #{id}
+    </update>
+
+    <update id="updateZdRefundStatus">
+        update bas_customer set
+        zd_refund_status = #{zdRefundStatus}
+        where id = #{id}
+    </update>
+
+    <update id="updateActive">
+        update bas_customer set
+        is_active = #{isActive}
+        where id = #{id}
+    </update>
+
+    <update id="updateMpOpenId">
+        update bas_customer set
+        mp_open_id = #{mpOpenId}
+        <if test="nickname != null and nickname != ''">
+            ,nickname = #{nickname}
+        </if>
+        <if test="photoPath != null and photoPath != ''">
+            ,photo_path = #{photoPath}
+        </if>
+        where id = #{id}
+    </update>
+
+    <update id="updateFwOpenId">
+        update bas_customer set
+        fw_open_id = #{fwOpenId}
+        <if test="nickname != null and nickname != ''">
+            ,nickname = #{nickname}
+        </if>
+        <if test="photoPath != null and photoPath != ''">
+            ,photo_path = #{photoPath}
+        </if>
+        where id = #{id}
+    </update>
+
+    <update id="updateAppId" parameterType="cn.com.yusong.yhdg.common.domain.basic.Customer">
+        update bas_customer SET
+        app_id = #{appId}
+        where id = #{id}
+    </update>
+
+    <update id="updateAgentId">
+        update bas_customer SET
+        agent_id = #{agentId}
+        where id = #{id}
+    </update>
+
+    <update id="updateHdForegiftStatus">
+        update bas_customer SET
+        hd_foregift_status = #{hdForegiftStatus}
+        where id = #{id}
+    </update>
+
+    <update id="updateZdForegiftStatus">
+        update bas_customer SET
+        zd_foregift_status = #{zdForegiftStatus}
+        where id = #{id}
+    </update>
+
+    <update id="clearAgentId">
+        update bas_customer set
+        agent_id = null
+        where id = #{id}
+    </update>
+
+    <update id="clearAgentCompanyId">
+        update bas_customer set
+        agent_company_id = null
+        where id = #{id}
+    </update>
+
+    <update id="updateIsWhiteList">
+        update bas_customer SET
+        is_white_list = #{isWhiteList}
+        where id = #{id}
+    </update>
+
+    <update id="updateAuditPass">
+        update bas_customer set
+            auth_status = #{authStatus},
+            id_card = #{idCard},
+            auth_face_path = #{authFacePath},
+            id_card_face = #{idCardFace},
+            id_card_rear = #{idCardRear},
+            auth_message = #{auditMemo}
+        where id = #{id}
+    </update>
+
+    <update id="updateAuditRefuse">
+        update bas_customer
+        set
+        auth_status = #{authStatus},
+        auth_message = #{auditMemo}
+        where id = #{id}
+    </update>
+
+    <update id="bindCompany">
+        update bas_customer
+        set
+        agent_company_id = #{agentCompanyId}
+        where id = #{id}
+    </update>
+
+</mapper>

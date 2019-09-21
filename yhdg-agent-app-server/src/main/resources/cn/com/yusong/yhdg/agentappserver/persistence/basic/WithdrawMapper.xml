@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.agentappserver.persistence.basic.WithdrawMapper">
+
+    <select id="find" parameterType="string" resultType="cn.com.yusong.yhdg.common.domain.basic.Withdraw">
+        select
+            *
+        from bas_withdraw
+        where id = #{id}
+    </select>
+
+    <select id="findByEstate" resultType="cn.com.yusong.yhdg.common.domain.basic.Withdraw">
+        select
+        *
+        from bas_withdraw
+        where type = #{type} and estate_id = #{estateId}
+        order by create_time desc
+        limit #{offset}, #{limit}
+    </select>
+
+    <select id="findByShop" resultType="cn.com.yusong.yhdg.common.domain.basic.Withdraw">
+        select
+        *
+        from bas_withdraw
+        where type = #{type} and shop_id = #{shopId}
+        order by create_time desc
+        limit #{offset}, #{limit}
+    </select>
+
+    <select id="findByAgentCompany" resultType="cn.com.yusong.yhdg.common.domain.basic.Withdraw">
+        select
+        *
+        from bas_withdraw
+        where type = #{type} and agent_company_id = #{agentCompanyId}
+        order by create_time desc
+        limit #{offset}, #{limit}
+    </select>
+
+    <select id="findByAgent" resultType="cn.com.yusong.yhdg.common.domain.basic.Withdraw">
+        select
+        *
+        from bas_withdraw
+        where type = #{type} and agent_id = #{agentId}
+        order by create_time desc
+        limit #{offset}, #{limit}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.Withdraw">
+        INSERT INTO bas_withdraw (
+        id,
+        partner_id,
+        type,
+        customer_id,
+        customer_fullname,
+        customer_mobile,
+        agent_id,
+        agent_name,
+        agent_code,
+        shop_id,
+        shop_name,
+        estate_id,
+        estate_name,
+        agent_company_id,
+        agent_company_name,
+        account_type,
+        account_name,
+        weixin_account,
+        alipay_account,
+        money,
+        real_money,
+        service_money,
+        status,
+        status_message,
+        handle_time,
+        audit_user,
+        audit_memo,
+        create_time,
+        belong_agent_id
+        )
+        VALUES
+        (
+        #{id},
+        #{partnerId},
+        #{type},
+        #{customerId},
+        #{customerFullname},
+        #{customerMobile},
+        #{agentId},
+        #{agentName},
+        #{agentCode},
+        #{shopId},
+        #{shopName},
+        #{estateId},
+        #{estateName},
+        #{agentCompanyId},
+        #{agentCompanyName},
+        #{accountType},
+        #{accountName},
+        #{weixinAccount},
+        #{alipayAccount},
+        #{money},
+        #{realMoney},
+        #{serviceMoney},
+        #{status},
+        #{statusMessage},
+        #{handleTime},
+        #{auditUser},
+        #{auditMemo},
+        #{createTime},
+        #{belongAgentId}
+        )
+    </insert>
+
+</mapper>

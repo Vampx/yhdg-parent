@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.basic.RoleMapper">
+
+    <select id="find" parameterType="int" resultType="cn.com.yusong.yhdg.common.domain.basic.Role">
+        select
+          id,
+          role_name as roleName,
+          memo,
+          agent_id as agentId,
+          create_time as createTime
+        from bas_role
+        where id = #{id}
+    </select>
+
+    <select id="findUnique" resultType="int">
+        select count(*) from bas_role where role_name = #{roleName}
+        <if test="id != null">
+            and id != #{id}
+        </if>
+    </select>
+
+    <select id="hasRecordByProperty" resultType="int">
+        select count(id) from bas_role where
+        <if test="property == 'agentId'">
+            agent_id = #{value}
+        </if>
+    </select>
+
+    <select id="findCount" resultType="int">
+        select count(*) from bas_role
+        <if test="agentId != null">
+        where
+            agent_id = #{agentId}
+        </if>
+    </select>
+
+    <select id="findByAgent" parameterType="int" resultType="cn.com.yusong.yhdg.common.domain.basic.Role">
+        select
+          id,
+          role_name as roleName,
+          memo,
+          agent_id as agentId,
+          create_time as createTime
+        from bas_role
+        <choose>
+            <when test="agentId != null and agentId != 0">
+                where agent_id = #{agentId}
+            </when>
+            <otherwise>
+                where agent_id is null
+            </otherwise>
+        </choose>
+        order by id desc
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.basic.Role" resultType="int">
+        select
+          count(id)
+        from bas_role
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null">
+                and agent_id = #{agentId}
+            </if>
+            <if test="agentId == null">
+                and agent_id is null
+            </if>
+            <if test="roleName != null and roleName != ''">
+                <![CDATA[and role_name LIKE concat('%', #{roleName}, '%')]]>
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.basic.Role" resultType="cn.com.yusong.yhdg.common.domain.basic.Role">
+        select
+            *
+        from bas_role
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null">
+                and agent_id = #{agentId}
+            </if>
+            <if test="agentId == null">
+                and agent_id is null
+            </if>
+            <if test="roleName != null and roleName != ''">
+                <![CDATA[and role_name LIKE concat('%', #{roleName}, '%')]]>
+            </if>
+        </trim>
+        order by create_time desc
+        limit #{beginIndex}, #{rows}
+    </select>
+
+    <select id="findAgentPageCount" parameterType="cn.com.yusong.yhdg.common.domain.basic.Role" resultType="int">
+        select
+        count(id)
+        from bas_role
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null">
+                and agent_id = #{agentId}
+            </if>
+            <if test="agentId == null">
+                and agent_id is not null
+            </if>
+            <if test="roleName != null and roleName != ''">
+                <![CDATA[and role_name LIKE concat('%', #{roleName}, '%')]]>
+            </if>
+        </trim>
+    </select>
+
+    <select id="findAgentPageResult" parameterType="cn.com.yusong.yhdg.common.domain.basic.Role" resultType="cn.com.yusong.yhdg.common.domain.basic.Role">
+        select
+        bas_role.id,
+        bas_role.role_name as roleName,
+        bas_role.memo,
+        bas_role.agent_id as agentId,
+        bas_agent.agent_name as agentName,
+        bas_role.create_time as createTime
+        from bas_role
+        left join bas_agent on bas_role.agent_id = bas_agent.id
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null">
+                and agent_id = #{agentId}
+            </if>
+            <if test="agentId == null">
+                and agent_id is not null
+            </if>
+            <if test="roleName != null and roleName != ''">
+                <![CDATA[and role_name LIKE concat('%', #{roleName}, '%')]]>
+            </if>
+        </trim>
+        order by bas_role.create_time desc
+        limit #{beginIndex}, #{rows}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.Role" useGeneratedKeys="true" keyProperty="id">
+        insert into bas_role(agent_id, role_name, memo, create_time) values(#{agentId}, #{roleName}, #{memo}, #{createTime})
+    </insert>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.basic.Role">
+        update bas_role set
+        role_name = #{roleName},
+        memo = #{memo}
+        where id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="int">
+        delete from bas_role where id = #{id}
+    </delete>
+</mapper>

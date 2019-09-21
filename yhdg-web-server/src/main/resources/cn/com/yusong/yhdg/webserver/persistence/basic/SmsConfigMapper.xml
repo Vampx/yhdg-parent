@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.basic.SmsConfigMapper">
+
+    <select id="find" parameterType="int" resultType="cn.com.yusong.yhdg.common.domain.basic.SmsConfig">
+        select
+            id,
+            partner_id as partnerId,
+            sms_type as smsType,
+            config_name as configName,
+            account,
+            password,
+            balance,
+            is_active as isActive,
+            sign,
+            sign_place as signPlace,
+            update_time as updateTime
+        from bas_sms_config
+        where id = #{id}
+    </select>
+
+    <select id="findInfo" parameterType="int" resultType="cn.com.yusong.yhdg.common.domain.basic.SmsConfigInfo">
+        select
+            id,
+            partner_id as partnerId,
+            sms_type as smsType,
+            config_name as configName,
+            account,
+            password,
+            balance,
+            is_active as isActive,
+            sign,
+            sign_place as signPlace,
+            update_time as updateTime
+        from bas_sms_config
+        where id = #{id}
+    </select>
+
+    <select id="findByApp" parameterType="int" resultType="cn.com.yusong.yhdg.common.domain.basic.SmsConfig">
+        select
+            id,
+            sms_type as smsType,
+            config_name as configName,
+            account,
+            password,
+            is_active as isActive,
+            sign,
+            sign_place as signPlace
+        from bas_sms_config
+        where partner_id = #{partnerId}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.basic.SmsConfig" resultType="int">
+        select
+        count(id)
+        from bas_sms_config
+        <trim prefix="where" prefixOverrides="and">
+            <if test="partnerId != null">
+                and partner_id = #{partnerId}
+            </if>
+            <if test="configName != null and configName != ''">
+                <![CDATA[and config_name LIKE concat('%', #{configName}, '%')]]>
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.basic.SmsConfig" resultType="cn.com.yusong.yhdg.common.domain.basic.SmsConfig">
+        select
+            id,
+            partner_id as partnerId,
+            sms_type as smsType,
+            config_name as configName,
+            account,
+            password,
+            balance,
+            is_active as isActive,
+            sign,
+            sign_place as signPlace,
+            update_time as updateTime
+        from bas_sms_config
+        <trim prefix="where" prefixOverrides="and">
+            <if test="partnerId != null">
+                and partner_id = #{partnerId}
+            </if>
+            <if test="configName != null and configName != ''">
+                <![CDATA[and config_name LIKE concat('%', #{configName}, '%')]]>
+            </if>
+        </trim>
+        limit #{beginIndex}, #{rows}
+    </select>
+
+    <insert id="insert">
+        ${sql}
+    </insert>
+
+    <insert id="insertSmsConfig" parameterType="cn.com.yusong.yhdg.common.domain.basic.SmsConfig" useGeneratedKeys="true" keyProperty="id">
+        insert into bas_sms_config(partner_id, sms_type, config_name, account, password, balance, is_active, sign, sign_place, update_time)
+        values(#{partnerId}, #{smsType}, #{configName}, #{account}, #{password}, #{balance}, #{isActive}, #{sign}, #{signPlace}, #{updateTime})
+    </insert>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.basic.SmsConfig">
+        update bas_sms_config set
+            account = #{account},
+            password = #{password},
+            config_name = #{configName},
+            is_active = #{isActive},
+            sign = #{sign},
+            sign_place = #{signPlace}
+        where id = #{id}
+    </update>
+
+    <update id="updateBalance">
+        update bas_sms_config set
+            balance = #{balance},
+            update_time = #{updateTime}
+        where id = #{id}
+    </update>
+
+    <delete id="deleteByApp" parameterType="int">
+        delete from bas_sms_config where partner_id = #{partnerId}
+    </delete>
+</mapper>

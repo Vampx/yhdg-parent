@@ -1,0 +1,544 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.hdg.PacketPeriodOrderMapper">
+
+    <select id="find" parameterType="string" resultType="cn.com.yusong.yhdg.common.domain.hdg.PacketPeriodOrder">
+        SELECT
+        *
+        FROM hdg_packet_period_order
+        WHERE id = #{id}
+    </select>
+
+    <select id="findListByCustomerId" resultType="cn.com.yusong.yhdg.common.domain.hdg.PacketPeriodOrder">
+        select
+        *
+        from hdg_packet_period_order
+        where customer_id = #{customerId} and agent_id = #{agentId}
+    </select>
+
+    <select id="findCountByAgentCompany" resultType="int">
+        select
+        *
+        from hdg_packet_period_order
+        where agent_company_id = #{agentCompanyId}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.hdg.PacketPeriodOrder" resultType="int">
+        select
+        count(a.id)
+        from hdg_packet_period_order a left join hdg_cabinet b on a.cabinet_id = b.id
+        <trim prefix="where" prefixOverrides="and">
+            <if test="partnerId != null">
+                and a.partner_id = #{partnerId}
+            </if>
+            <if test="agentId != null">
+                and a.agent_id = #{agentId}
+            </if>
+            <if test="cabinetId != null and cabinetId !='' ">
+                <![CDATA[and a.cabinet_id LIKE concat('%', #{cabinetId}, '%')]]>
+            </if>
+            <if test="cabinetName != null and cabinetName !='' ">
+                <![CDATA[and b.cabinet_name LIKE concat('%', #{cabinetName}, '%')]]>
+            </if>
+            <if test="customerFullname != null and customerFullname != ''">
+                <![CDATA[and a.customer_fullname LIKE concat('%', #{customerFullname}, '%')]]>
+            </if>
+            <if test="customerMobile != null and customerMobile != ''">
+                <![CDATA[and a.customer_mobile LIKE concat(#{customerMobile}, '%')]]>
+            </if>
+            <if test="status != null">
+                and a.status= #{status}
+            </if>
+            <if test="vehicleOrderFlag != null">
+                and  a.vehicle_order_flag = #{vehicleOrderFlag}
+            </if>
+            <if test="vehicleOrderFlag == null">
+                and  a.vehicle_order_flag =0
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.hdg.PacketPeriodOrder"
+            resultType="cn.com.yusong.yhdg.common.domain.hdg.PacketPeriodOrder">
+        select
+          a.*, b.cabinet_name as cabinetName
+        from hdg_packet_period_order a left join hdg_cabinet b on a.cabinet_id = b.id
+        <trim prefix="where" prefixOverrides="and">
+            <if test="partnerId != null">
+                and a.partner_id = #{partnerId}
+            </if>
+            <if test="agentId != null">
+                and a.agent_id = #{agentId}
+            </if>
+            <if test="cabinetId != null and cabinetId !='' ">
+                <![CDATA[and a.cabinet_id LIKE concat('%', #{cabinetId}, '%')]]>
+            </if>
+            <if test="cabinetName != null and cabinetName !='' ">
+                <![CDATA[and b.cabinet_name LIKE concat('%', #{cabinetName}, '%')]]>
+            </if>
+            <if test="customerFullname != null and customerFullname != ''">
+                <![CDATA[and a.customer_fullname LIKE concat('%', #{customerFullname}, '%')]]>
+            </if>
+            <if test="customerMobile != null and customerMobile != ''">
+                <![CDATA[and a.customer_mobile LIKE concat(#{customerMobile}, '%')]]>
+            </if>
+            <if test="status != null">
+                and a.status= #{status}
+            </if>
+            <if test="vehicleOrderFlag != null">
+                and  a.vehicle_order_flag = #{vehicleOrderFlag}
+            </if>
+            <if test="vehicleOrderFlag == null">
+                and  a.vehicle_order_flag =0
+            </if>
+        </trim>
+        ORDER BY create_time DESC
+        limit #{beginIndex}, #{rows}
+    </select>
+
+    <select id="findPageForBalanceCount" parameterType="cn.com.yusong.yhdg.common.domain.hdg.PacketPeriodOrder" resultType="int">
+        select
+        count(*)
+        from hdg_packet_period_order left join bas_customer on hdg_packet_period_order.customer_id = bas_customer.id
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null">
+                and hdg_packet_period_order.agent_id = #{agentId}
+            </if>
+            <if test="customerMobile != null and customerMobile != ''">
+                <![CDATA[and hdg_packet_period_order.customer_mobile LIKE concat(#{customerMobile}, '%')]]>
+            </if>
+            <if test="customerFullname != null and customerFullname != ''">
+                <![CDATA[and hdg_packet_period_order.customer_fullname LIKE concat(#{customerFullname}, '%')]]>
+            </if>
+
+             and hdg_packet_period_order.status in (2,3)
+
+            <if test="queryBeginTime != null and queryBeginTime != ''">
+                <![CDATA[and hdg_packet_period_order.create_time >= #{queryBeginTime} ]]>
+            </if>
+            <if test="queryEndTime != null and queryEndTime != ''">
+                <![CDATA[and hdg_packet_period_order.create_time < #{queryEndTime} ]]>
+            </if>
+        </trim>
+    </select>
+
+    <select id="findList" resultType="cn.com.yusong.yhdg.common.domain.hdg.PacketPeriodOrder">
+        select
+        *
+        from hdg_packet_period_order
+        where customer_id = #{customerId}
+    </select>
+
+    <select id="findPageForBalanceResult" parameterType="cn.com.yusong.yhdg.common.domain.hdg.PacketPeriodOrder"
+            resultType="cn.com.yusong.yhdg.common.domain.hdg.PacketPeriodOrder">
+        select
+        hdg_packet_period_order.*
+        from hdg_packet_period_order left join bas_customer on hdg_packet_period_order.customer_id = bas_customer.id
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null">
+                and hdg_packet_period_order.agent_id = #{agentId}
+            </if>
+            <if test="customerMobile != null and customerMobile != ''">
+                <![CDATA[and hdg_packet_period_order.customer_mobile LIKE concat(#{customerMobile}, '%')]]>
+            </if>
+            <if test="customerFullname != null and customerFullname != ''">
+                <![CDATA[and hdg_packet_period_order.customer_fullname LIKE concat(#{customerFullname}, '%')]]>
+            </if>
+
+            and hdg_packet_period_order.status in (2,3)
+
+            <if test="queryBeginTime != null and queryBeginTime != ''">
+                <![CDATA[and hdg_packet_period_order.create_time >= #{queryBeginTime} ]]>
+            </if>
+            <if test="queryEndTime != null and queryEndTime != ''">
+                <![CDATA[and hdg_packet_period_order.create_time < #{queryEndTime} ]]>
+            </if>
+        </trim>
+        ORDER BY create_time DESC
+        limit #{beginIndex}, #{rows}
+    </select>
+
+    <select id="findPageForClearingCount" parameterType="cn.com.yusong.yhdg.common.domain.hdg.PacketPeriodOrder" resultType="int">
+        select
+        count(*)
+        from hdg_packet_period_order
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null">
+                and agent_id = #{agentId}
+            </if>
+            <if test="shopId != null and shopId != ''">
+                and (shop_id = #{shopId} or cabinet_id in(select id from hdg_cabinet where shop_id = #{shopId} ))
+            </if>
+            <if test="beginTime != null and beginTime != ''">
+                <![CDATA[and pay_time >= #{beginTime} ]]>
+            </if>
+            <if test="endTime != null and endTime != ''">
+                <![CDATA[and pay_time < #{endTime} ]]>
+            </if>
+
+        </trim>
+    </select>
+
+    <select id="findPageForClearingResult" parameterType="cn.com.yusong.yhdg.common.domain.hdg.PacketPeriodOrder"
+            resultType="cn.com.yusong.yhdg.common.domain.hdg.PacketPeriodOrder">
+        select
+        *
+        from hdg_packet_period_order
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null">
+                and agent_id = #{agentId}
+            </if>
+            <if test="shopId != null and shopId != ''">
+                and (shop_id = #{shopId} or cabinet_id in(select id from hdg_cabinet where shop_id = #{shopId} ))
+            </if>
+            <if test="beginTime != null and beginTime != ''">
+                <![CDATA[and pay_time >= #{beginTime} ]]>
+            </if>
+            <if test="endTime != null and endTime != ''">
+                <![CDATA[and pay_time < #{endTime} ]]>
+            </if>
+        </trim>
+        ORDER BY create_time DESC
+    </select>
+
+    <select id="findOneEnabledLast" resultType="cn.com.yusong.yhdg.common.domain.hdg.PacketPeriodOrder">
+        select
+        *
+        FROM
+        hdg_packet_period_order
+        where customer_id = #{customerId}
+        and status in
+        <foreach collection="status" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        order by end_time desc
+        limit 1
+    </select>
+
+    <select id="findListByCustomerIdAndStatus" resultType="cn.com.yusong.yhdg.common.domain.hdg.PacketPeriodOrder">
+        select *
+        from  hdg_packet_period_order
+        where customer_id = #{customerId}
+        and status in
+        <foreach collection="status" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="findCanRefundByCustomerId" resultType="cn.com.yusong.yhdg.common.domain.hdg.PacketPeriodOrder">
+        select *
+        from  hdg_packet_period_order
+        where customer_id = #{customerId} and status in (2, 3, 5)
+    </select>
+
+    <update id="updateRefund">
+        update hdg_packet_period_order
+        set refund_money = #{refundMoney},
+        refund_time = #{refundTime},
+        status = #{toStatus}
+        where id = #{id}
+    </update>
+
+    <update id="updateOrder">
+        update hdg_packet_period_order set
+        customer_id = #{customerId},
+        customer_mobile = #{customerMobile},
+        customer_fullname = #{customerFullname},
+        pay_type = #{payType},
+        create_time = #{createTime}
+        where id = #{id}
+    </update>
+
+    <update id="backRefund">
+        update hdg_packet_period_order
+        set refund_money = null,
+        refund_time = null,
+        status = #{toStatus}
+        where id = #{id} and status = #{fromStatus}
+    </update>
+
+    <update id="updateStatus">
+        update hdg_packet_period_order
+        set status = #{status}
+        where customer_id = #{customerId}
+    </update>
+
+    <update id="updatePayTime">
+        update hdg_packet_period_order
+        set pay_time = #{payTime}
+        where id = #{id}
+    </update>
+
+    <update id="extendRent">
+        update hdg_packet_period_order
+        set day_count = #{dayCount},
+        end_time = #{endTime},
+        status = #{status},
+        operator_memo = #{operatorMemo}
+        where id = #{id}
+    </update>
+
+    <delete id="deleteByCustomerId">
+        delete from hdg_packet_period_order where customer_id = #{customerId}
+    </delete>
+
+    <select id="findBySoonExpirePageCount" parameterType="cn.com.yusong.yhdg.common.domain.hdg.PacketPeriodOrder" resultType="int">
+        select
+        count(f.customer_id)
+        from (
+            select
+            a.customer_id
+            from
+            hdg_packet_period_order a left join hdg_cabinet b on a.cabinet_id = b.id
+            left join bas_customer_exchange_battery bceb on a.customer_id=bceb.customer_id
+            <trim prefix="where" prefixOverrides="and">
+                <if test="status != null">
+                    and a.status= #{status}
+                    <if test="status == 3">
+                        and  not EXISTS ( select  1  FROM  hdg_packet_period_order c  where c.status = 2 AND c.customer_mobile=a.customer_mobile AND c.agent_id = a.agent_id)
+                    </if>
+                    <if test="status == 4">
+                        and  not EXISTS ( select  1  FROM  hdg_packet_period_order c  where c.status in (2,3) AND c.customer_mobile=a.customer_mobile AND c.agent_id = a.agent_id)
+                    </if>
+                </if>
+                <if test="partnerId != null">
+                    and a.partner_id = #{partnerId}
+                </if>
+                <if test="agentId != null">
+                    and a.agent_id = #{agentId}
+                </if>
+                <if test="cabinetId != null and cabinetId !='' ">
+                    <![CDATA[and a.cabinet_id LIKE concat('%', #{cabinetId}, '%')]]>
+                </if>
+                <if test="cabinetName != null and cabinetName !='' ">
+                    <![CDATA[and b.cabinet_name LIKE concat('%', #{cabinetName}, '%')]]>
+                </if>
+                <if test="customerFullname != null and customerFullname != ''">
+                    <![CDATA[and a.customer_fullname LIKE concat('%', #{customerFullname}, '%')]]>
+                </if>
+                <if test="customerMobile != null and customerMobile != ''">
+                    <![CDATA[and a.customer_mobile LIKE concat(#{customerMobile}, '%')]]>
+                </if>
+                <if test="currentTime != null and currentThreeDaysTime != null">
+                    AND <![CDATA[unix_timestamp(#{currentTime}) < unix_timestamp(a.end_time)]]>
+                    AND <![CDATA[unix_timestamp(#{currentThreeDaysTime}) > unix_timestamp(a.end_time)]]>
+                </if>
+                <if test="isBattery == 1">
+                    and EXISTS (select 1 from bas_customer_exchange_battery bc WHERE bc.customer_id = a.customer_id)
+                </if>
+                <if test="isBattery == 0">
+                    and NOT EXISTS (select 1 from bas_customer_exchange_battery bc WHERE bc.customer_id = a.customer_id)
+                </if>
+                <if test="isDeposit == 1">
+                    and EXISTS (select 1 from bas_customer_exchange_info bce WHERE bce.id = a.customer_id)
+                </if>
+                <if test="isDeposit == 0">
+                    and NOT EXISTS (select 1 from bas_customer_exchange_info bce WHERE bce.id = a.customer_id)
+                </if>
+            </trim>
+        GROUP BY a.customer_id
+        ) f
+    </select>
+    <select id="findBySoonExpirePageResult" parameterType="cn.com.yusong.yhdg.common.domain.hdg.PacketPeriodOrder"
+            resultType="cn.com.yusong.yhdg.common.domain.hdg.PacketPeriodOrder">
+        select
+        f.customer_id as customer_id,
+        max(f.end_time) as end_time,
+        max(f.cabinetName) as cabinetName,
+        max(f.batteryId) as batteryId,
+        max(f.id) as id,
+        max(f.agent_id) AS agent_id,
+        max(f.day_count) AS day_count,
+        max(f.begin_time) AS begin_time,
+        max(f.expire_time) AS expire_time,
+        max(f.status) AS status,
+        max(f.customer_id) AS customer_id,
+        max(f.customer_mobile) AS customer_mobile,
+        max(f.customer_fullname) AS customer_fullname,
+        max(f.pay_type) AS pay_type,
+        max(f.pay_time) AS pay_time,
+        max(f.refund_time) AS refund_time,
+        max(f.refund_money) AS refund_money,
+        max(f.price) AS price,
+        max(f.money) AS money,
+        max(f.consume_deposit_balance) AS consume_deposit_balance,
+        max(f.consume_gift_balance) AS consume_gift_balance,
+        max(f.battery_type) AS battery_type,
+        max(f.ticket_name) AS ticket_name,
+        max(f.ticket_money) AS ticket_money,
+        max(f.coupon_ticket_id) AS coupon_ticket_id,
+        max(f.order_count) AS order_count,
+        max(f.scan_cabinet_id) AS scan_cabinet_id,
+        max(f.create_time) AS create_time,
+        max(f.agent_name) AS agent_name,
+        max(f.limit_count) AS limit_count,
+        max(f.agent_code) AS agent_code,
+        max(f.day_limit_count) AS day_limit_count,
+        max(f.cabinet_id) AS cabinet_id,
+        max(f.partner_id) AS partner_id,
+        max(f.operator_memo) AS operator_memo,
+        max(f.expire_notice_time) AS expire_notice_time,
+        max(f.shop_name) AS shop_name,
+        max(f.shop_id) AS shop_id,
+        max(f.complete_installment_time) AS complete_installment_time,
+        max(f.agent_company_name) AS agent_company_name,
+        max(f.agent_company_id) AS agent_company_id
+        from (
+        select
+        a.*, b.cabinet_name as cabinetName,bceb.battery_id as batteryId
+        from
+        hdg_packet_period_order a left join hdg_cabinet b on a.cabinet_id = b.id
+        left join bas_customer_exchange_battery bceb on a.customer_id=bceb.customer_id
+        <trim prefix="where" prefixOverrides="and">
+            <if test="status != null">
+                and a.status= #{status}
+                <if test="status == 3">
+                    and  not EXISTS ( select  1  FROM  hdg_packet_period_order c  where c.status = 2 AND c.customer_mobile=a.customer_mobile AND c.agent_id = a.agent_id)
+                </if>
+                <if test="status == 4">
+                    and  not EXISTS ( select  1  FROM  hdg_packet_period_order c  where c.status in (2,3) AND c.customer_mobile=a.customer_mobile AND c.agent_id = a.agent_id)
+                </if>
+            </if>
+            <if test="partnerId != null">
+                and a.partner_id = #{partnerId}
+            </if>
+            <if test="agentId != null">
+                and a.agent_id = #{agentId}
+            </if>
+            <if test="cabinetId != null and cabinetId !='' ">
+                <![CDATA[and a.cabinet_id LIKE concat('%', #{cabinetId}, '%')]]>
+            </if>
+            <if test="cabinetName != null and cabinetName !='' ">
+                <![CDATA[and b.cabinet_name LIKE concat('%', #{cabinetName}, '%')]]>
+            </if>
+            <if test="customerFullname != null and customerFullname != ''">
+                <![CDATA[and a.customer_fullname LIKE concat('%', #{customerFullname}, '%')]]>
+            </if>
+            <if test="customerMobile != null and customerMobile != ''">
+                <![CDATA[and a.customer_mobile LIKE concat(#{customerMobile}, '%')]]>
+            </if>
+            <if test="currentTime != null and currentThreeDaysTime != null">
+               AND <![CDATA[unix_timestamp(#{currentTime}) < unix_timestamp(a.end_time)]]>
+               AND <![CDATA[unix_timestamp(#{currentThreeDaysTime}) > unix_timestamp(a.end_time)]]>
+            </if>
+            <if test="isBattery == 1">
+                and EXISTS (select 1 from bas_customer_exchange_battery bc WHERE bc.customer_id = a.customer_id)
+            </if>
+            <if test="isBattery == 0">
+                and NOT EXISTS (select 1 from bas_customer_exchange_battery bc WHERE bc.customer_id = a.customer_id)
+            </if>
+            <if test="isDeposit == 1">
+                and EXISTS (select 1 from bas_customer_exchange_info bce WHERE bce.id = a.customer_id)
+            </if>
+            <if test="isDeposit == 0">
+                and NOT EXISTS (select 1 from bas_customer_exchange_info bce WHERE bce.id = a.customer_id)
+            </if>
+        </trim>
+        ORDER BY a.end_time DESC ) f
+        GROUP BY f.customer_id
+        ORDER BY max(f.end_time)desc,f.customer_id  desc
+        limit #{beginIndex}, #{rows}
+    </select>
+    <select id="findBySoonExpireAll" parameterType="cn.com.yusong.yhdg.common.domain.hdg.PacketPeriodOrder"
+            resultType="cn.com.yusong.yhdg.common.domain.hdg.PacketPeriodOrder">
+        select
+        f.customer_id as customer_id,
+        max(f.end_time) as end_time,
+        max(f.cabinetName) as cabinetName,
+        max(f.batteryId) as batteryId,
+        max(f.id) as id,
+        max(f.agent_id) AS agent_id,
+        max(f.day_count) AS day_count,
+        max(f.begin_time) AS begin_time,
+        max(f.expire_time) AS expire_time,
+        max(f.status) AS status,
+        max(f.customer_id) AS customer_id,
+        max(f.customer_mobile) AS customer_mobile,
+        max(f.customer_fullname) AS customer_fullname,
+        max(f.pay_type) AS pay_type,
+        max(f.pay_time) AS pay_time,
+        max(f.refund_time) AS refund_time,
+        max(f.refund_money) AS refund_money,
+        max(f.price) AS price,
+        max(f.money) AS money,
+        max(f.consume_deposit_balance) AS consume_deposit_balance,
+        max(f.consume_gift_balance) AS consume_gift_balance,
+        max(f.battery_type) AS battery_type,
+        max(f.ticket_name) AS ticket_name,
+        max(f.ticket_money) AS ticket_money,
+        max(f.coupon_ticket_id) AS coupon_ticket_id,
+        max(f.order_count) AS order_count,
+        max(f.scan_cabinet_id) AS scan_cabinet_id,
+        max(f.create_time) AS create_time,
+        max(f.agent_name) AS agent_name,
+        max(f.limit_count) AS limit_count,
+        max(f.agent_code) AS agent_code,
+        max(f.day_limit_count) AS day_limit_count,
+        max(f.cabinet_id) AS cabinet_id,
+        max(f.partner_id) AS partner_id,
+        max(f.operator_memo) AS operator_memo,
+        max(f.expire_notice_time) AS expire_notice_time,
+        max(f.shop_name) AS shop_name,
+        max(f.shop_id) AS shop_id,
+        max(f.complete_installment_time) AS complete_installment_time,
+        max(f.agent_company_name) AS agent_company_name,
+        max(f.agent_company_id) AS agent_company_id
+        from (
+        select
+        a.*, b.cabinet_name as cabinetName,bceb.battery_id as batteryId
+        from
+        hdg_packet_period_order a left join hdg_cabinet b on a.cabinet_id = b.id
+        left join bas_customer_exchange_battery bceb on a.customer_id=bceb.customer_id
+        <trim prefix="where" prefixOverrides="and">
+            <if test="status != null">
+                and a.status= #{status}
+                <if test="status == 3">
+                    and  not EXISTS ( select  1  FROM  hdg_packet_period_order c  where c.status = 2 AND c.customer_mobile=a.customer_mobile AND c.agent_id = a.agent_id)
+                </if>
+                <if test="status == 4">
+                    and  not EXISTS ( select  1  FROM  hdg_packet_period_order c  where c.status in (2,3) AND c.customer_mobile=a.customer_mobile AND c.agent_id = a.agent_id)
+                </if>
+            </if>
+            <if test="partnerId != null">
+                and a.partner_id = #{partnerId}
+            </if>
+            <if test="agentId != null">
+                and a.agent_id = #{agentId}
+            </if>
+            <if test="cabinetId != null and cabinetId !='' ">
+                <![CDATA[and a.cabinet_id LIKE concat('%', #{cabinetId}, '%')]]>
+            </if>
+            <if test="cabinetName != null and cabinetName !='' ">
+                <![CDATA[and b.cabinet_name LIKE concat('%', #{cabinetName}, '%')]]>
+            </if>
+            <if test="customerFullname != null and customerFullname != ''">
+                <![CDATA[and a.customer_fullname LIKE concat('%', #{customerFullname}, '%')]]>
+            </if>
+            <if test="customerMobile != null and customerMobile != ''">
+                <![CDATA[and a.customer_mobile LIKE concat(#{customerMobile}, '%')]]>
+            </if>
+            <if test="currentTime != null and currentThreeDaysTime != null">
+                AND <![CDATA[unix_timestamp(#{currentTime}) < unix_timestamp(a.end_time)]]>
+                AND <![CDATA[unix_timestamp(#{currentThreeDaysTime}) > unix_timestamp(a.end_time)]]>
+            </if>
+            <if test="isBattery == 1">
+                and EXISTS (select 1 from bas_customer_exchange_battery bc WHERE bc.customer_id = a.customer_id)
+            </if>
+            <if test="isBattery == 0">
+                and NOT EXISTS (select 1 from bas_customer_exchange_battery bc WHERE bc.customer_id = a.customer_id)
+            </if>
+            <if test="isDeposit == 1">
+                and EXISTS (select 1 from bas_customer_exchange_info bce WHERE bce.id = a.customer_id)
+            </if>
+            <if test="isDeposit == 0">
+                and NOT EXISTS (select 1 from bas_customer_exchange_info bce WHERE bce.id = a.customer_id)
+            </if>
+        </trim>
+        ORDER BY a.end_time DESC) f
+        GROUP BY f.customer_id
+        ORDER BY max(f.end_time)desc,f.customer_id  desc
+    </select>
+
+</mapper>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.hdg.BatteryBarcodeMapper">
+
+    <select id="findMaxCode" resultType="string">
+        select barcode from hdg_battery_barcode
+        WHERE battery_format_id = #{batteryFormatId}
+        ORDER BY id desc LIMIT 1;
+    </select>
+
+    <select id="findMaxCodeBatteryBarcode" resultType="cn.com.yusong.yhdg.common.domain.hdg.BatteryBarcode">
+        select * from hdg_battery_barcode
+        WHERE battery_format_id = #{batteryFormatId}
+        ORDER BY id desc LIMIT 1;
+    </select>
+
+    <select id="findByBarcode" resultType="cn.com.yusong.yhdg.common.domain.hdg.BatteryBarcode">
+        select
+        *
+        from hdg_battery_barcode
+        where barcode = #{barcode}
+    </select>
+
+    <select id="findList" resultType="cn.com.yusong.yhdg.common.domain.hdg.BatteryBarcode">
+        SELECT
+        *
+        FROM hdg_battery_barcode
+        WHERE battery_format_id = #{batteryFormatId}
+        ORDER BY id desc
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.hdg.BatteryBarcode" resultType="int">
+        select
+        count(*)
+        from hdg_battery_barcode
+        <trim prefix="where" prefixOverrides="and">
+            <if test="barcode != null and barcode != ''">
+                <![CDATA[and barcode LIKE concat('%', #{barcode}, '%')]]>
+            </if>
+            <if test="batteryFormatId != null">
+                and battery_format_id = #{batteryFormatId}
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.hdg.BatteryBarcode"
+            resultType="cn.com.yusong.yhdg.common.domain.hdg.BatteryBarcode">
+        select
+        *
+        from hdg_battery_barcode
+        <trim prefix="where" prefixOverrides="and">
+            <if test="barcode != null and barcode != ''">
+                <![CDATA[and barcode LIKE concat('%', #{barcode}, '%')]]>
+            </if>
+            <if test="batteryFormatId != null">
+                and battery_format_id = #{batteryFormatId}
+            </if>
+        </trim>
+        order by id desc
+        limit #{beginIndex}, #{rows}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.BatteryBarcode" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO hdg_battery_barcode(
+         battery_format_id,
+         cell_mfr,
+         cell_model,
+         barcode,
+         operator,
+         create_time
+        ) VALUES (
+          #{batteryFormatId},
+          #{cellMfr},
+          #{cellModel},
+          #{barcode},
+          #{operator},
+          #{createTime}
+        )
+    </insert>
+
+    <delete id="delete" parameterType="long">
+        delete from hdg_battery_barcode where id = #{id}
+    </delete>
+
+
+</mapper>

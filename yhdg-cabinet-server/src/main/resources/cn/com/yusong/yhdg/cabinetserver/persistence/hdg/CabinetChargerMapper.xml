@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.cabinetserver.persistence.hdg.CabinetChargerMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetCharger">
+        select
+        *
+        from hdg_cabinet_charger
+        where cabinet_id = #{cabinetId} and box_num = #{boxNum}
+    </select>
+
+
+    <select id="findListByCabinet" resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetCharger">
+        select
+         *
+        from hdg_cabinet_charger
+        where cabinet_id = #{cabinetId}
+        order by box_num
+    </select>
+
+    <select id="findByOldVersion" resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetCharger">
+        select
+         *
+        from hdg_cabinet_charger
+        where charger_version = #{chargerVersion}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.CabinetCharger">
+        insert into hdg_cabinet_charger (
+            cabinet_id,
+            box_num,
+            charger_module,
+            charger_version,
+            charge_state,
+            charge_stage,
+            charge_time,
+            charge_voltage,
+            battery_voltage,
+            charge_current,
+            transformer_temp,
+            heatsink_temp,
+            ambient_temp,
+            charger_fault,
+            enable_charge,
+            enable_link,
+            auto_swtich_mode,
+            max_charge_voltage_of_stage1,
+            charge_current_of_stage1,
+            max_charge_voltage_of_stage2,
+            charge_current_of_stage2,
+            slope_voltage,
+            charge_current_of_stage3,
+            full_voltage,
+            slope_current,
+            min_current_of_stage4,
+            low_temperature_mode,
+            box_forbidden,
+            other
+          )
+        values(
+            #{cabinetId},
+            #{boxNum},
+            #{chargerModule},
+            #{chargerVersion},
+            #{chargeState},
+            #{chargeStage},
+            #{chargeTime},
+            #{chargeVoltage},
+            #{batteryVoltage},
+            #{chargeCurrent},
+            #{transformerTemp},
+            #{heatsinkTemp},
+            #{ambientTemp},
+            #{chargerFault},
+            #{enableCharge},
+            #{enableLink},
+            #{autoSwtichMode},
+            #{maxChargeVoltageOfStage1},
+            #{chargeCurrentOfStage1},
+            #{maxChargeVoltageOfStage2},
+            #{chargeCurrentOfStage2},
+            #{slopeVoltage},
+            #{chargeCurrentOfStage3},
+            #{fullVoltage},
+            #{slopeCurrent},
+            #{minCurrentOfStage4},
+            #{lowTemperatureMode},
+            #{boxForbbiden},
+            #{other}
+          )
+    </insert>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.hdg.CabinetCharger">
+        update hdg_cabinet_charger set
+            charger_module = #{chargerModule},
+            charger_version = #{chargerVersion},
+            charge_state = #{chargeState},
+            charge_stage = #{chargeStage},
+            charge_time = #{chargeTime},
+            charge_voltage = #{chargeVoltage},
+            battery_voltage = #{batteryVoltage},
+            charge_current = #{chargeCurrent},
+            transformer_temp = #{transformerTemp},
+            heatsink_temp = #{heatsinkTemp},
+            ambient_temp = #{ambientTemp},
+            box_forbidden = #{boxForbidden},
+            charger_fault = #{chargerFault}
+        where cabinet_id = #{cabinetId} and box_num = #{boxNum}
+    </update>
+
+</mapper>

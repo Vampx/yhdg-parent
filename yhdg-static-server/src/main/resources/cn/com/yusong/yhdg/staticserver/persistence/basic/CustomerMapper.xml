@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.staticserver.persistence.basic.CustomerMapper">
+
+    <select id="find" parameterType="long" resultType="cn.com.yusong.yhdg.common.domain.basic.Customer">
+          select
+              *
+          from bas_customer
+          where id = #{id}
+    </select>
+
+    <select id="findByMobile" resultType="cn.com.yusong.yhdg.common.domain.basic.Customer">
+        select
+        *
+        from bas_customer
+        where partner_id = #{partnerId} and mobile = #{mobile}
+        limit 1
+    </select>
+
+    <update id="updateBalance">
+        <choose>
+            <when test="balance > 0 and giftBalance > 0 ">
+                update bas_customer set balance = balance + #{balance},gift_balance = gift_balance + #{giftBalance} where id = #{id}
+            </when>
+            <otherwise>
+                <![CDATA[update bas_customer set balance = balance + #{balance},gift_balance = gift_balance + #{giftBalance}  where id = #{id} and balance + #{balance} >= 0 and gift_balance + #{giftBalance} >= 0 ]]>
+            </otherwise>
+        </choose>
+    </update>
+
+    <update id="updateAgent">
+          update bas_customer set agent_id = #{agentId}  where id = #{id}
+    </update>
+
+    <update id="updateCabinet">
+        update bas_customer set
+        belong_cabinet_id = #{belongCabinetId}
+        where id = #{id}
+    </update>
+
+    <update id="updateIdCardAuthRecordStats">
+        update bas_customer set id_card_auth_record_status = #{idCardAuthRecordStatus} where id = #{id}
+    </update>
+
+    <update id="updateHdForegiftStatus">
+        update bas_customer set hd_foregift_status = #{hdForegiftStatus} where id = #{id}
+    </update>
+
+    <update id="updateZdForegiftStatus">
+        update bas_customer set zd_foregift_status = #{zdForegiftStatus} where id = #{id}
+    </update>
+
+    <update id="updateLaxinInfo">
+        update bas_customer set laxin_mobile = #{laxinMobile}, laxin_fullname = #{laxinFullname} where id = #{id}
+    </update>
+</mapper>

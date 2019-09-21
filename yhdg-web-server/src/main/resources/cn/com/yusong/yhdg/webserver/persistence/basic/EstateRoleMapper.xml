@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.basic.EstateRoleMapper">
+
+    <select id="find" parameterType="int" resultType="cn.com.yusong.yhdg.common.domain.basic.EstateRole">
+        select
+        id,
+        role_name as roleName,
+        memo,
+        estate_id as estateId,
+        create_time as createTime
+        from bas_estate_role
+        where id = #{id}
+    </select>
+
+    <select id="findUnique" resultType="int">
+        select count(*) from bas_estate_role where role_name = #{roleName}
+        <if test="id != null">
+            and id != #{id}
+        </if>
+    </select>
+
+    <select id="findByEstateId" parameterType="int" resultType="cn.com.yusong.yhdg.common.domain.basic.EstateRole">
+        select
+        id,
+        role_name as roleName,
+        memo,
+        estate_id as estateId,
+        create_time as createTime
+        from bas_estate_role
+        <choose>
+            <when test="estateId != null and estateId != '' ">
+                where estate_id = #{estateId}
+            </when>
+            <otherwise>
+                where estate_id is null
+            </otherwise>
+        </choose>
+        order by id desc
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.basic.EstateRole" resultType="int">
+        select
+        count(bas_estate_role.estate_id)
+        from bas_estate_role, hdg_estate
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null ">
+                and hdg_estate.agent_id = #{agentId}
+            </if>
+            <if test="estateId != null and estateId != '' ">
+                and bas_estate_role.estate_id = #{estateId}
+            </if>
+            <if test="roleName != null and roleName != ''">
+                <![CDATA[and role_name LIKE concat('%', #{roleName}, '%')]]>
+            </if>
+            and bas_estate_role.estate_id = hdg_estate.id
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.basic.EstateRole" resultType="cn.com.yusong.yhdg.common.domain.basic.EstateRole">
+        select
+        bas_estate_role.*
+        from bas_estate_role, hdg_estate
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null ">
+                and hdg_estate.agent_id = #{agentId}
+            </if>
+            <if test="estateId != null and estateId != '' ">
+                and bas_estate_role.estate_id = #{estateId}
+            </if>
+            <if test="roleName != null and roleName != ''">
+                <![CDATA[and role_name LIKE concat('%', #{roleName}, '%')]]>
+            </if>
+            and bas_estate_role.estate_id = hdg_estate.id
+        </trim>
+        order by bas_estate_role.create_time desc
+        limit #{beginIndex}, #{rows}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.EstateRole" useGeneratedKeys="true" keyProperty="id">
+        insert into bas_estate_role(estate_id, role_name, memo, create_time) values
+        (#{estateId}, #{roleName}, #{memo}, #{createTime})
+    </insert>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.basic.Role">
+        update bas_estate_role set
+        role_name = #{roleName},
+        memo = #{memo}
+        where id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="int">
+        delete from bas_estate_role where id = #{id}
+    </delete>
+</mapper>

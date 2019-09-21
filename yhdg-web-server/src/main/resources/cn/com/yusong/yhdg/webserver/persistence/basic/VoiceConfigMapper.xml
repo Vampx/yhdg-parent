@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.basic.VoiceConfigMapper">
+
+    <select id="find" parameterType="int" resultType="cn.com.yusong.yhdg.common.domain.basic.VoiceConfig">
+        SELECT
+            *
+        FROM bas_voice_config
+        WHERE id = #{id}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.basic.VoiceConfig" resultType="int">
+        SELECT
+            COUNT(*)
+        FROM bas_voice_config
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null">
+                AND agent_id = #{agentId}
+            </if>
+            <if test="configName != null and configName != ''">
+                <![CDATA[AND config_name LIKE concat('%', #{configName}, '%')]]>
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.basic.VoiceConfig" resultType="cn.com.yusong.yhdg.common.domain.basic.VoiceConfig">
+        SELECT
+            *
+        FROM bas_voice_config
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null">
+                AND agent_id = #{agentId}
+            </if>
+            <if test="configName != null and configName != ''">
+                <![CDATA[AND config_name LIKE concat('%', #{configName}, '%')]]>
+            </if>
+        </trim>
+        limit #{beginIndex}, #{rows}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.VoiceConfig" useGeneratedKeys="true" keyProperty="id">
+        insert into bas_voice_config(
+            agent_id,
+            agent_name,
+            agent_code,
+            sms_type,
+            config_name,
+            account,
+            password,
+            balance,
+            is_active,
+            update_time
+        ) values (
+            #{agentId},
+            #{agentName},
+            #{agentCode},
+            #{smsType},
+            #{configName},
+            #{account},
+            #{password},
+            #{balance},
+            #{isActive},
+            #{updateTime}
+        )
+    </insert>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.basic.VoiceConfig">
+        UPDATE bas_voice_config SET
+            account = #{account},
+            password = #{password},
+            config_name = #{configName},
+            is_active = #{isActive}
+        WHERE id = #{id}
+    </update>
+
+</mapper>

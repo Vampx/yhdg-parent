@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.staticserver.persistence.hdg.ChargePacketOrderMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.hdg.ChargePacketOrder">
+        select *
+        from
+            hdg_charge_packet_order
+        WHERE
+        id = #{id}
+    </select>
+
+    <update id="payOk">
+        update hdg_charge_packet_order set status = #{toStatus},pay_time = #{payTime} where id = #{id} and status = #{fromStatus}
+    </update>
+
+</mapper>

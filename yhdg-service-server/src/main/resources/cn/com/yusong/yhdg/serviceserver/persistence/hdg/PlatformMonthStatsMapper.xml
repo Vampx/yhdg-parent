@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.serviceserver.persistence.hdg.PlatformMonthStatsMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.hdg.PlatformMonthStats">
+        select
+            *
+        from hdg_platform_month_stats
+        where stats_month = #{statsMonth}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.PlatformMonthStats" >
+        INSERT INTO `hdg_platform_month_stats` (
+            `stats_month`,
+            `increment_platform_income`,
+            `increment_foregift_money`,
+            `increment_exchange_money`,
+            `increment_packet_period_money`,
+            `increment_deposit_money`,
+            `increment_deposit_count`,
+            `increment_exchange_count`,
+            `increment_foregift_count`,
+            `increment_refund_money`,
+            `increment_refund_foregift_money`,
+            `increment_refund_exchange_money`,
+            `increment_refund_packet_period_money`,
+            `increment_refund_deposit_money`,
+            `increment_refund_deposit_count`,
+            `increment_refund_exchange_count`,
+            `increment_refund_foregift_count`,
+            `increment_cabinet_count`,
+            `increment_customer_count`,
+            `increment_feedback_count`,
+            `agent_income`,
+            `not_use_count`,
+            `update_time`
+        )
+        VALUES
+            (
+            #{statsMonth},
+            #{incrementPlatformIncome},
+            #{incrementForegiftMoney},
+            #{incrementExchangeMoney},
+            #{incrementPacketPeriodMoney},
+            #{incrementDepositMoney},
+            #{incrementDepositCount},
+            #{incrementExchangeCount},
+            #{incrementForegiftCount},
+            #{incrementRefundMoney},
+            #{incrementRefundForegiftMoney},
+            #{incrementRefundExchangeMoney},
+            #{incrementRefundPacketPeriodMoney},
+            #{incrementRefundDepositMoney},
+            #{incrementRefundDepositCount},
+            #{incrementRefundExchangeCount},
+            #{incrementRefundForegiftCount},
+            #{incrementCabinetCount},
+            #{incrementCustomerCount},
+            #{incrementFeedbackCount},
+            #{agentIncome},
+            #{notUseCount},
+            #{updateTime})
+    </insert>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.hdg.PlatformMonthStats">
+        update hdg_platform_month_stats
+        set
+        increment_platform_income = #{incrementPlatformIncome},
+        increment_foregift_money = #{incrementForegiftMoney},
+        increment_exchange_money = #{incrementExchangeMoney},
+        increment_packet_period_money = #{incrementPacketPeriodMoney},
+        increment_deposit_money = #{incrementDepositMoney},
+        increment_deposit_count = #{incrementDepositCount},
+        increment_exchange_count = #{incrementExchangeCount},
+        increment_foregift_count = #{incrementForegiftCount},
+        increment_refund_money = #{incrementRefundMoney},
+        increment_refund_foregift_money = #{incrementRefundForegiftMoney},
+        increment_refund_exchange_money = #{incrementRefundExchangeMoney},
+        increment_refund_packet_period_money = #{incrementRefundPacketPeriodMoney},
+        increment_refund_deposit_money = #{incrementRefundDepositMoney},
+        increment_refund_deposit_count = #{incrementRefundDepositCount},
+        increment_refund_exchange_count = #{incrementRefundExchangeCount},
+        increment_refund_foregift_count = #{incrementRefundForegiftCount},
+        increment_cabinet_count = #{incrementCabinetCount},
+        increment_customer_count = #{incrementCustomerCount},
+        increment_feedback_count = #{incrementFeedbackCount},
+        agent_income = #{agentIncome},
+        not_use_count = #{notUseCount},
+        update_time = #{updateTime}
+        where stats_month = #{statsMonth}
+    </update>
+
+</mapper>

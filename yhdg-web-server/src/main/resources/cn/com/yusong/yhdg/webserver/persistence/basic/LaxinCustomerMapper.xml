@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.basic.LaxinCustomerMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.basic.LaxinCustomer">
+        select
+        *
+        from bas_laxin_customer
+        where id = #{id}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.basic.LaxinCustomer" resultType="int">
+        select
+        count(id)
+        from bas_laxin_customer t1
+        <trim prefix="where" prefixOverrides="and">
+            <if test="partnerId != null ">
+                and  partner_id = #{partnerId}
+            </if>
+            <if test="agentId != null ">
+                and  agent_id = #{agentId}
+            </if>
+            <if test="laxinMobile != null and laxinMobile != ''">
+                and laxin_mobile = #{laxinMobile}
+            </if>
+            <if test="targetMobile != null and targetMobile != ''">
+                and target_mobile = #{targetMobile}
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.basic.LaxinCustomer"
+            resultType="cn.com.yusong.yhdg.common.domain.basic.LaxinCustomer">
+        select
+        *
+        from bas_laxin_customer
+        <trim prefix="where" prefixOverrides="and">
+            <if test="partnerId != null ">
+                and  partner_id = #{partnerId}
+            </if>
+            <if test="agentId != null ">
+                and  agent_id = #{agentId}
+            </if>
+            <if test="laxinMobile != null and laxinMobile != ''">
+                and laxin_mobile = #{laxinMobile}
+            </if>
+            <if test="targetMobile != null and targetMobile != ''">
+                and target_mobile = #{targetMobile}
+            </if>
+        </trim>
+        order by id desc
+        limit #{beginIndex}, #{rows}
+    </select>
+
+    <delete id="delete">
+        DELETE FROM bas_laxin_customer
+        WHERE id = #{id}
+    </delete>
+</mapper>

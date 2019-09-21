@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.appserver.persistence.hdg.ExchangeBatteryForegiftMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.hdg.ExchangeBatteryForegift">
+        SELECT
+        *
+        FROM
+        hdg_exchange_battery_foregift
+        where id = #{id}
+    </select>
+
+    <select id="findByCabinet" resultType="cn.com.yusong.yhdg.common.domain.hdg.ExchangeBatteryForegift">
+        SELECT
+        a.*
+        FROM
+        hdg_exchange_battery_foregift a , hdg_cabinet b , hdg_cabinet_battery_type c
+        where a.agent_id = b.agent_id and b.id = c.cabinet_id   and a.battery_type = c.battery_type and b.id = #{cabinetId}
+        limit 1
+    </select>
+
+    <select id="findByBatteryType" resultType="cn.com.yusong.yhdg.common.domain.hdg.ExchangeBatteryForegift">
+        SELECT
+        *
+        FROM
+        hdg_exchange_battery_foregift
+        where agent_id = #{agentId}
+        and battery_type = #{batteryType}
+    </select>
+
+    <select id="findByAgent" resultType="cn.com.yusong.yhdg.common.domain.hdg.ExchangeBatteryForegift">
+        SELECT
+        *
+        FROM
+        hdg_exchange_battery_foregift
+         where agent_id = #{agentId}
+        <if test="batteryType != null">
+            and battery_type = #{batteryType}
+        </if>
+    </select>
+
+</mapper>

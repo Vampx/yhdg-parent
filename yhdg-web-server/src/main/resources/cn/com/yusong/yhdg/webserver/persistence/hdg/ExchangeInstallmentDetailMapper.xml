@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.hdg.ExchangeInstallmentDetailMapper">
+
+    <select id="findListBySettingId" resultType="cn.com.yusong.yhdg.common.domain.hdg.ExchangeInstallmentDetail">
+        select
+         *
+        from hdg_exchange_installment_detail
+        where setting_id = #{settingId}
+        order by num asc
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.hdg.ExchangeInstallmentDetail" resultType="int">
+        select count(*)
+        from hdg_exchange_installment_detail
+        <trim prefix="where" prefixOverrides="and">
+            <if test="settingId != null">and setting_id = #{settingId} </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.hdg.ExchangeInstallmentDetail" resultType="cn.com.yusong.yhdg.common.domain.hdg.ExchangeInstallmentDetail">
+        select *
+        from hdg_exchange_installment_detail
+        <trim prefix="where" prefixOverrides="and">
+            <if test="settingId != null">and setting_id = #{settingId} </if>
+        </trim>
+        order by num asc
+        limit #{beginIndex}, #{rows}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.ExchangeInstallmentDetail">
+        INSERT INTO hdg_exchange_installment_detail(
+        setting_id,
+        num,
+        foregift_money,
+        packet_money,
+        insurance_money,
+        money,
+        expire_time
+        ) VALUES (
+        #{settingId},
+        #{num},
+        #{foregiftMoney},
+        #{packetMoney},
+        #{insuranceMoney},
+        #{money},
+        #{expireTime}
+        )
+    </insert>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.hdg.ExchangeInstallmentDetail">
+        update hdg_exchange_installment_detail set
+        money = #{money},
+        expire_time = #{expireTime}
+        where setting_id = #{settingId} and num = #{num}
+    </update>
+
+    <update id="updateNum">
+        update hdg_exchange_installment_detail set
+        num = #{toNum}
+        where setting_id = #{settingId} and num = #{fromNum}
+    </update>
+
+    <delete id="delete">
+        delete from hdg_exchange_installment_detail
+        where setting_id = #{settingId} and num = #{num}
+    </delete>
+
+    <delete id="deleteBySettingId">
+        delete from hdg_exchange_installment_detail
+        where setting_id = #{settingId}
+    </delete>
+
+</mapper>

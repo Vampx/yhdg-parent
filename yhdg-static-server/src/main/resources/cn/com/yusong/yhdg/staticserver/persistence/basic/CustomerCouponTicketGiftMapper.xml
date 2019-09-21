@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.staticserver.persistence.basic.CustomerCouponTicketGiftMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.basic.CustomerCouponTicketGift">
+        select * from bas_customer_coupon_ticket_gift
+        where agent_id = #{agentId}
+        and type = #{type}
+        and category = #{category}
+        and is_active = 1
+        <if test="payCount != null">
+            and pay_count = #{payCount}
+        </if>
+        limit 1
+    </select>
+
+</mapper>

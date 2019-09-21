@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.agentappserver.persistence.basic.LaxinSettingMapper">
+
+    <select id="find" parameterType="long" resultType="cn.com.yusong.yhdg.common.domain.basic.LaxinSetting">
+        select
+            *
+        from bas_laxin_setting
+        where id = #{id}
+    </select>
+
+
+    <select id="findByType" resultType="long">
+        select
+            id
+        from bas_laxin_setting
+        where agent_id = #{agentId} and type = #{type}
+    </select>
+
+    <select id="findList" parameterType="cn.com.yusong.yhdg.common.domain.basic.LaxinSetting"
+            resultType="cn.com.yusong.yhdg.common.domain.basic.LaxinSetting">
+        select
+        *
+        from bas_laxin_setting
+        where agent_id = #{agentId}
+        <if test="settingName != null and settingName != ''">
+            and setting_name like concat(#{settingName}, '%')
+        </if>
+        order by id desc
+        limit #{offset}, #{limit}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.LaxinSetting" useGeneratedKeys="true" keyProperty="id">
+        insert into bas_laxin_setting (setting_name, agent_id, agent_name, agent_code, laxin_money, ticket_money, ticket_day_count,
+          packet_period_money, packet_period_month, is_active, income_type, memo, interval_day, type, create_time)
+        values (#{settingName}, #{agentId}, #{agentName}, #{agentCode}, #{laxinMoney}, #{ticketMoney}, #{ticketDayCount},
+          #{packetPeriodMoney}, #{packetPeriodMonth}, #{isActive}, #{incomeType}, #{memo}, #{intervalDay}, #{type}, #{createTime})
+    </insert>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.basic.LaxinSetting">
+        update bas_laxin_setting set
+            setting_name = #{settingName},
+            laxin_money = #{laxinMoney},
+            ticket_money = #{ticketMoney},
+            ticket_day_count = #{ticketDayCount},
+            packet_period_money = #{packetPeriodMoney},
+            packet_period_month = #{packetPeriodMonth},
+            is_active = #{isActive},
+            income_type = #{incomeType},
+            interval_day = #{intervalDay},
+            type = #{type}
+        where id = #{id}
+    </update>
+
+    <update id="updateType">
+        update bas_laxin_setting set type = #{type} where id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="long">
+        delete from bas_laxin_setting where id = #{id}
+    </delete>
+
+</mapper>

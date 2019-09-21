@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.frontserver.persistence.yms.TerminalSequenceMapper">
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.yms.TerminalSequence" useGeneratedKeys="true" keyProperty="id">
+        insert into yms_terminal_sequence(id) values(null)
+    </insert>
+</mapper>

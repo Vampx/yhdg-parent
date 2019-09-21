@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.agentappserver.persistence.basic.CustomerInOutMoneyMapper">
+
+    <select id="findList" resultType="cn.com.yusong.yhdg.common.domain.basic.CustomerInOutMoney" parameterType="cn.com.yusong.yhdg.common.domain.basic.CustomerInOutMoney">
+        select
+        *
+        from bas_customer_in_out_money
+        where customer_id = #{customerId}
+        ORDER BY id DESC
+        limit #{offset},#{limit}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.CustomerInOutMoney">
+        insert into bas_customer_in_out_money(customer_id, biz_type, money, source_id, create_time)
+        values(#{customerId}, #{bizType}, #{money}, #{sourceId}, #{createTime})
+    </insert>
+
+</mapper>

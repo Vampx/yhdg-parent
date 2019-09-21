@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.appserver.persistence.basic.ZhizuCustomerMapper">
+
+    <select id="find" parameterType="long" resultType="cn.com.yusong.yhdg.common.domain.basic.ZhizuCustomer">
+        select
+        *
+        from bas_zhizu_customer
+        where id = #{id}
+    </select>
+
+    <select id="findAllList" resultType="cn.com.yusong.yhdg.common.domain.basic.ZhizuCustomer">
+        select
+        *
+        from bas_zhizu_customer
+        where is_active = 1 and rent_time is not null
+        <if test="updateTime != null">
+            <![CDATA[ and update_time  < #{updateTime} ]]>
+        </if>
+
+    </select>
+
+    <select id="findAllCount" resultType="int">
+        select
+         count(id)
+        from bas_zhizu_customer
+        where is_active = 1 and rent_time is not null
+    </select>
+
+    <select id="findIncrementList" resultType="cn.com.yusong.yhdg.common.domain.basic.ZhizuCustomer">
+        select
+        *
+        from bas_zhizu_customer
+        where is_active = 1
+        <if test="updateTime != null">
+            <![CDATA[ and update_time > #{updateTime} ]]>
+        </if>
+    </select>
+
+    <select id="findIncrementCount" resultType="int">
+        select
+         count(id)
+        from bas_zhizu_customer
+        where is_active = 1
+        <if test="updateTime != null">
+            <![CDATA[ and update_time > #{updateTime} ]]>
+        </if>
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.ZhizuCustomer" >
+        insert into bas_zhizu_customer(
+            id,
+            mobile,
+            id_card,
+            real_mobile,
+            real_id_card,
+            rent_time,
+            battery_type,
+            province_id,
+            city_id,
+            district_id,
+            is_active,
+            update_time,
+            create_time
+        ) values (
+            #{id},
+            #{mobile},
+            #{idCard},
+            #{realMobile},
+            #{realIdCard},
+            #{rentTime},
+            #{batteryType},
+            #{provinceId},
+            #{cityId},
+            #{districtId},
+            #{isActive},
+            #{updateTime},
+            #{createTime}
+        )
+    </insert>
+
+    <update id="update">
+        update bas_zhizu_customer set
+            id_card = #{idCard},
+            real_mobile  = #{realMobile},
+            real_id_card = #{realIdCard},
+            rent_time = #{rentTime},
+            battery_type = #{batteryType},
+            city_id = #{cityId},
+            update_time = #{updateTime}
+        where id = #{id}
+    </update>
+
+</mapper>

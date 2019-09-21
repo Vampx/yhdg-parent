@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.appserver.persistence.basic.CustomerInstallmentRecordOrderDetailMapper">
+
+    <select id="findList" resultType="cn.com.yusong.yhdg.common.domain.basic.CustomerInstallmentRecordOrderDetail">
+        select * from bas_customer_installment_record_order_detail where record_id = #{recordId}
+    </select>
+
+    <select id="findOrderDetail" resultType="cn.com.yusong.yhdg.common.domain.basic.CustomerInstallmentRecordOrderDetail">
+        select * from bas_customer_installment_record_order_detail where record_id = #{recordId} and source_type = #{sourceType}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.CustomerInstallmentRecordOrderDetail">
+        insert into bas_customer_installment_record_order_detail(
+        record_id,
+        num,
+        source_type,
+        source_id,
+        category,
+        money)
+        values (
+        #{recordId},
+        #{num},
+        #{sourceType},
+        #{sourceId},
+        #{category},
+        #{money})
+    </insert>
+
+</mapper>

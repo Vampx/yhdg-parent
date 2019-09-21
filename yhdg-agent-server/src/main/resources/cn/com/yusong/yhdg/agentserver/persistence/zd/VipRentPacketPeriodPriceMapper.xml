@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.zd.VipRentPacketPeriodPriceMapper">
+
+    <select id="find" parameterType="long" resultType="cn.com.yusong.yhdg.common.domain.zd.VipRentPeriodPrice">
+        SELECT
+        *
+        FROM zd_vip_rent_period_price
+        WHERE id = #{id}
+    </select>
+
+    <select id="findListByForegiftId"  resultType="cn.com.yusong.yhdg.common.domain.zd.VipRentPeriodPrice">
+        SELECT
+        *
+        FROM zd_vip_rent_period_price
+        WHERE foregift_id = #{foregiftId}
+        and battery_type = #{batteryType}
+        and agent_id = #{agentId}
+        and price_id = #{priceId}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.zd.VipRentPeriodPrice" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO zd_vip_rent_period_price(
+          price_id,
+          agent_id,
+          agent_name,
+          agent_code,
+          foregift_id,
+          battery_type,
+          day_count,
+          price,
+          memo,
+          create_time
+        ) VALUES (
+          #{priceId},
+          #{agentId},
+          #{agentName},
+          #{agentCode},
+          #{foregiftId},
+          #{batteryType},
+          #{dayCount},
+          #{price},
+          #{memo},
+          #{createTime}
+        )
+    </insert>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.zd.VipRentPeriodPrice">
+        update zd_vip_rent_period_price SET
+          agent_name = #{agentName},
+          agent_code = #{agentCode},
+          day_count = #{dayCount},
+          price = #{price},
+          memo = #{memo}
+          where id = #{id}
+    </update>
+
+    <delete id="delete">
+        delete from zd_vip_rent_period_price where id = #{id}
+    </delete>
+
+</mapper>

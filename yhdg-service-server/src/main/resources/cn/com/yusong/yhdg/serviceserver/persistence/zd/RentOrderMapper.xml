@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.serviceserver.persistence.zd.RentOrderMapper">
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.zd.RentOrder">
+        select *
+        FROM zd_rent_order
+        where id = #{id}
+    </select>
+
+    <select id="findAgentActiveCustomerCount" resultType="cn.com.yusong.yhdg.common.domain.hdg.AgentDayStats">
+        SELECT
+        agent_id AS agentId,
+        COUNT(DISTINCT customer_id) AS rentActiveCustomerCount
+        FROM
+        zd_rent_order
+        WHERE
+        create_time &lt;= #{endTime}
+        AND create_time &gt;= #{beginTime}
+        GROUP BY
+        agent_id
+    </select>
+
+</mapper>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.basic.AgentInOutMoneyMapper">
+
+    <select id="find" parameterType="long" resultType="cn.com.yusong.yhdg.common.domain.basic.AgentInOutMoney">
+        select * from bas_agent_in_out_money where id = #{id}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.basic.AgentInOutMoney" resultType="int">
+        select
+            count(*)
+        from bas_agent_in_out_money
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId !=null">
+                and agent_id = #{agentId}
+            </if>
+            <if test="bizType !=null">
+                and biz_type = #{bizType}
+            </if>
+            <if test="type !=null">
+                and type = #{type}
+            </if>
+            <if test="queryTime !=null and queryTime != ''">
+                and DATE_FORMAT(create_time, '%Y-%c') =#{queryTime}
+            </if>
+            <if test="statsDate != null and statsDate != ''">
+                <![CDATA[and create_time LIKE concat('%', #{statsDate}, '%')]]>
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.basic.AgentInOutMoney" resultType="cn.com.yusong.yhdg.common.domain.basic.AgentInOutMoney">
+        select
+           *
+        from bas_agent_in_out_money
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId !=null">
+                and agent_id = #{agentId}
+            </if>
+            <if test="bizType !=null">
+                and biz_type = #{bizType}
+            </if>
+            <if test="type !=null">
+                and type = #{type}
+            </if>
+            <if test="queryTime !=null and queryTime != ''">
+                and DATE_FORMAT(create_time, '%Y-%c') =#{queryTime}
+            </if>
+            <if test="statsDate != null and statsDate != ''">
+                <![CDATA[and create_time LIKE concat('%', #{statsDate}, '%')]]>
+            </if>
+        </trim>
+        order by id desc
+        limit ${beginIndex}, ${rows}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.AgentInOutMoney">
+        insert into bas_agent_in_out_money(agent_id, biz_type, money, create_time, type, balance, operator)
+        values(#{agentId}, #{bizType}, #{money}, #{createTime}, #{type}, #{balance}, #{operator})
+    </insert>
+
+</mapper>

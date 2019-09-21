@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.hdg.ExchangePriceTimeMapper">
+
+    <select id="find" parameterType="long" resultType="cn.com.yusong.yhdg.common.domain.hdg.ExchangePriceTime">
+        SELECT
+        *
+        FROM hdg_exchange_price_time
+        WHERE id = #{id}
+    </select>
+
+    <select id="findByBatteryType" resultType="cn.com.yusong.yhdg.common.domain.hdg.ExchangePriceTime">
+        SELECT
+        *
+        FROM hdg_exchange_price_time
+        WHERE battery_type = #{batteryType} and agent_id = #{agentId}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.hdg.ExchangePriceTime" resultType="int">
+        select
+        count(*)
+        from hdg_exchange_price_time
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null">
+                and agent_id = #{agentId}
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.hdg.ExchangePriceTime"
+            resultType="cn.com.yusong.yhdg.common.domain.hdg.ExchangePriceTime">
+        SELECT
+        *
+        from hdg_exchange_price_time
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null">
+                and agent_id = #{agentId}
+            </if>
+        </trim>
+        limit #{beginIndex}, #{rows}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.ExchangePriceTime" useGeneratedKeys="true" keyProperty="id">
+       INSERT INTO hdg_exchange_price_time (
+            agent_id,
+            battery_type,
+            active_single_exchange,
+            volume_price,
+            times_price
+        ) VALUES (
+            #{agentId},
+            #{batteryType},
+            #{activeSingleExchange},
+            #{volumePrice},
+            #{timesPrice}
+        )
+    </insert>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.hdg.ExchangePriceTime">
+        update hdg_exchange_price_time set
+        <trim suffix="" suffixOverrides=",">
+            <if test="activeSingleExchange != null">
+                active_single_exchange = #{activeSingleExchange},
+            </if>
+            <if test="timesPrice != null">
+                times_price = #{timesPrice},
+            </if>
+        </trim>
+        where battery_type = #{batteryType} and agent_id = #{agentId}
+    </update>
+
+    <delete id="delete" parameterType="long">
+        delete from hdg_exchange_price_time where id = #{id}
+    </delete>
+
+</mapper>

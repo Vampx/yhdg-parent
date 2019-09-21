@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.staticserver.persistence.hdg.CabinetBoxMapper">
+
+    <select id="findOneFull" resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetBox">
+        select a.* from (
+        select
+        t1.cabinet_id,
+        t1.box_num,
+        t1.type,
+        t1.box_status,
+        t1.battery_id,
+        t2.volume
+        from hdg_cabinet_box t1
+        inner join hdg_battery t2 on t1.battery_id = t2.id
+        inner join hdg_cabinet t3 on t3.id = t1.cabinet_id
+        where t1.cabinet_id = #{cabinetId}
+        and t1.box_status = #{fullStatus}
+        and t1.is_active = 1
+        and t1.is_online = 1
+        and t2.up_line_status = 1
+        and t2.status = #{batteryStatus}
+        and t2.type = #{batteryType}
+        and t2.is_normal = 1
+        and ((t3.min_exchange_volume is not null and  t2.volume >= t3.min_exchange_volume)
+        or  t2.volume >= t3.charge_full_volume)
+
+        <if test="batteryId != null and batteryId != ''">
+            and t2.id != #{batteryId}
+        </if>
+
+        <if test="bespeakBoxNum != null and bespeakBoxNum != ''">
+            union all
+            select
+            t1.cabinet_id,
+            t1.box_num,
+            t1.type,
+            t1.box_status,
+            t1.battery_id,
+            t2.volume
+            from hdg_cabinet_box t1
+            inner join hdg_battery t2 on t1.battery_id = t2.id
+            where t1.cabinet_id = #{cabinetId}
+            and t1.box_num = #{bespeakBoxNum}
+            and t1.is_active = 1
+            and t1.is_online = 1
+            and t2.up_line_status = 1
+            and t2.status = #{batteryStatus}
+            and t2.type = #{batteryType}
+            and t2.is_normal = 1
+        </if>
+        ) a ORDER BY a.volume DESC
+        limit 1
+    </select>
+
+    <select id="findFullCount" resultType="int">
+        select
+            count(*)
+              from hdg_cabinet_box t1
+            inner join hdg_battery t2 on t1.battery_id = t2.id
+            inner join hdg_cabinet t3 on t3.id = t1.cabinet_id
+            where t1.cabinet_id = #{cabinetId}
+            and t1.box_status = #{boxStatus}
+            and t1.is_active = 1
+            and t1.is_online = 1
+            and t2.status = #{batteryStatus}
+            and t2.is_normal = 1
+            and t2.volume >= t3.charge_full_volume
+    </select>
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetBox">
+        select
+        *
+        from hdg_cabinet_box
+        where cabinet_id = #{cabinetId}
+        and box_num = #{boxNum}
+        and is_online = 1
+    </select>
+
+    <update id="lockBox">
+        update hdg_cabinet_box
+        set
+            lock_time = #{lockTime},
+            box_status = #{toStatus}
+        where cabinet_id = #{cabinetId}
+        and box_num = #{boxNum}
+        and box_status = #{fromStatus}
+    </update>
+
+    <update id="unlockBox">
+        update hdg_cabinet_box
+        set
+        lock_time = null,
+        box_status = #{toStatus}
+        where cabinet_id = #{cabinetId}
+        and box_num = #{boxNum}
+        and box_status = #{fromStatus}
+    </update>
+
+</mapper>

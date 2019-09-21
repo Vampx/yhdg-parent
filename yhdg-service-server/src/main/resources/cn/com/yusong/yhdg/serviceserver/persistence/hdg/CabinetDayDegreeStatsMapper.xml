@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.serviceserver.persistence.hdg.CabinetDayDegreeStatsMapper">
+
+    <select id="findUseVolume"  resultType="int">
+        SELECT
+        ifnull(sum(num), 0)
+        FROM hdg_cabinet_day_degree_stats
+        where cabinet_id = #{cabinetId}
+    </select>
+
+    <select id="findIncrement"  resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetDayStats">
+        SELECT
+             cabinet_id,
+             agent_id,
+             ifnull(num, 0) as electricDegree
+        FROM hdg_cabinet_day_degree_stats
+         where stats_date = #{statsDate}
+    </select>
+
+    <select id="findListByAgent"  resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetDayDegreeStats">
+        SELECT
+         *
+        FROM hdg_cabinet_day_degree_stats
+        where stats_date = #{statsDate}
+        and agent_id = #{agentId}
+       limit ${offset}, ${limit}
+    </select>
+
+</mapper>

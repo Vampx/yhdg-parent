@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.hdg.VipExchangeBatteryForegiftMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.hdg.VipExchangeBatteryForegift">
+        select * from hdg_vip_exchange_battery_foregift where id = #{id}
+    </select>
+
+    <select id="findListByPriceId" resultType="cn.com.yusong.yhdg.common.domain.hdg.VipExchangeBatteryForegift">
+        select * from hdg_vip_exchange_battery_foregift where price_id = #{priceId}
+    </select>
+
+    <select id="findByAgentIdAndForegiftId" resultType="cn.com.yusong.yhdg.common.domain.hdg.VipExchangeBatteryForegift">
+        select * from hdg_vip_exchange_battery_foregift
+        where foregift_id = #{foregiftId}
+        and agent_id = #{agentId} and price_id = #{priceId}
+    </select>
+
+    <select id="findByAgentId" resultType="int">
+        select count(id) from hdg_vip_exchange_battery_foregift
+        where foregift_id = #{foregiftId}
+        and agent_id = #{agentId}
+    </select>
+
+    <select id="findId" resultType="long">
+        select max(id) from hdg_vip_exchange_battery_foregift
+    </select>
+
+    <select id="findByPriceId" resultType="cn.com.yusong.yhdg.common.domain.hdg.VipExchangeBatteryForegift">
+        select * from hdg_vip_exchange_battery_foregift
+        where price_id = #{priceId}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.VipExchangeBatteryForegift" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO hdg_vip_exchange_battery_foregift(
+        price_id,
+        agent_id,
+        foregift_id,
+        reduce_money,
+        memo,
+        create_time
+        ) VALUES (
+        #{priceId},
+        #{agentId},
+        #{foregiftId},
+        #{reduceMoney},
+        #{memo},
+        #{createTime}
+        )
+    </insert>
+
+    <update id="update">
+        update hdg_vip_exchange_battery_foregift set
+        reduce_money = #{reduceMoney},
+        memo = #{memo}
+        where id = #{id}
+    </update>
+
+    <delete id="deleteByAgentId">
+        delete from hdg_vip_exchange_battery_foregift
+        where foregift_id = #{foregiftId}
+        and agent_id = #{agentId}
+    </delete>
+
+    <delete id="deleteByPriceId">
+        delete from hdg_vip_exchange_battery_foregift
+        where price_id = #{priceId}
+    </delete>
+
+</mapper>

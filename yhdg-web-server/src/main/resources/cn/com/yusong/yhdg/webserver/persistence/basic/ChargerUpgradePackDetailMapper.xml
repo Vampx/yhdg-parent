@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.basic.ChargerUpgradePackDetailMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.basic.ChargerUpgradePackDetail">
+        select
+          *
+        from bas_charger_upgrade_pack_detail
+        where
+        upgrade_pack_id = #{upgradePackId}
+        and
+        terminal_id =#{terminalId}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.basic.ChargerUpgradePackDetail" resultType="int">
+        select
+        count(bas_charger_upgrade_pack_detail.terminal_id)
+        from bas_charger_upgrade_pack_detail, hdg_cabinet
+        <trim prefix="where" prefixOverrides="and">
+            <if test="upgradePackId != null ">
+                and bas_charger_upgrade_pack_detail.upgrade_pack_id = #{upgradePackId}
+            </if>
+            and bas_charger_upgrade_pack_detail.terminal_id = hdg_cabinet.id
+        </trim>
+    </select>
+
+    <select id="findPageResult" resultType="cn.com.yusong.yhdg.common.domain.basic.ChargerUpgradePackDetail">
+        select
+        hdg_cabinet.id as cabinetId,
+        hdg_cabinet.cabinet_name as cabinetName,
+        hdg_cabinet.agent_id as agentId,
+        hdg_cabinet.address as cabinetAddress,
+        hdg_cabinet.version as cabinetVersion,
+        hdg_cabinet.is_online as cabinetIsOnline,
+
+        bas_charger_upgrade_pack_detail.*
+
+        from bas_charger_upgrade_pack_detail, hdg_cabinet
+        <trim prefix="where" prefixOverrides="and">
+            <if test="upgradePackId != null ">
+                and bas_charger_upgrade_pack_detail.upgrade_pack_id = #{upgradePackId}
+            </if>
+            and bas_charger_upgrade_pack_detail.terminal_id = hdg_cabinet.id
+        </trim>
+        limit ${beginIndex}, ${rows}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.ChargerUpgradePackDetail">
+        INSERT INTO bas_charger_upgrade_pack_detail
+        (
+           upgrade_pack_id,
+           terminal_id
+        ) VALUES (
+            #{upgradePackId},
+            #{terminalId}
+        )
+    </insert>
+
+    <delete id="delete" parameterType="cn.com.yusong.yhdg.common.domain.basic.ChargerUpgradePackDetail">
+    delete
+    from
+    bas_charger_upgrade_pack_detail
+    where
+    upgrade_pack_id = #{upgradePackId}
+    and
+    terminal_id = #{terminalId}
+
+</delete>
+
+
+</mapper>

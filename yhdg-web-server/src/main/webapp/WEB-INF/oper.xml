@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<data>
+    <node name="平台" code="1">
+        <node name="会员管理" code="1_1">
+            <node name="会员管理" code="1_1_1">
+                <node name="列表" code="1_1_1_1" ref=""/>
+            </node>
+            <node name="会员充值" code="1_1_2">
+                <node name="列表" code="1_1_2_1" ref=""/>
+            </node>
+        </node>
+        <node name="平台公告" code="1_2">
+            <node name="平台公告" code="1_2_1">
+                <node name="列表" code="1_2_1_1" ref=""/>
+            </node>
+        </node>
+        <node name="运营商管理" code="1_3">
+            <node name="运营商管理" code="1_3_1">
+                <node name="列表" code="1_3_1_1" ref=""/>
+            </node>
+            <node name="运营商账户" code="1_3_2">
+                <node name="列表" code="1_3_2_1" ref=""/>
+            </node>
+        </node>
+        <node name="系统电池型号" code="1_4">
+            <node name="系统电池型号" code="1_4_1">
+                <node name="列表" code="1_4_1_1" ref=""/>
+            </node>
+        </node>
+        <node name="电池配置" code="1_5">
+            <node name="电芯型号管理" code="1_5_1">
+                <node name="列表" code="1_5_1_1" ref=""/>
+            </node>
+            <node name="电芯规格管理" code="1_5_2">
+                <node name="列表" code="1_5_2_1" ref=""/>
+            </node>
+            <node name="电芯检验" code="1_5_3">
+                <node name="列表" code="1_5_3_1" ref=""/>
+            </node>
+            <node name="电池规格管理" code="1_5_4">
+                <node name="列表" code="1_5_4_1" ref=""/>
+            </node>
+            <node name="电池检验" code="1_5_5">
+                <node name="列表" code="1_5_5_1" ref=""/>
+            </node>
+        </node>
+        <node name="上线管理" code="1_6">
+            <node name="换电柜上线审核" code="1_6_1">
+                <node name="列表" code="1_6_1_1" ref=""/>
+            </node>
+            <node name="电池分成模板" code="1_6_2">
+                <node name="列表" code="1_6_2_1" ref=""/>
+            </node>
+            <node name="换电柜分成模板" code="1_6_3">
+                <node name="列表" code="1_6_3_1" ref=""/>
+            </node>
+        </node>
+        <node name="用户指南协议" code="1_7">
+            <node name="用户指南" code="1_7_1">
+                <node name="列表" code="1_7_1_1" ref=""/>
+            </node>
+            <node name="协议管理(富文本)" code="1_7_2">
+                <node name="列表" code="1_7_2_1" ref=""/>
+            </node>
+        </node>
+        <node name="其他配置" code="1_8">
+            <node name="运营商配置管理" code="1_8_1">
+                <node name="列表" code="1_8_1_1" ref=""/>
+            </node>
+            <node name="移动救援" code="1_8_2">
+                <node name="列表" code="1_8_2_1" ref=""/>
+            </node>
+            <node name="意见反馈" code="1_8_3">
+                <node name="列表" code="1_8_3_1" ref=""/>
+            </node>
+            <node name="充值配置" code="1_8_4">
+                <node name="列表" code="1_8_4_1" ref=""/>
+            </node>
+            <node name="白名单用户配置" code="1_8_5">
+                <node name="列表" code="1_8_5_1" ref=""/>
+            </node>
+        </node>
+    </node>
+    <node name="运营商" code="2">
+        <node name="运营商管理" code="2_1">
+            <node name="运营商账户管理" code="2_1_1">
+                <node name="列表" code="2_1_1_1" ref=""/>
+            </node>
+            <node name="运营商账户管理" code="2_1_2">
+                <node name="列表" code="2_1_2_1" ref=""/>
+            </node>
+            <node name="运营商角色管理" code="2_1_3">
+                <node name="列表" code="2_1_3_1" ref=""/>
+            </node>
+        </node>
+        <node name="运营商公告" code="2_2">
+            <node name="运营商公告" code="2_2_1">
+                <node name="列表" code="2_2_1_1" ref=""/>
+            </node>
+        </node>
+        <node name="位置纠错" code="2_3">
+            <node name="位置纠错" code="2_3_1">
+                <node name="列表" code="2_3_1_1" ref=""/>
+            </node>
+            <node name="纠错免人员" code="2_3_2">
+                <node name="列表" code="2_3_2_1" ref=""/>
+            </node>
+        </node>
+        <node name="优惠券管理" code="2_4">
+            <node name="优惠券配置" code="2_4_1">
+                <node name="列表" code="2_4_1_1" ref=""/>
+            </node>
+            <node name="优惠券订单" code="2_4_2">
+                <node name="列表" code="2_4_2_1" ref=""/>
+            </node>
+        </node>
+        <node name="拉新管理" code="2_5">
+            <node name="拉新人员" code="2_5_1">
+                <node name="列表" code="2_5_1_1" ref=""/>
+            </node>
+            <node name="拉新记录" code="2_5_2">
+                <node name="列表" code="2_5_2_1" ref=""/>
+            </node>
+            <node name="拉新记录" code="2_5_3">
+                <node name="列表" code="2_5_3_1" ref=""/>
+            </node>
+            <node name="拉新客户" code="2_5_4">
+                <node name="列表" code="2_5_4_1" ref=""/>
+            </node>
+        </node>
+
+    </node>
+    <node name="换电" code="3">
+        <node name="电池型号管理" code="3_1">
+            <node name="电池型号管理" code="3_1_1">
+                <node name="列表" code="3_1_1_1" ref=""/>
+            </node>
+        </node>
+        <node name="电池管理" code="3_2">
+            <node name="电池管理" code="3_2_1">
+                <node name="列表" code="3_2_1_1" ref=""/>
+            </node>
+        </node>
+        <node name="换电柜管理" code="3_3">
+            <node name="换电柜管理" code="3_3_1">
+                <node name="列表" code="3_3_1_1" ref=""/>
+            </node>
+        </node>
+        <node name="终端屏幕管理" code="3_4">
+            <node name="终端屏幕管理" code="3_4_1">
+                <node name="列表" code="3_4_1_1" ref=""/>
+            </node>
+        </node>
+        <node name="活动管理" code="3_5">
+            <node name="活动管理" code="3_5_1">
+                <node name="列表" code="3_5_1_1" ref=""/>
+            </node>
+        </node>
+        <node name="白名单管理" code="3_6">
+            <node name="白名单管理" code="3_6_1">
+                <node name="列表" code="3_6_1_1" ref=""/>
+            </node>
+        </node>
+        <node name="订单管理" code="3_7">
+            <node name="押金订单" code="3_7_1">
+                <node name="列表" code="3_7_1_1" ref=""/>
+            </node>
+            <node name="租金订单" code="3_7_2">
+                <node name="列表" code="3_7_2_1" ref=""/>
+            </node>
+            <node name="换电订单" code="3_7_3">
+                <node name="列表" code="3_7_3_1" ref=""/>
+            </node>
+            <node name="退租订单" code="3_7_4">
+                <node name="列表" code="3_7_4_1" ref=""/>
+            </node>
+            <node name="保险订单" code="3_7_5">
+                <node name="列表" code="3_7_5_1" ref=""/>
+            </node>
+        </node>
+        <node name="故障管理" code="3_8">
+            <node name="故障管理" code="3_8_1">
+                <node name="列表" code="3_8_1_1" ref=""/>
+            </node>
+        </node>
+        <node name="故障反馈" code="3_9">
+            <node name="故障反馈" code="3_9_1">
+                <node name="列表" code="3_9_1_1" ref=""/>
+            </node>
+        </node>
+    </node>
+    <node name="消息" code="4">
+        <node name="短信消息" code="4_1">
+            <node name="短信接口" code="4_1_1">
+                <node name="列表" code="4_1_1_1" ref=""/>
+            </node>
+            <node name="短信模板" code="4_1_2">
+                <node name="列表" code="4_1_2_1" ref=""/>
+            </node>
+            <node name="短信记录" code="4_1_3">
+                <node name="列表" code="4_1_3_1" ref=""/>
+            </node>
+            <node name="自定义短信" code="4_1_4">
+                <node name="列表" code="4_1_4_1" ref=""/>
+            </node>
+        </node>
+        <node name="app消息" code="4_2">
+            <node name="消息推送模板" code="4_2_1">
+                <node name="列表" code="4_2_1_1" ref=""/>
+            </node>
+            <node name="消息记录" code="4_2_2">
+                <node name="列表" code="4_2_2_1" ref=""/>
+            </node>
+            <node name="会员通知消息" code="4_2_3">
+                <node name="列表" code="4_2_3_1" ref=""/>
+            </node>
+            <node name="用户通知消息" code="4_2_4">
+                <node name="列表" code="4_2_4_1" ref=""/>
+            </node>
+        </node>
+        <node name="公众号消息" code="4_3">
+            <node name="公众号模板" code="4_3_1">
+                <node name="列表" code="4_3_1_1" ref=""/>
+            </node>
+            <node name="公众号消息记录" code="4_3_2">
+                <node name="列表" code="4_3_2_1" ref=""/>
+            </node>
+            <node name="自定义消息" code="4_3_3">
+                <node name="列表" code="4_3_3_1" ref=""/>
+            </node>
+        </node>
+        <node name="生活号消息" code="4_4">
+            <node name="生活号模板" code="4_4_1">
+                <node name="列表" code="4_4_1_1" ref=""/>
+            </node>
+            <node name="生活号消息记录" code="4_4_2">
+                <node name="列表" code="4_4_2_1" ref=""/>
+            </node>
+        </node>
+    </node>
+    <node name="资金" code="5">
+        <node name="结算记录" code="5_1">
+            <node name="结算记录" code="5_1_1">
+                <node name="列表" code="5_1_1_1" ref=""/>
+            </node>
+            <node name="结算转账记录" code="5_1_2">
+                <node name="列表" code="5_1_2_1" ref=""/>
+            </node>
+        </node>
+        <node name="支付凭证" code="5_2">
+            <node name="微信订单" code="5_2_1">
+                <node name="列表" code="5_2_1_1" ref=""/>
+            </node>
+            <node name="支付宝订单" code="5_2_2">
+                <node name="列表" code="5_2_2_1" ref=""/>
+            </node>
+            <node name="公众号订单" code="5_2_3">
+                <node name="列表" code="5_2_3_1" ref=""/>
+            </node>
+            <node name="生活号订单" code="5_2_4">
+                <node name="列表" code="5_2_4_1" ref=""/>
+            </node>
+        </node>
+    </node>
+    <node name="统计" code="6">
+        <node name="运营商统计" code="6_1">
+            <node name="运营商日统计" code="6_1_1">
+                <node name="列表" code="6_1_1_1" ref=""/>
+            </node>
+            <node name="运营商月统计" code="6_1_2">
+                <node name="列表" code="6_1_2_1" ref=""/>
+            </node>
+        </node>
+        <node name="换电统计" code="6_2">
+            <node name="换电柜日统计" code="6_2_1">
+                <node name="列表" code="6_2_1_1" ref=""/>
+            </node>
+            <node name="换电柜月统计" code="6_2_2">
+                <node name="列表" code="6_2_2_1" ref=""/>
+            </node>
+        </node>
+        <node name="平台统计" code="6_3">
+            <node name="客户日活" code="6_3_1">
+                <node name="列表" code="6_3_1_1" ref=""/>
+            </node>
+            <node name="客单量统计" code="6_3_2">
+                <node name="列表" code="6_3_2_1" ref=""/>
+            </node>
+            <node name="平台日统计" code="6_3_3">
+                <node name="列表" code="6_3_3_1" ref=""/>
+            </node>
+            <node name="平台月统计" code="6_3_4">
+                <node name="列表" code="6_3_4_1" ref=""/>
+            </node>
+        </node>
+    </node>
+    <node name="系统配置" code="7">
+        <node name="账户权限管理" code="7_1">
+            <node name="用户管理" code="7_1_1">
+                <node name="列表" code="7_1_1_1" ref=""/>
+            </node>
+            <node name="角色管理" code="7_1_2">
+                <node name="列表" code="7_1_2_1" ref=""/>
+            </node>
+        </node>
+        <node name="升级管理" code="7_2">
+            <node name="手机端升级" code="7_2_1">
+                <node name="列表" code="7_2_1_1" ref=""/>
+            </node>
+            <node name="屏幕升级" code="7_2_2">
+                <node name="列表" code="7_2_2_1" ref=""/>
+            </node>
+            <node name="电池升级" code="7_2_3">
+                <node name="列表" code="7_2_3_1" ref=""/>
+            </node>
+            <node name="换电柜升级" code="7_2_4">
+                <node name="列表" code="7_2_4_1" ref=""/>
+            </node>
+        </node>
+        <node name="系统配置" code="7_3">
+            <node name="系统配置" code="7_3_1">
+                <node name="列表" code="7_3_1_1" ref=""/>
+            </node>
+            <node name="字典管理" code="7_3_2">
+                <node name="列表" code="7_3_2_1" ref=""/>
+            </node>
+        </node>
+    </node>
+</data>

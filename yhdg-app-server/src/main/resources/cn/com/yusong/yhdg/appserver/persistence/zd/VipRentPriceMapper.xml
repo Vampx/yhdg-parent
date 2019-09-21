@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.appserver.persistence.zd.VipRentPriceMapper">
+
+    <select id="findOneByShopId" resultType="cn.com.yusong.yhdg.common.domain.zd.VipRentPrice">
+        <![CDATA[
+            SELECT
+            *
+            FROM zd_vip_rent_price t1, zd_vip_rent_price_shop t2
+            WHERE t1.agent_id = #{agentId}
+            and t1.battery_type = #{batteryType}
+            and #{now} >= t1.begin_time
+            and #{now} <= t1.end_time
+            and t1.is_active = 1
+            and t1.id = t2.price_id
+            and t2.shop_id = #{shopId}
+            limit 1
+        ]]>
+    </select>
+
+    <select id="findOneByCustomerMobile" resultType="cn.com.yusong.yhdg.common.domain.zd.VipRentPrice">
+        <![CDATA[
+            SELECT
+            *
+            FROM zd_vip_rent_price t1, zd_vip_rent_price_customer t2
+            WHERE t1.agent_id = #{agentId}
+            and t1.battery_type = #{batteryType}
+            and #{now} >= t1.begin_time
+            and #{now} <= t1.end_time
+            and t1.is_active = 1
+            and t1.id = t2.price_id
+            and t2.mobile = #{mobile}
+            limit 1
+        ]]>
+    </select>
+
+    <select id="findOneByAgentCompanyId" resultType="cn.com.yusong.yhdg.common.domain.zd.VipRentPrice">
+        <![CDATA[
+            SELECT
+            *
+            FROM zd_vip_rent_price t1, zd_vip_rent_price_agent_company t2
+            WHERE t1.agent_id = #{agentId}
+            and t1.battery_type = #{batteryType}
+            and #{now} >= t1.begin_time
+            and #{now} <= t1.end_time
+            and t1.is_active = 1
+            and t1.id = t2.price_id
+            and t2.agent_company_id = #{agentCompanyId}
+            limit 1
+        ]]>
+    </select>
+
+</mapper>

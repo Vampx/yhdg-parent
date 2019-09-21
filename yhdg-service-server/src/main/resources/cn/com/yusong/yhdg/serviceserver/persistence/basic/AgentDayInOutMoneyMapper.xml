@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.serviceserver.persistence.basic.AgentDayInOutMoneyMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.basic.AgentDayInOutMoney">
+        select
+        *
+        from bas_agent_day_in_out_money
+        where  agent_id = #{agentId}
+        and stats_date = #{statsDate}
+    </select>
+
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.AgentDayInOutMoney" >
+        insert into bas_agent_day_in_out_money (
+            agent_id,
+            agent_name,
+            stats_date,
+            agent_in_money,
+            agent_out_money,
+            update_time
+        ) values (
+            #{agentId},
+            #{agentName},
+            #{statsDate},
+            #{agentInMoney},
+            #{agentOutMoney},
+            #{updateTime}
+        )
+    </insert>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.basic.AgentDayInOutMoney">
+        update bas_agent_day_in_out_money
+        set
+            agent_in_money = #{agentInMoney},
+            agent_out_money = #{agentOutMoney},
+            update_time = #{updateTime}
+        where agent_id = #{agentId}
+        and stats_date = #{statsDate}
+    </update>
+
+</mapper>

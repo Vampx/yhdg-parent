@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.agentappserver.persistence.hdg.VipPriceCustomerMapper">
+
+    <select id="findListByPriceId" parameterType="long" resultType="cn.com.yusong.yhdg.common.domain.hdg.VipPriceCustomer">
+        SELECT
+        *
+        FROM hdg_vip_price_customer
+        where price_id = #{priceId}
+    </select>
+
+    <select id="findByAgentIdAndMobile" resultType="cn.com.yusong.yhdg.common.domain.hdg.VipPriceCustomer">
+        <![CDATA[
+            SELECT
+            *
+            FROM hdg_vip_price t1, hdg_vip_price_customer t2
+            WHERE t1.agent_id = #{agentId}
+            and t1.id = t2.price_id
+            and t2.mobile = #{mobile}
+            limit 1
+        ]]>
+    </select>
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.VipPriceCustomer" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO hdg_vip_price_customer(
+        price_id,
+        mobile,
+        create_time
+        ) VALUES (
+        #{priceId},
+        #{mobile},
+        #{createTime}
+        )
+    </insert>
+
+    <delete id="delete">
+        delete from hdg_vip_price_customer where id = #{id}
+    </delete>
+
+    <delete id="deleteByPriceId">
+        delete from hdg_vip_price_customer where price_id = #{priceId}
+    </delete>
+
+</mapper>

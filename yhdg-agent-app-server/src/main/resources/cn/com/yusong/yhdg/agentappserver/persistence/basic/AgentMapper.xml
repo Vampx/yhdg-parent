@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.agentappserver.persistence.basic.AgentMapper">
+
+    <select id="find"  resultType="cn.com.yusong.yhdg.common.domain.basic.Agent">
+        select
+        *
+        from bas_agent
+        where id = #{id}
+    </select>
+
+    <select id="findAll"  resultType="cn.com.yusong.yhdg.common.domain.basic.Agent">
+        select
+        *
+        from bas_agent
+        where 1 = 1
+        <if test="agentName != null and agentName != '' ">
+            <![CDATA[and agent_name LIKE concat('%',#{agentName}, '%')]]>
+        </if>
+    </select>
+
+    <select id="findByParent" resultType="cn.com.yusong.yhdg.common.domain.basic.Agent">
+        select * from bas_agent where parent_id = #{parentId} and is_active = 1
+    </select>
+
+    <select id="findAllId" resultType="int">
+        select
+        id
+        from bas_agent
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.Agent" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into bas_agent(
+            partner_id,
+            parent_id,
+            agent_name,
+            order_num,
+            memo,
+            is_active,
+            balance_status,
+            balance,
+            province_id,
+            city_id,
+            district_id,
+            street,
+            linkman,
+            tel,
+            foregift_balance,
+            foregift_remain_money,
+            foregift_balance_ratio,
+            zd_foregift_balance,
+            zd_foregift_remain_money,
+            zd_foregift_balance_ratio,
+            create_time)
+        values(
+            #{partnerId},
+            #{parentId},
+            #{agentName},
+            #{orderNum},
+            #{memo},
+            #{isActive},
+            #{balanceStatus},
+            #{balance},
+            #{provinceId},
+            #{cityId},
+            #{districtId},
+            #{street},
+            #{linkman},
+            #{tel},
+            #{foregiftBalance},
+            #{foregiftRemainMoney},
+            #{foregiftBalanceRatio},
+            #{zdForegiftBalance},
+            #{zdForegiftRemainMoney},
+            #{zdForegiftBalanceRatio},
+            #{createTime})
+    </insert>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.basic.Agent">
+        update bas_agent set
+        parent_id = #{parentId},
+        agent_name = #{agentName},
+        memo = #{memo},
+        province_id = #{provinceId},
+        city_id = #{cityId},
+        district_id = #{districtId},
+        street = #{street},
+        linkman = #{linkman},
+        tel = #{tel}
+        where id = #{id}
+    </update>
+
+    <update id="updatePayPeople">
+        update bas_agent set
+        <trim suffix="" suffixOverrides=",">
+            <if test="payPeopleMobile != null and payPeopleMobile != ''">
+                pay_people_mobile = #{payPeopleMobile},
+            </if>
+            <if test="payPeopleName != null and payPeopleName != ''">
+                pay_people_name = #{payPeopleName},
+            </if>
+            <if test="payPeopleMpOpenId != null and payPeopleMpOpenId != ''">
+                pay_people_mp_open_id  = #{payPeopleMpOpenId},
+            </if>
+            <if test="payPeopleFwOpenId != null and payPeopleFwOpenId != ''">
+                pay_people_fw_open_id   = #{payPeopleFwOpenId},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="updatePayPassword">
+        update bas_agent set pay_password = #{payPassword} where id = #{id}
+    </update>
+
+    <update id="updateBalance">
+        <choose>
+            <when test="balance > 0">
+                update bas_agent set balance = balance + #{balance} where id = #{id}
+            </when>
+            <otherwise>
+                <![CDATA[update bas_agent set balance = balance + #{balance} where id = #{id} and balance + #{balance} >= 0]]>
+            </otherwise>
+        </choose>
+    </update>
+
+    <update id="updateForegift">
+        UPDATE bas_agent SET
+        foregift_balance = #{foregiftBalance},
+        foregift_remain_money = #{foregiftRemainMoney},
+        foregift_balance_ratio = #{foregiftBalanceRatio}
+        where id = #{id}
+    </update>
+
+    <update id="updateZdForegift">
+        UPDATE bas_agent SET
+        zd_foregift_balance = #{foregiftBalance},
+        zd_foregift_remain_money = #{foregiftRemainMoney},
+        zd_foregift_balance_ratio = #{foregiftBalanceRatio}
+        where id = #{id}
+    </update>
+</mapper>

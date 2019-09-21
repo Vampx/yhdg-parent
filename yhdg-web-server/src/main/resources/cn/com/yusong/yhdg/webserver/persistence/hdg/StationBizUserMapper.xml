@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.hdg.StationBizUserMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.hdg.StationBizUser">
+        SELECT
+        *
+        FROM hdg_station_biz_user
+        where station_id = #{stationId}
+        and user_id = #{userId}
+        limit 1
+    </select>
+
+    <select id="findListByStationId" resultType="cn.com.yusong.yhdg.common.domain.hdg.StationBizUser">
+        SELECT
+        *
+        FROM hdg_station_biz_user
+        where station_id = #{stationId}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.StationBizUser" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO hdg_station_biz_user(
+        station_id,
+        user_id,
+        create_time
+        ) VALUES (
+        #{stationId},
+        #{userId},
+        #{createTime}
+        )
+    </insert>
+
+    <delete id="delete">
+        delete from hdg_station_biz_user where id = #{id}
+    </delete>
+
+    <delete id="deleteByStationId">
+        delete from hdg_station_biz_user where station_id = #{stationId}
+    </delete>
+
+</mapper>

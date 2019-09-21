@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.serviceserver.persistence.hdg.PacketPeriodOrderRefundMapper">
+    <select id="findAgentIncrement" resultType="cn.com.yusong.yhdg.common.domain.hdg.PacketPeriodOrder">
+        select
+          *
+        FROM
+            hdg_packet_period_order_refund
+        WHERE refund_time &lt;= #{endTime}
+        AND refund_time &gt;= #{beginTime}
+        AND refund_status = #{refundStatus}
+    </select>
+</mapper>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.basic.FwPushMessageTemplateDetailMapper">
+
+    <select id="find"  resultType="cn.com.yusong.yhdg.common.domain.basic.FwPushMessageTemplateDetail">
+        select
+        *
+        from bas_fw_push_message_template_detail
+        where id = #{id} and alipayfw_id = #{alipayfwId} and template_id = #{templateId}
+    </select>
+
+    <select id="findByTemplateId" resultType="cn.com.yusong.yhdg.common.domain.basic.FwPushMessageTemplateDetail">
+        select
+        *
+        from bas_fw_push_message_template_detail
+        where alipayfw_id = #{alipayfwId} and template_id = #{templateId}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.basic.FwPushMessageTemplateDetail" resultType="int">
+        select
+        count(id)
+        from bas_fw_push_message_template_detail
+        <trim prefix="where" prefixOverrides="and">
+            <if test="alipayfwId != null">
+                and alipayfw_id = #{alipayfwId}
+            </if>
+            <if test="templateId != null">
+                and template_id = #{templateId}
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.basic.FwPushMessageTemplateDetail" resultType="cn.com.yusong.yhdg.common.domain.basic.FwPushMessageTemplateDetail">
+        select
+        *
+        from bas_fw_push_message_template_detail
+        <trim prefix="where" prefixOverrides="and">
+            <if test="alipayfwId != null">
+                and alipayfw_id = #{alipayfwId}
+            </if>
+            <if test="templateId != null and templateId != ''">
+                and template_id = #{templateId}
+            </if>
+        </trim>
+        order by order_num
+        limit #{beginIndex}, #{rows}
+    </select>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.basic.FwPushMessageTemplateDetail">
+        update bas_fw_push_message_template_detail set
+        keyword_value = #{keywordValue},
+        color = #{color}
+        where alipayfw_id = #{alipayfwId} and id = #{id} and template_id = #{templateId}
+    </update>
+
+    <insert id="insert">
+        INSERT INTO `bas_fw_push_message_template_detail` (`id`, alipayfw_id, `template_id`, `keyword_name`, `keyword_value`, `color`, `order_num`)
+        VALUES (#{id},#{alipayfwId},#{templateId},#{keywordName},#{keywordValue},#{color},#{orderNum})
+    </insert>
+
+</mapper>

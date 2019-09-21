@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.cabinetserver.persistence.hdg.CabinetChargerReportDateMapper">
+
+    <update id="update">
+        update hdg_cabinet_charger_report_date
+          set record_count=record_count+1
+        where cabinet_id=#{cabinetId} and box_num = #{boxNum}
+          and report_date=#{reportDate}
+    </update>
+
+    <insert id="create">
+        INSERT INTO `hdg_cabinet_charger_report_date`
+          (`cabinet_id`, `box_num`, `report_date`, `record_count`)
+        VALUES
+          (#{cabinetId}, #{boxNum}, #{reportDate}, 1)
+    </insert>
+</mapper>

@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.appserver.persistence.hdg.BatteryMapper">
+
+    <select id="findBoxBattery" resultType="java.util.Map">
+           select
+           t2.type,count(*) as count
+            from hdg_cabinet_box t1
+            inner join hdg_battery t2 on t1.battery_id = t2.id
+            inner join hdg_cabinet t3 on t3.id = t1.cabinet_id
+            where t1.cabinet_id = #{cabinetId}
+            and t1.box_status = #{boxStatus}
+            and t1.is_active = #{isActive}
+            and t1.is_online = 1
+            and t2.status = #{batteryStatus}
+            and t2.volume >= t3.charge_full_volume
+        GROUP BY
+        type
+    </select>
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.hdg.Battery">
+        SELECT
+        *
+        FROM
+        hdg_battery
+        WHERE
+        id = #{id}
+    </select>
+
+    <select id="findByCode" resultType="cn.com.yusong.yhdg.common.domain.hdg.Battery">
+        SELECT
+        *
+        FROM
+        hdg_battery
+        WHERE
+        code = #{code}
+    </select>
+
+    <select id="findByShellCode" resultType="cn.com.yusong.yhdg.common.domain.hdg.Battery">
+        SELECT
+        *
+        FROM
+        hdg_battery
+        WHERE
+        shell_code = #{shellCode}
+    </select>
+
+    <select id="findList" resultType="cn.com.yusong.yhdg.common.domain.hdg.Battery">
+        SELECT
+        *
+        FROM
+        hdg_battery
+        WHERE
+        cabinet_id=#{cabinetId}
+    </select>
+
+    <select id="findCanRentByAgentId" resultType="cn.com.yusong.yhdg.common.domain.hdg.Battery">
+        SELECT
+         *
+        FROM
+        hdg_battery
+        WHERE agent_id = #{agentId}
+        and category = #{category}
+        and status = #{status}
+    </select>
+
+    <select id="findConditional" resultType="cn.com.yusong.yhdg.common.domain.hdg.Battery">
+        select * from hdg_battery where ${name} = #{value}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.Battery">
+        insert into hdg_battery(
+        id,
+        code,
+        type,
+        category,
+        agent_id,
+        order_id,
+        volume,
+        status,
+        exchange_amount,
+        report_time,
+        order_distance,
+        total_distance,
+        is_active,
+        current_signal,
+        belong_city_id,
+        lng,
+        lat,
+        address,
+        health,
+        sim_memo,
+        brand,
+        voltage,
+        electricity,
+        use_count,
+        produce_date,
+        protect_state,
+        strand,
+        temp,
+        fet_status,
+        charge_status,
+        ready_charge_time,
+        customer_out_time,
+        customer_id,
+        customer_mobile,
+        customer_fullname,
+        in_box_time,
+        cabinet_id,
+        cabinet_name,
+        box_num,
+        keeper_out_time,
+        keeper_name,
+        free_out_time,
+        stay_heartbeat,
+        move_heartbeat,
+        electrify_heartbeat,
+        is_report_voltage,
+        is_online,
+        qrcode,
+        shell_code,
+        charge_complete_volume,
+        gps_switch,
+        lock_switch,
+        gprs_shutdown,
+        shutdown_voltage,
+        accelereted_speed,
+        repair_status,
+        create_time
+        )
+        values(
+        #{id},
+        #{code},
+        #{type},
+        #{category},
+        #{agentId},
+        #{orderId},
+        #{volume},
+        #{status},
+        #{exchangeAmount},
+        #{reportTime},
+        #{orderDistance},
+        #{totalDistance},
+        #{isActive},
+        #{currentSignal},
+        #{belongCityId},
+        #{lng},
+        #{lat},
+        #{address},
+        #{health},
+        #{simMemo},
+        #{brand},
+        #{voltage},
+        #{electricity},
+        #{useCount},
+        #{produceDate},
+        #{protectState},
+        #{strand},
+        #{temp},
+        #{fetStatus},
+        #{chargeStatus},
+        #{readyChargeTime},
+        #{customerOutTime},
+        #{customerId},
+        #{customerMobile},
+        #{customerFullname},
+        #{inBoxTime},
+        #{cabinetId},
+        #{cabinetName},
+        #{boxNum},
+        #{keeperOutTime},
+        #{keeperName},
+        #{freeOutTime},
+        #{stayHeartbeat},
+        #{moveHeartbeat},
+        #{electrifyHeartbeat},
+        #{isReportVoltage},
+        #{isOnline},
+        #{qrcode},
+        #{shellCode},
+        #{chargeCompleteVolume},
+        #{gpsSwitch},
+        #{lockSwitch},
+        #{gprsShutdown},
+        #{shutdownVoltage},
+        #{acceleretedSpeed},
+        #{repairStatus},
+        #{createTime}
+        )
+    </insert>
+
+    <update id="clearCustomer">
+        update hdg_battery
+        set
+            status = #{status},
+            order_id = null,
+            order_distance = 0,
+            customer_out_time = null,
+            customer_id = null,
+            customer_mobile = null,
+            customer_fullname = null,
+            rescue_status = null,
+            low_volume_notice_volume = null,
+            low_volume_notice_time = null
+        where id = #{id}
+    </update>
+
+    <update id="updateCustomerUse">
+        update hdg_battery set
+        status = #{status},
+        order_distance = 0,
+        order_id = #{orderId},
+        customer_out_time = #{customerOutTime},
+        exchange_amount = exchange_amount+1,
+        customer_id = #{customerId},
+        customer_mobile = #{customerMobile},
+        customer_fullname = #{customerFullname}
+        where id = #{id}
+    </update>
+
+
+    <update id="updateChargeStatus">
+        update hdg_battery set
+            charge_status = #{chargeStatus}
+        where id = #{id}
+    </update>
+
+    <update id="update">
+        update hdg_battery set
+            qrcode = #{qrcode},
+            shell_code = #{shellCode}
+        where id = #{id}
+    </update>
+
+    <update id="updateFaultLog">
+        update hdg_battery set
+            not_electrify_fault_log_id = null
+        where not_electrify_fault_log_id = #{notElectrifyFaultLogId}
+    </update>
+
+    <update id="updateUpLineStatus">
+        update hdg_battery set
+        up_line_status = #{upLineStatus}
+        where id = #{id}
+    </update>
+
+    <update id="updateLockSwitch">
+        update hdg_battery set
+        lock_switch = #{lockSwitch}
+        where id = #{id}
+    </update>
+
+    <update id="updateRescueStatus">
+        update hdg_battery set
+        rescue_status = #{rescueStatus}
+        where id = #{id}
+    </update>
+
+
+</mapper>

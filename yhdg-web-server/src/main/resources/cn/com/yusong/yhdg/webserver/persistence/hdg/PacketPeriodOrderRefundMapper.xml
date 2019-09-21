@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.hdg.PacketPeriodOrderRefundMapper">
+
+    <select id="find"  resultType="cn.com.yusong.yhdg.common.domain.hdg.PacketPeriodOrderRefund">
+        select * from hdg_packet_period_order_refund where id = #{id}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.hdg.PacketPeriodOrderRefund" resultType="int">
+        select
+            count(*)
+        from hdg_packet_period_order_refund
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null">
+                and agent_id = #{agentId}
+            </if>
+            <if test="customerFullname != null and customerFullname != ''">
+                <![CDATA[and customer_fullname LIKE concat('%', #{customerFullname}, '%')]]>
+            </if>
+            <if test="customerMobile != null and customerMobile != ''">
+                <![CDATA[and customer_mobile LIKE concat(#{customerMobile}, '%')]]>
+            </if>
+            <if test="refundStatus != null">
+                and refund_status = #{refundStatus}
+            </if>
+            <if test="id != null">
+                id = #{id}
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.hdg.PacketPeriodOrderRefund" resultType="cn.com.yusong.yhdg.common.domain.hdg.PacketPeriodOrderRefund">
+        select
+            *
+        from hdg_packet_period_order_refund
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null">
+                and agent_id = #{agentId}
+            </if>
+            <if test="customerFullname != null and customerFullname != ''">
+                <![CDATA[and customer_fullname LIKE concat('%', #{customerFullname}, '%')]]>
+            </if>
+            <if test="customerMobile != null and customerMobile != ''">
+                <![CDATA[and customer_mobile LIKE concat(#{customerMobile}, '%')]]>
+            </if>
+            <if test="refundStatus != null">
+                and refund_status = #{refundStatus}
+            </if>
+            <if test="id != null">
+                id = #{id}
+            </if>
+        </trim>
+        order by apply_refund_time desc
+        limit ${beginIndex}, ${rows}
+    </select>
+
+    <update id="updateStatus">
+        update hdg_packet_period_order_refund set
+            refund_status = #{refundStatus},
+            refund_money = #{refundMoney},
+            refund_operator = #{refundOperator},
+            refund_time = #{refundTime},
+            refund_reason = #{refundReason}
+        where id = #{id}
+    </update>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.hdg.PacketPeriodOrderRefund">
+        update hdg_packet_period_order_refund set
+        <trim suffix="" suffixOverrides=",">
+            <if test="refundStatus != null">
+                refund_status = #{refundStatus},
+            </if>
+            <if test="refundMoney != null">
+                refund_money = #{refundMoney},
+            </if>
+            <if test="memo != null and memo != ''">
+                memo = #{memo},
+            </if>
+            <if test="refundTime != null">
+                refund_time = #{refundTime},
+            </if>
+            <if test="refundOperator != null">
+                refund_operator = #{refundOperator},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteByCustomerId">
+        delete from hdg_packet_period_order_refund where customer_id = #{customerId}
+    </delete>
+</mapper>

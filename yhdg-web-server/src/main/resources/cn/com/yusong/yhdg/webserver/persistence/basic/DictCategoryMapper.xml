@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.basic.DictCategoryMapper">
+
+    <select id="findAll" resultType="cn.com.yusong.yhdg.common.domain.basic.DictCategory">
+        select
+            id,
+            category_name as categoryName
+        from bas_dict_category
+        ORDER BY order_num ASC
+    </select>
+
+    <select id="find" parameterType="long" resultType="cn.com.yusong.yhdg.common.domain.basic.DictCategory">
+        select * from bas_dict_category where id = #{id}
+    </select>
+</mapper>

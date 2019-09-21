@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.hdg.InsuranceOrderMapper">
+
+    <select id="find" parameterType="string" resultType="cn.com.yusong.yhdg.common.domain.hdg.InsuranceOrder">
+        select
+        *
+        from hdg_insurance_order
+        where id = #{id}
+    </select>
+
+    <select id="findListByCustomerId"  resultType="cn.com.yusong.yhdg.common.domain.hdg.InsuranceOrder">
+        select
+        *
+        from hdg_insurance_order
+        where customer_id = #{customerId} and agent_id = #{agentId}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.hdg.InsuranceOrder" resultType="int">
+        select
+        count(*)
+        from hdg_insurance_order
+        <trim prefix="where" prefixOverrides="and">
+            <if test="partnerId != null">
+                and partner_id = #{partnerId}
+            </if>
+            <if test="agentId != null">
+                and agent_id = #{agentId}
+            </if>
+            <if test="status != null and status != ''">
+                and status = #{status}
+            </if>
+            <if test="customerMobile != null and customerMobile != ''">
+                <![CDATA[and customer_mobile LIKE concat(#{customerMobile}, '%')]]>
+            </if>
+            <if test="customerFullname != null and customerFullname != ''">
+                <![CDATA[and customer_fullname LIKE concat(#{customerFullname}, '%')]]>
+            </if>
+            <if test="queryBeginTime !=null">
+                and pay_time &gt;= #{queryBeginTime}
+            </if>
+            <if test="queryEndTime !=null">
+                and pay_time &lt;= #{queryEndTime}
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.hdg.InsuranceOrder" resultType="cn.com.yusong.yhdg.common.domain.hdg.InsuranceOrder">
+        select
+        *
+        from hdg_insurance_order
+        <trim prefix="where" prefixOverrides="and">
+            <if test="partnerId != null">
+                and partner_id = #{partnerId}
+            </if>
+            <if test="agentId != null">
+                and agent_id = #{agentId}
+            </if>
+            <if test="status != null and status != ''">
+                and status = #{status}
+            </if>
+            <if test="customerMobile != null and customerMobile != ''">
+                <![CDATA[and customer_mobile LIKE concat(#{customerMobile}, '%')]]>
+            </if>
+            <if test="customerFullname != null and customerFullname != ''">
+                <![CDATA[and customer_fullname LIKE concat(#{customerFullname}, '%')]]>
+            </if>
+            <if test="queryBeginTime !=null">
+                and pay_time &gt;= #{queryBeginTime}
+            </if>
+            <if test="queryEndTime !=null">
+                and pay_time &lt;= #{queryEndTime}
+            </if>
+        </trim>
+        order by hdg_insurance_order.id desc
+        limit ${beginIndex}, ${rows}
+    </select>
+    <select id="findCanRefundByCustomerId" resultType="cn.com.yusong.yhdg.common.domain.hdg.InsuranceOrder">
+        select *
+        from  hdg_insurance_order
+        where customer_id = #{customerId} and status in (2, 4)
+    </select>
+
+    <update id="updateStatus">
+        update hdg_insurance_order
+        set status = #{status}
+        where customer_id = #{customerId}
+    </update>
+
+    <update id="updatePayTime">
+        update hdg_insurance_order
+        set pay_time = #{payTime}
+        where id = #{id}
+    </update>
+
+    <update id="updateRefund">
+        update hdg_insurance_order
+        set refund_money = #{refundMoney},
+        refund_time = #{refundTime},
+        status = #{toStatus}
+        where id = #{id}
+    </update>
+</mapper>

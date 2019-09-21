@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.appserver.persistence.basic.PartnerInOutMoneyMapper">
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.PartnerInOutMoney">
+        insert into bas_partner_in_out_money(partner_type, partner_id, biz_type, biz_id, type, money, operator, create_time)
+        values(#{partnerType}, #{partnerId}, #{bizType}, #{bizId}, #{type}, #{money}, #{operator}, #{createTime})
+    </insert>
+</mapper>

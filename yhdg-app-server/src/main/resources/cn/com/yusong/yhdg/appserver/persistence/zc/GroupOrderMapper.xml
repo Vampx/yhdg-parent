@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.appserver.persistence.zc.GroupOrderMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.zc.GroupOrder">
+        SELECT
+        *
+        FROM
+        zc_group_order
+        WHERE id = #{id}
+    </select>
+
+    <select id="findByVehicleForegiftId" resultType="cn.com.yusong.yhdg.common.domain.zc.GroupOrder">
+        SELECT
+        *
+        FROM
+        zc_group_order
+        WHERE vehicle_foregift_id = #{vehicleForegiftId}
+        limit 1
+    </select>
+
+    <select id="findByVehiclePeriodId" resultType="cn.com.yusong.yhdg.common.domain.zc.GroupOrder">
+        SELECT
+        *
+        FROM
+        zc_group_order
+        WHERE vehicle_period_id = #{vehiclePeriodId}
+        limit 1
+    </select>
+
+    <select id="findByBatteryForegiftId" resultType="cn.com.yusong.yhdg.common.domain.zc.GroupOrder">
+        SELECT
+        *
+        FROM
+        zc_group_order
+        WHERE battery_foregift_id = #{batteryForegiftId}
+        limit 1
+    </select>
+
+    <select id="findByBatteryPeriodId" resultType="cn.com.yusong.yhdg.common.domain.zc.GroupOrder">
+        SELECT
+        *
+        FROM
+        zc_group_order
+        WHERE battery_rent_id = #{batteryRentId}
+        limit 1
+    </select>
+
+
+    <select id="findOneEnabled" resultType="cn.com.yusong.yhdg.common.domain.zc.GroupOrder">
+        select
+        *
+        FROM
+        zc_group_order
+        where customer_id = #{customerId}
+        and status = #{status}
+        and agent_id = #{agentId}
+        and model_id = #{modelId}
+        limit 1
+    </select>
+
+    <select id="findList" resultType="cn.com.yusong.yhdg.common.domain.zc.GroupOrder">
+        select
+        *
+        FROM
+        zc_group_order
+        where
+        customer_id = #{customerId}
+        <if test="status != null">
+            and status = #{status}
+        </if>
+        order by id DESC
+        limit #{offset},#{limit}
+    </select>
+
+    <select id="findListByCustomerIdAndStatus" resultType="cn.com.yusong.yhdg.common.domain.zc.GroupOrder">
+        select
+        *
+        FROM
+        zc_group_order
+        where
+        customer_id = #{customerId}
+        and status = #{status}
+        order by id DESC
+    </select>
+
+    <update id="payOk">
+        update zc_group_order
+        set status = #{toStatus},
+        pay_time = #{payTime}
+        where id = #{id}
+        and status = #{fromStatus}
+    </update>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.zc.GroupOrder">
+        insert into zc_group_order (
+        id,
+        partner_id,
+        agent_id,
+        agent_name,
+        agent_code,
+        rent_price_id,
+        vip_price_id,
+        category,
+        model_id,
+        shop_id,
+        shop_name,
+        battery_type,
+        price,
+        money,
+        foregift_money,
+        rent_period_money,
+        vehicle_foregift_id,
+        vehicle_foregift_money,
+        vehicle_foregift_price,
+        battery_foregift_id,
+        battery_foregift_money,
+        battery_foregift_price,
+        vehicle_period_id,
+        vehicle_period_money,
+        vehicle_period_price,
+        battery_rent_id,
+        battery_rent_period_money,
+        battery_rent_period_price,
+        vehicle_day_count,
+        battery_day_count,
+        customer_id,
+        customer_mobile,
+        customer_fullname,
+        status,
+        handle_time,
+        memo,
+        pay_time,
+        pay_type,
+        foregift_ticket_name,
+        foregift_ticket_money,
+        foregift_coupon_ticket_id,
+        deduction_ticket_name,
+        deduction_ticket_money,
+        deduction_ticket_id,
+        rent_ticket_name,
+        rent_ticket_money,
+        rent_coupon_ticket_id,
+        reduce_money,
+        create_time )
+        VALUES (
+        #{id},
+        #{partnerId},
+        #{agentId},
+        #{agentName},
+        #{agentCode},
+        #{rentPriceId},
+        #{vipPriceId},
+        #{category},
+        #{modelId},
+        #{shopId},
+        #{shopName},
+        #{batteryType},
+        #{price},
+        #{money},
+        #{foregiftMoney},
+        #{rentPeriodMoney},
+        #{vehicleForegiftId},
+        #{vehicleForegiftMoney},
+        #{vehicleForegiftPrice},
+        #{batteryForegiftId},
+        #{batteryForegiftMoney},
+        #{batteryForegiftPrice},
+        #{vehiclePeriodId},
+        #{vehiclePeriodMoney},
+        #{vehiclePeriodPrice},
+        #{batteryRentId},
+        #{batteryRentPeriodMoney},
+        #{batteryRentPeriodPrice},
+        #{vehicleDayCount},
+        #{batteryDayCount},
+        #{customerId},
+        #{customerMobile},
+        #{customerFullname},
+        #{status},
+        #{handleTime},
+        #{memo},
+        #{payTime},
+        #{payType},
+        #{foregiftTicketName},
+        #{foregiftTicketMoney},
+        #{foregiftCouponTicketId},
+        #{deductionTicketName},
+        #{deductionTicketMoney},
+        #{deductionTicketId},
+        #{rentTicketName},
+        #{rentTicketMoney},
+        #{rentCouponTicketId},
+        #{reduceMoney},
+        #{createTime})
+    </insert>
+
+    <update id="updateRefund">
+        update zc_group_order
+        set status = #{toStatus},
+        apply_refund_time = #{applyRefundTime}
+        where id = #{id}
+        <if test="fromStatus != null">
+            and status = #{fromStatus}
+        </if>
+    </update>
+
+    <update id="updateOrderInfo">
+        update zc_group_order
+        set
+        vehicle_name = #{vehicleName}
+        where id = #{id}
+    </update>
+
+</mapper>

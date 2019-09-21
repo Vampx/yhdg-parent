@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.appserver.persistence.hdg.ShopMapper">
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.hdg.Shop">
+        select * from hdg_shop
+        where id = #{id}
+    </select>
+
+    <select id="findNearestInfo" resultType="cn.com.yusong.yhdg.common.domain.hdg.Shop">
+        select
+        *,
+        floor(6378.138*2*ASIN(SQRT(POW(SIN((${lat}*PI()/180-lat*PI()/180)/2),2)+COS(${lat}*PI()/180)*COS(lat*PI()/180)*POW(SIN((${lng}*PI()/180-lng*PI()/180)/2),2)))*1000) AS distance
+        FROM hdg_shop
+        where active_status = 1
+        <if test="keyword != null">
+            <![CDATA[and keyword LIKE concat('%', #{keyword}, '%')]]>
+        </if>
+        <if test="cityId != null">
+            and city_id = #{cityId}
+        </if>
+        and exists (select 1 from hdg_shop_store_battery  where hdg_shop_store_battery.shop_id = hdg_shop.id and hdg_shop_store_battery.category =2  )
+        ORDER BY
+        distance
+        limit #{offset}, #{limit}
+    </select>
+
+    <select id="findNearest" resultType="cn.com.yusong.yhdg.common.domain.hdg.Shop">
+        select
+        *,
+        floor(6378.138*2*ASIN(SQRT(POW(SIN((${lat}*PI()/180-lat*PI()/180)/2),2)+COS(${lat}*PI()/180)*COS(lat*PI()/180)*POW(SIN((${lng}*PI()/180-lng*PI()/180)/2),2)))*1000) AS distance
+        FROM hdg_shop
+        where active_status = 1
+        <if test="keyword != null">
+            <![CDATA[and keyword LIKE concat('%', #{keyword}, '%')]]>
+        </if>
+        <if test="cityId != null">
+            and city_id = #{cityId}
+        </if>
+        ORDER BY
+        distance
+        limit #{offset}, #{limit}
+    </select>
+
+    <select id="findShopIdDistance" resultType="cn.com.yusong.yhdg.common.domain.hdg.Shop">
+        select
+        *,
+        floor(6378.138*2*ASIN(SQRT(POW(SIN((${lat}*PI()/180-lat*PI()/180)/2),2)+COS(${lat}*PI()/180)*COS(lat*PI()/180)*POW(SIN((${lng}*PI()/180-lng*PI()/180)/2),2)))*1000) AS distance
+        FROM hdg_shop
+        where active_status = 1
+        <if test="ShopId != null">
+            and id = #{ShopId}
+        </if>
+        ORDER BY
+        distance
+    </select>
+
+    <select id="findAddressList" resultType="cn.com.yusong.yhdg.common.domain.hdg.Shop">
+        SELECT DISTINCT
+        province_id,
+        city_id
+        FROM
+        hdg_shop
+        where province_id is not null and city_id is not null
+    </select>
+
+    <select id="findAddVehicleShopList" resultType="cn.com.yusong.yhdg.common.domain.hdg.Shop">
+        SELECT DISTINCT
+        province_id,
+        city_id
+        FROM
+        hdg_shop
+        where province_id is not null and city_id is not null AND is_vehicle =1
+    </select>
+
+    <update id="updateLocation">
+        update hdg_shop
+        set
+        id = #{shopId}
+        <if test="provinceId != null">
+            ,province_id = #{provinceId}
+        </if>
+        <if test="cityId != null">
+            ,city_id = #{cityId}
+        </if>
+        <if test="districtId != null">
+            ,district_id = #{districtId}
+        </if>
+        <if test="geoHash != null">
+            ,geo_hash = #{geoHash}
+        </if>
+
+        <if test="address != null">
+            ,address = #{address}
+        </if>
+        <if test="keyword != null and keyword != '' ">
+            ,keyword = #{keyword}
+        </if>
+        <if test="shopName != null and shopName != '' ">
+            ,shop_name = #{shopName}
+        </if>
+        <if test="lng != null ">
+            ,lng = #{lng}
+        </if>
+        <if test="lat != null ">
+            ,lat = #{lat}
+        </if>
+
+        where id = #{shopId}
+    </update>
+
+</mapper>

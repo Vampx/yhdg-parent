@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.serviceserver.persistence.hdg.CustomerDayStatsMapper">
+
+    <select id="find" parameterType="cn.com.yusong.yhdg.common.domain.hdg.CustomerDayStats" resultType="cn.com.yusong.yhdg.common.domain.hdg.CustomerDayStats">
+        select
+            *
+        from hdg_customer_day_stats
+        where  customer_id = #{customerId}
+        and stats_date = #{statsDate}
+    </select>
+
+    <select id="sumByMonth" parameterType="cn.com.yusong.yhdg.common.domain.hdg.CustomerDayStats" resultType="cn.com.yusong.yhdg.common.domain.hdg.CustomerDayStats">
+        select
+        ifnull(sum(money), 0) as money,
+        ifnull(sum(order_count), 0) as orderCount
+        from hdg_customer_day_stats
+        where  customer_id = #{customerId}
+        and stats_date like '${statsMonth}%'
+    </select>
+
+    <select id="findDayCount" resultType="int">
+        select ifnull(count(customer_id),0) from hdg_customer_day_stats
+        WHERE stats_date = #{statsDate}
+    </select>
+
+    <select id="findMonthCount" resultType="int">
+        select ifnull(count(DISTINCT customer_id),0) from hdg_customer_day_stats
+        WHERE stats_date LIKE concat(#{statsMonth}, '%')
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.CustomerDayStats" >
+        insert into hdg_customer_day_stats (customer_id, stats_date, customer_mobile, customer_name, order_count, money ,update_time)
+        values (#{customerId}, #{statsDate}, #{customerMobile}, #{customerName}, #{orderCount}, #{money},#{updateTime})
+    </insert>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.hdg.CustomerDayStats">
+        update hdg_customer_day_stats
+        set
+            money = #{money},
+            order_count = #{orderCount},
+            update_time = #{updateTime}
+        where customer_id = #{customerId}
+        and stats_date = #{statsDate}
+    </update>
+
+</mapper>

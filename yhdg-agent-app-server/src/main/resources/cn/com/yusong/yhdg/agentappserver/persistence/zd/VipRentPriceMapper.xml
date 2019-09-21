@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.agentappserver.persistence.zd.VipRentPriceMapper">
+
+    <select id="find" parameterType="long" resultType="cn.com.yusong.yhdg.common.domain.zd.VipRentPrice">
+        SELECT
+        *
+        FROM zd_vip_rent_price
+        WHERE id = #{id}
+    </select>
+
+    <select id="findListByAgentId" resultType="cn.com.yusong.yhdg.common.domain.zd.VipRentPrice">
+        select *
+        FROM zd_vip_rent_price
+        where 1 = 1
+        <if test="agentId != null">
+            and agent_id = #{agentId}
+        </if>
+        <if test="keyword != null and keyword != ''">
+            <![CDATA[and price_name LIKE concat('%', #{keyword}, '%')]]>
+        </if>
+        ORDER BY id desc
+        limit #{offset}, #{limit}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.zd.VipRentPrice" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO zd_vip_rent_price(
+          agent_id,
+          battery_type,
+          price_name,
+          begin_time,
+          end_time,
+          customer_count,
+          is_active,
+          create_time
+        ) VALUES (
+          #{agentId},
+          #{batteryType},
+          #{priceName},
+          #{beginTime},
+          #{endTime},
+          #{customerCount},
+          #{isActive},
+          #{createTime}
+        )
+    </insert>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.zd.VipRentPrice">
+        update zd_vip_rent_price set
+               agent_id = #{agentId},
+               battery_type = #{batteryType},
+               price_name = #{priceName},
+               begin_time = #{beginTime},
+               end_time = #{endTime},
+               is_active = #{isActive}
+        where id = #{id}
+    </update>
+
+    <update id="updateCustomerCount">
+        update zd_vip_rent_price set
+        customer_count = #{customerCount}
+        where id = #{id}
+    </update>
+
+    <update id="updateShopCount">
+        update zd_vip_rent_price set
+        shop_count = #{shopCount}
+        where id = #{id}
+    </update>
+
+    <update id="updateAgentCompanyCount">
+        update zd_vip_rent_price set
+        agent_company_count = #{agentCompanyCount}
+        where id = #{id}
+    </update>
+
+    <delete id="delete">
+        delete from zd_vip_rent_price where id = #{id}
+    </delete>
+
+</mapper>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.staticserver.persistence.basic.LaxinRecordMapper">
+
+    <select id="findByOrderId" resultType="cn.com.yusong.yhdg.common.domain.basic.LaxinRecord">
+          select
+              t1.*
+          from bas_laxin_record t1 join bas_laxin_pay_order_detail t2 on t1.id = t2.record_id
+          where t2.order_id = #{orderId}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.LaxinRecord">
+        insert into bas_laxin_record (id, agent_id, agent_name, agent_code, laxin_id, laxin_mobile, laxin_money,
+        target_customer_id, target_mobile, target_fullname, pay_type, status, pay_time, transfer_time, order_id,
+        income_type, foregift_money, packet_period_money, create_time) values (
+        #{id}, #{agentId}, #{agentName}, #{agentCode}, #{laxinId}, #{laxinMobile}, #{laxinMoney},
+        #{targetCustomerId}, #{targetMobile}, #{targetFullname}, #{payType}, #{status}, #{payTime}, #{transferTime}, #{orderId},
+        #{incomeType}, #{foregiftMoney}, #{packetPeriodMoney}, #{createTime}
+        )
+    </insert>
+
+    <update id="updateStatus">
+          update bas_laxin_record set order_id = #{orderId}, status = #{status}, pay_type = #{payType}, pay_time = #{payTime}  where id = #{id}
+    </update>
+
+</mapper>

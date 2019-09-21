@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.hdg.BatteryParameterLogMapper">
+
+    <select id="find" parameterType="int" resultType="cn.com.yusong.yhdg.common.domain.hdg.BatteryParameterLog">
+        select
+        *
+        from hdg_battery_parameter_log
+        where id = #{id}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.hdg.BatteryParameterLog" resultType="int">
+        select
+        count(id)
+        from hdg_battery_parameter_log
+        <trim prefix="where" prefixOverrides="and">
+            <if test="batteryId != null">
+                and battery_id = #{batteryId}
+            </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.hdg.BatteryParameterLog" resultType="cn.com.yusong.yhdg.common.domain.hdg.BatteryParameterLog">
+        select
+        *
+        from hdg_battery_parameter_log
+        <trim prefix="where" prefixOverrides="and">
+            <if test="batteryId != null">
+                and battery_id = #{batteryId}
+            </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+        </trim>
+        order by id desc
+        limit #{beginIndex}, #{rows}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.BatteryParameterLog">
+        INSERT INTO hdg_battery_parameter_log (
+        battery_id,
+        param_id,
+        param_name,
+        old_value,
+        new_value,
+        status,
+        operator,
+        create_time
+        ) VALUES (
+        #{batteryId},
+        #{paramId},
+        #{paramName},
+        #{oldValue},
+        #{newValue},
+        #{status},
+        #{operator},
+        #{createTime}
+        )
+    </insert>
+
+    <update id="cancel">
+        update hdg_battery_parameter_log set
+        status = #{toStatus}
+        where  battery_id = #{batteryId} and param_id = #{paramId} and status = #{fromStatus}
+    </update>
+
+    <delete id="delete">
+        delete from hdg_battery_parameter_log
+        where  id = #{id}
+    </delete>
+
+
+</mapper>

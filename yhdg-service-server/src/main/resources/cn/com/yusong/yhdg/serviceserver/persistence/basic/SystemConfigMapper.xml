@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.serviceserver.persistence.basic.SystemConfigMapper">
+    <select id="findConfigValue" parameterType="String" resultType="String">
+        SELECT config_value
+        FROM bas_system_config
+        WHERE id=#{id}
+    </select>
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.basic.SystemConfig">
+        SELECT id,config_value
+        FROM bas_system_config
+    </select>
+</mapper>

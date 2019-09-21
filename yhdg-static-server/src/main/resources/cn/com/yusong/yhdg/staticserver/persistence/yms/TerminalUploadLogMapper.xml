@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.staticserver.persistence.yms.TerminalUploadLogMapper">
+    <select id="find" parameterType="long" resultType="cn.com.yusong.yhdg.common.domain.yms.TerminalUploadLog">
+        select
+        *
+        from yms_terminal_upload_log
+        where id = #{id}
+    </select>
+
+    <select id="findByTerminal" resultType="cn.com.yusong.yhdg.common.domain.yms.TerminalUploadLog">
+        select
+         *
+        from yms_terminal_upload_log
+        where terminal_id = #{terminalId}
+          and status = #{status}
+    </select>
+
+    <update id="updateStatus">
+        update yms_terminal_upload_log set
+            status = #{status}
+        where id = #{id}
+    </update>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.yms.TerminalUploadLog">
+        update yms_terminal_upload_log set
+        <trim suffix="" suffixOverrides=",">
+            <if test="agentId != null and agentId != 0">
+                agent_id = #{agentId},
+            </if>
+            <if test="terminalId != null and terminalId != ''">
+                terminal_id = #{terminalId},
+            </if>
+            <if test="type != null and type != 0">
+                type = #{type},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="filePath != null and filePath != ''">
+                file_path = #{filePath},
+            </if>
+            <if test="logTime != null and logTime != ''">
+                log_time = #{logTime},
+            </if>
+            <if test="uploadTime != null">
+                upload_time = #{uploadTime},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+</mapper>

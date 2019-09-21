@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.hdg.UnregisterBatteryReportLogMapper">
+
+    <select id="findTableExist" parameterType="string" resultType="String" >
+        show tables like #{tableName}
+    </select>
+
+    <select id="find" parameterType="string" resultType="cn.com.yusong.yhdg.common.domain.hdg.UnregisterBatteryReportLog">
+        select
+          *
+        from hdg_unregister_battery_report_log_${suffix}
+        where code = #{code}
+        and create_time = #{createTime}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.hdg.UnregisterBatteryReportLog" resultType="int">
+        select
+          count(*)
+        from hdg_unregister_battery_report_log_${suffix}
+        <trim prefix="where" prefixOverrides="and">
+            <if test="code != null and code != ''">
+                and code = #{code}
+            </if>
+            <if test="createTime != null and createTime != ''">
+                and DATE_FORMAT(create_time, '%Y-%m-%d' ) = DATE_FORMAT( #{createTime}, '%Y-%m-%d')
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.hdg.UnregisterBatteryReportLog"
+            resultType="cn.com.yusong.yhdg.common.domain.hdg.UnregisterBatteryReportLog">
+        select
+            *
+        from hdg_unregister_battery_report_log_${suffix}
+        <trim prefix="where" prefixOverrides="and">
+            <if test="code != null and code != ''">
+                and code = #{code}
+            </if>
+            <if test="createTime != null and createTime != ''">
+                and DATE_FORMAT(create_time, '%Y-%m-%d' ) = DATE_FORMAT( #{createTime}, '%Y-%m-%d')
+            </if>
+        </trim>
+        order by create_time desc
+        limit ${beginIndex}, ${rows}
+    </select>
+</mapper>

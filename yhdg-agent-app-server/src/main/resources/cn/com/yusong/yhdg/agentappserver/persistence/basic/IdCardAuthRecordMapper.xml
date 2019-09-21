@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.agentappserver.persistence.basic.IdCardAuthRecordMapper">
+    <select id="queryByDate" resultType="cn.com.yusong.yhdg.common.domain.basic.IdCardAuthRecord">
+        select
+        *
+        from bas_id_card_auth_record
+        WHERE agent_id = #{agentId}
+        <if test="keyword != null and keyword != ''">
+            and mobile like concat(#{keyword}, '%')
+        </if>
+        <if test="date != null and date != ''">
+            and create_time like concat(#{date}, '%')
+        </if>
+        limit #{offset}, #{limit}
+    </select>
+
+</mapper>

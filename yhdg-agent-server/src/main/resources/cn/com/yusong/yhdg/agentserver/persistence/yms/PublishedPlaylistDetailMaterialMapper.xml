@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.yms.PublishedPlaylistDetailMaterialMapper">
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.yms.PublishedPlaylistDetailMaterial" useGeneratedKeys="true" keyProperty="id">
+        insert into yms_published_playlist_detail_material(
+            detail_id,
+            material_id,
+            version,
+            order_num,
+            duration
+        )
+        values (
+            #{detailId},
+            #{materialId},
+            #{version},
+            #{orderNum},
+            #{duration}
+        )
+    </insert>
+
+    <delete id="deleteByDetailId" >
+        delete from yms_published_playlist_detail_material
+        where detail_id = #{detailId}
+    </delete>
+</mapper>

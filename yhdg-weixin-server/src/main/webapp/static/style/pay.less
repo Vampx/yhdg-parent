@@ -1,0 +1,77 @@
+html {
+    height: 100%;
+    body {
+        height: 100%;
+        background-color: #EFEFEF;
+        .canPay {
+            display: block;
+            height: 100%;
+            box-sizing: border-box;
+            padding-top: 1.17rem;
+            position: relative;
+            .weui-cells {
+                margin-top: 0;
+                .weui-cell {
+                    padding: 10/17rem 15/17rem;
+                    .charge_num,.weui-label {
+                        font-size: 14/17rem;
+                        color: #5C5C5C;
+                    }
+                }
+                .space {
+                    margin-bottom: 1.17rem;
+                    p {
+                        font-size: 1rem;
+                        color: #999;
+                    }
+                }
+                .choices {
+                    display: flex;
+                    flex-direction: row;
+                    flex-wrap: wrap;
+                    background-color: #fff;
+                    padding: 10/17rem 15/17rem;
+                    .choice {
+                        box-sizing: border-box;
+                        width: 31%;
+                        padding: .5rem 0em;
+                        border: 1px solid #E0E0E0;
+                        margin: .3rem 1.16%;
+                        border-radius: 5px;
+                        p {
+                            text-align: center;
+                            color: #5C5C5C;
+                            font-size: 17/17rem;
+                        }
+                    }
+                    .choiced {
+                        border: 1px solid #4EC6F7;
+                        p {
+                            color: #4EC6F7;
+                        }
+                    }
+                }
+                .btn {
+                    margin-top: 1.8em;
+                    padding: 0 15px;
+                    .weui-btn_blue {
+                        background-color: #12B7F5;
+                    }
+                }
+            }
+            .foot {
+                width: 100%;
+                position: absolute;
+                display: flex;
+                justify-content: center;
+                bottom: 1rem;
+                right: 0;
+                left: 0;
+                a {
+                    color: #798BA2;
+                    font-size: 14/17rem;
+                }
+            }
+        }
+    }
+}

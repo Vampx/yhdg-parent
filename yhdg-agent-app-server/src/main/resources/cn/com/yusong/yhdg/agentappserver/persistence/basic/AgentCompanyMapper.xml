@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.agentappserver.persistence.basic.AgentCompanyMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.basic.AgentCompany">
+        select * from bas_agent_company
+        where id = #{id}
+    </select>
+
+    <select id="findVipAgentCompanyList" resultType="cn.com.yusong.yhdg.common.domain.basic.AgentCompany">
+        select *
+        FROM bas_agent_company
+        where active_status = 1
+        <if test="keyword != null and keyword != ''">
+            <![CDATA[and (id LIKE concat('%', #{keyword}, '%') or company_name LIKE concat('%', #{keyword}, '%'))]]>
+        </if>
+        <if test="agentId != null">
+            and agent_id = #{agentId}
+        </if>
+        and id not in (select agent_company_id from hdg_vip_price_agent_company)
+        limit #{offset}, #{limit}
+    </select>
+
+    <update id="updateBalance">
+        <choose>
+            <when test="balance > 0">
+                update bas_agent_company set balance = balance + #{balance} where id = #{id}
+            </when>
+            <otherwise>
+                <![CDATA[update bas_agent_company set balance = balance + #{balance} where id = #{id} and balance + #{balance} >= 0 ]]>
+            </otherwise>
+        </choose>
+    </update>
+
+    <update id="updatePayPassword">
+        update bas_agent_company set pay_password = #{payPassword} where id = #{id}
+    </update>
+
+    <update id="updateInfo">
+        update bas_agent_company set
+        <trim suffix="" suffixOverrides=",">
+            <if test="companyName != null and companyName != ''">
+                company_name = #{companyName},
+            </if>
+            <if test="linkname != null and linkname != ''">
+                linkname = #{linkname},
+            </if>
+            <if test="tel != null and tel != ''">
+                tel = #{tel},
+            </if>
+            <if test="workTime != null and workTime != ''">
+                work_time = #{workTime},
+            </if>
+            <if test="payPeopleMobile != null and payPeopleMobile != ''">
+                pay_people_mobile = #{payPeopleMobile},
+            </if>
+            <if test="payPeopleName != null and payPeopleName != ''">
+                pay_people_name = #{payPeopleName},
+            </if>
+            <if test="payPeopleMpOpenId != null and payPeopleMpOpenId != ''">
+                pay_people_mp_open_id  = #{payPeopleMpOpenId},
+            </if>
+            <if test="payPeopleFwOpenId != null and payPeopleFwOpenId != ''">
+                pay_people_fw_open_id   = #{payPeopleFwOpenId},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+</mapper>

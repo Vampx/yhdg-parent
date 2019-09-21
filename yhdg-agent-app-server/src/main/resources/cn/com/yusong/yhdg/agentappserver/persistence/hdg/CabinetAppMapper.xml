@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.agentappserver.persistence.hdg.CabinetAppMapper">
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.CabinetApp">
+        insert into hdg_cabinet_app(
+        app_id,
+        cabinet_id
+        )
+        values(
+        #{appId},
+        #{cabinetId}
+        )
+    </insert>
+
+</mapper>

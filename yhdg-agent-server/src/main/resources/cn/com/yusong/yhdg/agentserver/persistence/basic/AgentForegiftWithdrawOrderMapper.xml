@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.basic.AgentForegiftWithdrawOrderMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.basic.AgentForegiftWithdrawOrder">
+        select *
+        from  bas_agent_foregift_withdraw_order
+        where id=#{id}
+    </select>
+
+    <select id="sumMoney" resultType="int">
+        select ifnull(SUM(money),0) as money
+        from  bas_agent_foregift_withdraw_order
+        where agent_id = #{agentId}
+         and  status =  #{status}
+         and  category =  #{category}
+    </select>
+
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.basic.AgentForegiftWithdrawOrder" resultType="int">
+        select
+        count(*)
+        from bas_agent_foregift_withdraw_order
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId !=null">
+                and agent_id = #{agentId}
+            </if>
+            <if test="category != null ">
+                and category = #{category}
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.basic.AgentForegiftWithdrawOrder" resultType="cn.com.yusong.yhdg.common.domain.basic.AgentForegiftWithdrawOrder">
+        select
+        *
+        from bas_agent_foregift_withdraw_order
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId !=null">
+                and agent_id = #{agentId}
+            </if>
+            <if test="category != null ">
+                and category = #{category}
+            </if>
+        </trim>
+        order by id desc
+        limit ${beginIndex}, ${rows}
+    </select>
+
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.AgentForegiftWithdrawOrder">
+        INSERT INTO bas_agent_foregift_withdraw_order (
+        id,
+        category,
+        partner_id,
+        agent_id,
+        agent_name,
+        agent_code,
+        account_type,
+        money,
+        real_money,
+        service_money,
+        status,
+        handle_time,
+        operator,
+        create_time
+        )
+        VALUES
+        (
+        #{id},
+        #{category},
+        #{partnerId},
+        #{agentId},
+        #{agentName},
+        #{agentCode},
+        #{accountType},
+        #{money},
+        #{realMoney},
+        #{serviceMoney},
+        #{status},
+        #{handleTime},
+        #{operator},
+        #{createTime}
+        )
+    </insert>
+
+</mapper>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.agentappserver.persistence.zd.CustomerRentBatteryMapper">
+
+    <select id="findByCustomerId" resultType="cn.com.yusong.yhdg.common.domain.zd.CustomerRentBattery">
+        select
+        *
+        from zd_customer_rent_battery
+        where customer_id = #{customerId}
+    </select>
+
+    <update id="updateBattery">
+        update zd_customer_rent_battery set
+        battery_id = #{newBatteryId}
+        where customer_id = #{customerId} and battery_id = #{oldBatteryId}
+    </update>
+
+    <delete id="clearBattery">
+        delete from  zd_customer_rent_battery
+        where customer_id = #{customerId}
+        and battery_id = #{batteryId}
+    </delete>
+
+
+</mapper>

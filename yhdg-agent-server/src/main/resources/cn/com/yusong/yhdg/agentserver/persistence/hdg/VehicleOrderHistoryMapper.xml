@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.hdg.VehicleOrderHistoryMapper">
+
+    <select id="find" parameterType="string" resultType="cn.com.yusong.yhdg.common.domain.hdg.VehicleOrder">
+        select
+        *
+        from hdg_vehicle_order_${suffix}
+        where id = #{id}
+    </select>
+    <select id="findTable" resultType="String">
+        SHOW TABLES LIKE #{tableName}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.hdg.VehicleOrder" resultType="int">
+        select
+        count(*)
+        from hdg_vehicle_order_${suffix}
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null">
+                and agent_id = #{agentId}
+            </if>
+            <!--<if test="payType != null">-->
+                <!--and pay_type = #{payType}-->
+            <!--</if>-->
+            <if test="id != null and id != ''">
+                <![CDATA[and id LIKE concat(#{id}, '%')]]>
+            </if>
+            <if test="customerId != null">
+                and customer_id = #{customerId}
+            </if>
+            <if test="customerMobile != null and customerMobile != ''">
+                <![CDATA[and customer_mobile LIKE concat(#{customerMobile}, '%')]]>
+            </if>
+            <if test="customerFullname != null and customerFullname != ''">
+                <![CDATA[and customer_fullname LIKE concat(#{customerFullname}, '%')]]>
+            </if>
+            <if test="vehicleId != null and vehicleId != ''">
+                <![CDATA[and vehicle_id LIKE concat(#{vehicleId}, '%')]]>
+            </if>
+            <if test="queryBeginTime !=null">
+                and create_time &gt;= #{queryBeginTime}
+            </if>
+            <if test="queryEndTime !=null">
+                and create_time &lt;= #{queryEndTime}
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.hdg.VehicleOrder"
+            resultType="cn.com.yusong.yhdg.common.domain.hdg.VehicleOrder">
+        select
+        *
+        from hdg_vehicle_order_${suffix}
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null">
+                and agent_id = #{agentId}
+            </if>
+            <!--<if test="payType != null">-->
+                <!--and pay_type = #{payType}-->
+            <!--</if>-->
+            <if test="id != null and id != ''">
+                <![CDATA[and id LIKE concat(#{id}, '%')]]>
+            </if>
+            <if test="customerId != null">
+                and customer_id = #{customerId}
+            </if>
+            <if test="customerMobile != null and customerMobile != ''">
+                <![CDATA[and customer_mobile LIKE concat(#{customerMobile}, '%')]]>
+            </if>
+            <if test="customerFullname != null and customerFullname != ''">
+                <![CDATA[and customer_fullname LIKE concat(#{customerFullname}, '%')]]>
+            </if>
+            <if test="vehicleId != null and vehicleId != ''">
+                <![CDATA[and vehicle_id LIKE concat(#{vehicleId}, '%')]]>
+            </if>
+            <if test="queryBeginTime !=null">
+                and create_time &gt;= #{queryBeginTime}
+            </if>
+            <if test="queryEndTime !=null">
+                and create_time &lt;= #{queryEndTime}
+            </if>
+        </trim>
+        order by id desc
+        limit ${beginIndex}, ${rows}
+    </select>
+</mapper>

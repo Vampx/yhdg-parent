@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.hdg.UnregisterBatteryMapper">
+    <select id="find" parameterType="string" resultType="cn.com.yusong.yhdg.common.domain.hdg.UnregisterBattery">
+        select
+        *
+        from hdg_unregister_battery
+        where id = #{id}
+    </select>
+
+    <select id="findCountByQrcode" resultType="int">
+        select
+        count(*)
+        from hdg_unregister_battery
+        where qrcode = #{qrcode}
+    </select>
+
+    <select id="findCountByCode" resultType="int">
+        select
+        count(*)
+        from hdg_unregister_battery
+        where code = #{code}
+    </select>
+
+    <select id="findByShellCode" resultType="cn.com.yusong.yhdg.common.domain.hdg.UnregisterBattery">
+        select * from hdg_unregister_battery where shell_code = #{shellCode}
+    </select>
+
+    <select id="findByCode" resultType="cn.com.yusong.yhdg.common.domain.hdg.UnregisterBattery">
+        select * from hdg_unregister_battery where code = #{code}
+    </select>
+
+    <select id="findByCodeAndShellCode" resultType="cn.com.yusong.yhdg.common.domain.hdg.UnregisterBattery">
+        select * from hdg_unregister_battery where code = #{code} and shell_code = #{shellCode}
+    </select>
+
+    <select id="findCountByShellCode" resultType="int">
+        select
+        count(*)
+        from hdg_unregister_battery
+        where shell_code = #{shellCode}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.hdg.UnregisterBattery" resultType="int">
+        select
+        count(*)
+        from hdg_unregister_battery
+        <trim prefix="where" prefixOverrides="and">
+            <if test="id != null and id !=''">
+                <![CDATA[and id LIKE concat(#{id}, '%')]]>
+            </if>
+            <if test="createTime != null and createTime != ''">
+                and DATE_FORMAT(create_time, '%Y-%m-%d' ) = DATE_FORMAT( #{createTime}, '%Y-%m-%d')
+            </if>
+            <if test="code != null and code !=''">
+                <![CDATA[and code LIKE concat(#{code}, '%')]]>
+            </if>
+            <if test="shellCode != null and shellCode !=''">
+                <![CDATA[and shell_code LIKE concat(#{shellCode}, '%')]]>
+            </if>
+            <if test="cellMfr != null and cellMfr !='' ">
+                <![CDATA[and cell_mfr LIKE concat(#{cellMfr}, '%')]]>
+            </if>
+            <if test="cellModel != null and cellModel !='' ">
+                <![CDATA[and cell_model LIKE concat(,#{cellModel}, '%')]]>
+            </if>
+            <if test="cellBarcode != null and cellBarcode !='' ">
+                and id in
+                (
+                select battery_id from hdg_battery_cell  where battery_id is not null and battery_id !=''
+                and barcode LIKE concat(#{cellBarcode}, '%')
+                )
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.hdg.UnregisterBattery"
+            resultType="cn.com.yusong.yhdg.common.domain.hdg.UnregisterBattery">
+        select
+        *
+        from hdg_unregister_battery
+        <trim prefix="where" prefixOverrides="and">
+            <if test="id != null and id !=''">
+                <![CDATA[and id LIKE concat(#{id}, '%')]]>
+            </if>
+            <if test="createTime != null and createTime != ''">
+                and DATE_FORMAT(create_time, '%Y-%m-%d' ) = DATE_FORMAT( #{createTime}, '%Y-%m-%d')
+            </if>
+            <if test="code != null and code !=''">
+                <![CDATA[and code LIKE concat(#{code}, '%')]]>
+            </if>
+            <if test="shellCode != null and shellCode !=''">
+                <![CDATA[and shell_code LIKE concat(#{shellCode}, '%')]]>
+            </if>
+            <if test="cellMfr != null and cellMfr !='' ">
+                <![CDATA[and cell_mfr LIKE concat(#{cellMfr}, '%')]]>
+            </if>
+            <if test="cellModel != null and cellModel !='' ">
+                <![CDATA[and cell_model LIKE concat(#{cellModel}, '%')]]>
+            </if>
+            <if test="cellBarcode != null and cellBarcode !='' ">
+                and id in
+                (
+                select battery_id from hdg_battery_cell  where battery_id is not null and battery_id !=''
+                and barcode LIKE concat(#{cellBarcode}, '%')
+                )
+            </if>
+        </trim>
+        order by create_time desc
+        limit ${beginIndex}, ${rows}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.UnregisterBattery">
+        insert into hdg_unregister_battery(
+        id,
+        code,
+        shell_code,
+        qrcode,
+        volume,
+        use_count,
+        cell_count,
+        is_online,
+        battery_type,
+        create_time
+        )
+        values(
+        #{id},
+        #{code},
+        #{shellCode},
+        #{qrcode},
+        #{volume},
+        #{useCount},
+        #{cellCount},
+        #{isOnline},
+        #{batteryType},
+        #{createTime}
+        )
+    </insert>
+
+    <delete id="delete">
+        DELETE FROM hdg_unregister_battery WHERE id = #{id}
+    </delete>
+
+    <update id="updateQrcode">
+        update hdg_unregister_battery set
+        qrcode = #{qrcode},
+        code = #{code}
+        where id = #{id}
+    </update>
+
+    <update id="updateCode">
+        update hdg_unregister_battery set
+        code = #{code}
+        where id = #{id}
+    </update>
+
+    <update id="checkBattery">
+        update hdg_unregister_battery set
+        cell_mfr = #{cellMfr},
+        cell_model = #{cellModel}
+        where id = #{id}
+    </update>
+
+    <update id="updateIdAndCode">
+        update hdg_unregister_battery set
+        code = #{code},
+        id = #{toId}
+        where id = #{id}
+    </update>
+
+    <update id="updateCellCount">
+        update hdg_unregister_battery set
+        cell_count = #{cellCount}
+        where id = #{id}
+    </update>
+
+    <update id="clearCode">
+        update hdg_unregister_battery set
+        code = #{newCode}
+        where id = #{id} and code = #{code}
+    </update>
+
+</mapper>

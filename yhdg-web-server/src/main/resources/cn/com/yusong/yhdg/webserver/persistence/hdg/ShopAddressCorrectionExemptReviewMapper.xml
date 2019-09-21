@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.hdg.ShopAddressCorrectionExemptReviewMapper">
+
+    <select id="find" parameterType="long" resultType="cn.com.yusong.yhdg.common.domain.hdg.ShopAddressCorrectionExemptReview">
+        select
+        *
+        from hdg_shop_address_correction_exempt_review
+        where id = #{id}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.hdg.ShopAddressCorrectionExemptReview" resultType="int">
+        select
+        count(id)
+        from hdg_shop_address_correction_exempt_review
+        <trim prefix="where" prefixOverrides="and">
+            <if test="nickname != null and nickname != ''">
+                <![CDATA[and nickname LIKE concat('%', #{nickname}, '%')]]>
+            </if>
+            <if test="mobile != null and mobile != ''">
+                <![CDATA[and mobile LIKE concat(#{mobile}, '%')]]>
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.hdg.ShopAddressCorrectionExemptReview"
+            resultType="cn.com.yusong.yhdg.common.domain.hdg.ShopAddressCorrectionExemptReview">
+        select
+        *
+        from hdg_shop_address_correction_exempt_review
+        <trim prefix="where" prefixOverrides="and">
+            <if test="nickname != null and nickname != ''">
+                <![CDATA[and nickname LIKE concat('%', #{nickname}, '%')]]>
+            </if>
+            <if test="mobile != null and mobile != ''">
+                <![CDATA[and mobile LIKE concat(#{mobile}, '%')]]>
+            </if>
+        </trim>
+        order by create_time desc
+        limit ${beginIndex}, ${rows}
+    </select>
+
+    <insert id="insert" parameterType = "cn.com.yusong.yhdg.common.domain.hdg.ShopAddressCorrectionExemptReview" >
+        insert into hdg_shop_address_correction_exempt_review(id, mobile, nickname, create_time)
+        values(#{id},#{mobile},#{nickname},#{createTime})
+    </insert>
+
+    <delete id="delete" parameterType="long">
+        delete from hdg_shop_address_correction_exempt_review where id = #{id}
+    </delete>
+
+</mapper>

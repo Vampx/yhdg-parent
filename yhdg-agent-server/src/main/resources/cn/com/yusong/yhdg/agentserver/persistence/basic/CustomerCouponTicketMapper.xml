@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.basic.CustomerCouponTicketMapper">
+
+    <select id="find" parameterType="long" resultType="cn.com.yusong.yhdg.common.domain.basic.CustomerCouponTicket">
+        select
+        *
+        from bas_customer_coupon_ticket
+        where id = #{id}
+    </select>
+
+    <select id="findBySource" resultType="cn.com.yusong.yhdg.common.domain.basic.CustomerCouponTicket">
+        select
+        *
+        from bas_customer_coupon_ticket
+        where source_id = #{sourceId} and source_type = #{sourceType}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.basic.CustomerCouponTicket" resultType="int">
+        select
+        count(1)
+        from bas_customer_coupon_ticket
+        <trim prefix="where" prefixOverrides="and">
+            <if test="category != null ">
+                and category = #{category}
+            </if>
+            <if test="partnerId != null ">
+                and  partner_id = #{partnerId}
+            </if>
+            <if test="ticketName != null and ticketName != ''">
+                <![CDATA[and ticket_name LIKE concat('%', #{ticketName}, '%')]]>
+            </if>
+            <if test="customerMobile != null and customerMobile != ''">
+                <![CDATA[and customer_mobile LIKE concat('%', #{customerMobile}, '%')]]>
+            </if>
+            <if test="agentId != null">
+                and agent_id = #{agentId}
+            </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+            <if test="ticketType != null">
+                and ticket_type = #{ticketType}
+            </if>
+            <if test="giveType != null">
+                and give_type = #{giveType}
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.basic.CustomerCouponTicket"
+            resultType="cn.com.yusong.yhdg.common.domain.basic.CustomerCouponTicket">
+        select
+          *
+        from bas_customer_coupon_ticket
+
+        <trim prefix="where" prefixOverrides="and">
+            <if test="category != null ">
+                and category = #{category}
+            </if>
+            <if test="partnerId != null ">
+                and  partner_id = #{partnerId}
+            </if>
+            <if test="ticketName != null and ticketName != ''">
+                <![CDATA[and ticket_name LIKE concat('%', #{ticketName}, '%')]]>
+            </if>
+            <if test="customerMobile != null and customerMobile != ''">
+                <![CDATA[and customer_mobile LIKE concat('%', #{customerMobile}, '%')]]>
+            </if>
+            <if test="agentId != null">
+                and agent_id = #{agentId}
+            </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+            <if test="ticketType != null">
+                and ticket_type = #{ticketType}
+            </if>
+            <if test="giveType != null">
+                and give_type = #{giveType}
+            </if>
+        </trim>
+        order by bas_customer_coupon_ticket.id desc
+        limit ${beginIndex}, ${rows}
+    </select>
+
+    <select id="findList" resultType="cn.com.yusong.yhdg.common.domain.basic.CustomerCouponTicket">
+        select
+        *
+        from bas_customer_coupon_ticket
+        where customer_id = #{customerId}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.CustomerCouponTicket" useGeneratedKeys="true" keyProperty="id">
+        insert into bas_customer_coupon_ticket(
+        partner_id,
+        agent_id,
+        ticket_name,
+        money,
+        category,
+        status,
+        expire_time,
+        customer_mobile,
+        memo,
+        operator,
+        ticket_type,
+        give_type,
+        begin_time,
+        create_time)
+        values(
+        #{partnerId},
+        #{agentId},
+        #{ticketName},
+        #{money},
+        #{category},
+        #{status},
+        #{expireTime},
+        #{customerMobile},
+        #{memo},
+        #{operator},
+        #{ticketType},
+        #{giveType},
+        #{beginTime},
+        #{createTime})
+    </insert>
+
+    <update id="updateStatus">
+        update bas_customer_coupon_ticket set
+            status = #{toStatus},
+            use_time = NULL
+        where id = #{id} and status = #{fromStatus}
+    </update>
+
+    <update id="updateStatusByMobile">
+        update bas_customer_coupon_ticket set
+        status = #{status},
+        use_time = NULL
+        where customer_mobile = #{customerMobile}
+    </update>
+
+    <delete id="delete">
+        delete from bas_customer_coupon_ticket where id = #{id}
+    </delete>
+
+</mapper>

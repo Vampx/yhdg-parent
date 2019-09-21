@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.appserver.persistence.hdg.CabinetDayStatsMapper">
+
+    <select id="findForCabinet" resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetDayStats">
+        select
+        *
+        from hdg_cabinet_day_stats
+        where  cabinet_id = #{cabinetId}
+        and stats_date = #{statsDate}
+        limit 1
+    </select>
+
+</mapper>

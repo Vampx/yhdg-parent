@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.appserver.persistence.basic.DeviceCommandMapper">
+
+    <select id="findOneByType" resultType="cn.com.yusong.yhdg.common.domain.basic.DeviceCommand">
+        select
+        *
+        from bas_device_command
+        where type = #{type}
+        and device_type = #{deviceType}
+        and device_id = #{deviceId}
+        and status = #{status}
+        limit 1
+    </select>
+
+    <update id="updateStatus">
+        update bas_device_command  set
+        status = #{status}
+        <if test="dispatchTime != null">
+            ,dispatch_time = #{dispatchTime}
+        </if>
+        where id = #{id}
+    </update>
+
+</mapper>

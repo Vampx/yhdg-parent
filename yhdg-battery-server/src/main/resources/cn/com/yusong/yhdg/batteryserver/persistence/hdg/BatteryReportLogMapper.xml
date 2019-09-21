@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.batteryserver.persistence.hdg.BatteryReportLogMapper">
+
+    <select id="findTable" resultType="String">
+        SHOW TABLES LIKE #{tableName}
+    </select>
+
+    <update id="createTable">
+        create table if not exists ${tableName} (
+        battery_id char(12) not null,
+        report_time datetime, /*上报日期*/
+        voltage int, /*电压*/
+        electricity int, /*电流*/
+        current_capacity smallint(6), /*当前电量*/
+        protect_state varchar(40), /*保护状态*/
+        fet varchar(40), /*bit0表示充电，bit1表示放电，0表示MOS关闭，1表示打开*/
+        strand tinyint, /*电池串数*/
+        temp varchar(40), /*温度*/
+        lng double, /*经度*/
+        lat double, /*纬度*/
+        coordinate_type varchar(10), /*经纬类型*/
+        distance int, /*距离*/
+        power int, /*功率*/
+        fet_status tinyint, /*0充电  1放电  2不充电也不放电*/
+        current_signal smallint, /*当前信号*/
+        charge_status tinyint, /*通电状态 0 未通电 1 已通电*/
+        is_electrify tinyint, /*是否已通电 1 是 0 否*/
+        position_state tinyint, /*0表示位置不移动 1表示位置移动中 2表示通电中*/
+        address varchar(40), /*地址*/
+        sim_code varchar(40), /*sim卡号*/
+        single_voltage varchar(100), /*电池每串单体电压*/
+        primary key (battery_id, report_time)
+        ) engine=innodb default charset=utf8;
+    </update>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.BatteryReportLog">
+        INSERT INTO hdg_battery_report_log_${suffix}  (battery_id,  voltage, electricity, current_capacity, report_time, protect_state, fet, strand, temp, lng, lat,coordinate_type, current_signal, fet_status, charge_status, is_electrify, position_state, address, distance, single_voltage, sim_code, power)
+        VALUES (#{batteryId},  #{voltage}, #{electricity}, #{currentCapacity}, #{reportTime},#{protectState},#{fet}, #{strand}, #{temp}, #{lng}, #{lat}, #{coordinateType}, #{currentSignal}, #{fetStatus}, #{chargeStatus}, #{isElectrify}, #{positionState}, #{address}, #{distance}, #{singleVoltage}, #{simCode}, #{power})
+    </insert>
+
+</mapper>

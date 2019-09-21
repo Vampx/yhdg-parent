@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.hdg.ReliefStationMapper">
+
+    <select id="find" parameterType="long" resultType="cn.com.yusong.yhdg.common.domain.hdg.ReliefStation">
+        select
+            *
+        from hdg_relief_station
+        where id = #{id}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.hdg.ReliefStation" resultType="int">
+        select
+            count(id)
+        from hdg_relief_station
+        <trim prefix="where" prefixOverrides="and">
+            <if test="partnerId != null ">
+                and  partner_id = #{partnerId}
+            </if>
+            <if test="provinceId != null">
+                <![CDATA[and province_id = #{provinceId}]]>
+            </if>
+            <if test="cityId != null">
+                <![CDATA[and city_id = #{cityId}]]>
+            </if>
+            <if test="districtId != null">
+                <![CDATA[and district_id = #{districtId}]]>
+            </if>
+            <if test="stationName != null and stationName != ''">
+                <![CDATA[and station_name LIKE concat('%', #{stationName}, '%')]]>
+            </if>
+        </trim>
+    </select>
+    
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.hdg.ReliefStation" resultType="cn.com.yusong.yhdg.common.domain.hdg.ReliefStation">
+        select
+            *
+        from hdg_relief_station
+        <trim prefix="where" prefixOverrides="and">
+            <if test="partnerId != null ">
+                and  partner_id = #{partnerId}
+            </if>
+            <if test="provinceId != null">
+                <![CDATA[and province_id = #{provinceId}]]>
+            </if>
+            <if test="cityId != null">
+                <![CDATA[and city_id = #{cityId}]]>
+            </if>
+            <if test="districtId != null">
+                <![CDATA[and district_id = #{districtId}]]>
+            </if>
+            <if test="stationName != null and stationName != ''">
+                <![CDATA[and station_name LIKE concat('%', #{stationName}, '%')]]>
+            </if>
+        </trim>
+        limit ${beginIndex}, ${rows}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.ReliefStation" useGeneratedKeys="true" keyProperty="id">
+        insert into hdg_relief_station(station_name, tel, image_path, introduce, province_id, city_id, district_id, street, lng, lat, star, min_price, max_price)
+        values(#{stationName}, #{tel}, #{imagePath}, #{introduce}, #{provinceId}, #{cityId}, #{districtId}, #{street},#{lng},#{lat},#{star},#{minPrice},#{maxPrice})
+    </insert>
+
+    <insert id="newInsert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.ReliefStation" useGeneratedKeys="true" keyProperty="id">
+        insert into hdg_relief_station(partner_id, station_name, tel, image_path, introduce,  star, min_price, max_price)
+        values(#{partnerId}, #{stationName}, #{tel}, #{imagePath}, #{introduce}, #{star},#{minPrice},#{maxPrice})
+    </insert>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.hdg.ReliefStation">
+         update hdg_relief_station set
+        <trim suffix="" suffixOverrides=",">
+        <if test="id != null and id != ''">
+            id = #{id},
+        </if>
+            <if test="partnerId != null">
+                partner_id = #{partnerId},
+            </if>
+            <if test="stationName != null and stationName != ''">
+                station_name = #{stationName},
+            </if>
+            <if test="tel != null and tel != ''">
+                tel = #{tel},
+            </if>
+            <if test="imagePath != null and imagePath != ''">
+                image_path = #{imagePath},
+            </if>
+            <if test="introduce != null and introduce != ''">
+                introduce = #{introduce},
+            </if>
+            <if test="provinceId != null and provinceId != ''">
+                province_id = #{provinceId},
+            </if>
+            <if test="cityId != null and cityId != ''">
+                city_id = #{cityId},
+            </if>
+            <if test="minPrice != null and minPrice != ''">
+                min_price = #{minPrice},
+            </if>
+            <if test="maxPrice != null and maxPrice != ''">
+                max_price = #{maxPrice},
+            </if>
+            <if test="star != null and star != ''">
+                star = #{star},
+            </if>
+            <if test="districtId != null and districtId != ''">
+                district_id = #{districtId},
+            </if>
+            <if test="street != null and street != ''">
+                street = #{street},
+            </if>
+            <!--<if test="address != null and address != ''">-->
+                <!--address = #{address},-->
+            <!--</if>-->
+            <if test="lng != null and lng != ''">
+                lng = #{lng},
+            </if>
+            <if test="lat != null and lat != ''">
+                lat = #{lat},
+            </if>
+        </trim>
+         where id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="long">
+        delete from hdg_relief_station where id = #{id}
+    </delete>
+    
+</mapper>

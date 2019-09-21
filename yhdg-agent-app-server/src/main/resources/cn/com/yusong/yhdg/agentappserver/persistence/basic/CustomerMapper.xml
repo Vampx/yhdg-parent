@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.agentappserver.persistence.basic.CustomerMapper">
+
+    <select id="find" parameterType="long" resultType="cn.com.yusong.yhdg.common.domain.basic.Customer">
+        select
+        *
+        from bas_customer
+        where id = #{id}
+    </select>
+
+    <select id="findByMobile" resultType="cn.com.yusong.yhdg.common.domain.basic.Customer">
+        select
+        *
+        from bas_customer
+        where partner_id = #{partnerId} and mobile = #{mobile}
+        limit 1
+    </select>
+
+    <select id="findForAgentCompany" resultType="cn.com.yusong.yhdg.common.domain.basic.Customer">
+        select
+        *
+        from bas_customer
+        where partner_id = #{partnerId} and mobile = #{mobile}
+        <if test="fullname != null and fullname != '' ">
+            and fullname = #{fullname}
+        </if>
+        limit 1
+    </select>
+
+    <select id="findMobileList" parameterType="cn.com.yusong.yhdg.common.domain.basic.Customer"
+            resultType="cn.com.yusong.yhdg.common.domain.basic.Customer">
+        select
+        *
+        from bas_customer
+        where agent_id = #{agentId} and partner_id = #{partnerId}
+        <if test="mobile != null and mobile != ''">
+            <![CDATA[and (mobile LIKE concat('%', #{mobile}, '%') or fullname LIKE concat('%', #{mobile}, '%'))]]>
+        </if>
+        order by id desc
+        limit #{offset}, #{limit}
+    </select>
+
+    <select id="findList" resultType="cn.com.yusong.yhdg.common.domain.basic.Customer">
+        select *
+        FROM bas_customer
+        where 1 = 1
+        <if test="mobile != null and mobile != ''">
+            <![CDATA[and (mobile LIKE concat('%', #{mobile}, '%') or fullname LIKE concat('%', #{mobile}, '%'))]]>
+        </if>
+        <if test="agentId != null">
+            and agent_id = #{agentId}
+        </if>
+        ORDER BY id desc
+        limit #{offset}, #{limit}
+    </select>
+
+    <select id="findListOrderByForegift" resultType="cn.com.yusong.yhdg.common.domain.basic.Customer">
+        select t1.*, t2.foregift as hdPaidForegift
+        FROM bas_customer t1 left join bas_customer_exchange_info t2
+        on t1.id = t2.id
+        where 1 = 1
+        <if test="mobile != null and mobile != ''">
+            <![CDATA[and (t1.mobile LIKE concat('%', #{mobile}, '%') or t1.fullname LIKE concat('%', #{mobile}, '%'))]]>
+        </if>
+        <if test="agentId != null">
+            and t1.agent_id = #{agentId}
+        </if>
+        order by t2.create_time desc
+        limit #{offset}, #{limit}
+    </select>
+
+    <select id="findAgentCompanyCustomer" resultType="cn.com.yusong.yhdg.common.domain.basic.Customer">
+        select bas_customer.*
+        FROM bas_agent_company_customer, bas_customer
+        where bas_agent_company_customer.customer_id = bas_customer.id
+        <if test="mobile != null and mobile != ''">
+            <![CDATA[and (bas_customer.mobile LIKE concat('%', #{mobile}, '%') or bas_customer.fullname LIKE concat('%', #{mobile}, '%'))]]>
+        </if>
+        <if test="agentId != null">
+            and bas_customer.agent_id = #{agentId}
+        </if>
+        <if test="agentCompanyId != null and agentCompanyId != '' ">
+            and bas_agent_company_customer.agent_company_id = #{agentCompanyId}
+        </if>
+        ORDER BY bas_customer.id desc
+        limit #{offset}, #{limit}
+    </select>
+
+    <update id="updateHdRefundStatus">
+        update bas_customer set
+        hd_refund_status = #{hdRefundStatus}
+        where id = #{id}
+    </update>
+
+    <update id="updateZdRefundStatus">
+        update bas_customer set zd_refund_status = #{zdRefundStatus} where id = #{id}
+    </update>
+
+    <update id="updateHdForegiftStatus">
+        update bas_customer set hd_foregift_status = #{hdForegiftStatus} where id = #{id}
+    </update>
+
+    <update id="updateZdForegiftStatus">
+        update bas_customer set zd_foregift_status = #{zdForegiftStatus} where id = #{id}
+    </update>
+
+    <update id="clearAgentCompanyId">
+        update bas_customer set agent_company_id = null where id = #{id}
+    </update>
+
+    <select id="findCustomerCount" resultType="int">
+        select
+        ifnull(count(1), 0)
+        from bas_customer where agent_id = #{agentId}
+    </select>
+
+    <select id="findHdCustomerCountByStatus" resultType="int">
+        select
+        ifnull(count(1), 0)
+        from bas_customer where agent_id = #{agentId}
+        and hd_foregift_status = #{status}
+        <if test="beginTime != null and endTime != null">
+            <![CDATA[and create_time > #{beginTime} and create_time < #{endTime}]]>
+        </if>
+    </select>
+
+    <select id="findZdCustomerCountByStatus" resultType="int">
+        select
+        ifnull(count(1), 0)
+        from bas_customer where agent_id = #{agentId}
+        and zd_foregift_status = #{status}
+        <if test="beginTime != null and endTime != null">
+            <![CDATA[and create_time > #{beginTime} and create_time < #{endTime}]]>
+        </if>
+    </select>
+
+    <update id="bindCompany">
+        update bas_customer set agent_company_id = #{agentCompanyId} where id = #{id}
+    </update>
+
+</mapper>

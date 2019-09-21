@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.basic.DeviceMapper">
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.basic.Device">
+        SELECT * FROM bas_device
+        WHERE id = #{id}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.basic.Device" resultType="int">
+        select
+        count(b.id)
+        from bas_device b
+        <trim prefix="where" prefixOverrides="and">
+            <if test="deviceId != null and deviceId != '' ">
+                and b.device_id LIKE concat('%',#{deviceId}, '%')
+            </if>
+            <if test="version != null and version != '' ">
+                and version LIKE concat('%',#{version}, '%')
+            </if>
+            <if test="terminalDetailFlag != null and terminalDetailFlag == 1 ">
+                AND NOT EXISTS(SELECT 1 FROM bas_device_upgrade_pack_detail bdupd WHERE bdupd.device_id = b.device_id)
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.basic.Device" resultType="cn.com.yusong.yhdg.common.domain.basic.Device">
+        select
+        b.*
+        from bas_device b
+        <trim prefix="where" prefixOverrides="and">
+            <if test="deviceId != null and deviceId != '' ">
+                and device_id LIKE concat('%',#{deviceId}, '%')
+            </if>
+            <if test="version != null and version != '' ">
+                and version LIKE concat('%',#{version}, '%')
+            </if>
+            <if test="terminalDetailFlag != null and terminalDetailFlag == 1 ">
+                AND NOT EXISTS(SELECT 1 FROM bas_device_upgrade_pack_detail bdupd WHERE bdupd.device_id = b.device_id)
+            </if>
+        </trim>
+        limit ${beginIndex}, ${rows}
+    </select>
+</mapper>

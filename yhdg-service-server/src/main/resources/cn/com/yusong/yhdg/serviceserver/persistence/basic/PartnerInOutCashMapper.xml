@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.serviceserver.persistence.basic.PartnerInOutCashMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.basic.PartnerInOutCash">
+        select
+            *
+        from bas_partner_in_out_cash
+        where partner_id = #{partnerId}
+        and stats_date = #{statsDate}
+    </select>
+
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.PartnerInOutCash" >
+        insert into bas_partner_in_out_cash (
+            partner_id,
+            partner_name,
+            stats_date,
+            weixinmp_income,
+            weixinmp_refund,
+            weixinmp_withdraw,
+            alipayfw_income,
+            alipayfw_refund,
+            alipayfw_withdraw,
+            weixin_income,
+            weixin_refund,
+            weixin_withdraw,
+            alipay_income,
+            alipay_refund,
+            alipay_withdraw,
+            update_time
+        ) values (
+             #{partnerId},
+             #{partnerName},
+             #{statsDate},
+             #{weixinmpIncome},
+             #{weixinmpRefund},
+             #{weixinmpWithdraw},
+             #{alipayfwIncome},
+             #{alipayfwRefund},
+             #{alipayfwWithdraw},
+             #{weixinIncome},
+             #{weixinRefund},
+             #{weixinWithdraw},
+             #{alipayIncome},
+             #{alipayRefund},
+             #{alipayWithdraw},
+
+             #{updateTime}
+        )
+    </insert>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.basic.PartnerInOutCash">
+        update bas_partner_in_out_cash
+        set
+            weixinmp_income = #{weixinmpIncome},
+            weixinmp_refund = #{weixinmpRefund},
+            weixinmp_withdraw = #{weixinmpWithdraw},
+            alipayfw_income = #{alipayfwIncome},
+            alipayfw_refund = #{alipayfwRefund},
+            alipayfw_withdraw = #{alipayfwWithdraw},
+            weixin_income = #{weixinIncome},
+            weixin_refund = #{weixinRefund},
+            weixin_withdraw = #{weixinWithdraw},
+            alipay_income = #{alipayIncome},
+            alipay_refund = #{alipayRefund},
+            alipay_withdraw = #{alipayWithdraw},
+            update_time = #{updateTime}
+        where partner_id = #{partnerId}
+        and stats_date = #{statsDate}
+    </update>
+
+</mapper>

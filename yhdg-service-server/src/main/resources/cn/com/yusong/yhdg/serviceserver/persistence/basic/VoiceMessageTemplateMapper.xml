@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.serviceserver.persistence.basic.VoiceMessageTemplateMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.basic.VoiceMessageTemplate">
+        SELECT
+          *
+        FROM bas_voice_message_template
+        WHERE id = #{id} AND partner_id = #{partnerId}
+        limit 1
+    </select>
+
+</mapper>

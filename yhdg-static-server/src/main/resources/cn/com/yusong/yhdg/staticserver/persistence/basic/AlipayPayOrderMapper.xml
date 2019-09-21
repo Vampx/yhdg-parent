@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+                "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.staticserver.persistence.basic.AlipayPayOrderMapper">
+    <select id="find" parameterType="String" resultType="cn.com.yusong.yhdg.common.domain.basic.AlipayPayOrder">
+        select
+            *
+        from bas_alipay_pay_order
+        where id = #{id}
+    </select>
+    <update id="payOk">
+        update bas_alipay_pay_order set
+        order_status = #{toStatus},
+        payment_id = #{paymentId},
+        handle_time = #{handleTime}
+        where id = #{id} and order_status = #{fromStatus}
+    </update>
+</mapper>

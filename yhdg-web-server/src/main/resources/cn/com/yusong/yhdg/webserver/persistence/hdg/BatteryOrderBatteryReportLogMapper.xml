@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.hdg.BatteryOrderBatteryReportLogMapper">
+
+    <select id="findTableExist" parameterType="string" resultType="String">
+        show tables like #{tableName};
+    </select>
+    <select id="findAllMap" resultType="cn.com.yusong.yhdg.common.entity.LocationInfo">
+        select
+        *
+        from hdg_battery_order_battery_report_log_${suffix}
+        where order_id = #{orderId}
+        AND lat is not null AND lat != 0 AND lng is not null AND lng != 0 AND coordinate_type is not null AND coordinate_type != 'gprs'
+        <if test="startDate !=null">
+            and report_time &gt;= #{startDate}
+        </if>
+        <if test="endDate !=null">
+            and report_time &lt;= #{endDate}
+        </if>
+        order by report_time asc
+    </select>
+    <select id="findLastReportTime" resultType="java.util.Date">
+        select
+        report_time
+        from hdg_battery_order_battery_report_log_${suffix}
+        where order_id = #{orderId}
+        AND lat is not null AND lat != 0 AND lng is not null AND lng != 0 AND coordinate_type is not null AND coordinate_type != 'gprs'
+        order by report_time DESC
+        limit 1
+    </select>
+    <select id="findSelectPageResult" resultType="cn.com.yusong.yhdg.common.domain.hdg.BatteryOrderBatteryReportLog">
+        select
+        *
+        from hdg_battery_order_battery_report_log_${suffix}
+        where order_id = #{orderId}
+        AND lat is not null AND lat != 0 AND lng is not null AND lng != 0 AND coordinate_type is not null AND coordinate_type != 'gprs'
+        <if test="queryBeginTime !=null">
+            and report_time &gt;= #{queryBeginTime}
+        </if>
+        <if test="queryEndTime !=null">
+            and report_time &lt;= #{queryEndTime}
+        </if>
+        order by report_time asc
+        limit ${beginIndex}, ${rows}
+    </select>
+    <select id="findAllMapCount" resultType="int">
+        select
+        count(*)
+        from hdg_battery_order_battery_report_log_${suffix}
+        where order_id = #{orderId}
+        AND lat is not null AND lat != 0 AND lng is not null AND lng != 0 AND coordinate_type is not null AND coordinate_type != 'gprs'
+        <if test="startDate !=null">
+            and report_time &gt;= #{startDate}
+        </if>
+        <if test="endDate !=null">
+            and report_time &lt;= #{endDate}
+        </if>
+    </select>
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.hdg.BatteryOrderBatteryReportLog"
+            resultType="int">
+        select
+        count(*)
+        from hdg_battery_order_battery_report_log_${suffix}
+        where <![CDATA[order_id LIKE concat(#{orderId}, '%')]]>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.hdg.BatteryOrderBatteryReportLog"
+            resultType="cn.com.yusong.yhdg.common.domain.hdg.BatteryOrderBatteryReportLog">
+        select
+        *
+        from hdg_battery_order_battery_report_log_${suffix}
+        where <![CDATA[order_id LIKE concat(#{orderId}, '%')]]>
+        order by report_time desc
+        limit ${beginIndex}, ${rows}
+    </select>
+
+    <update id="updateAddress" parameterType="cn.com.yusong.yhdg.common.domain.hdg.BatteryOrderBatteryReportLog">
+       UPDATE hdg_battery_order_battery_report_log_${suffix} SET address = #{address} WHERE order_id = #{orderId} AND report_time = #{reportTime}
+    </update>
+
+</mapper>

@@ -1,0 +1,1 @@
+<table width="100%" height="100%"><tr><td align="center" valign="middle">没有电池上报记录</td></tr></table>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.frontserver.persistence.yms.TerminalRunLogMapper">
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.yms.TerminalRunLog">
+        insert into yms_terminal_run_log(
+            terminal_id,
+            now,
+            num,
+            agent_id,
+            report_time,
+            log_level,
+            tag,
+            content,
+            create_time
+        ) values (
+            #{terminalId},
+            #{now},
+            #{num},
+            #{agentId},
+            #{reportTime},
+            #{logLevel},
+            #{tag},
+            #{content},
+            #{createTime}
+        )
+    </insert>
+
+</mapper>

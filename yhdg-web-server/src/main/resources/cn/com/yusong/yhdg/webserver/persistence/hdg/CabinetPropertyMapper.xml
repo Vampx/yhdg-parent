@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.hdg.CabinetPropertyMapper">
+
+    <resultMap id="cabinetPropertyMap" type="cn.com.yusong.yhdg.common.domain.hdg.CabinetProperty">
+        <result column="cabinet_id" property="cabinetId"/>
+        <result column="order_num" property="orderNum"/>
+        <result column="property_name" property="propertyName"/>
+        <result column="property_value" property="propertyValue"/>
+        <result column="is_active" property="isActive"/>
+    </resultMap>
+
+    <select id="findByCabinet" parameterType="String" resultMap="cabinetPropertyMap">
+        select cabinet_id, property_name, property_value,is_active from hdg_cabinet_property where cabinet_id = #{cabinetId}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.CabinetProperty">
+        insert into hdg_cabinet_property(cabinet_id, order_num, property_name, property_value, is_active)
+        values(#{cabinetId}, #{orderNum}, #{propertyName}, #{propertyValue}, #{isActive})
+    </insert>
+
+    <delete id="deleteByCabinet" parameterType="String">
+        delete from hdg_cabinet_property where cabinet_id = #{cabinetId}
+    </delete>
+
+</mapper>

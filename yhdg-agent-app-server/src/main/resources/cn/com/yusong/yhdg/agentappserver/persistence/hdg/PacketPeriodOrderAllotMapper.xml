@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.agentappserver.persistence.hdg.PacketPeriodOrderAllotMapper">
+
+    <select id="exist" resultType="string">
+        show tables like 'hdg_packet_period_order_allot_${suffix}'
+    </select>
+
+    <select id="findByOrder" resultType="cn.com.yusong.yhdg.common.domain.hdg.PacketPeriodOrderAllot">
+        select * from hdg_packet_period_order_allot_${suffix}
+        where org_type = #{orgType}
+        and cabinet_id = #{cabinetId}
+        and agent_id = #{agentId}
+        and service_type = #{serviceType}
+        and stats_date = #{statsDate}
+        limit #{offset}, #{limit}
+    </select>
+
+    <select id="findShopDayIncome" resultType="cn.com.yusong.yhdg.common.domain.hdg.PacketPeriodOrderAllot">
+        select * from hdg_packet_period_order_allot_${suffix}
+        where org_type = #{orgType}
+        and shop_id = #{shopId}
+        and service_type = #{serviceType}
+        and stats_date = #{statsDate}
+    </select>
+
+    <select id="findShopMonthIncome" resultType="cn.com.yusong.yhdg.common.domain.hdg.PacketPeriodOrderAllot">
+        select * from hdg_packet_period_order_allot_${suffix}
+        where org_type = #{orgType}
+        and shop_id = #{shopId}
+        and service_type = #{serviceType}
+        and DATE_FORMAT(stats_date, '%Y-%m-%d') >= #{beginDate}
+        and DATE_FORMAT(stats_date, '%Y-%m-%d') &lt;= #{endDate}
+    </select>
+
+    <select id="findAgentCompanyMonthIncome" resultType="cn.com.yusong.yhdg.common.domain.hdg.PacketPeriodOrderAllot">
+        select * from hdg_packet_period_order_allot_${suffix}
+        where org_type = #{orgType}
+        and agent_company_id = #{agentCompanyId}
+        and service_type = #{serviceType}
+        and DATE_FORMAT(stats_date, '%Y-%m-%d') >= #{beginDate}
+        and DATE_FORMAT(stats_date, '%Y-%m-%d') &lt;= #{endDate}
+    </select>
+
+    <select id="findAgentCompanyDayIncome" resultType="cn.com.yusong.yhdg.common.domain.hdg.PacketPeriodOrderAllot">
+        select * from hdg_packet_period_order_allot_${suffix}
+        where org_type = #{orgType}
+        and agent_company_id = #{agentCompanyId}
+        and service_type = #{serviceType}
+        and stats_date = #{statsDate}
+    </select>
+
+    <select id="findByAgentCompany" resultType="cn.com.yusong.yhdg.common.domain.hdg.PacketPeriodOrderAllot">
+        select * from hdg_packet_period_order_allot_${suffix}
+        where org_type = #{orgType}
+        and agent_id = #{agentId}
+        and agent_company_id = #{agentCompanyId}
+        and statsDate = #{statsDate}
+    </select>
+
+    <select id="contain" resultType="int">
+        select count(*) from information_schema.columns
+        where table_name = 'hdg_packet_period_order_allot_${suffix}'
+        and column_name = #{columnName}
+    </select>
+
+</mapper>

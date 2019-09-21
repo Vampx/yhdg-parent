@@ -1,0 +1,30 @@
+html {
+  height: 100%;
+}
+html body {
+  font-family: SimHei;
+  height: 100%;
+  background: #efefef;
+}
+html body .space {
+  margin-bottom: 1.17rem;
+}
+html body .weui-cells {
+  background-color: #efefef;
+}
+html body .weui-cells .weui-cell {
+  padding: 0.58823529rem 0.88235294rem;
+  background: #fff;
+}
+html body .weui-cells .weui-cell .weui-cell__ft .header_img {
+  height: 50px;
+  width: 50px;
+  border-radius: 5px;
+}
+html body .weui-cells .weui-cell_access .weui-cell__bd {
+  font-size: 1rem;
+  color: #5C5C5C;
+}
+html body .weui-cells .weui-cell_access .weui-cell__ft {
+  padding-right: 20px;
+}

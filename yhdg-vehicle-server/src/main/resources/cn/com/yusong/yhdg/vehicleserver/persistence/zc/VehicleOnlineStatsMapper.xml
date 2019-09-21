@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.vehicleserver.persistence.zc.VehicleOnlineStatsMapper">
+
+    <select id="findMaxRecord" parameterType="int" resultType="cn.com.yusong.yhdg.common.domain.zc.VehicleOnlineStats">
+        select
+            *
+        from
+        zc_vehicle_online_stats
+        where vehicle_id = #{vehicleId}
+        order by begin_time desc
+        limit 1
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.zc.VehicleOnlineStats">
+        insert into zc_vehicle_online_stats(vehicle_id, begin_time, end_time)
+        values(#{vehicleId}, #{beginTime}, #{endTime})
+    </insert>
+
+    <update id="updateEndTime">
+        update zc_vehicle_online_stats set
+            end_time = #{endTime}
+        where vehicle_id = #{vehicleId} and end_time is null
+        order by begin_time desc
+        limit 1
+    </update>
+
+</mapper>

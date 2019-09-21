@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.hdg.CabinetUserMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetUser">
+        select
+        *
+        from hdg_cabinet_user
+        where  cabinet_id = #{cabinetId} and user_id = #{userId}
+    </select>
+
+    <select id="findUserCountByCabinetId" resultType="int">
+        select
+        count(*)
+        from hdg_cabinet_user
+        where  cabinet_id = #{cabinetId}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.hdg.CabinetUser" resultType="int">
+        select count(*) from hdg_cabinet_user
+        left join bas_user on hdg_cabinet_user.user_id = bas_user.id
+        left join hdg_cabinet on hdg_cabinet_user.cabinet_id = hdg_cabinet.id
+        where 1 = 1
+        <if test="agentId != null">
+            and hdg_cabinet_user.agent_id = #{agentId}
+        </if>
+        <if test="cabinetId != null">
+            and hdg_cabinet_user.cabinet_id = #{cabinetId}
+        </if>
+        <if test="mobile != null and mobile != ''">
+            <![CDATA[and bas_user.mobile LIKE concat('%', #{mobile}, '%')]]>
+        </if>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.hdg.CabinetUser"
+            resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetUser">
+        select
+        hdg_cabinet_user.cabinet_id as cabinetId,
+        hdg_cabinet_user.user_id as userId,
+        hdg_cabinet.cabinet_name as cabinetName,
+        bas_user.login_name as loginName,
+        bas_user.fullname as fullname,
+        bas_user.mobile as mobile
+        from hdg_cabinet_user
+        left join bas_user on hdg_cabinet_user.user_id = bas_user.id
+        left join hdg_cabinet on hdg_cabinet_user.cabinet_id = hdg_cabinet.id
+        where 1 = 1
+        <if test="agentId != null">
+            and hdg_cabinet_user.agent_id = #{agentId}
+        </if>
+        <if test="cabinetId != null">
+            and hdg_cabinet_user.cabinet_id = #{cabinetId}
+        </if>
+        <if test="mobile != null and mobile != ''">
+            <![CDATA[and bas_user.mobile LIKE concat('%', #{mobile}, '%')]]>
+        </if>
+        limit ${beginIndex}, ${rows}
+    </select>
+
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.CabinetUser">
+        INSERT INTO hdg_cabinet_user
+        (
+            cabinet_id,
+            user_id,
+            agent_id,
+            create_time
+        ) VALUES (
+            #{cabinetId},
+            #{userId},
+            #{agentId},
+            #{createTime}
+        )
+    </insert>
+
+    <delete id="delete" >
+        delete from hdg_cabinet_user where cabinet_id = #{cabinetId} and user_id = #{userId}
+    </delete>
+
+
+</mapper>

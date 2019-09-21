@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.agentappserver.persistence.basic.CustomerInstallmentRecordMapper">
+
+    <update id="clearExchangeSettingId">
+        update bas_customer_installment_record
+        set exchange_setting_id = null
+        where exchange_setting_id = #{exchangeSettingId}
+    </update>
+
+    <update id="clearRentSettingId">
+        update bas_customer_installment_record
+        set rent_setting_id = null
+        where rent_setting_id = #{rentSettingId}
+    </update>
+
+</mapper>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.hdg.BatteryOrderRefundMapper">
+
+    <select id="find" parameterType="String" resultType="cn.com.yusong.yhdg.common.domain.hdg.BatteryOrderRefund">
+        select * from hdg_battery_order_refund where id = #{id}
+    </select>
+
+    <select id="findCountByCabinet" resultType="int">
+        select
+        count(*)
+        from hdg_battery_order_refund
+        where cabinet_id = #{cabinetId}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.hdg.BatteryOrderRefund" resultType="int">
+        select
+        count(*)
+        from hdg_battery_order_refund
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null">
+                and agent_id= #{agentId}
+            </if>
+            <if test="customerFullname != null and customerFullname != ''">
+                <![CDATA[and customer_fullname LIKE concat('%', #{customerFullname}, '%')]]>
+            </if>
+            <if test="customerMobile != null and customerMobile != ''">
+                <![CDATA[and customer_mobile LIKE concat(#{customerMobile}, '%')]]>
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.hdg.BatteryOrderRefund" resultType="cn.com.yusong.yhdg.common.domain.hdg.BatteryOrderRefund">
+        select
+        *
+        from hdg_battery_order_refund
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null">
+                and agent_id= #{agentId}
+            </if>
+            <if test="customerFullname != null and customerFullname != ''">
+                <![CDATA[and customer_fullname LIKE concat('%', #{customerFullname}, '%')]]>
+            </if>
+            <if test="customerMobile != null and customerMobile != ''">
+                <![CDATA[and customer_mobile LIKE concat(#{customerMobile}, '%')]]>
+            </if>
+        </trim>
+    </select>
+
+    <insert id="insert">
+        insert into hdg_battery_order_refund (id, agent_id, money, customer_id,
+        customer_mobile, customer_fullname, refund_status, refund_reason, apply_refund_time, refund_time, refund_money, refund_photo, refund_operator, create_time)
+        VALUES (#{id}, #{agentId}, #{money}, #{customerId},
+        #{customerMobile}, #{customerFullname}, #{refundStatus}, #{refundReason}, #{applyRefundTime}, #{refundTime}, #{refundMoney}, #{refundPhoto}, #{refundOperator}, #{createTime}
+        )
+    </insert>
+
+    <delete id="deleteByCustomerId">
+        delete from hdg_battery_order_refund where customer_id = #{customerId}
+    </delete>
+</mapper>

@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.batteryserver.persistence.hdg.UnregisterBatteryReportLogMapper">
+
+    <select id="findTable" parameterType="string" resultType="String" >
+        show tables like #{tableName}
+    </select>
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.hdg.UnregisterBatteryReportLog">
+        select
+            *
+        from hdg_unregister_battery_report_log_${suffix}
+        where code = #{code}
+        and create_time = #{createTime}
+    </select>
+
+    <update id="createTable">
+        create table if not exists ${tableName} (
+            code varchar(40) not null,
+            version varchar(40),
+            voltage int, /*电压*/
+            electricity int, /*电流*/
+            current_capacity smallint(6), /*当前电量*/
+            total_capacity smallint, /*总容量*/
+            use_count int,
+            produce_date datetime, /*生产日期*/
+            protect_state int, /*保护状态*/
+            fet_status tinyint, /*0充电  1放电  2不充电也不放电*/
+            strand tinyint, /*电池串数*/
+            temp varchar(40), /*温度*/
+            lng double, /*经度*/
+            lat double, /*纬度*/
+            fet tinyint, /*bit0表示充电，bit1表示放电，0表示MOS关闭，1表示打开*/
+            position_state tinyint, /*0表示位置不移动 1表示位置移动中 2表示通电中*/
+            current_signal smallint, /*当前信号*/
+            sim_code varchar(40), /*sim卡号*/
+            single_voltage varchar(100), /*电池每串单体电压*/
+            volume tinyint,
+            create_time datetime not null,
+            primary key(code, create_time)
+        ) engine=innodb default charset=utf8;
+    </update>
+
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.UnregisterBatteryReportLog">
+        insert into hdg_unregister_battery_report_log_${suffix} (
+            code,
+            version,
+            voltage,
+            electricity,
+            current_capacity,
+            total_capacity,
+            use_count,
+            produce_date,
+            protect_state,
+            fet_status,
+            strand,
+            temp,
+            lng,
+            lat,
+            fet,
+            position_state,
+            current_signal,
+            sim_code,
+            single_voltage,
+            volume,
+            create_time
+        ) values (
+            #{code},
+            #{version},
+            #{voltage},
+            #{electricity},
+            #{currentCapacity},
+            #{totalCapacity},
+            #{useCount},
+            #{produceDate},
+            #{protectState},
+            #{fetStatus},
+            #{strand},
+            #{temp},
+            #{lng},
+            #{lat},
+            #{fet},
+            #{positionState},
+            #{currentSignal},
+            #{simCode},
+            #{singleVoltage},
+            #{volume},
+            #{createTime}
+        )
+    </insert>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.hdg.UnregisterBatteryReportLog">
+        update hdg_unregister_battery_report_log_${suffix} set
+        <trim suffix="" suffixOverrides=",">
+            <if test="id != null">
+                code = #{code},
+            </if>
+            <if test="version != null">
+                version = #{version},
+            </if>
+            <if test="voltage != null">
+                voltage = #{voltage},
+            </if>
+            <if test="electricity != null">
+                electricity = #{electricity},
+            </if>
+            <if test="currentCapacity != null">
+                current_capacity = #{currentCapacity},
+            </if>
+            <if test="totalCapacity != null">
+                total_capacity = #{totalCapacity},
+            </if>
+            <if test="useCount != null">
+                use_count = #{useCount},
+            </if>
+            <if test="produceDate != null">
+                produce_date = #{produceDate},
+            </if>
+            <if test="protectState != null">
+                protect_state = #{protectState},
+            </if>
+            <if test="fetStatus != null">
+                fet_status = #{fetStatus},
+            </if>
+            <if test="strand != null">
+                strand = #{strand},
+            </if>
+            <if test="temp != null">
+                temp = #{temp},
+            </if>
+            <if test="lng != null">
+                lng = #{lng},
+            </if>
+            <if test="lat != null">
+                lat = #{lat},
+            </if>
+            <if test="fet != null">
+                fet = #{fet},
+            </if>
+            <if test="positionState != null">
+                position_state = #{positionState},
+            </if>
+            <if test="currentSignal != null">
+                current_signal = #{currentSignal},
+            </if>
+            <if test="simCode != null">
+                sim_code = #{simCode},
+            </if>
+            <if test="singleVoltage != null">
+                single_voltage = #{singleVoltage},
+            </if>
+            <if test="volume != null">
+                volume = #{volume},
+            </if>
+            <if test="reportTime != null">
+                report_time = #{reportTime},
+            </if>
+        </trim>
+        where id=#{id}
+    </update>
+
+</mapper>

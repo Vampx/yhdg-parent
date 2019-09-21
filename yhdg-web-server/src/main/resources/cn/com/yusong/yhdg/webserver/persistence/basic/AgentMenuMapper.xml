@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.basic.AgentMenuMapper">
+
+    <select id="findByMenuName" resultType="cn.com.yusong.yhdg.common.domain.basic.AgentMenu">
+        select
+        *
+        from bas_agent_menu
+        where menu_name = #{menuName}
+    </select>
+
+    <select id="findRootsByClientType" resultType="string">
+        select
+        id
+        from bas_agent_menu
+        where parent_id is null and client_type = #{clientType}
+        order by menu_pos asc
+    </select>
+
+    <select id="findAllByClientType" resultType="cn.com.yusong.yhdg.common.domain.basic.AgentMenu">
+        select
+        *
+        from bas_agent_menu
+        where client_type = #{clientType}
+        order by menu_pos asc
+    </select>
+
+</mapper>

@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.serviceserver.persistence.hdg.CabinetMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.hdg.Cabinet">
+        SELECT
+          *
+        FROM
+          hdg_cabinet
+        WHERE id = #{id}
+    </select>
+
+    <select id="findByMac" resultType="cn.com.yusong.yhdg.common.domain.hdg.Cabinet">
+        select
+        *
+        from hdg_cabinet
+        where mac = #{mac}
+    </select>
+
+
+    <select id="findAllId" resultType="string">
+        SELECT
+          id
+        FROM
+          hdg_cabinet
+    </select>
+
+    <select id="findAgentIncrement" resultType="cn.com.yusong.yhdg.common.domain.hdg.AgentDayStats">
+        SELECT
+        agent_id AS agentId,
+        count(id) AS cabinetCount
+        FROM
+        hdg_cabinet
+        WHERE  agent_id is not null and up_line_status = 2
+        group by agent_id
+    </select>
+
+    <select id="findIncrement" resultType="int">
+        SELECT
+          ifnull(count(*),0)
+        FROM
+          hdg_cabinet
+        WHERE   create_time &lt;= #{endTime}
+        AND     create_time &gt;= #{beginTime}
+    </select>
+    <select id="findTotal" resultType="int">
+        SELECT
+          ifnull(count(*),0)
+        FROM
+          hdg_cabinet
+    </select>
+
+    <select id="findNeedForegiftList" resultType="cn.com.yusong.yhdg.common.domain.hdg.Cabinet">
+        SELECT
+        *
+        FROM
+        hdg_cabinet
+        WHERE up_line_status = 2
+        AND foregift_money > 0
+        AND up_line_time is not null and DATE_FORMAT(up_line_time, '%Y-%m-%d')  &lt;= #{statsTime}
+        AND NOT EXISTS
+          (SELECT
+            1
+          FROM
+            hdg_agent_cabinet_foregift_record
+          WHERE hdg_agent_cabinet_foregift_record.cabinet_id = hdg_cabinet.id
+            AND hdg_agent_cabinet_foregift_record.agent_id = hdg_cabinet.agent_Id)
+    </select>
+
+    <select id="findNeedRentList" resultType="cn.com.yusong.yhdg.common.domain.hdg.Cabinet">
+        SELECT
+        *
+        FROM
+        hdg_cabinet
+        WHERE up_line_status = 2
+        AND rent_money > 0
+        and rent_period_type > 0
+        and (rent_record_time is null or rent_record_time &lt; #{statsTime})
+    </select>
+
+    <select id="findByActiveStatus" resultType="cn.com.yusong.yhdg.common.domain.hdg.Cabinet">
+        <![CDATA[
+
+        select
+            *
+        from hdg_cabinet
+        where active_status = #{activeStatus}
+
+        ]]>
+    </select>
+
+    <update id="updateAllFullCount">
+        update hdg_cabinet set all_full_count = #{allFullCount}, all_full_fault_log_id = #{allFullFaultLogId} where id = #{id}
+    </update>
+
+    <update id="updateUseVolume">
+        update hdg_cabinet set use_volume = #{useVolume} where id = #{id}
+    </update>
+
+    <select id="findByHeartTime" resultType="cn.com.yusong.yhdg.common.domain.hdg.Cabinet">
+        SELECT
+        *
+        FROM
+        hdg_cabinet
+        WHERE is_online = 1
+        AND heart_time &lt; #{heartTime}
+        LIMIT #{limit}
+    </select>
+
+    <select id="findByOfflineMessageTime" resultType="cn.com.yusong.yhdg.common.domain.hdg.Cabinet">
+        SELECT
+        *
+        FROM
+        hdg_cabinet
+        WHERE is_online = 0
+        AND heart_time &lt; #{heartTime}
+        AND offline_fault_log_id is null
+        and id is not null
+        LIMIT #{limit}
+    </select>
+
+
+    <select id="findBySubtype" resultType="cn.com.yusong.yhdg.common.domain.hdg.Cabinet">
+        SELECT
+        id,
+        (select count(*) from hdg_cabinet_box t1 inner join hdg_battery t2 on t1.battery_id = t2.id where t1.cabinet_id = t.id and t2.status = #{batteryStatus} and charge_status in (2, 3)) as charging_count,
+        max_charge_count
+        FROM
+        hdg_cabinet t
+        where subtype = #{subtype}
+        limit ${offset}, ${limit}
+    </select>
+
+    <select id="findAll" resultType="cn.com.yusong.yhdg.common.domain.hdg.Cabinet">
+        SELECT
+         *
+        from hdg_cabinet
+        order by id
+        limit ${offset}, ${limit}
+    </select>
+
+    <select id="findAllByAgent" resultType="cn.com.yusong.yhdg.common.domain.hdg.Cabinet">
+        SELECT
+        *
+        from hdg_cabinet
+        WHERE agent_id = #{agentId}
+        order by id
+        limit ${offset}, ${limit}
+    </select>
+
+    <select id="findByNotAgent" resultType="cn.com.yusong.yhdg.common.domain.hdg.Cabinet">
+        SELECT
+        *
+        from hdg_cabinet WHERE 1 = 1
+        <foreach collection="agentIdList" item="item" open=" AND agent_id not in (" separator="," close=")">
+            #{item}
+        </foreach>
+        order by id
+        limit ${offset}, ${limit}
+    </select>
+
+    <update id="updateOnline">
+        update hdg_cabinet set is_online = #{isOnline} where id = #{id}
+    </update>
+
+    <update id="updateRentRecordTime">
+        update hdg_cabinet set rent_record_time = #{rentRecordTime} where id = #{id}
+    </update>
+
+    <update id="updateOfflineMessageTime">
+        update hdg_cabinet set offline_fault_log_id = #{offlineFaultLogId} where id = #{id}
+    </update>
+
+</mapper>

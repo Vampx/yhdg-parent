@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.hdg.ExchangeInstallmentStationMapper">
+
+    <select id="findStationId" parameterType="cn.com.yusong.yhdg.common.domain.hdg.ExchangeInstallmentStation" resultType="cn.com.yusong.yhdg.common.domain.hdg.ExchangeInstallmentStation">
+        select
+        *
+        from hdg_exchange_installment_station
+        where station_id = #{stationId}
+         AND setting_id = #{settingId}
+    </select>
+
+    <select id="findSettingId" parameterType="long" resultType="cn.com.yusong.yhdg.common.domain.hdg.ExchangeInstallmentStation">
+        select
+        *
+        from hdg_exchange_installment_station
+        where setting_id = #{settingId}
+    </select>
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.ExchangeInstallmentStation">
+        insert into hdg_exchange_installment_station (
+        setting_id,
+        station_id,
+        station_name
+        )
+        values(
+        #{settingId},
+        #{stationId},
+        #{stationName}
+        )
+    </insert>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.hdg.ExchangeInstallmentStation">
+        update hdg_exchange_installment_station set
+        <trim suffix="" suffixOverrides=",">
+            <if test="stationName != null and stationName != ''">
+                station_name = #{stationName},
+            </if>
+        </trim>
+        where station_id = #{stationId} and  setting_id = #{settingId}
+    </update>
+
+
+
+
+    <delete id="deleteStationId"  parameterType="cn.com.yusong.yhdg.common.domain.hdg.ExchangeInstallmentStation">
+        delete from hdg_exchange_installment_station where station_id = #{stationId} AND setting_id = #{settingId}
+    </delete>
+
+
+</mapper>

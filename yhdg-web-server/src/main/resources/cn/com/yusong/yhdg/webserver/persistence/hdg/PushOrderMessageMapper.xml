@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.hdg.PushOrderMessageMapper">
+
+    <insert id="insert">
+        insert into hdg_push_order_message (agent_id, send_status, source_type, source_id, create_time)
+        values(#{agentId}, #{sendStatus}, #{sourceType}, #{sourceId},  #{createTime})
+    </insert>
+
+</mapper>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.appserver.persistence.hdg.KeepPutOrderMapper">
+
+    <select id="findList" resultType="cn.com.yusong.yhdg.common.domain.hdg.KeepPutOrder">
+            select
+            torder.*
+            from hdg_keep_put_order as torder
+            where torder.dispatcher_id = #{dispatcherId}
+            order by create_time DESC
+        Limit #{offset},#{limit}
+    </select>
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.hdg.KeepPutOrder">
+        select
+        torder.*
+        from   hdg_keep_put_order as torder
+        where  torder.id = #{id}
+    </select>
+
+
+</mapper>

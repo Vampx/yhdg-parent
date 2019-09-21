@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.hdg.VipPriceMapper">
+
+    <select id="find" parameterType="long" resultType="cn.com.yusong.yhdg.common.domain.hdg.VipPrice">
+        SELECT
+        *
+        FROM hdg_vip_price
+        WHERE id = #{id}
+    </select>
+
+    <select id="findByBatteryType" resultType="cn.com.yusong.yhdg.common.domain.hdg.VipPrice">
+        SELECT
+        *
+        FROM hdg_vip_price
+        WHERE agent_id = #{agentId} and battery_type = #{batteryType} limit 1
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.hdg.VipPrice" resultType="int">
+        select
+        count(*)
+        from hdg_vip_price
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null">
+                and agent_id = #{agentId}
+            </if>
+            <if test="priceName != null and priceName != ''">
+                <![CDATA[and price_name LIKE concat('%', #{priceName}, '%')]]>
+            </if>
+        </trim>
+    </select>
+
+    <select id="findByIsActive" resultType="cn.com.yusong.yhdg.common.domain.hdg.VipPrice">
+        <![CDATA[
+            SELECT
+            *
+            FROM hdg_vip_price
+            WHERE id = #{id}
+            and #{now} >= begin_time
+            and #{now} <= end_time
+            and is_active = 1
+        ]]>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.hdg.VipPrice"
+            resultType="cn.com.yusong.yhdg.common.domain.hdg.VipPrice">
+        select
+          *
+        from hdg_vip_price
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null">
+                and agent_id = #{agentId}
+            </if>
+            <if test="priceName != null and priceName != ''">
+                <![CDATA[and price_name LIKE concat('%', #{priceName}, '%')]]>
+            </if>
+        </trim>
+        order by id desc
+        limit #{beginIndex}, #{rows}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.VipPrice" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO hdg_vip_price(
+          agent_id,
+          battery_type,
+          price_name,
+          begin_time,
+          end_time,
+          cabinet_count,
+          customer_count,
+          shop_count,
+          agent_company_count,
+          station_count,
+          is_active,
+          create_time
+        ) VALUES (
+          #{agentId},
+          #{batteryType},
+          #{priceName},
+          #{beginTime},
+          #{endTime},
+          #{cabinetCount},
+          #{customerCount},
+          #{shopCount},
+          #{agentCompanyCount},
+          #{stationCount},
+          #{isActive},
+          #{createTime}
+        )
+    </insert>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.hdg.VipPrice">
+        update hdg_vip_price set
+               agent_id = #{agentId},
+               battery_type = #{batteryType},
+               price_name = #{priceName},
+               begin_time = #{beginTime},
+               end_time = #{endTime},
+               cabinet_count = #{cabinetCount},
+               customer_count = #{customerCount},
+               station_count = #{stationCount},
+               is_active = #{isActive}
+        where id = #{id}
+    </update>
+
+    <update id="updateCustomerCount">
+        update hdg_vip_price set
+        customer_count = #{customerCount}
+        where id = #{id}
+    </update>
+
+    <update id="updateCabinetCount">
+        update hdg_vip_price set
+        cabinet_count = #{cabinetCount}
+        where id = #{id}
+    </update>
+
+    <update id="updateStationCount">
+        update hdg_vip_price set
+        station_count = #{stationCount}
+        where id = #{id}
+    </update>
+
+    <update id="updateShopCount">
+        update hdg_vip_price set
+        shop_count = #{shopCount}
+        where id = #{id}
+    </update>
+
+    <update id="updateAgentCompanyCount">
+        update hdg_vip_price set
+        agent_company_count = #{agentCompanyCount}
+        where id = #{id}
+    </update>
+
+    <delete id="delete">
+        delete from hdg_vip_price where id = #{id}
+    </delete>
+
+</mapper>

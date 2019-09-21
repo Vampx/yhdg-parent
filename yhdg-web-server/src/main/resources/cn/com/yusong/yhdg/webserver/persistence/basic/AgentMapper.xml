@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.basic.AgentMapper">
+
+    <select id="find" parameterType="long" resultType="cn.com.yusong.yhdg.common.domain.basic.Agent">
+        select
+            *
+        from bas_agent
+        where id = #{id}
+    </select>
+
+    <select id="findByPayPeopleMobile" parameterType="String" resultType="cn.com.yusong.yhdg.common.domain.basic.Agent">
+        select
+        *
+        from bas_agent
+        where pay_people_mobile = #{payPeopleMobile} limit 1
+    </select>
+
+    <select id="findCountByParentId" resultType="int">
+        select count(1) from bas_agent  where parent_id = #{id}
+    </select>
+
+    <select id="findAgentInfo" resultType="cn.com.yusong.yhdg.common.domain.basic.AgentInfo">
+        select
+            id,
+            agent_name as agentName
+        from bas_agent
+        where id = #{id}
+    </select>
+
+    <select id="findAll" parameterType="int" resultType="cn.com.yusong.yhdg.common.domain.basic.Agent">
+        select
+            *
+        from bas_agent
+    </select>
+
+    <select id="topAgentList" parameterType="int" resultType="cn.com.yusong.yhdg.common.domain.basic.Agent">
+        select
+        *
+        from bas_agent where parent_id is null
+    </select>
+
+    <select id="hasRecordByProperty" resultType="int">
+        select count(id) from bas_agent where
+        <if test="property == 'parentId'">
+            parent_id = #{value}
+        </if>
+    </select>
+
+    <select id="findByParentId" resultType="cn.com.yusong.yhdg.common.domain.basic.Agent">
+        select
+        *
+        from bas_agent
+        <if test="parentId != null and parentId!= 0">
+            where parent_id = #{parentId}
+        </if>
+        <if test="parentId == 0">
+            where parent_id is null
+        </if>
+    </select>
+
+    <select id="findByPartnerId" resultType="cn.com.yusong.yhdg.common.domain.basic.Agent">
+        select
+        *
+        from bas_agent
+        where partner_id = #{partnerId}
+    </select>
+
+    <select id="findTreePageCount" parameterType="cn.com.yusong.yhdg.common.domain.basic.Agent" resultType="int">
+        select
+        count(*)
+        from bas_agent
+        <trim prefix="where" prefixOverrides="and">
+            <if test="parentId == 0">
+                and parent_id is null
+            </if>
+            <if test="parentId != null and parentId > 0 ">
+                and parent_id = #{parentId}
+            </if>
+        </trim>
+    </select>
+
+    <select id="findTreePageResult" parameterType="cn.com.yusong.yhdg.common.domain.basic.Agent" resultType="cn.com.yusong.yhdg.common.domain.basic.Agent">
+        select
+        *
+        from bas_agent
+        <trim prefix="where" prefixOverrides="and">
+        <if test="parentId == 0">
+                and parent_id is null
+            </if>
+            <if test="parentId != null and parentId > 0 ">
+                and parent_id = #{parentId}
+            </if>
+        </trim>
+        order by id desc
+        limit ${beginIndex}, ${rows}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.basic.Agent" resultType="int">
+        select
+        count(id)
+        from bas_agent
+        <trim prefix="where" prefixOverrides="and">
+            <if test="partnerId != null ">
+                and  partner_id = #{partnerId}
+            </if>
+            <if test="parentId != null ">
+                and  parent_id = #{parentId}
+            </if>
+            <if test="id != null ">
+                and (id = #{id} or parent_id = #{id})
+            </if>
+            <if test="balanceStatus != null ">
+                and balance_status = #{balanceStatus}
+            </if>
+            <if test="weixinmpId != null ">
+                and weixinmp_id = #{weixinmpId}
+            </if>
+            <if test="alipayfwId != null ">
+                and alipayfw_id = #{alipayfwId}
+            </if>
+            <if test="grade != null and grade != ''">
+                and grade = #{grade}
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.basic.Agent"
+            resultType="cn.com.yusong.yhdg.common.domain.basic.Agent">
+        select
+        *
+        from bas_agent
+        <trim prefix="where" prefixOverrides="and">
+            <if test="partnerId != null ">
+                and  partner_id = #{partnerId}
+            </if>
+            <if test="parentId != null ">
+                and  parent_id = #{parentId}
+            </if>
+            <if test="id != null ">
+                and (id = #{id} or parent_id = #{id})
+            </if>
+            <if test="balanceStatus != null ">
+                and balance_status = #{balanceStatus}
+            </if>
+            <if test="weixinmpId != null ">
+                and weixinmp_id = #{weixinmpId}
+            </if>
+            <if test="alipayfwId != null ">
+                and alipayfw_id = #{alipayfwId}
+            </if>
+            <if test="grade != null and grade != ''">
+                and grade = #{grade}
+            </if>
+        </trim>
+        order by id desc
+        limit ${beginIndex}, ${rows}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.Agent" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into bas_agent(partner_id,
+                                        parent_id,
+                                        agent_name,
+                                        order_num,
+                                        memo,
+                                        is_active,
+                                        balance_status,
+                                        balance,
+                                        foregift_balance,
+                                        foregift_remain_money,
+                                        foregift_balance_ratio,
+                                        zd_foregift_balance,
+                                        zd_foregift_remain_money,
+                                        zd_foregift_balance_ratio,
+                                        province_id,
+                                        city_id,
+                                        district_id,
+                                        street,
+                                        linkman,
+                                        tel,
+                                        province_agent_id,
+                                        city_agent_id,
+                                        grade,
+                                        weixinmp_id,
+                                        weixinma_id,
+                                        alipayfw_id,
+                                        phoneapp_id,
+                                        is_exchange,
+                                        is_rent,
+                                        is_vehicle,
+                                        create_time)
+                            values(#{partnerId},
+                                      #{parentId},
+                                      #{agentName},
+                                      #{orderNum},
+                                      #{memo},
+                                      #{isActive},
+                                      #{balanceStatus},
+                                      #{balance},
+                                      #{foregiftBalance},
+                                      #{foregiftRemainMoney},
+                                      #{foregiftBalanceRatio},
+                                      #{zdForegiftBalance},
+                                      #{zdForegiftRemainMoney},
+                                      #{zdForegiftBalanceRatio},
+                                      #{provinceId},
+                                      #{cityId},
+                                      #{districtId},
+                                      #{street},
+                                      #{linkman},
+                                      #{tel},
+                                      #{provinceAgentId},
+                                      #{cityAgentId},
+                                      #{grade},
+                                      #{weixinmpId},
+                                      #{weixinmaId},
+                                      #{alipayfwId},
+                                      #{phoneappId},
+                                      #{isExchange},
+                                      #{isRent},
+                                      #{isVehicle},
+                                      #{createTime})
+    </insert>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.basic.Agent">
+        update bas_agent set
+            partner_id = #{partnerId},
+            agent_name = #{agentName},
+            memo = #{memo},
+            is_active = #{isActive},
+            province_id = #{provinceId},
+            city_id = #{cityId},
+            district_id = #{districtId},
+            linkman = #{linkman},
+            tel = #{tel},
+            province_agent_id = #{provinceAgentId},
+            city_agent_id = #{cityAgentId},
+            grade = #{grade},
+            weixinmp_id = #{weixinmpId},
+            weixinma_id = #{weixinmaId},
+            alipayfw_id = #{alipayfwId},
+            is_exchange = #{isExchange},
+            is_rent = #{isRent},
+            is_vehicle = #{isVehicle},
+            balance_status = #{balanceStatus},
+            phoneapp_id = #{phoneappId}
+        where id = #{id}
+    </update>
+
+    <update id="updateBalance">
+        <choose>
+            <when test="balance > 0">
+                update bas_agent set balance = balance + #{balance} where id = #{id}
+            </when>
+            <otherwise>
+                <![CDATA[update bas_agent set balance = balance + #{balance} where id = #{id} and balance + #{balance} >= 0]]>
+            </otherwise>
+        </choose>
+    </update>
+
+    <update id="updateForegift">
+        UPDATE bas_agent SET
+        foregift_balance = #{foregiftBalance},
+        foregift_remain_money = #{foregiftRemainMoney},
+        foregift_balance_ratio = #{foregiftBalanceRatio}
+        where id = #{id}
+    </update>
+
+    <update id="updateZdForegift">
+        UPDATE bas_agent SET
+        zd_foregift_balance = #{foregiftBalance},
+        zd_foregift_remain_money = #{foregiftRemainMoney},
+        zd_foregift_balance_ratio = #{foregiftBalanceRatio}
+        where id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="int">
+        delete from bas_agent where id = #{id}
+    </delete>
+
+    <update id="updateOrderNum">
+        update bas_agent set
+        order_num = #{orderNum}
+        where id = #{id}
+    </update>
+
+    <update id="updatePayPeople">
+        UPDATE bas_agent SET
+        pay_people_name = #{payPeopleName},
+        pay_people_mp_open_id = #{payPeopleMpOpenId},
+        pay_people_fw_open_id = #{payPeopleFwOpenId},
+        <if test="payPassword != null and payPassword != ''">
+            pay_password = #{payPassword},
+        </if>
+        pay_people_mobile = #{payPeopleMobile}
+        where id = #{id}
+    </update>
+
+</mapper>

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.basic.CustomerForegiftRefundDetailedMapper">
+    <select id="find"  resultType="cn.com.yusong.yhdg.common.domain.basic.CustomerForegiftRefundDetailed">
+        select
+        *
+        from bas_customer_foregift_refund_detailed
+        where id = #{id} and num = #{num}
+    </select>
+
+   <select id="findMaxNum" parameterType="String" resultType="int">
+        select
+        num
+        from bas_customer_foregift_refund_detailed
+        where id = #{id}
+        ORDER BY num DESC
+        limit 1
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.basic.CustomerForegiftRefundDetailed" resultType="int">
+        select
+        count(*)
+        from bas_customer_foregift_refund_detailed
+        <trim prefix="where" prefixOverrides="and">
+            <if test="id != null">
+                id = #{id}
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.basic.CustomerForegiftRefundDetailed"
+            resultType="cn.com.yusong.yhdg.common.domain.basic.CustomerForegiftRefundDetailed">
+        select
+        *
+        from bas_customer_foregift_refund_detailed
+        <trim prefix="where" prefixOverrides="and">
+            <if test="id != null">
+                id = #{id}
+            </if>
+        </trim>
+        order by num
+        limit ${beginIndex}, ${rows}
+    </select>
+
+    <insert id="insert"  parameterType="cn.com.yusong.yhdg.common.domain.basic.CustomerForegiftRefundDetailed" >
+        INSERT INTO
+        bas_customer_foregift_refund_detailed
+        (
+        id,
+        num,
+        refund_money,
+        refund_photo,
+        refund_type,
+        refund_operator,
+        create_time
+        )
+        VALUES
+        (
+        #{id},
+        #{num},
+        #{refundMoney},
+        #{refundPhoto},
+        #{refundType},
+        #{refundOperator},
+        #{createTime}
+        )
+    </insert>
+
+    <delete id="deleteByCustomerId">
+        DELETE b
+        FROM
+            bas_customer_foregift_order a
+        LEFT JOIN bas_customer_foregift_refund_detailed b ON a.id = b.id
+        WHERE
+            a.customer_id = #{customerId}
+    </delete>
+
+</mapper>

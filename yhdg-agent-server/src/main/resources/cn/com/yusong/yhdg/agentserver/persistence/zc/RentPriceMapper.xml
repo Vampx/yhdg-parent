@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.zc.RentPriceMapper">
+    
+    <select id="find" parameterType="long" resultType="cn.com.yusong.yhdg.common.domain.zc.RentPrice">
+        select
+        *
+        from zc_rent_price
+        where id = #{id}
+    </select>
+
+    <select id="findListBySetting" resultType="cn.com.yusong.yhdg.common.domain.zc.RentPrice">
+        select
+        *
+        from zc_rent_price
+        where price_setting_id = #{priceSettingId}
+    </select>
+
+    <select id="findListByBatteryType" resultType="cn.com.yusong.yhdg.common.domain.zc.RentPrice">
+        select
+        *
+        from zc_rent_price
+        where 1=1
+        <if test="batteryType != null">
+            and battery_type = #{batteryType}
+        </if>
+        and agent_id = #{agentId}
+        and price_setting_id = #{priceSettingId}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.zc.RentPrice" useGeneratedKeys="true" keyProperty="id">
+        insert into zc_rent_price(
+            price_name,
+            price_setting_id,
+            battery_type,
+            agent_id,
+            agent_name,
+            agent_code,
+            foregift_price,
+            vehicle_foregift_price,
+            battery_foregift_price,
+            rent_price,
+            day_count,
+            vehicle_rent_price,
+            battery_rent_price,
+            memo
+        ) values (
+            #{priceName},
+            #{priceSettingId},
+            #{batteryType},
+            #{agentId},
+            #{agentName},
+            #{agentCode},
+            #{foregiftPrice},
+            #{vehicleForegiftPrice},
+            #{batteryForegiftPrice},
+            #{rentPrice},
+            #{dayCount},
+            #{vehicleRentPrice},
+            #{batteryRentPrice},
+            #{memo}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE zc_rent_price SET
+            price_name = #{priceName},
+            price_setting_id = #{priceSettingId},
+            battery_type = #{batteryType},
+            agent_id = #{agentId},
+            agent_name = #{agentName},
+            agent_code = #{agentCode},
+            foregift_price = #{foregiftPrice},
+            vehicle_foregift_price = #{vehicleForegiftPrice},
+            battery_foregift_price = #{batteryForegiftPrice},
+            rent_price = #{rentPrice},
+            day_count = #{dayCount},
+            vehicle_rent_price = #{vehicleRentPrice},
+            battery_rent_price = #{batteryRentPrice},
+            memo = #{memo}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="long">
+        delete from zc_rent_price where id = #{id}
+    </delete>
+
+    <delete id="deleteBySettingId" parameterType="long">
+        delete from zc_rent_price where price_setting_id = #{priceSettingId}
+    </delete>
+
+</mapper>

@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.appserver.persistence.basic.CustomerMapper">
+
+    <select id="find" parameterType="long" resultType="cn.com.yusong.yhdg.common.domain.basic.Customer">
+        select
+        *
+        from bas_customer
+        where id = #{id}
+    </select>
+
+    <select id="findByMpOpenId" resultType="cn.com.yusong.yhdg.common.domain.basic.Customer">
+        select
+        *
+        from bas_customer
+        where partner_id = #{partnerId} and mp_open_id = #{mpOpenId}
+        limit 1
+    </select>
+
+    <select id="findByMaOpenId" resultType="cn.com.yusong.yhdg.common.domain.basic.Customer">
+        select
+        *
+        from bas_customer
+        where partner_id = #{partnerId} and ma_open_id = #{maOpenId}
+        limit 1
+    </select>
+
+    <select id="findByFwOpenId" resultType="cn.com.yusong.yhdg.common.domain.basic.Customer">
+        select
+        *
+        from bas_customer
+        where partner_id = #{partnerId} and fw_open_id = #{fwOpenId}
+        limit 1
+    </select>
+
+    <select id="findByMobile" resultType="cn.com.yusong.yhdg.common.domain.basic.Customer">
+        select
+        *
+        from bas_customer
+        where partner_id = #{partnerId} and mobile = #{mobile}
+        limit 1
+    </select>
+
+    <select id="findByIdCard" resultType="cn.com.yusong.yhdg.common.domain.basic.Customer">
+        select
+        *
+        from bas_customer
+        where partner_id = #{partnerId} and id_card = #{idCard}
+        limit 1
+    </select>
+
+    <select id="findListByAgent" resultType="cn.com.yusong.yhdg.common.domain.basic.Customer">
+        select
+        *
+        from bas_customer
+        where agent_id = #{agentId}
+        limit ${offset},${limit}
+    </select>
+
+    <select id="findFaceList" resultType="cn.com.yusong.yhdg.common.domain.basic.Customer">
+        select
+        *
+        from bas_customer
+        where face_path1 is not null or  face_path2 is not null or  face_path3 is not null
+        limit ${offset},${limit}
+    </select>
+
+    <select id="findLoginToken" resultType="string">
+        select
+            login_token
+        from bas_customer
+        where id = #{id}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.Customer" useGeneratedKeys="true" keyProperty="id">
+            insert into bas_customer(
+            partner_id,
+            agent_id,
+            mp_open_id,
+            ma_open_id,
+            fw_open_id,
+            mobile,
+            password,
+            balance,
+            photo_path,
+            nickname,
+            fullname,
+            ic_card,
+            id_card,
+            is_active,
+            register_type,
+            push_token,
+            gift_balance,
+            hd_foregift_status,
+            zd_foregift_status,
+            auth_status,
+            create_time
+        ) values (
+            #{partnerId},
+            #{agentId},
+            #{mpOpenId},
+            #{maOpenId},
+            #{fwOpenId},
+            #{mobile},
+            #{password},
+            #{balance},
+            #{photoPath},
+            #{nickname},
+            #{fullname},
+            #{icCard},
+            #{idCard},
+            #{isActive},
+            #{registerType},
+            #{pushToken},
+            #{giftBalance},
+            #{hdForegiftStatus},
+            #{zdForegiftStatus},
+            #{authStatus},
+            #{createTime}
+        )
+    </insert>
+
+    <update id="updateCertification">
+        update bas_customer set
+        fullname = #{fullname},
+        id_card  = #{idCard},
+        id_card_face = #{idCardFace},
+        id_card_rear = #{idCardRear},
+        auth_face_path = #{authFacePath}
+        where id = #{id}
+    </update>
+
+    <update id="updateCertification2">
+        update bas_customer set
+        fullname = #{fullname},
+        id_card  = #{idCard},
+        auth_status = #{authStatus}
+        where id = #{id}
+    </update>
+
+    <update id="updateAuthFacePath">
+        update bas_customer set
+        auth_face_path = #{authFacePath}
+        where id = #{id}
+    </update>
+
+    <update id="updateInfo">
+        update bas_customer set
+        <trim suffix="" suffixOverrides=",">
+            <if test="photoPath != null">photo_path = #{photoPath},</if>
+            <if test="facePath1 != null">face_path1 = #{facePath1},</if>
+            <if test="facePath2 != null">face_path2 = #{facePath2},</if>
+            <if test="facePath3 != null">face_path3 = #{facePath3},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="updateBalance">
+        <choose>
+            <when test="balance > 0 and giftBalance > 0">
+                update bas_customer set balance = balance + #{balance},gift_balance = gift_balance + #{giftBalance} where id = #{id}
+            </when>
+            <otherwise>
+                <![CDATA[update bas_customer set balance = balance + #{balance},gift_balance = gift_balance + #{giftBalance} where id = #{id} and balance + #{balance} >= 0 and gift_balance + #{giftBalance} >= 0  ]]>
+            </otherwise>
+        </choose>
+    </update>
+
+    <update id="updateMobile">
+        update bas_customer set mobile = #{mobile} where id = #{id}
+    </update>
+
+    <update id="updatePassword">
+        update bas_customer set password = #{newPassword} where id = #{id} and password = #{oldPassword}
+    </update>
+
+    <update id="updatePassword2">
+        update bas_customer set password = #{password} where id = #{id}
+    </update>
+
+    <update id="updateBatteryType">
+        update bas_customer set battery_type = #{batteryType} where id = #{id}
+    </update>
+
+    <update id="updateLoginToken">
+        update bas_customer set
+            login_token = #{loginToken}
+            <if test="loginTime != null">
+                ,login_time = #{loginTime}
+            </if>
+            <if test="loginType != null">
+                ,login_type = #{loginType}
+            </if>
+        where id = #{id}
+    </update>
+
+    <update id="updateMpLoginToken">
+        update bas_customer set
+        mp_login_token = #{mpLoginToken}
+        where id = #{id}
+    </update>
+
+    <update id="updateFwLoginToken">
+        update bas_customer set
+        fw_login_token = #{fwLoginToken}
+        where id = #{id}
+    </update>
+
+    <update id="updateLoginTime">
+        update bas_customer set
+            login_time = #{loginTime},
+            login_type = #{loginType}
+        where id = #{id}
+    </update>
+
+    <update id="updatePushToken">
+        update bas_customer set push_type = #{pushType},push_token = #{pushToken} where id = #{id}
+    </update>
+
+    <update id="updateMpOpenId">
+        update bas_customer set
+        mp_open_id = #{mpOpenId}
+        <if test="nickname != null and nickname != ''">
+            ,nickname = #{nickname}
+        </if>
+        <if test="photoPath != null and photoPath != ''">
+            ,photo_path = #{photoPath}
+        </if>
+        where id = #{id}
+    </update>
+
+    <update id="updateMaOpenId">
+        update bas_customer set
+        ma_open_id = #{maOpenId}
+        <if test="nickname != null and nickname != ''">
+            ,nickname = #{nickname}
+        </if>
+        <if test="photoPath != null and photoPath != ''">
+            ,photo_path = #{photoPath}
+        </if>
+        where id = #{id}
+    </update>
+
+    <update id="updateFwOpenId">
+        update bas_customer set
+        fw_open_id = #{fwOpenId}
+        <if test="nickname != null and nickname != ''">
+            ,nickname = #{nickname}
+        </if>
+        <if test="photoPath != null and photoPath != ''">
+            ,photo_path = #{photoPath}
+        </if>
+        where id = #{id}
+    </update>
+
+    <update id="updateAgent">
+        update bas_customer set agent_id = #{agentId}  where id = #{id}
+    </update>
+
+    <update id="updateCabinet">
+        update bas_customer set
+        belong_cabinet_id = #{belongCabinetId}
+        where id = #{id}
+    </update>
+
+    <update id="updateIndependentCustomer" >
+        update bas_customer set
+        fullname = #{customerName},
+        mobile = #{customerMobile},
+        id_card = #{idCard},
+        is_active = #{isActive},
+        agent_id = #{agentId},
+        ic_card = #{batteryType}
+        where id = #{id}
+    </update>
+
+    <update id="updateIdCardAuthRecordStats">
+        update bas_customer set id_card_auth_record_status = #{idCardAuthRecordStatus} where id = #{id}
+    </update>
+
+    <update id="updateHdRefundStatus">
+        update bas_customer set hd_refund_status = #{hdRefundStatus} where id = #{id}
+    </update>
+
+    <update id="updateZdRefundStatus">
+        update bas_customer set zd_refund_status = #{zdRefundStatus} where id = #{id}
+    </update>
+
+    <update id="updatePayPassword">
+        update bas_customer set pay_password = #{payPassword} where id = #{id}
+    </update>
+
+    <update id="updateHdForegiftStatus">
+        update bas_customer set hd_foregift_status = #{hdForegiftStatus} where id = #{id}
+    </update>
+
+    <update id="updateZdForegiftStatus">
+        update bas_customer set zd_foregift_status = #{zdForegiftStatus} where id = #{id}
+    </update>
+
+    <update id="updateAlipayAccount">
+        update bas_customer set alipay_account = #{alipayAccount} where id = #{id}
+    </update>
+
+    <update id="updateWxOpenId">
+        update bas_customer set wx_openId = #{wxOpenId} where id = #{id}
+    </update>
+
+    <update id="updateLaxinInfo">
+        update bas_customer set laxin_mobile = #{laxinMobile}, laxin_fullname = #{laxinFullname} where id = #{id}
+    </update>
+
+    <update id="updateAuthStatus">
+        update bas_customer set auth_status = #{authStatus} where id = #{id}
+    </update>
+    <update id="updateFullname">
+        update bas_customer set fullname = #{fullname} where id = #{id}
+    </update>
+
+    <update id="bindCompany">
+        update bas_customer set agent_company_id = #{agentCompanyId} where id = #{id}
+    </update>
+
+    <update id="clearWxOpenId">
+        update bas_customer set wx_open_id = NULL where id = #{id}
+    </update>
+
+    <update id="clearAlipayAccount">
+        update bas_customer set alipay_account = NULL where id = #{id}
+    </update>
+
+    <update id="bindingWxOpenId">
+        update bas_customer set wx_open_id = #{wxOpenId} where id = #{id}
+    </update>
+
+    <update id="bindingAlipayAccount">
+        update bas_customer set alipay_account = #{alipayAccount} where id = #{id}
+    </update>
+
+</mapper>

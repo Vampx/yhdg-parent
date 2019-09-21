@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.appserver.persistence.hdg.PacketPeriodPriceMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.hdg.PacketPeriodPrice">
+        select
+        *
+        from hdg_packet_period_price
+        where id = #{id}
+    </select>
+
+    <select id="findList" resultType="cn.com.yusong.yhdg.common.domain.hdg.PacketPeriodPrice">
+        select
+        *
+        from hdg_packet_period_price
+        where agent_id = #{agentId}
+        AND battery_type = #{batteryType}
+        <if test="foregiftId != null and  foregiftId != 0">
+            AND foregift_id = #{foregiftId}
+        </if>
+        order by day_count desc
+    </select>
+
+    <select id="findPacketPeriodList" resultType="java.util.Map">
+        select
+        *
+        from hdg_packet_period_price
+        where agent_id = #{agentId}
+        AND battery_type = #{batteryType}
+    </select>
+
+</mapper>

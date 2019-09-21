@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.agentappserver.persistence.hdg.ShopTotalStatsMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.hdg.ShopTotalStats">
+        select
+        *
+        from hdg_shop_total_stats
+        where shop_id = #{shopId} and category = #{category} and agent_id = #{agentId}
+        limit 1
+    </select>
+
+    <select id="sumAll" resultType="cn.com.yusong.yhdg.common.domain.hdg.ShopTotalStats">
+        select
+        ifnull(sum(agent_packet_period_count), 0) as agentPacketPeriodCount,
+        ifnull(sum(agent_foregift_count), 0)  as agentForegiftCount,
+        ifnull(sum(agent_refund_foregift_count), 0) as agentRefundForegiftCount
+        from hdg_shop_total_stats
+        where  agent_id = #{agentId}
+    </select>
+
+    <select id="findListByAgentId" resultType="cn.com.yusong.yhdg.common.domain.hdg.ShopTotalStats">
+        select
+        *
+        from hdg_shop_total_stats
+        where agent_id = #{agentId} and category = #{category}
+        <if test="keyword != null and keyword != ''">
+            <![CDATA[and shop_name LIKE concat('%', #{keyword}, '%')]]>
+        </if>
+        limit #{offset}, #{limit}
+    </select>
+
+    <select id="findCountByAgentId" resultType="cn.com.yusong.yhdg.common.domain.hdg.ShopTotalStats">
+        select
+        ifnull(sum(agent_foregift_money), 0) as agentForegiftMoney,
+        ifnull(sum(agent_refund_foregift_money), 0) as agentRefundForegiftMoney,
+
+        ifnull(sum(agent_packet_period_money), 0) as agentPacketPeriodMoney,
+        ifnull(sum(agent_refund_packet_period_money), 0) as agentRefundPacketPeriodMoney,
+
+        ifnull(sum(agent_insurance_money), 0) as agentInsuranceMoney,
+        ifnull(sum(agent_refund_insurance_money), 0) as agentRefundInsuranceMoney,
+
+        ifnull(sum(order_count), 0) as orderCount,
+        ifnull(sum(agent_foregift_count), 0) as agentForegiftCount,
+        ifnull(sum(agent_refund_foregift_count), 0) as agentRefundForegiftCount,
+
+
+        ifnull(sum(packet_period_money), 0) as packetPeriodMoney,
+        ifnull(sum(refund_packet_period_money), 0) as refundPacketPeriodMoney
+
+        from hdg_shop_total_stats
+        where agent_id = #{agentId} and category = #{category}
+    </select>
+
+</mapper>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.basic.MpPushMessageTemplateMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.basic.MpPushMessageTemplate">
+        select
+        *
+        from bas_mp_push_message_template
+        where weixinmp_id = #{weixinmpId} and id = #{id}
+    </select>
+
+    <select id="findByWeixinmpId" resultType="cn.com.yusong.yhdg.common.domain.basic.MpPushMessageTemplate">
+        select
+        *
+        from bas_mp_push_message_template
+         where weixinmp_id = #{weixinmpId}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.basic.MpPushMessageTemplate" resultType="int">
+        select
+        count(id)
+        from bas_mp_push_message_template
+        <trim prefix="where" prefixOverrides="and">
+            <if test="weixinmpId != null">
+                and weixinmp_id = #{weixinmpId}
+            </if>
+
+            <if test="templateName != null and templateName != ''">
+                <![CDATA[and template_name LIKE concat('%', #{templateName}, '%')]]>
+            </if>
+            <if test="receiver != null and receiver != ''">
+                <![CDATA[and receiver LIKE concat('%', #{receiver}, '%')]]>
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.basic.MpPushMessageTemplate" resultType="cn.com.yusong.yhdg.common.domain.basic.MpPushMessageTemplate">
+        select
+        *
+        from bas_mp_push_message_template
+        <trim prefix="where" prefixOverrides="and">
+            <if test="weixinmpId != null">
+                and weixinmp_id = #{weixinmpId}
+            </if>
+
+            <if test="templateName != null and templateName != ''">
+                <![CDATA[and template_name LIKE concat('%', #{templateName}, '%')]]>
+            </if>
+            <if test="receiver != null and receiver != ''">
+                <![CDATA[and receiver LIKE concat('%', #{receiver}, '%')]]>
+            </if>
+        </trim>
+        order by id desc
+        limit #{beginIndex}, #{rows}
+    </select>
+
+    <select id="findByReceiverPageCount" parameterType="cn.com.yusong.yhdg.common.domain.basic.MpPushMessageTemplate" resultType="int">
+        select
+        count(*)
+            FROM bas_mp_push_message_template
+            WHERE receiver = #{receiver}
+    </select>
+
+    <select id="findByUserPageResult" parameterType="cn.com.yusong.yhdg.common.domain.basic.MpPushMessageTemplate" resultType="cn.com.yusong.yhdg.common.domain.basic.MpPushMessageTemplate">
+        SELECT mp.*,IFNULL(user_mp.user_id,0) AS userId FROM bas_mp_push_message_template AS mp
+            LEFT JOIN bas_user_mp_push_message_template AS user_mp
+	        ON mp.id = user_mp.id AND mp.weixinmp_id = user_mp.weixinmp_id AND user_id = #{userId}
+	        LEFT JOIN bas_agent AS agent ON mp.weixinmp_id = agent.weixinmp_id
+	        WHERE receiver = #{receiver} AND mp.weixinmp_id = #{weixinmpId} GROUP BY mp.id,mp.weixinmp_id
+    </select>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.basic.MpPushMessageTemplate">
+        update bas_mp_push_message_template set
+        mp_code = #{mpCode},
+        variable = #{variable},
+        is_active = #{isActive}
+        where weixinmp_id = #{weixinmpId} and id = #{id}
+    </update>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.MpPushMessageTemplate" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO `bas_mp_push_message_template` (id, weixinmp_id, `template_name`, `variable`, `mp_code`, `is_active`, `memo`)
+        VALUES (#{id}, #{weixinmpId}, #{templateName}, #{variable}, #{mpCode}, #{isActive}, #{memo})
+    </insert>
+
+</mapper>

@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.zc.ShopStoreVehicleMapper">
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.zc.ShopStoreVehicle">
+        select
+        zssv.*,
+        zps.setting_name AS settingName,
+        zps.vehicle_name AS vehicleName,
+        zvm.model_name AS modelName,
+        zps.model_id AS modelId
+        from zc_shop_store_vehicle AS zssv LEFT JOIN zc_price_setting AS zps ON zssv.price_setting_id = zps.id
+        LEFT JOIN zc_vehicle_model AS zvm ON zps.model_id = zvm.id
+       where zssv.id = #{id}
+    </select>
+
+    <select id="findByPriceSetting" resultType="cn.com.yusong.yhdg.common.domain.zc.ShopStoreVehicle">
+        select *
+        from zc_shop_store_vehicle
+        where shop_id = #{shopId} and price_setting_id = #{priceSettingId}
+    </select>
+
+    <select id="findByVehicle" resultType="cn.com.yusong.yhdg.common.domain.zc.ShopStoreVehicle">
+        select *
+        from zc_shop_store_vehicle
+        where vehicle_id = #{vehicleId}
+    </select>
+
+    <select id="findByVinNo" resultType="cn.com.yusong.yhdg.common.domain.zc.ShopStoreVehicle">
+        select *
+        from zc_shop_store_vehicle
+        where vin_no = #{vinNo}
+    </select>
+
+    <select id="findId" resultType="long">
+        select MAX(id)
+        from zc_shop_store_vehicle
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.zc.ShopStoreVehicle" resultType="int">
+        select count(*)
+        from zc_shop_store_vehicle AS zssv LEFT JOIN zc_price_setting AS zps ON zssv.price_setting_id = zps.id
+        LEFT JOIN zc_vehicle_model AS zvm ON zps.model_id = zvm.id
+        <trim prefix="where" prefixOverrides="and">
+            <if test="settingName != null and settingName != ''">
+                <![CDATA[and zps.setting_name LIKE concat('%', #{settingName}, '%')]]>
+            </if>
+            <if test="agentId != null and agentId != ''">
+                and zssv.agent_id = #{agentId}
+            </if>
+            <if test="shopId != null and shopId != ''">
+                and zssv.shop_id = #{shopId}
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.zc.ShopStoreVehicle" resultType="cn.com.yusong.yhdg.common.domain.zc.ShopStoreVehicle">
+        select
+        zssv.*,
+        zps.setting_name AS settingName,
+        zps.vehicle_name AS vehicleName,
+        zvm.model_name AS modelName
+        from zc_shop_store_vehicle AS zssv LEFT JOIN zc_price_setting AS zps ON zssv.price_setting_id = zps.id
+        LEFT JOIN zc_vehicle_model AS zvm ON zps.model_id = zvm.id
+        <trim prefix="where" prefixOverrides="and">
+            <if test="settingName != null and settingName != ''">
+                <![CDATA[and zps.setting_name LIKE concat('%', #{settingName}, '%')]]>
+            </if>
+            <if test="agentId != null and agentId != ''">
+                and zssv.agent_id = #{agentId}
+            </if>
+            <if test="shopId != null and shopId != ''">
+                and zssv.shop_id = #{shopId}
+            </if>
+        </trim>
+        order by zssv.id desc
+        limit ${beginIndex}, ${rows}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.zc.ShopStoreVehicle" useGeneratedKeys="true" keyProperty="id">
+        insert into zc_shop_store_vehicle
+        (
+        category,
+        agent_id,
+        agent_name,
+        agent_code,
+        shop_id,
+        shop_name,
+        price_setting_id,
+        vehicle_id,
+        vin_no,
+        battery_count,
+        create_time) VALUES
+        (
+        #{category},
+        #{agentId},
+        #{agentName},
+        #{agentCode},
+        #{shopId},
+        #{shopName},
+        #{priceSettingId},
+        #{vehicleId},
+        #{vinNo},
+        #{batteryCount},
+        #{createTime})
+    </insert>
+
+    <update id="update">
+        UPDATE zc_shop_store_vehicle SET
+            <if test="category != null and category != ''">
+                category = #{category},
+            </if>
+            <if test="agentId != null and agentId != ''">
+                agent_id = #{agentId},
+            </if>
+            <if test="agentName != null and agentName != ''">
+                agent_name = #{agentName},
+            </if>
+            <if test="agentCode != null and agentCode != ''">
+                agent_code = #{agentCode},
+            </if>
+            <if test="shopId != null and shopId != ''">
+                shop_id = #{shopId},
+            </if>
+            <if test="priceSettingId != null and priceSettingId != ''">
+                price_setting_id = #{priceSettingId},
+            </if>
+            <if test="vehicleId != null and vehicleId != ''">
+                vehicle_id = #{vehicleId},
+            </if>
+            <if test="vinNo != null and vinNo != ''">
+                vin_no = #{vinNo},
+            </if>
+            <if test="batteryCount != null and batteryCount != ''">
+                battery_count = #{batteryCount},
+            </if>
+            shop_name = #{shopName}
+        where id = #{id}
+    </update>
+
+    <update id="updateBatteryCount">
+        UPDATE zc_shop_store_vehicle SET
+        battery_count = #{batteryCount}
+        where id = #{id}
+    </update>
+
+    <delete id="delete">
+        delete from zc_shop_store_vehicle
+        where id = #{id}
+    </delete>
+
+    <select id="findByPriceSettingList" resultType="cn.com.yusong.yhdg.common.domain.zc.ShopStoreVehicle">
+        select *
+        from zc_shop_store_vehicle
+        where shop_id = #{shopId} and price_setting_id = #{priceSettingId}
+    </select>
+
+</mapper>

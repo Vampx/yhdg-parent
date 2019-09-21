@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.yms.TerminalMapper">
+
+    <select id="find" parameterType="string" resultType="cn.com.yusong.yhdg.common.domain.yms.Terminal">
+        select
+            *
+        from yms_terminal
+        where id = #{id}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.yms.Terminal" resultType="int">
+        select
+            count(*)
+        FROM yms_terminal t inner join hdg_cabinet c on c.terminal_id = t.id
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != 0 and agentId != null">
+                and c.agent_id = #{agentId}
+            </if>
+            <if test="playlistId != null">
+                and t.playlist_id = #{playlistId}
+            </if>
+            <if test="version != null and version != ''">
+                <![CDATA[and t.version LIKE concat('%', #{version})]]>
+            </if>
+            <if test="id != null and id != ''">
+                <![CDATA[and t.id LIKE concat('%', #{id})]]>
+            </if>
+            <if test="isOnline != null">
+                and t.is_online = #{isOnline}
+            </if>
+            <if test="cabinetName != null and cabinetName != ''">
+                <![CDATA[and c.cabinet_name LIKE concat('%', #{cabinetName})]]>
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.yms.Terminal" resultType="cn.com.yusong.yhdg.common.domain.yms.Terminal">
+        select
+          c.id as cabinetId,
+          t.id,
+          c.cabinet_name as cabinetName,
+          c.agent_id as agentId,
+          c.address as address,
+          t.version,
+          t.playlist_id as playlistId,
+          t.strategy_id as strategyId,
+          t.is_online as isOnline,
+          t.heart_time as heartTime
+        FROM yms_terminal t inner join hdg_cabinet c on c.terminal_id = t.id
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != 0 and agentId != null">
+                and c.agent_id = #{agentId}
+            </if>
+            <if test="playlistId != null">
+                and t.playlist_id = #{playlistId}
+            </if>
+            <if test="version != null and version != ''">
+                <![CDATA[and t.version LIKE concat('%', #{version})]]>
+            </if>
+            <if test="id != null and id != ''">
+                <![CDATA[and t.id LIKE concat('%', #{id})]]>
+            </if>
+            <if test="isOnline != null">
+                and t.is_online = #{isOnline}
+            </if>
+            <if test="cabinetName != null and cabinetName != ''">
+                <![CDATA[and c.cabinet_name LIKE concat('%', #{cabinetName})]]>
+            </if>
+        </trim>
+        limit #{beginIndex}, #{rows}
+    </select>
+
+    <select id="findNotAssociatedPageCount" parameterType="cn.com.yusong.yhdg.common.domain.yms.Terminal" resultType="int">
+        select
+           count(*)
+        from yms_terminal
+        where id not in (select terminal_id from hdg_cabinet where terminal_id is not null)
+        <if test="version != null and version != ''">
+            <![CDATA[and version LIKE concat('%', #{version})]]>
+        </if>
+        <if test="id != null and id != ''">
+            <![CDATA[and id LIKE concat('%', #{id})]]>
+        </if>
+        <if test="isOnline != null">
+            and is_online = #{isOnline}
+        </if>
+    </select>
+
+    <select id="findNotAssociatedPageResult" parameterType="cn.com.yusong.yhdg.common.domain.yms.Terminal" resultType="cn.com.yusong.yhdg.common.domain.yms.Terminal">
+        select
+           *
+        from yms_terminal
+        where id not in (select terminal_id from hdg_cabinet where terminal_id is not null)
+        <if test="version != null and version != ''">
+            <![CDATA[and version LIKE concat('%', #{version})]]>
+        </if>
+        <if test="id != null and id != ''">
+            <![CDATA[and id LIKE concat('%', #{id})]]>
+        </if>
+        <if test="isOnline != null">
+            and is_online = #{isOnline}
+        </if>
+        limit #{beginIndex}, #{rows}
+    </select>
+
+    <select id="hasRecordByProperty" resultType="string">
+        select id from yms_terminal where
+        <if test="property == 'strategyId'">
+            strategy_id = #{value}
+        </if>
+        <if test="property == 'playlistId'">
+            playlist_id = #{value}
+        </if>
+        limit 1
+    </select>
+
+    <select id="findByPlaylist" parameterType="long" resultType="cn.com.yusong.yhdg.common.domain.yms.Terminal">
+        select
+            *
+        from yms_terminal
+        where playlist_id = #{playlistId}
+    </select>
+
+    <select id="findIdByStrategy" parameterType="long" resultType="string">
+        select id from yms_terminal where strategy_id = #{strategyId}
+    </select>
+
+    <select id="findId" resultType="cn.com.yusong.yhdg.common.domain.yms.Terminal">
+        select
+            id
+        from yms_terminal
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.yms.Terminal">
+        insert into yms_terminal(id, version, uid, strategy_id, is_online, heart_time)
+        values(#{id}, #{version}, #{uid}, #{strategyId}, #{isOnline}, #{heartTime});
+    </insert>
+
+    <update id="installBlank" parameterType="String">
+        update yms_terminal set
+            playlist_id = null
+        where id = #{id}
+    </update>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.yms.Terminal">
+        update yms_terminal set
+        <trim suffix="" suffixOverrides=",">
+            <if test="version != null and version != ''">
+                version = #{version},
+            </if>
+            <if test="uid != null and uid != ''">
+                uid = #{uid},
+            </if>
+            <if test="playlistId != null and playlistId != ''">
+                playlist_id = #{playlistId},
+            </if>
+            <if test="strategyId != null and strategyId != ''">
+                strategy_id = #{strategyId},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="updateBasicInfo" parameterType="cn.com.yusong.yhdg.common.domain.yms.Terminal">
+        update yms_terminal set
+            strategy_id = #{strategyId}
+        where id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="string">
+        delete from yms_terminal where id = #{id}
+    </delete>
+
+</mapper>

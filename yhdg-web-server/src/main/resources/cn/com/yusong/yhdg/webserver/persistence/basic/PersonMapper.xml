@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.basic.PersonMapper">
+
+    <select id="findByAgent" resultType="cn.com.yusong.yhdg.common.domain.basic.Person">
+        select id, agent_id as agentId, fullname from bas_person
+        where 1 = 1
+        <if test="agentId != null">
+            and agent_id = #{agentId}
+        </if>
+    </select>
+
+    <select id="findByMobile" parameterType="string" resultType="cn.com.yusong.yhdg.common.domain.basic.Person">
+        select * from bas_person
+        where mobile = #{mobile}
+    </select>
+
+    <select id="findUnique" resultType="int">
+        select count(*) from bas_person where mobile = #{mobile}
+        <if test="id != null">
+            and id != #{id}
+        </if>
+    </select>
+
+    <select id="find" parameterType="long" resultType="cn.com.yusong.yhdg.common.domain.basic.Person">
+        select
+            *
+        from bas_person
+        where id = #{id}
+    </select>
+
+    <select id="findByLoginInfo" parameterType="cn.com.yusong.yhdg.common.domain.basic.Person" resultType="cn.com.yusong.yhdg.common.domain.basic.Person">
+        select *
+        from bas_person
+        where mobile = #{mobile} and password = #{password}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.basic.Person" resultType="int">
+        select count(*) from bas_person
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null and agentId != 0">
+                and agent_id = #{agentId}
+            </if>
+            <if test="mobile != null and mobile != ''">
+                <![CDATA[and mobile LIKE concat(#{mobile}, '%')]]>
+            </if>
+            <if test="isActive != null">
+                and is_active = #{isActive}
+            </if>
+            <if test="isAdmin != null">
+                and is_admin = #{isAdmin}
+            </if>
+            <if test="isProtected != null">
+                and is_protected = #{isProtected}
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.basic.Person" resultType="cn.com.yusong.yhdg.common.domain.basic.Person">
+        select * from bas_person
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null and agentId != 0">
+                and agent_id = #{agentId}
+            </if>
+            <if test="mobile != null and mobile != ''">
+                <![CDATA[and mobile LIKE concat(#{mobile}, '%')]]>
+            </if>
+            <if test="isActive != null">
+                and is_active = #{isActive}
+            </if>
+            <if test="isAdmin != null">
+                and is_admin = #{isAdmin}
+            </if>
+            <if test="isProtected != null">
+                and is_protected = #{isProtected}
+            </if>
+        </trim>
+        order by id desc
+        limit ${beginIndex}, ${rows}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.Person" useGeneratedKeys="true" keyProperty="id">
+        insert into bas_person(agent_id, mobile, password, fullname, photo_path, gender, is_active, is_admin, is_protected, is_push, memo, create_time, last_login_time)
+        values(#{agentId}, #{mobile}, #{password}, #{fullname}, #{photoPath}, #{gender}, #{isActive}, #{isAdmin}, #{isProtected}, #{isPush}, #{memo}, #{createTime}, #{lastLoginTime})
+    </insert>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.basic.Person">
+        update bas_person set
+        agent_id = #{agentId},
+        is_admin = #{isAdmin},
+        is_protected = #{isProtected},
+        <if test="password != null and password != ''">
+            password = #{password},
+        </if>
+        <if test="isPush !=null ">
+            is_push = #{isPush},
+        </if>
+        mobile = #{mobile},
+        photo_path = #{photoPath},
+        is_active = #{isActive},
+        fullname = #{fullname}
+        where id = #{id}
+    </update>
+
+    <update id="updateLoginTime">
+        update bas_person set
+            last_login_time = #{lastLoginTime}
+        where id = #{id}
+    </update>
+
+    <update id="updatePassword">
+        update bas_person set password = #{newPassword} where id = #{id} and password = #{oldPassword}
+    </update>
+
+    <delete id="delete" parameterType="long">
+        delete from bas_person where id = #{id}
+    </delete>
+</mapper>

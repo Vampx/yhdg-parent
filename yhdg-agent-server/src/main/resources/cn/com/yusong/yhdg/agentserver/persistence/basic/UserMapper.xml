@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.basic.UserMapper">
+
+    <select id="findByAgent" resultType="cn.com.yusong.yhdg.common.domain.basic.User">
+        select id, login_name loginName, agent_id as agentId, fullname from bas_user
+        where 1 = 1
+        <if test="agentId != null">
+            and agent_id = #{agentId}
+        </if>
+    </select>
+
+    <select id="findByUsername" parameterType="string" resultType="cn.com.yusong.yhdg.common.domain.basic.User">
+        select
+            bas_user.id,
+            login_name as loginName,
+            is_admin as isAdmin,
+            is_protected as isProtected,
+            mobile,
+            photo_path as photoPath,
+            dept_id as deptId,
+            bas_user.memo,
+            last_login_time as lastLoginTime,
+            bas_user.create_time as createTime,
+            push_token as pushToken,
+            bas_user.agent_id as agentId,
+            fullname as fullname
+        from bas_user
+        left join bas_dept on bas_user.dept_id = bas_dept.id
+        where bas_user.login_name = #{loginName}
+    </select>
+
+
+    <select id="findByEstateProtected"  resultType="cn.com.yusong.yhdg.common.domain.basic.User">
+        select
+        *
+        from bas_user
+        where estate_id = #{estateId} and is_protected = 1
+        limit 1
+    </select>
+
+    <select id="findByProtected"  resultType="cn.com.yusong.yhdg.common.domain.basic.User">
+        select
+          *
+        from bas_user
+        where agent_id = #{agentId} and is_protected = 1
+        limit 1
+    </select>
+
+    <select id="findByShopProtected"  resultType="cn.com.yusong.yhdg.common.domain.basic.User">
+        select
+        *
+        from bas_user
+        where shop_id = #{shopId} and is_protected = 1
+        limit 1
+    </select>
+
+    <select id="findUnique" resultType="int">
+        select count(*) from bas_user where login_name = #{loginName}
+        <if test="id != null">
+            and id != #{id}
+        </if>
+    </select>
+
+    <select id="find" parameterType="long" resultType="cn.com.yusong.yhdg.common.domain.basic.User">
+        select
+            *
+        from bas_user
+        left join bas_dept on bas_user.dept_id = bas_dept.id
+        where bas_user.id = #{id}
+    </select>
+
+    <select id="hasRecordByProperty" resultType="string">
+       select login_name from bas_user where
+        <if test="property == 'agentId'">
+            agent_id = #{value}
+        </if>
+        <if test="property == 'roleId'">
+            role_id = #{value}
+        </if>
+        <if test="property == 'deptId'">
+            dept_id = #{value}
+        </if>
+        limit 1
+    </select>
+
+    <select id="findByLoginInfo" parameterType="cn.com.yusong.yhdg.common.domain.basic.User" resultType="cn.com.yusong.yhdg.common.domain.basic.User">
+        select
+            id,
+            agent_id as agentId,
+            is_admin as isAdmin,
+            is_protected as isProtected,
+            login_name as loginName,
+            password,
+            dept_id as deptId,
+            role_id as roleId,
+            photo_path as photoPath,
+            account_type as accountType,
+            is_active as isActive,
+            fullname as fullname
+        from bas_user
+        where login_name = #{loginName} and password = #{password}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.basic.User" resultType="int">
+        select count(*) from bas_user
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null and agentId != 0">
+                and agent_id = #{agentId}
+            </if>
+            <if test="shopFlag != null and shopFlag == 0 ">
+                and shop_id is null
+            </if>
+            <if test="shopFlag != null and shopFlag == 1 ">
+                and shop_id is not null
+            </if>
+            <if test="estateFlag != null and estateFlag == 0 ">
+                and estate_id is null
+            </if>
+            <if test="estateFlag != null and estateFlag == 1 ">
+                and estate_id is not null
+            </if>
+            <if test="shopId != null and shopId != '' ">
+                and shop_id = #{shopId}
+            </if>
+            <if test="estateId != null and estateId != '' ">
+                and estate_id = #{estateId}
+            </if>
+            <if test="agentCompanyId != null and agentCompanyId != '' ">
+                and bas_user.agent_company_id = #{agentCompanyId}
+            </if>
+            <if test="loginName != null and loginName != ''">
+                <![CDATA[and login_name LIKE concat(#{loginName}, '%')]]>
+            </if>
+            <if test="mobile != null and mobile != ''">
+                <![CDATA[and mobile LIKE concat(#{mobile}, '%')]]>
+            </if>
+            <if test="deptId != null">
+                and dept_id = #{deptId}
+            </if>
+            <if test="isActive != null">
+                and is_active = #{isActive}
+            </if>
+            <if test="accountType != null">
+                and account_type = #{accountType}
+            </if>
+            <if test="isAdmin != null">
+                and is_admin = #{isAdmin}
+            </if>
+            <if test="isProtected != null">
+                and is_protected = #{isProtected}
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.basic.User" resultType="cn.com.yusong.yhdg.common.domain.basic.User">
+        select
+            bas_user.id,
+            is_admin as isAdmin,
+            is_protected as isProtected,
+            login_name as loginName,
+            password,
+            mobile,
+            bas_user.fullname as fullname,
+            bas_user.is_active as isActive,
+            dept_id as deptId,
+            bas_user.memo,
+            last_login_time as lastLoginTime,
+            bas_user.create_time as createTime,
+            dept_name as deptName,
+            bas_role.role_name as roleName,
+            bas_user.estate_id as estateId,
+            bas_user.shop_id as shopId,
+            bas_agent.agent_name as agentName,
+            estate_name as estateName,
+            shop_name as shopName,
+            bas_agent_company.company_name as agentCompanyName,
+
+            bas_shop_role.role_name as shopRoleName,
+            bas_agent_company_role.role_name as agentCompanyRoleName
+        from bas_user
+        left join bas_dept on bas_user.dept_id = bas_dept.id
+        left join bas_role on bas_user.role_id = bas_role.id
+        left join hdg_estate on bas_user.estate_id = hdg_estate.id
+        left join bas_agent on bas_user.agent_id = bas_agent.id
+        left join hdg_shop on bas_user.shop_id = hdg_shop.id
+        left join bas_shop_role on bas_user.shop_role_id = bas_shop_role.id
+        left join bas_agent_company on bas_user.agent_company_id = bas_agent_company.id
+        left join bas_agent_company_role on bas_user.agent_company_role_id = bas_agent_company_role.id
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null and agentId != 0">
+                and bas_user.agent_id = #{agentId}
+            </if>
+            <if test="shopFlag != null and shopFlag == 0 ">
+                and bas_user.shop_id is null
+            </if>
+            <if test="shopFlag != null and shopFlag == 1 ">
+                and bas_user.shop_id is not null
+            </if>
+            <if test="estateFlag != null and estateFlag == 0 ">
+                and estate_id is null
+            </if>
+            <if test="estateFlag != null and estateFlag == 1 ">
+                and estate_id is not null
+            </if>
+            <if test="shopId != null and shopId != '' ">
+                and bas_user.shop_id = #{shopId}
+            </if>
+            <if test="agentCompanyId != null and agentCompanyId != '' ">
+                and bas_user.agent_company_id = #{agentCompanyId}
+            </if>
+            <if test="loginName != null and loginName != ''">
+                <![CDATA[and login_name LIKE concat(#{loginName}, '%')]]>
+            </if>
+            <if test="mobile != null and mobile != ''">
+                <![CDATA[and mobile LIKE concat(#{mobile}, '%')]]>
+            </if>
+            <if test="deptId != null">
+                and bas_user.dept_id = #{deptId}
+            </if>
+            <if test="isActive != null">
+                and bas_user.is_active = #{isActive}
+            </if>
+            <if test="accountType != null">
+                and account_type = #{accountType}
+            </if>
+            <if test="isAdmin != null">
+                and is_admin = #{isAdmin}
+            </if>
+            <if test="isProtected != null">
+                and is_protected = #{isProtected}
+            </if>
+        </trim>
+        order by bas_user.id desc
+        limit ${beginIndex}, ${rows}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.User" useGeneratedKeys="true" keyProperty="id">
+        insert into bas_user(agent_id, shop_id,estate_id, agent_company_id, is_admin, is_protected, account_type, login_name, password, mobile, dept_id, memo, create_time, role_id, shop_role_id, photo_path, is_active, fullname)
+        values(#{agentId}, #{shopId}, #{estateId}, #{agentCompanyId}, #{isAdmin}, #{isProtected}, #{accountType}, #{loginName}, #{password}, #{mobile}, #{deptId}, #{memo}, #{createTime}, #{roleId}, #{shopRoleId}, #{photoPath}, #{isActive}, #{fullname})
+    </insert>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.basic.User">
+        update bas_user set
+        agent_id = #{agentId},
+        is_admin = #{isAdmin},
+        is_protected = #{isProtected},
+        login_name = #{loginName},
+        <if test="password != null and password != ''">
+            password = #{password},
+        </if>
+        <if test="shopId !=null and shopId != '' ">
+            shop_id = #{shopId},
+        </if>
+        <if test="isPush !=null ">
+            is_push = #{isPush},
+        </if>
+        mobile = #{mobile},
+        dept_id = #{deptId},
+        memo = #{memo},
+        role_id = #{roleId},
+        <if test="shopRoleId !=null and shopRoleId != '' ">
+            shop_role_id = #{shopRoleId},
+        </if>
+        <if test="agentCompanyRoleId !=null and agentCompanyRoleId != '' ">
+            agent_company_role_id = #{agentCompanyRoleId},
+        </if>
+        photo_path = #{photoPath},
+        is_active = #{isActive},
+        fullname = #{fullname}
+        where id = #{id}
+    </update>
+
+    <update id="updateLoginTime">
+        update bas_user set
+            last_login_time = #{lastLoginTime}
+        where id = #{id}
+    </update>
+
+    <update id="updatePassword">
+        update bas_user set password = #{newPassword} where id = #{id} and password = #{oldPassword}
+    </update>
+
+    <delete id="delete" parameterType="long">
+        delete from bas_user where id = #{id}
+    </delete>
+</mapper>

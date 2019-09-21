@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.cabinetserver.persistence.hdg.BackBatteryOrderMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.hdg.BackBatteryOrder">
+        select *
+        from hdg_back_battery_order
+        where id = #{id}
+    </select>
+
+    <select id="findByBoxNum" resultType="cn.com.yusong.yhdg.common.domain.hdg.BackBatteryOrder">
+        select *
+        from hdg_back_battery_order
+        where cabinet_id = #{cabinetId} and box_num = #{boxNum} and order_status = #{orderStatus}
+        order by id desc limit 1
+    </select>
+
+    <update id="updateStatus">
+        UPDATE hdg_back_battery_order
+        SET order_status = #{orderStatus},
+        cancel_time = #{cancelTime}
+        where id = #{id}
+    </update>
+
+    <update id="backBattery" >
+        update hdg_back_battery_order set
+        battery_id = #{batteryId},
+        order_status = #{orderStatus},
+        back_time = #{backTime}
+        where id = #{id}
+    </update>
+
+
+</mapper>

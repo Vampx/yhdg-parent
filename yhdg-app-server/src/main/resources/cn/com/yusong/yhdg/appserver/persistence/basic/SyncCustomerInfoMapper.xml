@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.appserver.persistence.basic.SyncCustomerInfoMapper">
+
+    <select id="findByMobile" resultType="cn.com.yusong.yhdg.common.domain.basic.SyncCustomerInfo">
+        select
+        *
+        from bas_sync_customer_info
+        where mobile = #{mobile}
+    </select>
+
+    <select id="findMpOpenId" resultType="cn.com.yusong.yhdg.common.domain.basic.SyncCustomerInfo">
+        select
+            *
+        from bas_sync_customer_info
+        where mp_open_id = #{mpOpenId}
+    </select>
+
+    <select id="findFwOpenId" resultType="cn.com.yusong.yhdg.common.domain.basic.SyncCustomerInfo">
+        select
+        *
+        from bas_sync_customer_info
+        where fw_open_id = #{partnerFwOpenId}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.SyncCustomerInfo" useGeneratedKeys="true" keyProperty="id">
+        insert into bas_sync_customer_info(mp_open_id, fw_open_id, send_status,
+          nickname,
+          photo_path,
+          mobile,
+          fullname,
+          id_card,
+          company,
+          battery_type,
+          id_card_face,
+          id_card_rear,
+          create_time)
+        values(#{mpOpenId}, #{partnerFwOpenId}, #{sendStatus},
+         #{nickname},
+         #{photoPath},
+         #{mobile},
+         #{fullname},
+         #{idCard},
+         #{company},
+         #{batteryType},
+         #{idCardFace},
+         #{idCardRear},
+         #{createTime})
+    </insert>
+
+    <delete id="delete" parameterType="long">
+        delete from bas_sync_customer_info where id = #{id}
+    </delete>
+
+
+</mapper>

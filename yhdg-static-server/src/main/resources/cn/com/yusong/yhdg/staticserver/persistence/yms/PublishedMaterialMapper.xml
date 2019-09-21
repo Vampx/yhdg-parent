@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.staticserver.persistence.yms.PublishedMaterialMapper">
+    <select id="findByDetail" resultType="cn.com.yusong.yhdg.common.domain.yms.PublishedMaterial">
+        select
+            ypm.material_id as materialId,
+            ypm.agent_id as agentId,
+            ypm.group_id as groupId,
+            ypm.material_name as materialName,
+            ypm.material_type as materialType,
+            ypm.duration,
+            ypm.md5_sum as md5Sum,
+            ypm.version,
+            ypm.cover_path as coverPath,
+            ypm.convert_status as convertStatus,
+            ypm.convert_progress as convertProgress,
+            ypm.file_path as filePath,
+            ypm.size,
+            ypm.width,
+            ypm.height,
+            ypm.owner_id as ownerId,
+            ypm.owner_name as ownerName,
+            ypm.create_time as createTime,
+            yppam.order_num as orderNum
+        from yms_published_material ypm
+        right outer join yms_published_playlist_detail_material yppam on yppam.material_id = ypm.material_id
+        where yppam.detail_id = #{detailId} and ypm.version = yppam.version and ypm.convert_status = #{status}
+        order by yppam.order_num asc
+    </select>
+
+</mapper>

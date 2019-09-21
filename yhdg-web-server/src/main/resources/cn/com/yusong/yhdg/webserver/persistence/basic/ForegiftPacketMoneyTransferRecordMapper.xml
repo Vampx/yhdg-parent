@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.basic.ForegiftPacketMoneyTransferRecordMapper">
+
+    <select id="find" parameterType="long" resultType="cn.com.yusong.yhdg.common.domain.basic.ForegiftPacketMoneyTransferRecord">
+        select * from bas_foregift_packet_money_transfer_record where id = #{id}
+    </select>
+
+    <select id="findByCustomerId" resultType="cn.com.yusong.yhdg.common.domain.basic.ForegiftPacketMoneyTransferRecord">
+        select * from bas_foregift_packet_money_transfer_record
+        where customer_id = #{customerId}
+        and foregift_order_id = #{foregiftOrderId}
+        limit 1
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.basic.ForegiftPacketMoneyTransferRecord" resultType="int">
+        select
+        count(*)
+        from bas_foregift_packet_money_transfer_record
+        <trim prefix="where" prefixOverrides="and">
+            <if test="customerId != null">
+                and customer_id = #{customerId}
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.basic.ForegiftPacketMoneyTransferRecord" resultType="cn.com.yusong.yhdg.common.domain.basic.ForegiftPacketMoneyTransferRecord">
+        select
+        *
+        from bas_foregift_packet_money_transfer_record
+        <trim prefix="where" prefixOverrides="and">
+            <if test="customerId != null">
+                and customer_id = #{customerId}
+            </if>
+        </trim>
+        order by id desc
+        limit ${beginIndex}, ${rows}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.ForegiftPacketMoneyTransferRecord" useGeneratedKeys="true" keyProperty="id">
+        insert into bas_foregift_packet_money_transfer_record (
+          agent_id,
+          agent_name,
+          foregift_order_id,
+          packet_period_order_id,
+          foregift_money,
+          battery_order_id,
+          customer_id,
+          customer_mobile,
+          customer_fullname,
+          transfer_customer_id,
+          transfer_customer_mobile,
+          transfer_customer_fullname,
+          memo,
+          create_time)
+        values (
+         #{agentId},
+         #{agentName},
+         #{foregiftOrderId},
+         #{packetPeriodOrderId},
+         #{foregiftMoney},
+         #{batteryOrderId},
+         #{customerId},
+         #{customerMobile},
+         #{customerFullname},
+         #{transferCustomerId},
+         #{transferCustomerMobile},
+         #{transferCustomerFullname},
+         #{memo},
+         #{createTime})
+    </insert>
+
+</mapper>

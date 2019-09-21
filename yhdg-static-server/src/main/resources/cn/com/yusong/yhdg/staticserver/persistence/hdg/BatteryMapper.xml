@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.staticserver.persistence.hdg.BatteryMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.hdg.Battery">
+        SELECT
+        *
+        FROM
+        hdg_battery
+        WHERE
+        id = #{id}
+    </select>
+
+    <update id="updateChargeStatus" >
+        update hdg_battery set
+            charge_status = #{toChargeStatus}
+        where id = #{id} and charge_status = #{fromChargeStatus}
+    </update>
+
+    <update id="updateCustomerUse" >
+        update hdg_battery set
+        status = #{status},
+        order_distance = 0,
+        order_id = #{orderId},
+        customer_out_time = #{customerOutTime},
+        exchange_amount = exchange_amount+1,
+        customer_id = #{customerId},
+        customer_mobile = #{customerMobile},
+        customer_fullname = #{customerFullname}
+        where id = #{id}
+    </update>
+
+    <update id="clearCustomer">
+        update hdg_battery
+        set
+        status = #{status},
+        order_distance = 0,
+        order_id = null,
+        customer_out_time = null,
+        customer_id = null,
+        customer_mobile = null,
+        customer_fullname = null
+        where id = #{id}
+    </update>
+
+</mapper>

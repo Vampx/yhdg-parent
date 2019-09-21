@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.serviceserver.persistence.hdg.BatteryOrderHistoryMapper">
+
+    <select id="findTable" resultType="String">
+        SHOW TABLES LIKE #{tableName}
+    </select>
+
+    <select id="findTotalCount" resultType="int">
+        select
+        count(id)
+        from ${searchTableName}
+        <trim prefix="where" prefixOverrides="and">
+            <if test="beginTime != null">
+                <![CDATA[ and create_time > #{beginTime}]]>
+            </if>
+            <if test="endTime != null">
+                <![CDATA[ and create_time < #{endTime}]]>
+            </if>
+        </trim>
+    </select>
+
+    <select id="findTotalCountByNotAgent" resultType="int">
+        select
+        count(id)
+        from ${searchTableName}
+        WHERE 1 = 1
+        <if test="beginTime != null">
+            <![CDATA[ and create_time > #{beginTime}]]>
+        </if>
+        <if test="endTime != null">
+            <![CDATA[ and create_time < #{endTime}]]>
+        </if>
+        <foreach collection="agentIdList" item="item" open=" AND agent_id not in (" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="findTotalCountByAgent" resultType="int">
+        select
+        count(id)
+        from ${searchTableName}
+        WHERE agent_id = #{agentId}
+        <if test="beginTime != null">
+            <![CDATA[ and create_time > #{beginTime}]]>
+        </if>
+        <if test="endTime != null">
+            <![CDATA[ and create_time < #{endTime}]]>
+        </if>
+    </select>
+
+    <select id="findCountByCity" resultType="cn.com.yusong.yhdg.common.domain.hdg.BatteryOrder">
+        select
+        city_id as cityId, count(id) as orderCount
+        from ${searchTableName}
+        group by city_id
+    </select>
+
+    <select id="findCountByCityAndAgent" resultType="cn.com.yusong.yhdg.common.domain.hdg.BatteryOrder">
+        select
+        city_id as cityId, count(id) as orderCount
+        from ${searchTableName}
+        WHERE agent_id = #{agentId}
+        group by city_id
+    </select>
+
+    <select id="findCountByCityAndNotAgent" resultType="cn.com.yusong.yhdg.common.domain.hdg.BatteryOrder">
+        select
+        city_id as cityId, count(id) as orderCount
+        from ${searchTableName}
+        WHERE 1 = 1
+        <foreach collection="agentIdList" item="item" open=" AND agent_id not in (" separator="," close=")">
+            #{item}
+        </foreach>
+        group by city_id
+    </select>
+
+    <update id="createTable">
+        create table if not exists hdg_battery_order_${suffix} (
+            id CHAR (32) NOT NULL,
+            agent_id INT UNSIGNED NOT NULL,
+            province_id SMALLINT UNSIGNED,	/*省份id*/
+            city_id SMALLINT UNSIGNED,	/*城市id*/
+            district_id BIGINT UNSIGNED,	/*区id*/
+            battery_id CHAR (12) NOT NULL,
+            take_cabinet_id CHAR (12),	/*取电组id*/
+            take_cabinet_name VARCHAR (40),
+            take_box_num VARCHAR (20),	/*取电箱号*/
+            take_time datetime,	/*取电时间*/
+            init_volume TINYINT,	/*初始电量*/
+            put_cabinet_id CHAR (12),	/*放电组id*/
+            put_cabinet_name VARCHAR (40),
+            put_box_num VARCHAR (20),	/*放电箱号*/
+            put_time datetime,	/*放电时间*/
+            pay_time datetime,	/*付款时间*/
+            pay_type TINYINT,	/*支付类型*/
+            price INT,	/*换电价格*/
+            money INT,	/*实付金额*/
+            current_volume TINYINT,	/*当前电量*/
+            current_distance INT NOT NULL,	/*骑行距离*/
+            customer_id BIGINT UNSIGNED NOT NULL,
+            customer_mobile CHAR (11) NOT NULL,
+            customer_fullname VARCHAR (40) NOT NULL,
+            order_status TINYINT (4) NOT NULL,
+            refund_status TINYINT,	/*退款状态 1 申请退款 2 已退款 3 拒绝退款*/
+            refund_time datetime,	/*退款时间*/
+            refund_money INT UNSIGNED,	/*退款金额*/
+            refund_reason VARCHAR (40),	/*退款原因*/
+            address VARCHAR (120),	/*地址*/
+            ticket_name VARCHAR (40),	/*优惠券名称*/
+            ticket_money INT UNSIGNED,	/*优惠券金额*/
+            coupon_ticket_id BIGINT UNSIGNED,	/*优惠券id*/
+            packet_period_order_id CHAR (32),
+            error_message VARCHAR (40),	/*换电错误消息*/
+            error_time datetime,	/*换电出现错误的时间*/
+            pay_timeout_notice_time datetime,	/*付款超时推送时间*/
+            not_take_timeout_notice_time datetime,	/*未取出超时推送时间*/
+            create_time datetime NOT NULL,
+            PRIMARY KEY (id)
+        ) ENGINE = INNODB DEFAULT charset = utf8
+    </update>
+
+    <insert id="move" parameterType="cn.com.yusong.yhdg.common.domain.hdg.BatteryReportLog">
+        INSERT INTO hdg_battery_order_${suffix} SELECT
+            *
+        FROM
+            yhdg.hdg_battery_order
+        WHERE
+            <![CDATA[ id LIKE concat(#{monthId}, '%')]]>
+            AND id &lt; #{dayId}
+            AND order_status = #{orderStatus}
+    </insert>
+</mapper>

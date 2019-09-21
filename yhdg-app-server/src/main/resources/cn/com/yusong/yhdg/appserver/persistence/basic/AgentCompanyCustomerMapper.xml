@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.appserver.persistence.basic.AgentCompanyCustomerMapper">
+
+    <select id="findByCustomerId" parameterType="long" resultType="cn.com.yusong.yhdg.common.domain.basic.AgentCompanyCustomer">
+        select
+        *
+        from bas_agent_company_customer
+        where customer_id = #{customerId}
+    </select>
+
+    <select id="findByMobile" parameterType="string" resultType="cn.com.yusong.yhdg.common.domain.basic.AgentCompanyCustomer">
+        select
+        *
+        from bas_agent_company_customer
+        where customer_mobile = #{customerMobile}
+    </select>
+
+    <insert id="insert">
+        INSERT INTO bas_agent_company_customer(
+        agent_id,
+        agent_name,
+        agent_company_id,
+        customer_id,
+        customer_mobile,
+        customer_fullname,
+        create_time
+        ) VALUES (
+        #{agentId},
+        #{agentName},
+        #{agentCompanyId},
+        #{customerId},
+        #{customerMobile},
+        #{customerFullname},
+        #{createTime}
+        )
+    </insert>
+
+</mapper>

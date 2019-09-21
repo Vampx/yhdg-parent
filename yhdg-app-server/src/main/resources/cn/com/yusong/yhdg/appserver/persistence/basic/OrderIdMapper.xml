@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.appserver.persistence.basic.OrderIdMapper">
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.OrderId" useGeneratedKeys="true" keyProperty="id">
+        <choose>
+            <when test="orderType == 1">
+                insert into hdg_battery_order_num_${suffix}(id) values(#{id})
+            </when>
+            <when test="orderType == 2">
+                insert into bas_customer_deposit_order_num_${suffix}(id) values(#{id})
+            </when>
+            <when test="orderType == 3">
+                insert into bas_keep_order_num_${suffix}(id) values(#{id})
+            </when>
+            <when test="orderType == 4">
+                insert into bas_weixin_pay_order_num_${suffix}(id) values(#{id})
+            </when>
+            <when test="orderType == 5">
+                insert into bas_balance_transfer_order_num_${suffix}(id) values(#{id})
+            </when>
+            <when test="orderType == 6">
+                insert into bas_alipay_pay_order_num_${suffix}(id) values(#{id})
+            </when>
+            <when test="orderType == 7">
+                insert into bas_customer_foregift_order_num_${suffix}(id) values(#{id})
+            </when>
+            <when test="orderType == 8">
+                insert into hdg_packet_period_order_num_${suffix}(id) values(#{id})
+            </when>
+            <when test="orderType == 9">
+                insert into hdg_back_battery_order_num_${suffix}(id) values(#{id})
+            </when>
+            <when test="orderType == 10">
+                insert into hdg_insurance_num_${suffix}(id) values(#{id})
+            </when>
+            <when test="orderType == 11">
+                insert into bas_weixinmp_pay_order_num_${suffix}(id) values(#{id})
+            </when>
+            <when test="orderType == 12">
+                insert into bas_alipayfw_pay_order_num_${suffix}(id) values(#{id})
+            </when>
+            <when test="orderType == 14">
+                insert into bas_customer_refund_order_num_${suffix}(id) values(#{id})
+            </when>
+            <when test="orderType == 15">
+                insert into bas_laxin_pay_order_num_${suffix}(id) values(#{id})
+            </when>
+            <when test="orderType == 16">
+                insert into bas_laxin_record_num_${suffix}(id) values(#{id})
+            </when>
+            <when test="orderType == 17">
+                insert into bas_withdraw_order_num_${suffix}(id) values(#{id})
+            </when>
+            <when test="orderType == 19">
+                insert into hdg_bespeak_order_num_${suffix}(id) values(#{id})
+            </when>
+            <when test="orderType == 20">
+                insert into zd_rent_foregift_order_num_${suffix}(id) values(#{id})
+            </when>
+            <when test="orderType == 21">
+                insert into zd_rent_period_order_num_${suffix}(id) values(#{id})
+            </when>
+            <when test="orderType == 22">
+                insert into zd_rent_insurance_num_${suffix}(id) values(#{id})
+            </when>
+            <when test="orderType == 23">
+                insert into zd_rent_order_num_${suffix}(id) values(#{id})
+            </when>
+            <when test="orderType == 25">
+                insert into bas_agent_foregift_deposit_order_num_${suffix}(id) values(#{id})
+            </when>
+            <when test="orderType == 26">
+                insert into bas_agent_foregift_withdraw_order_num_${suffix}(id) values(#{id})
+            </when>
+            <when test="orderType == 27">
+                insert into zc_vehicle_period_order_num_${suffix}(id) values(#{id})
+            </when>
+            <when test="orderType == 28">
+                insert into zc_vehicle_foregift_order_num_${suffix}(id) values(#{id})
+            </when>
+            <when test="orderType == 29">
+                insert into zc_group_order_num_${suffix}(id) values(#{id})
+            </when>
+            <when test="orderType == 30">
+                insert into zc_vehicle_order_num_${suffix}(id) values(#{id})
+            </when>
+            <when test="orderType == 31">
+                insert into bas_weixinma_pay_order_num_${suffix}(id) values(#{id})
+            </when>
+            <otherwise>
+                error
+            </otherwise>
+        </choose>
+    </insert>
+
+</mapper>

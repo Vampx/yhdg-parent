@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.basic.AgentForegiftRefundMapper">
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.AgentForegiftRefund" keyProperty="id" useGeneratedKeys="true">
+        insert into bas_agent_foregift_refund (
+        id,agent_id,agent_name,agent_code,customer_id,mobile,fullname,
+        foregift_order_id,refund_record_id,price,ticket_money,deduction_ticket_money,pay_money,refund_money,remain_money,
+        operator_name,create_time)
+        values (
+        #{id},#{agentId},#{agentName},#{agentCode},#{customerId},#{mobile},#{fullname},
+        #{foregiftOrderId},#{refundRecordId},#{price},#{ticketMoney},#{deductionTicketMoney},#{payMoney},#{refundMoney},#{remainMoney},
+        #{operatorName},#{createTime})
+    </insert>
+
+</mapper>

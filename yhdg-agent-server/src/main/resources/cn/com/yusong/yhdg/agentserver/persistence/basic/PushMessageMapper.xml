@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.basic.PushMessageMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.basic.PushMessage">
+        select
+            bas_push_message.id,
+            agent_id as agentId,
+            send_status as sendStatus,
+            source_type as sourceType,
+            source_id as sourceId,
+            create_time as createTime,
+            handle_time as handleTime,
+            resend_num as resendNum,
+            bas_push_message_content.target as target,
+            bas_push_message_content.content as content
+       from bas_push_message
+       left join bas_push_message_content on bas_push_message.id = bas_push_message_content.id
+       where bas_push_message.id = #{id}
+    </select>
+
+    <select id="findPageCount" resultType="int">
+        select count(*) from bas_push_message
+        left join bas_push_message_content on bas_push_message.id = bas_push_message_content.id
+        <trim prefix="where" prefixOverrides="and">
+            <if test="sourceType != null">
+                <![CDATA[and source_type = #{sourceType}]]>
+            </if>
+            <if test="sourceId != null and sourceId != ''">
+                <![CDATA[and source_id LIKE concat('%', #{sourceId}, '%')]]>
+            </if>
+            <if test="sendStatus != null">
+                <![CDATA[and send_status = #{sendStatus}]]>
+            </if>
+            <if test="target != null and target != ''">
+                <![CDATA[and bas_push_message_content.target LIKE concat('%', #{target}, '%')]]>
+            </if>
+            <if test="content != null and content != ''">
+                <![CDATA[and bas_push_message_content.content LIKE concat('%', #{content}, '%')]]>
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" resultType="cn.com.yusong.yhdg.common.domain.basic.PushMessage">
+        select
+            bas_push_message.id,
+            agent_id as agentId,
+            send_status as sendStatus,
+            source_type as sourceType,
+            source_id as sourceId,
+            create_time as createTime,
+            handle_time as handleTime,
+            resend_num as resendNum,
+            bas_push_message_content.target as target,
+            bas_push_message_content.content as content
+        from bas_push_message
+        left join bas_push_message_content on bas_push_message.id = bas_push_message_content.id
+        <trim prefix="where" prefixOverrides="and">
+            <if test="sourceType != null">
+                <![CDATA[and source_type = #{sourceType}]]>
+            </if>
+            <if test="sourceId != null and sourceId != ''">
+                <![CDATA[and source_id LIKE concat('%', #{sourceId}, '%')]]>
+            </if>
+            <if test="sendStatus != null">
+                <![CDATA[and send_status = #{sendStatus}]]>
+            </if>
+            <if test="target != null and target != ''">
+                <![CDATA[and bas_push_message_content.target LIKE concat('%', #{target}, '%')]]>
+            </if>
+            <if test="content != null and content != ''">
+                <![CDATA[and bas_push_message_content.content LIKE concat('%', #{content}, '%')]]>
+            </if>
+        </trim>
+        order by bas_push_message.id desc
+        limit ${beginIndex}, ${rows}
+    </select>
+
+</mapper>

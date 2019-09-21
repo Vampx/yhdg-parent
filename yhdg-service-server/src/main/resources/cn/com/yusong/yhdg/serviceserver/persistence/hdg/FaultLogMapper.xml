@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.serviceserver.persistence.hdg.FaultLogMapper">
+
+    <select id="findMaxId" resultType="int">
+        SELECT
+        id
+        FROM
+        hdg_fault_log
+        order by id desc
+        limit 1
+    </select>
+
+    <select id="findList" resultType="cn.com.yusong.yhdg.common.domain.hdg.FaultLog">
+        select
+         *
+        from hdg_fault_log
+        where battery_id = #{batteryId}
+        and fault_type = #{faultType}
+        and create_time > date_add(now(),interval -60 MINUTE);
+    </select>
+
+    <select id="findAllByCursor" resultType="cn.com.yusong.yhdg.common.domain.hdg.FaultLog">
+        SELECT
+        *
+        FROM
+        hdg_fault_log
+        WHERE
+        id > #{id}
+        order by id
+        limit ${limit}
+    </select>
+
+    <select id="findByCursorNotAgent" resultType="cn.com.yusong.yhdg.common.domain.hdg.FaultLog">
+        SELECT
+        *
+        FROM
+        hdg_fault_log
+        WHERE
+        id > #{id}
+        <foreach collection="agentIdList" item="item" open=" AND agent_id not in (" separator="," close=")">
+            #{item}
+        </foreach>
+        order by id
+        limit ${limit}
+    </select>
+
+    <select id="findAllByCursorAndAgent" resultType="cn.com.yusong.yhdg.common.domain.hdg.FaultLog">
+        SELECT
+        *
+        FROM
+        hdg_fault_log
+        WHERE
+        id > #{id}
+        and agent_id = #{agentId}
+        order by id
+        limit ${limit}
+    </select>
+
+    <select id="findTotalCount" resultType="int">
+        SELECT
+        count(id)
+        FROM
+        hdg_fault_log
+        <trim prefix="where" prefixOverrides="and">
+            <if test="beginTime != null">
+                <![CDATA[ and create_time > #{beginTime}]]>
+            </if>
+            <if test="endTime != null">
+                <![CDATA[ and create_time < #{endTime}]]>
+            </if>
+        </trim>
+    </select>
+
+    <select id="findTotalCountByAgentAndType" resultType="int">
+        SELECT
+        count(id)
+        FROM
+        hdg_fault_log
+        WHERE agent_id = #{agentId}
+        and fault_type = #{faultType}
+        and status = 1
+    </select>
+
+    <select id="findTotalCountByAgentAndTypeAndBattery" resultType="int">
+        SELECT
+        count(id)
+        FROM
+        hdg_fault_log
+        WHERE agent_id = #{agentId}
+        and fault_type = #{faultType}
+        <if test="batteryId != null and batteryId !='' ">
+            <![CDATA[ and battery_id = #{batteryId}]]>
+        </if>
+        <if test="boxNum != null and boxNum !='' ">
+            <![CDATA[  and cabinet_id = #{cabinetId} and box_num = #{boxNum}]]>
+        </if>
+        and status = 1
+    </select>
+
+    <select id="findTotalCountByAgent" resultType="int">
+        SELECT
+        count(id)
+        FROM
+        hdg_fault_log
+        WHERE agent_id = #{agentId}
+        <if test="beginTime != null">
+            <![CDATA[ and create_time > #{beginTime}]]>
+        </if>
+        <if test="endTime != null">
+            <![CDATA[ and create_time < #{endTime}]]>
+        </if>
+    </select>
+
+    <select id="findTotalCountByNotAgent" resultType="int">
+        SELECT
+        count(id)
+        FROM
+        hdg_fault_log
+        WHERE 1 = 1
+        <if test="beginTime != null">
+            <![CDATA[ and create_time > #{beginTime}]]>
+        </if>
+        <if test="endTime != null">
+            <![CDATA[ and create_time < #{endTime}]]>
+        </if>
+        <foreach collection="agentIdList" item="item" open=" AND agent_id not in (" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="findTotalCountAndAgent" resultType="int">
+        SELECT
+        count(id)
+        FROM
+        hdg_fault_log
+        WHERE agent_id = #{agentId}
+        <if test="beginTime != null">
+            <![CDATA[ and create_time > #{beginTime}]]>
+        </if>
+        <if test="endTime != null">
+            <![CDATA[ and create_time < #{endTime}]]>
+        </if>
+    </select>
+
+    <insert id="create" parameterType="cn.com.yusong.yhdg.common.domain.hdg.FaultLog" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO `hdg_fault_log`
+        ( `fault_level`, `order_id`, `province_id`, `city_id`, `district_id`, `dispatcher_id`, `agent_id`, `agent_name`, `battery_id`, `cabinet_id`, `cabinet_name`, `cabinet_address`, `box_num`, `fault_type`, `fault_content`, `status`, `handle_memo`, `handle_time`, `handler_name`, `create_time`)
+        VALUES ( #{faultLevel},#{orderId},#{provinceId},#{cityId},#{districtId},#{dispatcherId},#{agentId},#{agentName},#{batteryId},#{cabinetId},#{cabinetName},#{cabinetAddress},#{boxNum},#{faultType},#{faultContent},#{status},#{handleMemo},#{handleTime},#{handlerName},#{createTime})
+    </insert>
+
+    <update id="handle">
+        update hdg_fault_log
+        set
+        status = #{status},
+        handle_type = #{handleType},
+        handle_time = #{handleTime},
+        handle_memo = #{handleMemo},
+        handler_name = #{handlerName}
+        where id = #{id}
+    </update>
+
+</mapper>

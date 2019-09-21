@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.serviceserver.persistence.basic.CustomerInstallmentRecordPayDetailMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.basic.CustomerInstallmentRecordPayDetail">
+        select * from bas_customer_installment_record_pay_detail where id = #{id}
+    </select>
+
+    <select id="findWillExpire" resultType="cn.com.yusong.yhdg.common.domain.basic.CustomerInstallmentRecordPayDetail">
+        select
+          a.*
+        from bas_customer_installment_record_pay_detail a left join bas_customer_installment_record b on a.record_id = b.id
+        where a.status = #{status}  and b.status = 2
+        <if test="expireTime != null">
+            <![CDATA[and a.expire_time <= #{expireTime}]]>
+        </if>
+        order by a.id asc
+        limit #{offset}, #{limit}
+    </select>
+
+
+</mapper>

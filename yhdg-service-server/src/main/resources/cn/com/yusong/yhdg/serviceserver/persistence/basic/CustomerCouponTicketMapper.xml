@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.serviceserver.persistence.basic.CustomerCouponTicketMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.basic.CustomerCouponTicket">
+        select *
+        from  bas_customer_coupon_ticket
+        where id = #{id}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.CustomerCouponTicket" useGeneratedKeys="true" keyProperty="id">
+        insert into bas_customer_coupon_ticket(
+        partner_id,
+        agent_id,
+        ticket_name,
+        money,
+        status,
+        category,
+        expire_time,
+        customer_mobile,
+        memo,
+        ticket_type,
+        give_type,
+        source_id,
+        source_type,
+        begin_time,
+        create_time)
+        values(
+        #{partnerId},
+        #{agentId},
+        #{ticketName},
+        #{money},
+        #{status},
+        #{category},
+        #{expireTime},
+        #{customerMobile},
+        #{memo},
+        #{ticketType},
+        #{giveType},
+        #{sourceId},
+        #{sourceType},
+        #{beginTime},
+        #{createTime})
+    </insert>
+
+    <update id="updateExpiredTicket">
+        update bas_customer_coupon_ticket set
+            status = #{toStatus}
+        where status in
+        <foreach collection="fromStatus" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        and expire_time &lt; #{expireTime}
+        limit ${limit}
+    </update>
+
+
+    <select id="findWillExpire" resultType="cn.com.yusong.yhdg.common.domain.basic.CustomerCouponTicket">
+        select *
+        from bas_customer_coupon_ticket
+        where status = #{status}
+        <if test="expireTime != null">
+            <![CDATA[and expire_time <= #{expireTime}]]>
+        </if>
+        order by id asc
+        limit #{offset}, #{limit}
+    </select>
+
+</mapper>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.zd.RentBatteryForegiftMapper">
+
+    <select id="findListByBatteryType" resultType="cn.com.yusong.yhdg.common.domain.zd.RentBatteryForegift">
+        SELECT
+            *
+        FROM zd_rent_battery_foregift
+        WHERE battery_type = #{batteryType}
+        AND agent_id = #{agentId}
+    </select>
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.zd.RentBatteryForegift">
+        SELECT
+            *
+        FROM zd_rent_battery_foregift
+        WHERE id = #{id}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.zd.RentBatteryForegift" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO zd_rent_battery_foregift(
+            agent_id,
+            battery_type,
+            money,
+            memo
+        ) VALUES (
+            #{agentId},
+            #{batteryType},
+            #{money},
+            #{memo}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE zd_rent_battery_foregift SET
+            money = #{money},
+            memo = #{memo}
+        WHERE agent_id = #{agentId}
+        AND battery_type = #{batteryType}
+        AND id = #{id}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM zd_rent_battery_foregift WHERE id = #{id}
+    </delete>
+
+</mapper>

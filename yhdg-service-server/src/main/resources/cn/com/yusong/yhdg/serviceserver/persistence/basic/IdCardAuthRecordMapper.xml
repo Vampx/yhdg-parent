@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.serviceserver.persistence.basic.IdCardAuthRecordMapper">
+
+    <select id="findByStatus" resultType="cn.com.yusong.yhdg.common.domain.basic.IdCardAuthRecord">
+        select
+        *
+        from bas_id_card_auth_record
+        where status = #{status} and   DATE_FORMAT(create_time, '%Y-%m-%d')  &lt;= #{statsTime} and  material_day_stats_id is null
+    </select>
+
+    <update id="updateDayStatsId" >
+        update bas_id_card_auth_record set
+        material_day_stats_id = #{materialDayStatsId}
+        where id = #{id}
+    </update>
+
+</mapper>

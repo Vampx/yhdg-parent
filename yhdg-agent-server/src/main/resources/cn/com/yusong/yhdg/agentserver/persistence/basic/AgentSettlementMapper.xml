@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.basic.AgentSettlementMapper">
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.basic.AgentSettlement" resultType="int">
+        select count(*) from bas_agent_settlement
+        <trim prefix="where" prefixOverrides="and">
+            <if test="state != null">
+                and state = #{state}
+            </if>
+            <if test="agentId != null">
+                and agent_id = #{agentId}
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.basic.AgentSettlement"
+            resultType="cn.com.yusong.yhdg.common.domain.basic.AgentSettlement">
+        select
+        *
+        from bas_agent_settlement
+        <trim prefix="where" prefixOverrides="and">
+            <if test="state != null">
+                and state = #{state}
+            </if>
+            <if test="agentId != null">
+                and agent_id = #{agentId}
+            </if>
+        </trim>
+        order by id desc
+        limit ${beginIndex}, ${rows}
+    </select>
+
+    <select id="find" parameterType="int" resultType="cn.com.yusong.yhdg.common.domain.basic.AgentSettlement">
+        select
+            *
+        from bas_agent_settlement
+        where id = #{id}
+    </select>
+</mapper>

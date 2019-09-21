@@ -1,0 +1,129 @@
+.weui-cells {
+    background-color: #EFEFEF;
+    .weui-cell {
+        background: #fff;
+        .weui-icon-cancel {
+            color: #B8B8B8;
+            font-size: 22px;
+        }
+        .weui-label {
+            font-size: 14/17rem;
+            color: #5C5C5C;
+        }
+        .weui-cell__bd {
+            .tel {
+                font-size: 24/17rem;
+                color: #5C5C5C;
+            }
+        }
+        .goCord{
+            display: flex;
+            align-items: center;
+            img{
+                height: 12/17rem;
+                width: 1rem;
+            }
+            a{
+                color: #4CBFFF;
+                padding-left: .5rem;
+                font-size: 14/17rem;
+            }
+        }
+    }
+    .choices {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        padding: 10px 15px;
+        background-color: #fff;
+        .choice {
+            box-sizing: border-box;
+            width: 31%;
+            padding: .5em 0em;
+            border: 1px solid #DDDDDD;
+            margin: .3em 1.16%;
+            border-radius: 5px;
+            p {
+                text-align: center;
+                color: #A9A9A9;
+            }
+            p+p {
+                font-size: .7em;
+            }
+        }
+        .choiced {
+            border: 1px solid #4EC6F7;
+            p {
+                color: #4EC6F7;
+            }
+        }
+    }
+}
+
+.pay {
+    .weui-cell__hd {
+        display: flex;
+        align-items: center;
+        img {
+            width: 18/17rem;
+            height: 1rem;
+        }
+    }
+    .weui-cell__bd {
+        p {
+            font-size: 1rem;
+            color: #5C5C5C;
+        }
+    }
+    .weui-icon-checked:before {
+        font-size: 19/17rem;
+    }
+    .weui-check:checked+.weui-icon-checked:before {
+        color: #4CBFFF;
+    }
+}
+
+.btn {
+    margin-top: 1.8em;
+    padding: 0 15/17rem;
+    background: #EFEFEF;
+    .weui-btn {
+        width: 100%;
+    }
+}
+
+.foot {
+    width: 100%;
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    bottom: 1rem;
+    span {
+        color: #798BA2;
+        padding: 0 .5em;
+    }
+    a {
+        color: #798BA2;
+        font-size: 14/17rem;
+    }
+}
+
+.space {
+    margin-bottom: 1.17rem;
+}
+
+.padding_left {
+    padding-left: .5rem
+}
+
+.canPay {
+    display: block;
+    height: 100%;
+    box-sizing: border-box;
+    padding-top: 1.17rem;
+    position: relative;
+}
+
+.canPay .weui-cells {
+    margin-top: 0;
+}

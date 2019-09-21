@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.staticserver.persistence.zc.PriceSettingMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.zc.PriceSetting">
+        SELECT
+        *
+        FROM
+        zc_price_setting
+        WHERE id = #{id}
+    </select>
+
+    <select id="findPriceSettingAll" resultType="cn.com.yusong.yhdg.common.domain.zc.PriceSetting">
+        select *
+        from  zc_price_setting
+        where is_active=1
+        order by id DESC
+    </select>
+
+    <select id="findAgentIdAll" parameterType="list" resultType="cn.com.yusong.yhdg.common.domain.zc.PriceSetting">
+        select zps.*,zvm.model_image_path AS modelImagePath
+        from  zc_price_setting zps LEFT JOIN zc_vehicle_model zvm ON zvm.id=zps.model_id
+        where zps.is_active=1
+        AND zps.agent_id IN
+        <foreach collection="list" item="agentId" open="(" close=")" separator=",">
+            #{agentId}
+        </foreach>
+        order by id DESC
+    </select>
+
+    <select id="findShopIdAll" resultType="cn.com.yusong.yhdg.common.domain.zc.PriceSetting">
+        select zps.*,zvm.model_image_path AS modelImagePath,zsps.vehicle_count AS vehicleCount
+        from  zc_price_setting zps right  JOIN zc_shop_price_setting zsps ON zps.id=zsps.price_setting_id
+        LEFT JOIN zc_vehicle_model zvm ON zvm.id=zps.model_id
+        where zps.is_active=1
+        AND zsps.shop_id =#{shopId}
+        order by id DESC
+    </select>
+
+
+</mapper>

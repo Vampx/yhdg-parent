@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.hdg.EstateMapper">
+
+    <select id="find" parameterType="long" resultType="cn.com.yusong.yhdg.common.domain.hdg.Estate">
+        select
+        *
+        from hdg_estate
+        where id = #{id}
+    </select>
+
+    <select id="findByPayPeopleMobile" parameterType="String" resultType="cn.com.yusong.yhdg.common.domain.hdg.Estate">
+        select
+        *
+        from hdg_estate
+        where pay_people_mobile = #{payPeopleMobile} limit 1
+    </select>
+
+    <select id="findMaxId" parameterType="String" resultType="String">
+        select
+        id
+        from hdg_estate
+        where
+        <![CDATA[id LIKE concat(#{id}, '%')]]>
+        ORDER BY id DESC
+        limit 1
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.hdg.Estate" resultType="int">
+        select
+        count(id)
+        from hdg_estate
+        where 1 = 1
+        <if test="estateName != null and estateName != ''">
+            <![CDATA[and estate_name LIKE concat('%', #{estateName}, '%')]]>
+        </if>
+        <if test="agentId != null">
+            and agent_id = #{agentId}
+        </if>
+        <if test="id != null and id != ''">
+            <![CDATA[and id LIKE concat(#{id}, '%')]]>
+        </if>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.hdg.Estate" resultType="cn.com.yusong.yhdg.common.domain.hdg.Estate">
+        select
+        *
+        from hdg_estate
+        where 1 = 1
+        <if test="estateName != null and estateName != ''">
+            <![CDATA[and estate_name LIKE concat('%', #{estateName}, '%')]]>
+        </if>
+        <if test="agentId != null">
+            and agent_id = #{agentId}
+        </if>
+        <if test="id != null and id != ''">
+            <![CDATA[and id LIKE concat(#{id}, '%')]]>
+        </if>
+        order by id desc
+        limit ${beginIndex}, ${rows}
+    </select>
+
+    <select id="findUnboundPageCount" parameterType="cn.com.yusong.yhdg.common.domain.hdg.Estate" resultType="int">
+        select
+        count(id)
+        from hdg_estate
+        where 1 = 1
+        <if test="id != null and id != ''">
+            <![CDATA[and id LIKE concat(#{id}, '%')]]>
+        </if>
+        <if test="estateName != null and estateName != ''">
+            <![CDATA[and estate_name LIKE concat('%', #{estateName}, '%')]]>
+        </if>
+        <if test="agentId != null">
+            and agent_id = #{agentId}
+        </if>
+    </select>
+
+    <select id="findUnboundPageResult" parameterType="cn.com.yusong.yhdg.common.domain.hdg.Estate" resultType="cn.com.yusong.yhdg.common.domain.hdg.Estate">
+        select
+        *
+        from hdg_estate
+        where 1 = 1
+        <if test="id != null and id != ''">
+            <![CDATA[and id LIKE concat(#{id}, '%')]]>
+        </if>
+        <if test="estateName != null and estateName != ''">
+            <![CDATA[and estate_name LIKE concat('%', #{estateName}, '%')]]>
+        </if>
+        <if test="agentId != null">
+            and agent_id = #{agentId}
+        </if>
+        order by id desc
+        limit ${beginIndex}, ${rows}
+    </select>
+
+    <select id="findUnique" parameterType="long" resultType="cn.com.yusong.yhdg.common.domain.hdg.Estate">
+        select id from hdg_estate where id = #{id}
+    </select>
+
+    <select id="findCountByAgent" resultType="int">
+        select count(1) from hdg_estate where agent_id = #{agentId}
+    </select>
+
+    <select id="findByAgent" resultType="cn.com.yusong.yhdg.common.domain.hdg.Estate">
+        select * from hdg_estate where agent_id = #{agentId}
+    </select>
+
+    <select id="findAll" resultType="cn.com.yusong.yhdg.common.domain.hdg.Estate">
+        select * from hdg_estate
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.Estate">
+        insert into hdg_estate (
+        agent_id,
+        auth_type,
+        estate_name,
+        is_active,
+        work_time,
+        linkname,
+        tel,
+        address,
+        balance,
+        create_time
+        )
+        values(
+        #{agentId},
+        #{authType},
+        #{estateName},
+        #{isActive},
+        #{workTime},
+        #{linkname},
+        #{tel},
+        #{address},
+        #{balance},
+        #{createTime}
+        )
+    </insert>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.hdg.Estate">
+        update hdg_estate set
+        <trim suffix="" suffixOverrides=",">
+            <if test="agentId != null">
+                agent_id = #{agentId},
+            </if>
+            <if test="estateName != null and estateName != ''">
+                estate_name = #{estateName},
+            </if>
+            <if test="isActive != null">
+                is_active = #{isActive},
+            </if>
+            <if test="workTime != null and workTime != ''">
+                work_time = #{workTime},
+            </if>
+            <if test="linkname != null and linkname != ''">
+                linkname = #{linkname},
+            </if>
+            <if test="tel != null and tel != ''">
+                tel = #{tel},
+            </if>
+            <if test="address != null and address != '' ">
+                address = #{address},
+            </if>
+            <if test="balance != null">
+                balance = #{balance},
+            </if>
+            <if test="payPeopleMobile != null and payPeopleMobile != ''">
+                pay_people_mobile = #{payPeopleMobile},
+            </if>
+            <if test="payPeopleName != null and payPeopleName != ''">
+                pay_people_name = #{payPeopleName},
+            </if>
+            <if test="payPeopleMpOpenId != null and payPeopleMpOpenId != ''">
+                pay_people_mp_open_id  = #{payPeopleMpOpenId},
+            </if>
+            <if test="payPeopleFwOpenId != null and payPeopleFwOpenId != ''">
+                pay_people_fw_open_id   = #{payPeopleFwOpenId},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+
+    <update id="updateBalance">
+        <choose>
+            <when test="balance > 0">
+                update hdg_estate set balance = balance + #{balance} where id = #{id}
+            </when>
+            <otherwise>
+                <![CDATA[update hdg_estate set balance = balance + #{balance} where id = #{id} and balance + #{balance} >= 0]]>
+            </otherwise>
+        </choose>
+    </update>
+
+    <delete id="delete">
+        delete from hdg_estate where id = #{id}
+    </delete>
+
+    <update id="updatePayPeople">
+        UPDATE hdg_estate SET
+        pay_people_name = #{payPeopleName},
+        pay_people_mp_open_id = #{payPeopleMpOpenId},
+        pay_people_fw_open_id = #{payPeopleFwOpenId},
+        <if test="payPassword != null and payPassword != ''">
+            pay_password = #{payPassword},
+        </if>
+        pay_people_mobile = #{payPeopleMobile}
+        where id = #{id}
+    </update>
+
+</mapper>

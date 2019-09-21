@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.com.yusong.yhdg.serviceserver.persistence.basic.WithdrawTransferLogMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.basic.WithdrawTransferLog">
+        select *
+        from bas_withdraw_transfer_log
+        where id=#{id}
+    </select>
+
+    <select id="findAll" resultType="cn.com.yusong.yhdg.common.domain.basic.WithdrawTransferLog">
+        select *
+        from bas_withdraw_transfer_log
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.basic.WithdrawTransferLog" resultType="int">
+        select count(id)
+        from bas_withdraw_transfer_log
+        <trim prefix="where" prefixOverrides="and">
+                <if test="id != null">and id = #{id} </if>
+                <if test="withdrawId != null">and withdraw_id = #{withdrawId} </if>
+                <if test="operatorName != null">and operator_name = #{operatorName} </if>
+                <if test="content != null">and content = #{content} </if>
+                <if test="createTime != null">and create_time = #{createTime} </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.basic.WithdrawTransferLog" resultType="cn.com.yusong.yhdg.common.domain.basic.WithdrawTransferLog">
+        select *
+        from bas_withdraw_transfer_log
+        <trim prefix="where" prefixOverrides="and">
+                <if test="id != null">and id = #{id} </if>
+                <if test="withdrawId != null">and withdraw_id = #{withdrawId} </if>
+                <if test="operatorName != null">and operator_name = #{operatorName} </if>
+                <if test="content != null">and content = #{content} </if>
+                <if test="createTime != null">and create_time = #{createTime} </if>
+        </trim>
+        order by id desc
+        limit #{beginIndex}, #{rows}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.WithdrawTransferLog" keyProperty="id" useGeneratedKeys="true">
+        insert into bas_withdraw_transfer_log (
+        id,withdraw_id,operator_name,content,create_time)
+        values (
+        #{id},#{withdrawId},#{operatorName},#{content},#{createTime})
+    </insert>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.basic.WithdrawTransferLog">
+        update bas_withdraw_transfer_log
+        <trim prefix="set" suffixOverrides="," suffix=" where id = #{id} ">
+            <if test="withdrawId != null"> withdraw_id = #{withdrawId}, </if>
+            <if test="operatorName != null"> operator_name = #{operatorName}, </if>
+            <if test="content != null"> content = #{content}, </if>
+            <if test="createTime != null"> create_time = #{createTime}, </if>
+        </trim>
+    </update>
+
+    <delete id="delete">
+        delete from bas_withdraw_transfer_log
+        where id=#{id}
+    </delete>
+</mapper>

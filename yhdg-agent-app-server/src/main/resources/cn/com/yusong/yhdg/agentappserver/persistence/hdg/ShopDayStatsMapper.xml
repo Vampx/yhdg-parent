@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.agentappserver.persistence.hdg.ShopDayStatsMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.hdg.ShopDayStats">
+        select
+        *
+        from hdg_shop_day_stats
+        where agent_id = #{agentId}
+        and stats_date = #{statsDate}
+        and shop_id = #{shopId}
+        and category = #{category}
+    </select>
+
+    <select id="findTotalShopStatsList" resultType="cn.com.yusong.yhdg.common.domain.hdg.ShopDayStats">
+        select
+        shop_id as shopId,
+        shop_name as shopName,
+        ifnull(sum(agent_foregift_money), 0) as agentForegiftMoney,
+        ifnull(sum(agent_refund_foregift_money), 0) as agentRefundForegiftMoney,
+
+        ifnull(sum(agent_packet_period_money), 0) as agentpacketPeriodMoney,
+        ifnull(sum(agent_refund_packet_period_money), 0) as agentRefundPacketPeriodMoney,
+
+        ifnull(sum(agent_insurance_money), 0) as agentInsuranceMoney,
+        ifnull(sum(agent_refund_insurance_money), 0) as agentRefundInsuranceMoney,
+
+        ifnull(sum(packet_period_money), 0) as packetPeriodMoney,
+        ifnull(sum(refund_packet_period_money), 0) as refundPacketPeriodMoney
+        from hdg_shop_day_stats
+        where agent_id = #{agentId} and category = #{category}
+        <if test="beginDate != null and endDate != null">
+            AND stats_date BETWEEN #{beginDate} AND #{endDate}
+        </if>
+        <if test="keyword != null and keyword != ''">
+            <![CDATA[and shop_name LIKE concat('%', #{keyword}, '%')]]>
+        </if>
+        GROUP BY shop_id, shop_name
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="findTotalStatsListShopId" resultType="cn.com.yusong.yhdg.common.domain.hdg.ShopDayStats">
+        select
+
+        ifnull(sum(agent_foregift_money), 0) as agentForegiftMoney,
+        ifnull(sum(agent_refund_foregift_money), 0) as agentRefundForegiftMoney,
+
+        ifnull(sum(agent_packet_period_money), 0) as agentpacketPeriodMoney,
+        ifnull(sum(agent_refund_packet_period_money), 0) as agentRefundPacketPeriodMoney,
+
+        ifnull(sum(agent_insurance_money), 0) as agentInsuranceMoney,
+        ifnull(sum(agent_refund_insurance_money), 0) as agentRefundInsuranceMoney,
+
+        ifnull(sum(packet_period_money), 0) as packetPeriodMoney,
+        ifnull(sum(refund_packet_period_money), 0) as refundPacketPeriodMoney
+
+        from hdg_shop_day_stats
+        where agent_id = #{agentId} and shop_id = #{shopId} and category = #{category}
+        AND stats_date BETWEEN #{beginDate} AND #{endDate}
+    </select>
+
+    <select id="findDateRange" resultType="cn.com.yusong.yhdg.common.domain.hdg.ShopDayStats">
+        SELECT
+        *
+        FROM hdg_shop_day_stats
+        WHERE agent_id = #{agentId} and shop_id = #{shopId} and category = #{category}
+        <if test="beginDate != null and endDate != null">
+            AND stats_date BETWEEN #{beginDate} AND #{endDate}
+        </if>
+    </select>
+
+    <select id="statsOrderAndRefundMoney" resultType="cn.com.yusong.yhdg.common.domain.hdg.ShopDayStats">
+        SELECT
+            IFNULL(SUM(packet_period_money), 0) as packetPeriodMoney,
+            IFNULL(SUM(refund_packet_period_money), 0) as refundPacketPeriodMoney,
+            IFNULL(SUM(agent_packet_period_money), 0) as agentPacketPeriodMoney,
+            IFNULL(SUM(agent_refund_packet_period_money), 0) as agentRefundPacketPeriodMoney
+        FROM hdg_shop_day_stats
+        where shop_id = #{shopId}
+    </select>
+
+</mapper>

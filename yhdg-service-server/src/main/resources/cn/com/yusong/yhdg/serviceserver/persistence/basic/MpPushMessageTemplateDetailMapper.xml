@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.serviceserver.persistence.basic.MpPushMessageTemplateDetailMapper">
+    <select id="findByTemplateId" resultType="cn.com.yusong.yhdg.common.domain.basic.MpPushMessageTemplateDetail">
+        select
+           *
+        from bas_mp_push_message_template_detail
+        where weixinmp_id = #{weixinmpId} and template_id = #{templateId}
+    </select>
+</mapper>

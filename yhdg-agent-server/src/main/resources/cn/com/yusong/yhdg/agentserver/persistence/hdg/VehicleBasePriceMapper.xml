@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.hdg.VehicleBasePriceMapper">
+
+    <select id="find" parameterType="long" resultType="cn.com.yusong.yhdg.common.domain.hdg.VehicleBasePrice">
+        select
+            *
+        from hdg_vehicle_base_price 
+        where id = #{id}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.hdg.VehicleBasePrice" resultType="int">
+        select
+        count(id)
+        from hdg_vehicle_base_price
+        where 1 = 1
+        <if test="agentId != null">
+            and agent_id = #{agentId}
+        </if>
+        <if test="modelId != null">
+            and model_id = #{modelId}
+        </if>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.hdg.VehicleBasePrice" resultType="cn.com.yusong.yhdg.common.domain.hdg.VehicleBasePrice">
+        select
+        *
+        from hdg_vehicle_base_price
+        where 1 = 1
+        <if test="agentId != null">
+            and agent_id = #{agentId}
+        </if>
+        <if test="modelId != null">
+            and model_id = #{modelId}
+        </if>
+        order by id desc
+        limit ${beginIndex}, ${rows}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.VehicleBasePrice" useGeneratedKeys="true" keyProperty="id">
+        insert into hdg_vehicle_base_price(
+          model_id,
+          model_code,
+          model_name,
+          agent_id,
+          overdue_price,
+          deduct_day,
+          duration,
+          unit,
+          price,
+          memo
+        )
+        values(
+        #{modelId},
+        #{modelCode},
+        #{modelName},
+        #{agentId},
+        #{overduePrice},
+        #{deductDay},
+        #{duration},
+        #{unit},
+        #{price},
+        #{memo})
+    </insert>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.hdg.VehicleBasePrice">
+        update hdg_vehicle_base_price set
+        model_id = #{modelId},
+        agent_id = #{agentId},
+        overdue_price = #{overduePrice},
+        deduct_day = #{deductDay},
+        duration = #{duration},
+        unit = #{unit},
+        price = #{price},
+        memo = #{memo}
+        where id = #{id}
+    </update>
+
+    <delete id="delete">
+        delete from hdg_vehicle_base_price where id = #{id}
+    </delete>
+
+</mapper>

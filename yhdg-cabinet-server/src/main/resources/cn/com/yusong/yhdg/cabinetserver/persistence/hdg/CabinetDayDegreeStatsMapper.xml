@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.cabinetserver.persistence.hdg.CabinetDayDegreeStatsMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetDayDegreeStats">
+        select
+            *
+        from hdg_cabinet_day_degree_stats
+        where cabinet_id = #{cabinetId} and stats_date = #{statsDate}
+    </select>
+
+    <select id="findBefore" resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetDayDegreeStats">
+        select
+            *
+        from hdg_cabinet_day_degree_stats
+        where cabinet_id = #{cabinetId} and stats_date != #{statsDate} ORDER BY stats_date DESC limit 1
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.CabinetDayDegreeStats">
+        INSERT INTO hdg_cabinet_day_degree_stats
+        (
+            cabinet_id,
+            cabinet_name,
+            agent_id,
+            agent_name,
+            stats_date,
+            begin_time,
+            end_time,
+            begin_num,
+            end_num,
+            num
+        ) VALUES (
+            #{cabinetId},
+            #{cabinetName},
+            #{agentId},
+            #{agentName},
+            #{statsDate},
+            #{beginTime},
+            #{endTime},
+            #{beginNum},
+            #{endNum},
+            #{num}
+        )
+    </insert>
+
+    <update id="updateEnd">
+        update hdg_cabinet_day_degree_stats set
+        end_time = #{endTime},
+        end_num = #{endNum},
+        num = #{num}
+        where cabinet_id = #{cabinetId} and stats_date = #{statsDate}
+    </update>
+
+    <update id="updateBegin">
+        update hdg_cabinet_day_degree_stats set
+        end_time = #{endTime},
+        begin_num = #{beginNum},
+        end_num = #{endNum},
+        num = #{num}
+        where cabinet_id = #{cabinetId} and stats_date = #{statsDate}
+    </update>
+
+</mapper>

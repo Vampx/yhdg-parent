@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.basic.TerminalUpgradePackDetailMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.basic.TerminalUpgradePackDetail">
+        select
+          *
+        from bas_terminal_upgrade_pack_detail
+        where
+        upgrade_pack_id = #{upgradePackId}
+        and
+        terminal_id =#{terminalId}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.basic.TerminalUpgradePackDetail" resultType="int">
+        select
+        count(bas_terminal_upgrade_pack_detail.terminal_id)
+        from bas_terminal_upgrade_pack_detail, hdg_cabinet
+        <trim prefix="where" prefixOverrides="and">
+            <if test="upgradePackId != null ">
+                and bas_terminal_upgrade_pack_detail.upgrade_pack_id = #{upgradePackId}
+            </if>
+            <if test="cabinetName != null and cabinetName != ''">
+                and hdg_cabinet.cabinet_name = #{cabinetName}
+            </if>
+            and bas_terminal_upgrade_pack_detail.terminal_id = hdg_cabinet.terminal_id
+        </trim>
+    </select>
+
+    <select id="findPageResult" resultType="cn.com.yusong.yhdg.common.domain.basic.TerminalUpgradePackDetail">
+        select
+        hdg_cabinet.id,
+        hdg_cabinet.cabinet_name,
+        hdg_cabinet.version
+        from bas_terminal_upgrade_pack_detail, hdg_cabinet
+        <trim prefix="where" prefixOverrides="and">
+            <if test="upgradePackId != null ">
+                and bas_terminal_upgrade_pack_detail.upgrade_pack_id = #{upgradePackId}
+            </if>
+            <if test="cabinetName != null and cabinetName != ''">
+                and hdg_cabinet.cabinet_name = #{cabinetName}
+            </if>
+            and bas_terminal_upgrade_pack_detail.terminal_id = hdg_cabinet.terminal_id
+        </trim>
+        limit ${beginIndex}, ${rows}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.TerminalUpgradePackDetail">
+        INSERT INTO bas_terminal_upgrade_pack_detail
+        (
+           upgrade_pack_id,
+           terminal_id
+        ) VALUES (
+            #{upgradePackId},
+            #{terminalId}
+        )
+    </insert>
+
+    <delete id="delete" parameterType="cn.com.yusong.yhdg.common.domain.basic.TerminalUpgradePackDetail">
+    delete
+    from
+    bas_terminal_upgrade_pack_detail
+    where
+    upgrade_pack_id = #{upgradePackId}
+    and
+    terminal_id = #{terminalId}
+
+</delete>
+
+
+</mapper>

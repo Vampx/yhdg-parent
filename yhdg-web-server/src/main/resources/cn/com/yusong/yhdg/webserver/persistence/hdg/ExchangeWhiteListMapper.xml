@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.hdg.ExchangeWhiteListMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.hdg.ExchangeWhiteList">
+        select hdg_exchange_whitelist.*,
+        bas_system_battery_type.type_name as typeName,
+        bas_system_battery_type.rated_voltage as ratedVoltage,
+        bas_system_battery_type.rated_capacity as ratedCapacity
+        from hdg_exchange_whitelist, bas_system_battery_type
+        where hdg_exchange_whitelist.id = #{id}
+        and hdg_exchange_whitelist.battery_type = bas_system_battery_type.id
+    </select>
+
+    <select id="findByCustomerId" resultType="cn.com.yusong.yhdg.common.domain.hdg.ExchangeWhiteList">
+        select * from hdg_exchange_whitelist
+        where customer_id = #{customerId}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.hdg.ExchangeWhiteList"
+            resultType="int">
+        select count(*) from hdg_exchange_whitelist, bas_system_battery_type
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null">
+                agent_id = #{agentId}
+            </if>
+            <if test="fullname != null and fullname != ''">
+                <![CDATA[and fullname LIKE concat(#{fullname}, '%')]]>
+            </if>
+            <if test="mobile != null and mobile != ''">
+                <![CDATA[and mobile LIKE concat(#{mobile}, '%')]]>
+            </if>
+            and hdg_exchange_whitelist.battery_type = bas_system_battery_type.id
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.hdg.ExchangeWhiteList"
+            resultType="cn.com.yusong.yhdg.common.domain.hdg.ExchangeWhiteList">
+        select hdg_exchange_whitelist.*, bas_system_battery_type.type_name as typeName
+        from hdg_exchange_whitelist, bas_system_battery_type
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null">
+                agent_id = #{agentId}
+            </if>
+            <if test="fullname != null and fullname != ''">
+                <![CDATA[and fullname LIKE concat(#{fullname}, '%')]]>
+            </if>
+            <if test="mobile != null and mobile != ''">
+                <![CDATA[and mobile LIKE concat(#{mobile}, '%')]]>
+            </if>
+            and hdg_exchange_whitelist.battery_type = bas_system_battery_type.id
+        </trim>
+        order by id desc
+        limit ${beginIndex}, ${rows}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.ExchangeWhiteList" useGeneratedKeys="true" keyProperty="id">
+        insert into hdg_exchange_whitelist
+        (agent_id, customer_id, mobile, fullname, battery_type, create_time)
+        VALUES
+        (#{agentId}, #{customerId}, #{mobile}, #{fullname}, #{batteryType}, #{createTime})
+    </insert>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.hdg.ExchangeWhiteList">
+        update hdg_exchange_whitelist
+            set agent_id = #{agentId},
+            customer_id = #{customerId},
+            battery_type = #{batteryType},
+            mobile = #{mobile},
+            fullname = #{fullname},
+            create_time = #{createTime}
+        where id = #{id}
+    </update>
+
+    <delete id="delete">
+        delete from hdg_exchange_whitelist
+        where id = #{id}
+    </delete>
+</mapper>

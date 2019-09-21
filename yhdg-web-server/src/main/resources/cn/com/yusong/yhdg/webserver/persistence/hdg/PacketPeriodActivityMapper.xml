@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.hdg.PacketPeriodActivityMapper">
+
+    <select id="find" parameterType="long" resultType="cn.com.yusong.yhdg.common.domain.hdg.PacketPeriodActivity">
+        SELECT
+        *
+        FROM hdg_packet_period_activity
+        WHERE id = #{id}
+    </select>
+    
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.hdg.PacketPeriodActivity" resultType="int">
+        select
+        count(*)
+        from hdg_packet_period_activity
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null">
+                and agent_id = #{agentId}
+            </if>
+            <if test="activityName != null and activityName != ''">
+                <![CDATA[and activity_name LIKE concat('%', #{activityName}, '%')]]>
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.hdg.PacketPeriodActivity"
+            resultType="cn.com.yusong.yhdg.common.domain.hdg.PacketPeriodActivity">
+        select
+          *
+        from hdg_packet_period_activity
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentId != null">
+                and agent_id = #{agentId}
+            </if>
+            <if test="activityName != null and activityName != ''">
+                <![CDATA[and activity_name LIKE concat('%', #{activityName}, '%')]]>
+            </if>
+        </trim>
+        order by id desc
+        limit #{beginIndex}, #{rows}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.PacketPeriodActivity" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO hdg_packet_period_activity(
+          agent_id,
+          activity_name,
+          battery_type,
+          day_count,
+          price,
+          limit_count,
+          day_limit_count,
+          memo,
+          begin_time,
+          end_time,
+          create_time
+        ) VALUES (
+          #{agentId},
+          #{activityName},
+          #{batteryType},
+          #{dayCount},
+          #{price},
+          #{limitCount},
+          #{dayLimitCount},
+          #{memo},
+          #{beginTime},
+          #{endTime},
+          #{createTime}
+        )
+    </insert>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.hdg.PacketPeriodActivity">
+        update hdg_packet_period_activity set
+               agent_id = #{agentId},
+               activity_name = #{activityName},
+               battery_type = #{batteryType},
+               day_count = #{dayCount},
+               price = #{price},
+               limit_count = #{limitCount},
+               day_limit_count = #{dayLimitCount},
+               memo = #{memo},
+               begin_time = #{beginTime},
+               end_time = #{endTime}
+        where id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="long">
+        delete from hdg_packet_period_activity where id = #{id}
+    </delete>
+
+</mapper>

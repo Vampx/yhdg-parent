@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.basic.AgentCompanyInOutMoneyMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.basic.AgentCompanyInOutMoney">
+        select *
+        from bas_agent_company_in_out_money
+        where id=#{id}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.basic.AgentCompanyInOutMoney" resultType="int">
+        select
+            count(*)
+        from bas_agent_company_in_out_money
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentCompanyId !=null">
+                and agent_company_id = #{agentCompanyId}
+            </if>
+            <if test="bizType !=null">
+                and biz_type = #{bizType}
+            </if>
+            <if test="type !=null">
+                and type = #{type}
+            </if>
+            <if test="queryTime !=null and queryTime != ''">
+                and DATE_FORMAT(create_time, '%Y-%c') =#{queryTime}
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.basic.AgentCompanyInOutMoney" resultType="cn.com.yusong.yhdg.common.domain.basic.AgentCompanyInOutMoney">
+        select
+        *
+        from bas_agent_company_in_out_money
+        <trim prefix="where" prefixOverrides="and">
+            <if test="agentCompanyId !=null">
+                and agent_company_id = #{agentCompanyId}
+            </if>
+            <if test="bizType !=null">
+                and biz_type = #{bizType}
+            </if>
+            <if test="type !=null">
+                and type = #{type}
+            </if>
+            <if test="queryTime !=null and queryTime != ''">
+                and DATE_FORMAT(create_time, '%Y-%c') =#{queryTime}
+            </if>
+        </trim>
+        order by id desc
+        limit ${beginIndex}, ${rows}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.AgentCompanyInOutMoney">
+        insert into bas_agent_company_in_out_money(agent_company_id, biz_type, biz_id, money, create_time, type, balance, operator)
+        values(#{agentCompanyId}, #{bizType},  #{bizId}, #{money}, #{createTime}, #{type}, #{balance}, #{operator})
+    </insert>
+
+</mapper>

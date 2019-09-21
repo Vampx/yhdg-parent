@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.agentappserver.persistence.zd.RentPeriodOrderMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.zd.RentPeriodOrder">
+        select
+        *
+        FROM
+        zd_rent_period_order
+        where
+        id = #{id}
+    </select>
+
+    <select id="findListByShop" resultType="cn.com.yusong.yhdg.common.domain.zd.RentPeriodOrder">
+        SELECT
+            *
+        FROM zd_rent_period_order
+        WHERE shop_id = #{shopId}
+        <if test="keyword != null and keyword != ''">
+            <![CDATA[AND customer_mobile LIKE concat('%', #{keyword}, '%')]]>
+        </if>
+        ORDER BY id DESC
+        limit #{offset}, #{limit}
+    </select>
+
+    <select id="findOneEnabled" resultType="cn.com.yusong.yhdg.common.domain.zd.RentPeriodOrder">
+        select
+        *
+        FROM
+        zd_rent_period_order
+        where customer_id = #{customerId}
+        and status = #{status}
+        and agent_id = #{agentId}
+        order by create_time desc
+        limit 1
+    </select>
+
+    <select id="findLastEndTime" resultType="cn.com.yusong.yhdg.common.domain.zd.RentPeriodOrder">
+        select
+        *
+        FROM
+        zd_rent_period_order
+        where
+        customer_id = #{customerId}
+        and status = #{status}
+        and end_time is not null
+        order by end_time DESC
+        limit 1
+    </select>
+    <select id="countShopTodayOrderMoney" resultType="java.lang.Integer">
+        select IFNULL(sum(money),0)
+        FROM zd_rent_period_order
+        WHERE shop_id = #{shopId}
+        and pay_time >= #{startTime} and pay_time &lt;= #{endTime}
+    </select>
+
+    <select id="findCountByShopAndStatus" resultType="int">
+        SELECT
+            COUNT(*)
+        FROM zd_rent_period_order
+        WHERE shop_id = #{shopId}
+        <foreach collection="statusList" item="status" open="and status in (" close=")" separator=",">
+            #{status}
+        </foreach>
+    </select>
+
+    <select id="findListByShopId" resultType="cn.com.yusong.yhdg.common.domain.zd.RentPeriodOrder">
+        select
+        *
+        from zd_rent_period_order
+        where agent_id = #{agentId}
+        <if test="shopId != null and shopId != ''">
+            and shop_id = #{shopId}
+        </if>
+        <if test="shopId == null">
+            and shop_id is not null
+        </if>
+        <if test="beginTime != null and endTime != ''">
+            and pay_time >= #{beginTime} and pay_time &lt;= #{endTime}
+        </if>
+        <if test="keyword != null and keyword != ''">
+            and customer_fullname like concat('%', #{keyword} ,'%')
+        </if>
+        ORDER BY id desc
+    </select>
+
+</mapper>

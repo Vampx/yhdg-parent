@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.basic.CustomerAgentBalanceMapper">
+    <select id="findByCustomerId" parameterType="long" resultType="cn.com.yusong.yhdg.common.domain.basic.CustomerAgentBalance">
+        select
+        *
+        from bas_customer_agent_balance
+        where customer_id = #{customerId}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.CustomerAgentBalance" useGeneratedKeys="true">
+        insert into bas_customer_agent_balance(
+        customer_id,
+        agent_id,
+        agent_name,
+        agent_balance
+        ) values (
+        #{customerId},
+        #{agentId},
+        #{agentName},
+        #{agentBalance}
+        )
+    </insert>
+
+    <update id="resignation">
+        update bas_customer_agent_balance set
+        agent_balance = agent_balance - #{agentBalance},
+        type = #{type}
+        where customer_id = #{customerId} and agent_balance - #{agentBalance} = 0
+    </update>
+
+    <update id="clearAgentId">
+        update bas_customer_agent_balance set
+        agent_id = null
+        where customer_id = #{customerId}
+    </update>
+
+    <update id="updateWhitelistPriceGroupId">
+        update bas_customer_agent_balance set
+        agent_id = #{agentId}
+        where customer_id = #{customerId}
+    </update>
+
+    <update id="updateAgentBalance" parameterType="cn.com.yusong.yhdg.common.domain.basic.Customer">
+        update bas_customer_agent_balance SET
+        agent_balance =#{agentBalance}
+        where customer_id = #{customerId}
+    </update>
+
+    <update id="updateBalance">
+        <choose>
+            <when test="agentBalance > 0 ">
+                update bas_customer_agent_balance set agent_balance = agent_balance + #{agentBalance} where customer_id = #{customerId}
+            </when>
+            <otherwise>
+                <![CDATA[update bas_customer_agent_balance set agent_balance = agent_balance + #{agentBalance} where customer_id = #{customerId} and agent_balance + #{agentBalance} >= 0 ]]>
+            </otherwise>
+        </choose>
+    </update>
+
+    <delete id="deleteByCustomerId" parameterType="long">
+        delete from bas_customer_agent_balance where customer_id = #{customerId}
+    </delete>
+</mapper>

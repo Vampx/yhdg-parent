@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.appserver.persistence.zd.RentPeriodOrderMapper">
+
+    <select id="findList" resultType="cn.com.yusong.yhdg.common.domain.zd.RentPeriodOrder">
+        select
+        *
+        FROM
+        zd_rent_period_order
+        where
+        customer_id = #{customerId}
+        order by id DESC
+        limit #{offset},#{limit}
+    </select>
+
+    <select id="findNoStatusList" resultType="cn.com.yusong.yhdg.common.domain.zd.RentPeriodOrder">
+        select
+        *
+        FROM
+        zd_rent_period_order
+        where
+        customer_id = #{customerId}
+        and status != #{status}
+        order by field(status,3,2,5,4,6,1),id DESC
+        limit #{offset},#{limit}
+    </select>
+
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.zd.RentPeriodOrder">
+        select
+        *
+        FROM
+        zd_rent_period_order
+        where
+        id = #{id}
+    </select>
+
+    <select id="findListByCustomerId" resultType="cn.com.yusong.yhdg.common.domain.zd.RentPeriodOrder">
+        select
+        *
+        FROM
+        zd_rent_period_order
+        where
+        customer_id = #{customerId}
+        and status in (2,3)
+        order by id DESC
+    </select>
+
+    <select id="findListByCustomerIdAndStatus" resultType="cn.com.yusong.yhdg.common.domain.zd.RentPeriodOrder">
+        select
+        *
+        FROM
+        zd_rent_period_order
+        where
+        customer_id = #{customerId}
+        and status = #{status}
+        order by id DESC
+    </select>
+
+    <select id="findNeedRefundList" resultType="cn.com.yusong.yhdg.common.domain.zd.RentPeriodOrder">
+        select
+          *
+        from zd_rent_period_order
+        where customer_id = #{customerId}
+        and status = #{status}
+        <![CDATA[and begin_time >= #{beginTime} ]]>
+    </select>
+
+    <select id="findLastEndTime" resultType="cn.com.yusong.yhdg.common.domain.zd.RentPeriodOrder">
+        select
+        *
+        FROM
+        zd_rent_period_order
+        where
+        customer_id = #{customerId}
+        and end_time is not null
+        order by end_time DESC
+        limit 1
+    </select>
+
+    <select id="findOneEnabled" resultType="cn.com.yusong.yhdg.common.domain.zd.RentPeriodOrder">
+        select
+            *
+        FROM
+            zd_rent_period_order
+        where customer_id = #{customerId}
+        and status = #{status}
+        and agent_id = #{agentId}
+        and battery_type = #{batteryType}
+        limit 1
+    </select>
+
+    <select id="findRemainingTime" resultType="cn.com.yusong.yhdg.common.domain.zd.RentPeriodOrder">
+        SELECT
+            end_time as endTime,
+            TIMESTAMPDIFF(DAY, NOW(), end_time)+1 as remainingDay
+        FROM
+            zd_rent_period_order
+        WHERE
+            customer_id = #{customerId}
+        AND STATUS = #{status}
+        limit 1
+    </select>
+
+    <insert id="insert">
+        insert into zd_rent_period_order (
+              id,
+              partner_id,
+              agent_id,
+              agent_name,
+              shop_id,
+              shop_name,
+              agent_company_id,
+              agent_company_name,
+              battery_type,
+              activity_id,
+              day_count,
+              begin_time,
+              end_time,
+              expire_time,
+              status,
+              customer_id,
+              customer_mobile,
+              customer_fullname,
+              pay_type,
+              pay_time,
+              price,
+              money,
+              consume_deposit_balance,
+              consume_gift_balance,
+              ticket_name,
+              ticket_money,
+              coupon_ticket_id,
+              vehicle_order_flag,
+              create_time )
+        VALUES (
+              #{id},
+              #{partnerId},
+              #{agentId},
+              #{agentName},
+              #{shopId},
+              #{shopName},
+              #{agentCompanyId},
+              #{agentCompanyName},
+              #{batteryType},
+              #{activityId},
+              #{dayCount},
+              #{beginTime},
+              #{endTime},
+              #{expireTime},
+              #{status},
+              #{customerId},
+              #{customerMobile},
+              #{customerFullname},
+              #{payType},
+              #{payTime},
+              #{price},
+              #{money},
+              #{consumeDepositBalance},
+              #{consumeGiftBalance},
+              #{ticketName},
+              #{ticketMoney},
+              #{couponTicketId},
+              #{vehicleOrderFlag},
+              #{createTime})
+    </insert>
+
+    <update id="updateStatus">
+        update zd_rent_period_order
+        set
+        status = #{toStatus},
+        begin_time = #{beginTime},
+        end_time = #{endTime}
+        where id = #{id} and status = #{fromStatus}
+    </update>
+
+    <update id="updateRefund">
+        update zd_rent_period_order
+        set status = #{toStatus}
+        where id = #{id}
+        <if test="fromStatus != null">
+            and status = #{fromStatus}
+        </if>
+    </update>
+
+    <update id="updateOrderStatus">
+        update zd_rent_period_order
+        set status = #{toStatus}
+        where id = #{id}
+        and status = #{fromStatus}
+    </update>
+
+    <update id="updatePaidMoney">
+        update zd_rent_period_order
+        set money = (select ifnull(sum(packet_money), 0) from bas_customer_installment_record_pay_detail where record_id = #{recordId} and status = #{status})
+        where id = #{id}
+    </update>
+
+    <update id="updateCompleteInstallmentTime">
+        update zd_rent_period_order
+        set complete_installment_time = #{completeInstallmentTime},
+        pay_time = #{payTime}
+        where id = #{id}
+    </update>
+
+    <update id="payOk">
+        update zd_rent_period_order
+        set status = #{toStatus},
+        <if test="beginTime != null">
+            begin_time = #{beginTime},
+        </if>
+        <if test="endTime != null">
+            end_time = #{endTime},
+        </if>
+        pay_time = #{payTime}
+        where id = #{id} and status = #{fromStatus}
+    </update>
+
+</mapper>

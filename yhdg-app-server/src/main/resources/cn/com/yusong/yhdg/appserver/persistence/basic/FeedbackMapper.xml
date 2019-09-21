@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.appserver.persistence.basic.FeedbackMapper">
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.Feedback" useGeneratedKeys="true" keyProperty="id">
+        insert into bas_feedback(partner_id, customer_id, customer_mobile, customer_fullname, content, photo_path, create_time)
+        values(#{partnerId}, #{customerId}, #{customerMobile}, #{customerFullname}, #{content}, #{photoPath}, #{createTime})
+    </insert>
+
+</mapper>

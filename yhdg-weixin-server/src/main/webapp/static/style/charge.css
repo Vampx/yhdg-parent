@@ -1,0 +1,116 @@
+.weui-cells {
+  background-color: #EFEFEF;
+}
+.weui-cells .weui-cell {
+  background: #fff;
+}
+.weui-cells .weui-cell .weui-icon-cancel {
+  color: #B8B8B8;
+  font-size: 22px;
+}
+.weui-cells .weui-cell .weui-label {
+  font-size: 0.82352941rem;
+  color: #5C5C5C;
+}
+.weui-cells .weui-cell .weui-cell__bd .tel {
+  font-size: 1.41176471rem;
+  color: #5C5C5C;
+}
+.weui-cells .weui-cell .goCord {
+  display: flex;
+  align-items: center;
+}
+.weui-cells .weui-cell .goCord img {
+  height: 0.70588235rem;
+  width: 1rem;
+}
+.weui-cells .weui-cell .goCord a {
+  color: #4CBFFF;
+  padding-left: .5rem;
+  font-size: 0.82352941rem;
+}
+.weui-cells .choices {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  padding: 10px 15px;
+  background-color: #fff;
+}
+.weui-cells .choices .choice {
+  box-sizing: border-box;
+  width: 31%;
+  padding: .5em 0em;
+  border: 1px solid #DDDDDD;
+  margin: .3em 1.16%;
+  border-radius: 5px;
+}
+.weui-cells .choices .choice p {
+  text-align: center;
+  color: #A9A9A9;
+}
+.weui-cells .choices .choice p + p {
+  font-size: .7em;
+}
+.weui-cells .choices .choiced {
+  border: 1px solid #4EC6F7;
+}
+.weui-cells .choices .choiced p {
+  color: #4EC6F7;
+}
+.pay .weui-cell__hd {
+  display: flex;
+  align-items: center;
+}
+.pay .weui-cell__hd img {
+  width: 1.05882353rem;
+  height: 1rem;
+}
+.pay .weui-cell__bd p {
+  font-size: 1rem;
+  color: #5C5C5C;
+}
+.pay .weui-icon-checked:before {
+  font-size: 1.11764706rem;
+}
+.pay .weui-check:checked + .weui-icon-checked:before {
+  color: #4CBFFF;
+}
+.btn {
+  margin-top: 1.8em;
+  padding: 0 0.88235294rem;
+  background: #EFEFEF;
+}
+.btn .weui-btn {
+  width: 100%;
+}
+.foot {
+  width: 100%;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  bottom: 1rem;
+}
+.foot span {
+  color: #798BA2;
+  padding: 0 .5em;
+}
+.foot a {
+  color: #798BA2;
+  font-size: 0.82352941rem;
+}
+.space {
+  margin-bottom: 1.17rem;
+}
+.padding_left {
+  padding-left: 0.5rem;
+}
+.canPay {
+  display: block;
+  height: 100%;
+  box-sizing: border-box;
+  padding-top: 1.17rem;
+  position: relative;
+}
+.canPay .weui-cells {
+  margin-top: 0;
+}

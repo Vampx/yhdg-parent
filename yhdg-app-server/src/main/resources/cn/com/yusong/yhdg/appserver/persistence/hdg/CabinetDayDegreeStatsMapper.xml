@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.appserver.persistence.hdg.CabinetDayDegreeStatsMapper">
+
+    <select id="findLast"  resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetDayDegreeStats">
+        SELECT
+        *
+        FROM hdg_cabinet_day_degree_stats
+        where cabinet_id = #{cabinetId}
+        order by stats_date DESC
+        limit 1
+    </select>
+
+</mapper>

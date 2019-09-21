@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.serviceserver.persistence.basic.FeedbackMapper">
+    <select id="findTotal" resultType="int">
+        select ifnull(count(*),0) from bas_feedback
+    </select>
+
+    <select id="findIncrement" resultType="int">
+        select ifnull(count(*),0) from bas_feedback
+        WHERE   create_time &lt;= #{endTime}
+        AND     create_time &gt;= #{beginTime}
+    </select>
+</mapper>

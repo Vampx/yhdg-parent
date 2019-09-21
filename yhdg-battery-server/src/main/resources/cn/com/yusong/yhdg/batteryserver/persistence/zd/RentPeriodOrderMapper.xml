@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.batteryserver.persistence.zd.RentPeriodOrderMapper">
+
+    <select id="findListByCustomerIdAndStatus" resultType="cn.com.yusong.yhdg.common.domain.zd.RentPeriodOrder">
+        select
+        *
+        FROM
+        zd_rent_period_order
+        where
+        customer_id = #{customerId}
+        and status = #{status}
+        order by id DESC
+    </select>
+
+    <select id="findLastEndTime" resultType="cn.com.yusong.yhdg.common.domain.zd.RentPeriodOrder">
+        select
+        *
+        FROM
+        zd_rent_period_order
+        where
+        customer_id = #{customerId}
+        and end_time is not null
+        order by end_time DESC
+        limit 1
+    </select>
+
+
+</mapper>

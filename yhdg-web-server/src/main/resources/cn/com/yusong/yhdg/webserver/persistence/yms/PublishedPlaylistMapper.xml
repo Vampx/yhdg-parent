@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.yms.PublishedPlaylistMapper">
+
+    <select id="find" parameterType="long" resultType="cn.com.yusong.yhdg.common.domain.yms.PublishedPlaylist">
+        select
+            *
+        from yms_published_playlist
+        where id = #{id}
+    </select>
+
+    <select id="findByVersion"  resultType="cn.com.yusong.yhdg.common.domain.yms.PublishedPlaylist">
+        select
+            *
+        from yms_published_playlist
+        where playlist_id = #{id} and version = #{version}
+    </select>
+
+    <select id="findByAgent" parameterType="int" resultType="cn.com.yusong.yhdg.common.domain.yms.PublishedPlaylist">
+        select
+            *
+        from yms_published_playlist
+        where agent_id = #{agentId}
+    </select>
+    <select id="findByPlaylist" parameterType="long" resultType="cn.com.yusong.yhdg.common.domain.yms.PublishedPlaylist">
+        select
+            *
+        from yms_published_playlist
+        where playlist_id = #{playlistId}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.yms.PublishedPlaylist" resultType="int">
+        select
+            count(id)
+        from yms_published_playlist
+        <trim prefix="where" prefixOverrides="and">
+            <if test="id != null and id != 0">
+                and id = #{id}
+            </if>
+            <if test="agentId != null and agentId != 0">
+                and agent_id = #{agentId}
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.yms.PublishedPlaylist" resultType="cn.com.yusong.yhdg.common.domain.yms.PublishedPlaylist">
+        select
+            *
+        from yms_published_playlist
+        <trim prefix="where" prefixOverrides="and">
+            <if test="id != null and id != 0">
+                and id = #{id}
+            </if>
+            <if test="agentId != null and agentId != 0">
+                and agent_id = #{agentId}
+            </if>
+            <if test="playlistName != null and playlistName != ''">
+                and playlist_name = #{playlistName}
+            </if>
+        </trim>
+        ORDER BY id DESC
+        limit #{beginIndex}, #{rows}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.yms.PublishedPlaylist" useGeneratedKeys="true" keyProperty="id">
+        insert into yms_published_playlist(
+            playlist_id,
+            agent_id,
+            playlist_name,
+            version,
+            create_time
+        )
+        values (
+            #{playlistId},
+            #{agentId},
+            #{playlistName},
+            #{version},
+            #{createTime}
+        )
+    </insert>
+
+    <delete id="deleteByPlaylist" parameterType="long">
+        delete from yms_published_playlist where playlist_id = #{playlistId}
+    </delete>
+
+</mapper>

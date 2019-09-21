@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.appserver.persistence.hdg.PacketPeriodOrderMapper">
+
+    <select id="findList" resultType="cn.com.yusong.yhdg.common.domain.hdg.PacketPeriodOrder">
+        select
+        *
+        FROM
+        hdg_packet_period_order
+        where
+        customer_id = #{customerId}
+        order by id DESC
+        limit #{offset},#{limit}
+    </select>
+
+    <select id="findExpireList" resultType="cn.com.yusong.yhdg.common.domain.hdg.PacketPeriodOrder">
+        SELECT
+         a.*,
+         c.cabinet_name as cabinetName
+        FROM
+        hdg_packet_period_order a left join hdg_cabinet c on a.cabinet_id = c.id
+        WHERE
+        a.status = 3 AND a.end_time &lt;= #{expireTime} and a.agent_id =  #{agentId}
+        AND NOT EXISTS (SELECT 1 FROM hdg_packet_period_order b WHERE a.customer_id = b.customer_id AND b.status =2)
+    </select>
+
+    <select id="findNoStatusList" resultType="cn.com.yusong.yhdg.common.domain.hdg.PacketPeriodOrder">
+        select
+        *
+        FROM
+        hdg_packet_period_order
+        where
+        customer_id = #{customerId}
+        and status != #{status}
+        order by field(status,3,2,5,4,6,7,1),id DESC
+        limit #{offset},#{limit}
+    </select>
+
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.hdg.PacketPeriodOrder">
+        select
+        *
+        FROM
+        hdg_packet_period_order
+        where
+        id = #{id}
+    </select>
+
+    <select id="findListByCustomerId" resultType="cn.com.yusong.yhdg.common.domain.hdg.PacketPeriodOrder">
+        select
+        *
+        FROM
+        hdg_packet_period_order
+        where
+        customer_id = #{customerId}
+        and status in (2,3)
+        order by id DESC
+    </select>
+
+    <select id="findListByCustomerIdAndStatus" resultType="cn.com.yusong.yhdg.common.domain.hdg.PacketPeriodOrder">
+        select
+        *
+        FROM
+        hdg_packet_period_order
+        where
+        customer_id = #{customerId}
+        and status = #{status}
+        order by id DESC
+    </select>
+
+    <select id="findNeedRefundList" resultType="cn.com.yusong.yhdg.common.domain.hdg.PacketPeriodOrder">
+        select
+          *
+        from hdg_packet_period_order
+        where customer_id = #{customerId}
+        and status = #{status}
+        <![CDATA[and begin_time >= #{beginTime} ]]>
+    </select>
+
+    <select id="findLastEndTime" resultType="cn.com.yusong.yhdg.common.domain.hdg.PacketPeriodOrder">
+        select
+        *
+        FROM
+        hdg_packet_period_order
+        where
+        customer_id = #{customerId}
+        and status = #{status}
+        and end_time is not null
+        order by end_time DESC
+        limit 1
+    </select>
+
+    <select id="findListByNoUsed" resultType="cn.com.yusong.yhdg.common.domain.hdg.PacketPeriodOrder">
+        select
+        *
+        FROM
+        hdg_packet_period_order
+        where
+        customer_id = #{customerId}
+        and status = #{status}
+    </select>
+
+    <select id="findOneEnabled" resultType="cn.com.yusong.yhdg.common.domain.hdg.PacketPeriodOrder">
+        select
+            *
+        FROM
+            hdg_packet_period_order
+        where customer_id = #{customerId}
+        and status = #{status}
+        and agent_id = #{agentId}
+        and battery_type = #{batteryType}
+        and if(limit_count is not null, limit_count > order_count, 1=1)
+        limit 1
+    </select>
+
+    <select id="findOneEnabledByAgent" resultType="cn.com.yusong.yhdg.common.domain.hdg.PacketPeriodOrder">
+        select
+        *
+        FROM
+        hdg_packet_period_order
+        where customer_id = #{customerId}
+        and agent_id = #{agentId}
+        and status = #{status}
+        and if(limit_count is not null, limit_count > order_count, 1=1)
+        limit 1
+    </select>
+
+    <select id="findRemainingTime" resultType="cn.com.yusong.yhdg.common.domain.hdg.PacketPeriodOrder">
+        SELECT
+            end_time as endTime,
+            TIMESTAMPDIFF(DAY, NOW(), end_time)+1 as remainingDay
+        FROM
+            hdg_packet_period_order
+        WHERE
+            customer_id = #{customerId}
+        AND STATUS = #{status}
+        limit 1
+    </select>
+
+    <insert id="insert">
+        insert into hdg_packet_period_order (
+              id,
+              partner_id,
+              agent_id,
+              agent_name,
+              shop_id,
+              shop_name,
+              station_id,
+              station_name,
+              agent_company_id,
+              agent_company_name,
+              cabinet_id,
+              scan_cabinet_id,
+              battery_type,
+              activity_id,
+              day_count,
+              begin_time,
+              end_time,
+              expire_time,
+              limit_count,
+              day_limit_count,
+              status,
+              customer_id,
+              customer_mobile,
+              customer_fullname,
+              pay_type,
+              pay_time,
+              price,
+              money,
+              consume_deposit_balance,
+              consume_gift_balance,
+              ticket_name,
+              ticket_money,
+              coupon_ticket_id,
+              order_count,
+              vehicle_order_flag,
+              create_time )
+        VALUES (
+              #{id},
+              #{partnerId},
+              #{agentId},
+              #{agentName},
+              #{shopId},
+              #{shopName},
+              #{stationId},
+              #{stationName},
+              #{agentCompanyId},
+              #{agentCompanyName},
+              #{cabinetId},
+              #{scanCabinetId},
+              #{batteryType},
+              #{activityId},
+              #{dayCount},
+              #{beginTime},
+              #{endTime},
+              #{expireTime},
+              #{limitCount},
+              #{dayLimitCount},
+              #{status},
+              #{customerId},
+              #{customerMobile},
+              #{customerFullname},
+              #{payType},
+              #{payTime},
+              #{price},
+              #{money},
+              #{consumeDepositBalance},
+              #{consumeGiftBalance},
+              #{ticketName},
+              #{ticketMoney},
+              #{couponTicketId},
+              #{orderCount},
+              #{vehicleOrderFlag},
+              #{createTime})
+    </insert>
+
+    <update id="updateStatus">
+        update hdg_packet_period_order
+        set
+        status = #{toStatus},
+        begin_time = #{beginTime},
+        end_time = #{endTime}
+        where id = #{id} and status = #{fromStatus}
+    </update>
+
+    <update id="updateOrderCount">
+        update hdg_packet_period_order set
+        order_count = order_count+1
+        where id = #{id}
+    </update>
+
+    <update id="updateRefund">
+        update hdg_packet_period_order
+        set status = #{toStatus}
+        where id = #{id}
+        <if test="fromStatus != null">
+            and status = #{fromStatus}
+        </if>
+    </update>
+
+    <update id="updateOrderStatus">
+        update hdg_packet_period_order
+        set status = #{toStatus}
+        where id = #{id}
+        and status = #{fromStatus}
+    </update>
+
+    <update id="updatePaidMoney">
+        update hdg_packet_period_order
+        set money = (select ifnull(sum(packet_money), 0) from bas_customer_installment_record_pay_detail where record_id = #{recordId} and status = #{status})
+        where id = #{id}
+    </update>
+
+    <update id="updateCompleteInstallmentTime">
+        update hdg_packet_period_order
+        set complete_installment_time = #{completeInstallmentTime},
+        pay_time = #{payTime}
+        where id = #{id}
+    </update>
+
+    <update id="payOk">
+        update hdg_packet_period_order set status = #{toStatus}, pay_time = #{payTime} where id = #{id} and status = #{fromStatus}
+    </update>
+
+</mapper>

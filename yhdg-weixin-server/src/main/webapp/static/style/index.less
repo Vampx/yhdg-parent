@@ -1,0 +1,90 @@
+* {
+    margin: 0px;
+    padding: 0px;
+}
+
+html {
+    height: 100%;
+    body {
+        height: 100%;
+        font-family: simhei;
+        .weui-tab__panel {
+            padding-bottom: 3.176rem;
+            #info {
+                width: 603px;
+                padding-top: 3px;
+                overflow: hidden;
+            }
+            #container {
+                width: 100%;
+                height: 90%;
+                .goback {
+                    z-index: 101;
+                    position: absolute;
+                    right: .5rem;
+                    bottom: .5rem;
+                    img {
+                        height: 2rem;
+                        width: 2rem;
+                    }
+                }
+                .prompt {
+                    z-index: 101;
+                    position: absolute;
+                    top: 28/17rem;
+                    left: 11/17rem;
+                    img {
+                        width: 80/17rem;
+                        height: 96/17rem;
+                    }
+                }
+            }
+            .foot {
+                .weui-cell {
+                    padding: 10/17rem 15/17rem;
+                }
+                .charge_name {
+                    font-size: 0.824rem;
+                    color: #5c5c5c;
+                }
+                .charge_adr {
+                    font-size: 1rem;
+                    color: #333;
+                }
+                .charge_distance {
+                    font-size: 0.706rem;
+                }
+                .navBtn {
+                    width: 4.82rem;
+                    height: 1.88rem;
+                }
+            }
+        }
+        .weui-tabbar {
+            height: 3.176rem;
+            overflow: hidden;
+            .weui-tabbar__label {
+                font-size: 12/17rem;
+                color: #999999;
+            }
+            .weui-tabbar__icon {
+                width: 23/17rem;
+                height: 24/17rem;
+            }
+            .weui-tabbar__item {
+                padding: .59rem 0 0;
+                img {
+                    height: 23/17rem;
+                    width: 24/17rem;
+                }
+                .scan {
+                    width: 54/17rem;
+                    height: 54/17rem;
+                }
+            }
+            .weui-bar__item_on .slected {
+                color: #4CBFFF;
+            }
+        }
+    }
+}

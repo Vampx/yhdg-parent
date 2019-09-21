@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.hdg.CabinetAddressCorrectionMapper">
+
+    <select id="find" parameterType="long" resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetAddressCorrection">
+        select
+            id,
+            agent_id as agentId,
+            cabinet_id as cabinetId,
+            cabinet_name as cabinetName,
+            province_id as provinceId,
+            city_id as cityId,
+            district_id as districtId,
+            street,
+            lng,
+            lat,
+            memo,
+            customer_id as customerId,
+            customer_mobile as customerMobile,
+            customer_fullname as customerFullname,
+            status,
+            create_time as createTime
+        from hdg_cabinet_address_correction
+        where id = #{id}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.hdg.CabinetAddressCorrection" resultType="int">
+        select
+        count(id)
+        from hdg_cabinet_address_correction
+        <trim prefix="where" prefixOverrides="and">
+            <if test="cabinetName != null and cabinetName != ''">
+                <![CDATA[and cabinet_name LIKE concat('%', #{cabinetName}, '%')]]>
+            </if>
+            <if test="customerFullname != null and customerFullname != ''">
+                <![CDATA[and customer_fullname LIKE concat('%', #{customerFullname}, '%')]]>
+            </if>
+            <if test="agentId != null">
+                and agent_id = #{agentId}
+            </if>
+        </trim>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.hdg.CabinetAddressCorrection"
+            resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetAddressCorrection">
+        select
+            id,
+            agent_id as agentId,
+            cabinet_id as cabinetId,
+            cabinet_name as cabinetName,
+            province_id as provinceId,
+            city_id as cityId,
+            district_id as districtId,
+            street,
+            lng,
+            lat,
+            memo,
+            customer_id as customerId,
+            customer_mobile as customerMobile,
+            customer_fullname as customerFullname,
+            status,
+            create_time as createTime
+        from hdg_cabinet_address_correction
+        <trim prefix="where" prefixOverrides="and">
+            <if test="cabinetName != null and cabinetName != ''">
+                <![CDATA[and cabinet_name LIKE concat('%', #{cabinetName}, '%')]]>
+            </if>
+            <if test="customerFullname != null and customerFullname != ''">
+                <![CDATA[and customer_fullname LIKE concat('%', #{customerFullname}, '%')]]>
+            </if>
+            <if test="agentId != null">
+                and agent_id = #{agentId}
+            </if>
+        </trim>
+        order by create_time DESC
+        limit ${beginIndex}, ${rows}
+    </select>
+
+    <update id="updateStatus">
+        update hdg_cabinet_address_correction set
+          status = #{status}
+        where id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="long">
+        delete from hdg_cabinet_address_correction
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteByCustomerId">
+        delete from hdg_cabinet_address_correction where customer_id = #{customerId}
+    </delete>
+</mapper>

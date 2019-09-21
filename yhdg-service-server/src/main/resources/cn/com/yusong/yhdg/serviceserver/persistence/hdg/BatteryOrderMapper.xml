@@ -1,0 +1,532 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.serviceserver.persistence.hdg.BatteryOrderMapper">
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.hdg.BatteryOrder">
+        select *
+        FROM hdg_battery_order
+        where id = #{id}
+    </select>
+
+    <select id="findMaxId" resultType="String">
+        SELECT
+        id
+        FROM
+        hdg_battery_order
+        order by id desc
+        limit 1
+    </select>
+
+    <select id="findAllByCursor" resultType="cn.com.yusong.yhdg.common.domain.hdg.BatteryOrder">
+        SELECT
+        *
+        FROM
+        hdg_battery_order
+        WHERE
+        id > #{id}
+        order by id
+        limit ${limit}
+    </select>
+
+    <select id="findLastByBattery" resultType="cn.com.yusong.yhdg.common.domain.hdg.BatteryOrder">
+        SELECT
+        *
+        FROM
+        hdg_battery_order
+        WHERE
+         battery_id = #{batteryId}
+        order by id desc
+        limit 1
+    </select>
+
+    <select id="findLastByCustomer" resultType="cn.com.yusong.yhdg.common.domain.hdg.BatteryOrder">
+        SELECT
+        *
+        FROM
+        hdg_battery_order
+        WHERE
+        battery_id = #{batteryId}
+        <if test="putTime != null">
+            <![CDATA[ and put_time  < #{putTime} ]]>
+        </if>
+        <if test="takeTime != null">
+            <![CDATA[ and take_time >= #{takeTime} ]]>
+        </if>
+        and customer_id = #{customerId}
+        AND order_status = #{orderStatus}
+        order by id desc
+        limit 1
+    </select>
+
+    <select id="findByCursorAndAgent" resultType="cn.com.yusong.yhdg.common.domain.hdg.BatteryOrder">
+        SELECT
+        *
+        FROM
+        hdg_battery_order
+        WHERE
+        id > #{id} and agent_id = #{agentId}
+        order by id
+        limit ${limit}
+    </select>
+
+    <select id="findByCursorNotAgent" resultType="cn.com.yusong.yhdg.common.domain.hdg.BatteryOrder">
+        SELECT
+        *
+        FROM
+        hdg_battery_order
+        WHERE
+        id > #{id}
+        <foreach collection="agentIdList" item="item" open=" AND agent_id not in (" separator="," close=")">
+            #{item}
+        </foreach>
+        order by id
+        limit ${limit}
+    </select>
+
+    <select id="findCabinetExchange" resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetDayStats">
+        SELECT
+        put_cabinet_id AS cabinetId,
+        SUM(money) AS exchangeMoney,
+        COUNT(id) AS orderCount
+        FROM
+        hdg_battery_order
+        WHERE
+        pay_time &lt;= #{endTime}
+        AND pay_time &gt;= #{beginTime}
+        GROUP BY
+        put_cabinet_id
+    </select>
+
+    <select id="findAllForPut" resultType="cn.com.yusong.yhdg.common.domain.hdg.BatteryOrder">
+        SELECT
+        *
+        FROM
+        hdg_battery_order
+        WHERE
+        put_time > #{putTime}
+        order by put_time
+        limit ${limit}
+    </select>
+
+    <select id="findAllForPutByAgent" resultType="cn.com.yusong.yhdg.common.domain.hdg.BatteryOrder">
+        SELECT
+        *
+        FROM
+        hdg_battery_order
+        WHERE
+        put_time > #{putTime} and agent_id = #{agentId}
+        order by put_time
+        limit ${limit}
+    </select>
+
+    <select id="findAllForPutNotAgent" resultType="cn.com.yusong.yhdg.common.domain.hdg.BatteryOrder">
+        SELECT
+        *
+        FROM
+        hdg_battery_order
+        WHERE
+        put_time > #{putTime}
+        <foreach collection="agentIdList" item="item" open=" AND agent_id not in (" separator="," close=")">
+            #{item}
+        </foreach>
+        order by put_time
+        limit ${limit}
+    </select>
+
+    <select id="findHistoryId" resultType="string">
+        SELECT
+          LEFT (id, 6)
+        FROM
+          hdg_battery_order
+        WHERE
+            id &lt; #{dayId}
+        AND order_status = #{orderStatus}
+        GROUP BY
+          LEFT (id, 6);
+    </select>
+
+    <select id="findIncrementExchange" resultType="cn.com.yusong.yhdg.common.domain.hdg.BatteryOrder">
+        SELECT
+         *
+        FROM
+        hdg_battery_order
+        WHERE
+        put_cabinet_id is not null
+        and pay_time &lt;= #{endTime}
+        AND pay_time &gt;= #{beginTime}
+        AND order_status = #{orderStatus}
+    </select>
+
+    <select id="findRefund" resultType="cn.com.yusong.yhdg.common.domain.hdg.BatteryOrder">
+        SELECT
+        *
+        FROM
+        hdg_battery_order
+        WHERE
+        refund_time &lt;= #{endTime}
+        AND refund_time &gt;= #{beginTime}
+        AND refund_status = #{refundStatus}
+    </select>
+
+    <select id="findActiveCustomerCount" resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetDayStats">
+        SELECT
+        put_cabinet_id AS cabinetId,
+        agent_id as agentId,
+        COUNT(DISTINCT customer_id) AS activeCustomerCount
+        FROM
+        hdg_battery_order
+        WHERE
+        put_cabinet_id is not null
+        and pay_time &lt;= #{endTime}
+        AND pay_time &gt;= #{beginTime}
+        GROUP BY
+        put_cabinet_id, agent_id
+    </select>
+
+    <select id="findAgentActiveCustomerCount" resultType="cn.com.yusong.yhdg.common.domain.hdg.AgentDayStats">
+        SELECT
+        agent_id AS agentId,
+        COUNT(DISTINCT customer_id) AS activeCustomerCount
+        FROM
+        hdg_battery_order
+        WHERE
+        put_cabinet_id is not null
+        and pay_time &lt;= #{endTime}
+        AND pay_time &gt;= #{beginTime}
+        AND order_status = #{orderStatus}
+        GROUP BY
+        agent_id
+    </select>
+
+    <select id="findIncrementByCustomer" resultType="cn.com.yusong.yhdg.common.domain.hdg.CustomerDayStats">
+        select
+            t1.customer_id as customerId,
+            t1.order_count as orderCount,
+            t1.money,
+            t2.mobile as customerMobile,
+            t2.fullname as customerFullname
+        from (
+            SELECT
+                customer_id,
+                COUNT(*) AS order_count,
+                SUM(money) AS money
+            FROM
+            hdg_battery_order
+            WHERE
+             put_cabinet_id is not null
+            and pay_time &lt;= #{endTime}
+            AND pay_time &gt;= #{beginTime}
+            AND order_status = #{orderStatus}
+            GROUP BY
+            customer_id
+        ) t1, bas_customer t2
+        where t1.customer_id = t2.id
+    </select>
+
+    <select id="findIncrementPacketPeriodCount" resultType="java.util.Map">
+        SELECT
+            agent_id as agentId,
+            count(id) as orderCount
+        FROM
+            hdg_battery_order
+        WHERE
+        put_cabinet_id is not null
+        and pay_time &lt;= #{endTime}
+        AND pay_time &gt;= #{beginTime}
+        AND order_status = #{orderStatus}
+        AND pay_type = #{payType}
+        GROUP BY
+        agent_id
+    </select>
+
+    <select id="findPayTimeout" resultType="cn.com.yusong.yhdg.common.domain.hdg.BatteryOrder">
+        SELECT
+            *
+        FROM
+            hdg_battery_order
+        WHERE
+            order_status = #{orderStatus}
+        AND put_time &lt;= #{putTime}
+        AND pay_timeout_fault_log_id is null
+    </select>
+
+    <select id="findNotTakeTimeout" resultType="cn.com.yusong.yhdg.common.domain.hdg.BatteryOrder">
+        SELECT
+            *
+        FROM
+            hdg_battery_order
+        WHERE
+            order_status = #{orderStatus}
+        AND create_time &lt;= #{createTime}
+        AND not_take_timeout_fault_log_id is null
+    </select>
+
+    <select id="findTakeTimeout" resultType="cn.com.yusong.yhdg.common.domain.hdg.BatteryOrder">
+        SELECT
+         agent_id as agentId,
+         count(id) as orderCount
+        FROM
+        hdg_battery_order
+        WHERE
+        order_status = #{orderStatus}
+        AND create_time &lt;= #{createTime}
+        group by agent_id
+    </select>
+
+    <select id="findIncrementPacketPeriod" resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetDayStats">
+        SELECT
+            take_cabinet_id AS cabinetId,
+            COUNT(id) AS packetPeriodCount
+        FROM
+        hdg_battery_order
+        WHERE packet_period_order_id = #{packetPeriodOrderId}
+        GROUP BY take_cabinet_id
+    </select>
+
+    <select id="findTotalCount" resultType="int">
+        select
+        count(id)
+        from hdg_battery_order
+        <trim prefix="where" prefixOverrides="and">
+            <if test="beginTime != null">
+                <![CDATA[ and create_time >= #{beginTime}]]>
+            </if>
+            <if test="endTime != null">
+                <![CDATA[ and create_time < #{endTime}]]>
+            </if>
+        </trim>
+    </select>
+
+    <select id="findTotalCountByAgent" resultType="int">
+        select
+        count(id)
+        from hdg_battery_order
+        WHERE agent_id = #{agentId}
+        <if test="beginTime != null">
+            <![CDATA[ and create_time >= #{beginTime}]]>
+        </if>
+        <if test="endTime != null">
+            <![CDATA[ and create_time < #{endTime}]]>
+        </if>
+    </select>
+
+    <select id="findTotalCountByNotAgent" resultType="int">
+        select
+        count(id)
+        from hdg_battery_order
+        WHERE 1 = 1
+        <if test="beginTime != null">
+            <![CDATA[ and create_time >= #{beginTime}]]>
+        </if>
+        <if test="endTime != null">
+            <![CDATA[ and create_time < #{endTime}]]>
+        </if>
+        <foreach collection="agentIdList" item="item" open=" AND agent_id not in (" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="findCountByCity" resultType="cn.com.yusong.yhdg.common.domain.hdg.BatteryOrder">
+        select
+        city_id as cityId, count(id) as orderCount
+        from hdg_battery_order
+        <trim prefix="where" prefixOverrides="and">
+            <if test="beginTime != null">
+                <![CDATA[ and create_time >= #{beginTime}]]>
+            </if>
+            <if test="endTime != null">
+                <![CDATA[ and create_time < #{endTime}]]>
+            </if>
+        </trim>
+        group by city_id
+    </select>
+
+    <select id="findCountByCityAndAgent" resultType="cn.com.yusong.yhdg.common.domain.hdg.BatteryOrder">
+        select
+        city_id as cityId, count(id) as orderCount
+        from hdg_battery_order
+        WHERE agent_id = #{agentId}
+        <if test="beginTime != null">
+            <![CDATA[ and create_time >= #{beginTime}]]>
+        </if>
+        <if test="endTime != null">
+            <![CDATA[ and create_time < #{endTime}]]>
+        </if>
+        group by city_id
+    </select>
+
+    <select id="findCountByCityAndNotAgent" resultType="cn.com.yusong.yhdg.common.domain.hdg.BatteryOrder">
+        select
+        city_id as cityId, count(id) as orderCount
+        from hdg_battery_order
+        WHERE 1 = 1
+        <if test="beginTime != null">
+            <![CDATA[ and create_time >= #{beginTime}]]>
+        </if>
+        <if test="endTime != null">
+            <![CDATA[ and create_time < #{endTime}]]>
+        </if>
+        <foreach collection="agentIdList" item="item" open=" AND agent_id not in (" separator="," close=")">
+            #{item}
+        </foreach>
+        group by city_id
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.BatteryOrder">
+        INSERT INTO hdg_battery_order (
+        id,
+        partner_id,
+        agent_id,
+        battery_type,
+        province_id,
+        city_id,
+        district_id,
+        battery_id,
+        take_shop_id,
+        take_shop_name,
+        take_agent_company_id,
+        take_agent_company_name,
+        take_cabinet_id,
+        take_cabinet_name,
+        take_box_num,
+        take_time,
+        init_volume,
+        put_cabinet_id,
+        put_cabinet_name,
+        put_agent_company_id,
+        put_agent_company_name,
+        put_box_num,
+        put_time,
+        pay_time,
+        pay_type,
+        price,
+        MONEY,
+        current_volume,
+        current_distance,
+        init_capacity,
+        current_capacity,
+        customer_id,
+        customer_mobile,
+        customer_fullname,
+        order_status,
+        refund_status,
+        refund_time,
+        refund_money,
+        address,
+        ticket_name,
+        ticket_money,
+        coupon_ticket_id,
+        packet_period_order_id,
+        vehicle_order_flag,
+        create_time
+        )
+        VALUES
+        (
+        #{id},
+        #{partnerId},
+        #{agentId},
+        #{batteryType},
+        #{provinceId},
+        #{cityId},
+        #{districtId},
+        #{batteryId},
+        #{takeShopId},
+        #{takeShopName},
+        #{takeAgentCompanyId},
+        #{takeAgentCompanyName},
+        #{takeCabinetId},
+        #{takeCabinetName},
+        #{takeBoxNum},
+        #{takeTime},
+        #{initVolume},
+        #{putCabinetId},
+        #{putCabinetName},
+        #{putAgentCompanyId},
+        #{putAgentCompanyName},
+        #{putBoxNum},
+        #{putTime},
+        #{payTime},
+        #{payType},
+        #{price},
+        #{money},
+        #{currentVolume},
+        #{currentDistance},
+        #{initCapacity},
+        #{currentCapacity},
+        #{customerId},
+        #{customerMobile},
+        #{customerFullname},
+        #{orderStatus},
+        #{refundStatus},
+        #{refundTime},
+        #{refundMoney},
+        #{address},
+        #{ticketName},
+        #{ticketMoney},
+        #{couponTicketId},
+        #{packetPeriodOrderId},
+        #{vehicleOrderFlag},
+        #{createTime}
+        )
+    </insert>
+
+    <update id="updatePayTimeout">
+        update hdg_battery_order set
+            pay_timeout_fault_log_id = #{payTimeoutFaultLogId}
+        where id = #{id}
+    </update>
+
+    <update id="updateNotTakeTimeout">
+        update hdg_battery_order set
+            not_take_timeout_fault_log_id = #{notTakeTimeoutFaultLogId}
+        where id = #{id}
+    </update>
+
+    <update id="updateTakeTimeout">
+        update hdg_battery_order set
+        take_timeout_fault_log_id = #{takeTimeoutFaultLogId}
+        where id = #{id}
+    </update>
+
+
+    <update id="updateLowVolumeVoiceTime">
+        UPDATE hdg_battery_order SET
+            low_volume_voice_time = #{lowVolumeVoiceTime}
+        WHERE id = #{id}
+    </update>
+
+    <update id="payOk">
+        update hdg_battery_order
+        set
+        order_status = #{toStatus},
+        <if test="putCabinetId != null ">
+            put_cabinet_id = #{putCabinetId},
+            put_cabinet_name = #{putCabinetName},
+            put_box_num = #{putBoxNum},
+            put_time = #{putTime},
+        </if>
+        pay_type = #{payType},
+        pay_time = #{payTime},
+        complete_time = #{payTime},
+        price = #{price},
+        money = #{money},
+        ticket_name = #{ticketName},
+        ticket_money = #{ticketMoney},
+        coupon_ticket_id = #{couponTicketId},
+        pay_timeout_fault_log_id = null
+        where id = #{id}
+        <if test="fromStatus != null ">
+            and order_status = #{fromStatus}
+        </if>
+    </update>
+
+    <delete id="deleteHistory">
+        DELETE
+        FROM
+          hdg_battery_order
+        WHERE
+        <![CDATA[ id LIKE concat(#{monthId}, '%')]]>
+        AND id &lt; #{dayId}
+        AND order_status = #{orderStatus}
+    </delete>
+</mapper>

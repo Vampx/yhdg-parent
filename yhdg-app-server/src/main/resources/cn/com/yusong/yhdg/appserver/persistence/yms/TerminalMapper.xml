@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.appserver.persistence.yms.TerminalMapper">
+
+    <select id="find" parameterType="string" resultType="cn.com.yusong.yhdg.common.domain.yms.Terminal">
+        select
+            *
+        from yms_terminal
+        where id = #{id}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.yms.Terminal">
+        insert into yms_terminal(id, version,  uid, heart_playlist_id, playlist_id, strategy_id, is_online, heart_time, playlist_version, heart_playlist_version)
+        values(#{id}, #{version}, #{uid},#{heartPlaylistId}, #{playlistId},#{strategyId}, #{isOnline}, #{heartTime}, #{playlistVersion}, #{heartPlaylistVersion});
+    </insert>
+
+    <insert id="updateOnline" parameterType="cn.com.yusong.yhdg.common.domain.yms.Terminal">
+        UPDATE yms_terminal SET
+        is_online=#{isOnline} ,
+        <if test="version != null">
+             version = #{version},
+        </if>
+        <if test="heartPlaylistId != null">
+            heart_playlist_id = #{heartPlaylistId},
+        </if>
+        <if test="heartPlaylistVersion != null">
+            heart_playlist_version = #{heartPlaylistVersion},
+        </if>
+         heart_time=#{heartTime} where id = #{id}
+    </insert>
+
+    <insert id="updateHeartPlaylistId" parameterType="cn.com.yusong.yhdg.common.domain.yms.Terminal">
+        UPDATE yms_terminal SET
+          heart_playlist_id = #{heartPlaylistId},
+          heart_playlist_version = #{heartPlaylistVersion}
+        where id = #{id}
+    </insert>
+
+    <insert id="updateHeartTime" parameterType="cn.com.yusong.yhdg.common.domain.yms.Terminal">
+        UPDATE yms_terminal SET
+        heart_time=#{heartTime} where id = #{id}
+    </insert>
+</mapper>

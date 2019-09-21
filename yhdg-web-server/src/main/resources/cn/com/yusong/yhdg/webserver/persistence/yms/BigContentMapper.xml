@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.yms.BigContentMapper">
+
+    <select id="find" resultType="string">
+        select
+            content
+        from yms_big_content
+        where type = #{type} and id = #{id}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.yms.BigContent" useGeneratedKeys="true" keyProperty="id">
+        insert into yms_big_content(type, id, content) values(#{type}, #{id}, #{content})
+    </insert>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.yms.BigContent">
+        update yms_big_content set
+            content = #{content}
+        where type = #{type} and id = #{id}
+    </update>
+
+    <delete id="delete">
+        delete from yms_big_content where type = #{type} and id = #{id}
+    </delete>
+
+</mapper>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.weixinserver.persistence.basic.WeixinmpSubscribeMapper">
+
+    <select id="findByOpenId" resultType="cn.com.yusong.yhdg.common.domain.basic.WeixinmpSubscribe">
+        select
+        *
+        from bas_weixinmp_subscribe
+        where weixinmp_id = #{weixinmpId} and open_id = #{openId}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.WeixinmpSubscribe">
+        insert into bas_weixinmp_subscribe(weixinmp_id, open_id, create_time)
+        values(#{weixinmpId}, #{openId}, #{createTime})
+    </insert>
+
+    <delete id="delete">
+        delete from bas_weixinmp_subscribe where weixinmp_id = #{weixinmpId} and open_id = #{openId}
+    </delete>
+</mapper>

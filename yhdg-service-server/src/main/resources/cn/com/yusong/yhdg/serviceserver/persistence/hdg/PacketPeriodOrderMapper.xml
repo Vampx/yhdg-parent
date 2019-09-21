@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.serviceserver.persistence.hdg.PacketPeriodOrderMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.hdg.PacketPeriodOrder">
+        select
+            *
+        from hdg_packet_period_order
+        where id = #{id}
+    </select>
+    
+    
+    <select id="findMaxId" resultType="String">
+        SELECT
+        id
+        FROM
+        hdg_packet_period_order
+        order by id desc
+        limit 1
+    </select>
+
+    <select id="findExpireList" resultType="cn.com.yusong.yhdg.common.domain.hdg.PacketPeriodOrder">
+        SELECT
+         a.*
+        FROM
+        hdg_packet_period_order a
+        WHERE
+        a.status = 3 AND a.end_time &lt;= #{expireTime}
+        AND (a.expire_notice_time IS NULL OR a.expire_notice_time &lt; #{expireTime})
+        AND NOT EXISTS (SELECT 1 FROM hdg_packet_period_order b WHERE a.customer_id = b.customer_id AND b.status =2)
+        and exists (select 1 from bas_customer_exchange_info d where a.customer_id = d.id)
+        limit #{offset}, #{limit}
+    </select>
+
+    <select id="findAllByCursor" resultType="cn.com.yusong.yhdg.common.domain.hdg.PacketPeriodOrder">
+        SELECT
+        *
+        FROM
+        hdg_packet_period_order
+        WHERE
+        id > #{id}
+        order by id
+        limit ${limit}
+    </select>
+
+    <select id="findByCursorNotAgent" resultType="cn.com.yusong.yhdg.common.domain.hdg.PacketPeriodOrder">
+        SELECT
+        *
+        FROM
+        hdg_packet_period_order
+        WHERE
+        id > #{id}
+        <foreach collection="agentIdList" item="item" open=" AND agent_id not in (" separator="," close=")">
+            #{item}
+        </foreach>
+        order by id
+        limit ${limit}
+    </select>
+
+    <select id="findCabinetIncrement" resultType="cn.com.yusong.yhdg.common.domain.hdg.CabinetDayStats">
+        select
+        cabinet_id as cabinetId,
+        sum(money) as packetPeriodMoney,
+        count(id) as packetPeriodCount
+        from hdg_packet_period_order
+        where pay_time >= #{beginTime}
+        and pay_time &lt;= #{endTime}
+        and cabinet_id is not null
+        group by cabinet_id
+    </select>
+
+    <select id="findAgentIncrement" resultType="cn.com.yusong.yhdg.common.domain.hdg.AgentDayStats">
+        select
+        agent_id as agentId,
+        sum(money) as packetPeriodMoney,
+        count(id) as packetPeriodOrderCount
+        from hdg_packet_period_order
+        where pay_time >= #{beginTime}
+        and pay_time &lt;= #{endTime}
+        AND status = #{status}
+        AND refund_time IS NULL
+        <foreach collection="payTypeList" item="item" open=" AND pay_type in (" separator="," close=")">
+            #{item}
+        </foreach>
+        group by agent_id
+    </select>
+
+    <select id="findIncrementExchange" resultType="cn.com.yusong.yhdg.common.domain.hdg.PacketPeriodOrder">
+        select
+         *
+        from hdg_packet_period_order
+        where pay_time >= #{beginTime}
+        and pay_time &lt;= #{endTime}
+        <foreach collection="payTypeList" item="item" open=" AND pay_type in (" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="findRefund" resultType="cn.com.yusong.yhdg.common.domain.hdg.PacketPeriodOrder">
+        select
+        *
+        from hdg_packet_period_order
+        where refund_time >= #{beginTime}
+        and refund_time &lt;= #{endTime}
+        and pay_time is not null
+        <foreach collection="payTypeList" item="item" open=" AND pay_type in (" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="findExpiredOrder" resultType="string">
+        select id from hdg_packet_period_order
+        where expire_time >= #{beginTime}
+        and expire_time &lt;= #{endTime}
+        <foreach collection="payTypeList" item="item" open=" AND pay_type in (" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="findOneEnabled" resultType="cn.com.yusong.yhdg.common.domain.hdg.PacketPeriodOrder">
+        select
+        *
+        FROM
+        hdg_packet_period_order
+        where customer_id = #{customerId}
+        and status = #{status}
+        and agent_id = #{agentId}
+        and battery_type = #{batteryType}
+        and if(limit_count is not null, limit_count > order_count, 1=1)
+        limit 1
+    </select>
+
+    <update id="updateStatus">
+        update hdg_packet_period_order
+        set
+        status = #{toStatus},
+        begin_time = #{beginTime},
+        end_time = #{endTime}
+        where id = #{id} and status = #{fromStatus}
+    </update>
+
+    <update id="updateUsedOrder">
+        update hdg_packet_period_order set
+        status = #{toStatus}
+        where status = #{fromStatus}
+        <![CDATA[ and begin_time <= #{beginTime} ]]>
+        limit ${limit}
+    </update>
+
+    <update id="updateExpiredOrder">
+        update hdg_packet_period_order set
+            status = #{toStatus},
+            expire_time = #{expireTime}
+        where status = #{fromStatus}
+        and end_time &lt; #{expireTime}
+        limit ${limit}
+    </update>
+
+    <update id="updateExpireNoticeTime">
+        update hdg_packet_period_order set
+        expire_notice_time = #{expireNoticeTime}
+        where id = #{id}
+    </update>
+</mapper>

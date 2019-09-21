@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.appserver.persistence.hdg.FaultLogMapper">
+
+    <select id="findCountByDispatcher" resultType="int">
+        select
+            count(*)
+        from hdg_fault_log
+        where dispatcher_id = #{dispatcherId}
+        and status = #{status}
+    </select>
+
+    <select id="findDispatcher" resultType="cn.com.yusong.yhdg.common.domain.hdg.FaultLog">
+            select
+                log.fault_level,log.cabinet_name,log.cabinet_address,
+                log.cabinet_id,log.id,log.fault_type,log.fault_content,
+                log.create_time,log.handler_name,log.handle_time,
+                log.status,log.battery_id
+            from hdg_cabinet as caninet
+            INNER JOIN hdg_fault_log as log on log.cabinet_id = caninet.id
+            where caninet.dispatcher_id = #{dispatcherId}
+            <if test="cabinetId != null">
+                and  caninet.id = #{cabinetId}
+            </if>
+            <if test="status != null" >
+                and status = #{status}
+            </if>
+            order by log.fault_level desc
+    </select>
+
+    <select id="findByStatus" resultType="cn.com.yusong.yhdg.common.domain.hdg.FaultLog">
+        select
+        *
+        from hdg_fault_log
+        where dispatcher_id = #{dispatcherId}
+        and status = #{status}
+        order by create_time desc
+        limit #{offset},#{limit}
+    </select>
+
+    <select id="findFaultType" resultType="int">
+        select fault_type from hdg_fault_log where id = #{id}
+    </select>
+
+    <update id="handle">
+        update hdg_fault_log
+        set
+        status = #{toStatus},
+        handle_type = #{handleType},
+        handle_time = #{handleTime},
+        handle_memo = #{handleMemo},
+        handler_name = #{handlerName}
+        where id = #{id} and  status = #{fromStatus}
+    </update>
+
+</mapper>

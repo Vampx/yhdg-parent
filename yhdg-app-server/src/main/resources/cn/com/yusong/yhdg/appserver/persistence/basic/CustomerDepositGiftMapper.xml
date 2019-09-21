@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.appserver.persistence.basic.CustomerDepositGiftMapper">
+
+    <select id="findAll" resultType="cn.com.yusong.yhdg.common.domain.basic.CustomerDepositGift">
+        select
+          *
+        from bas_customer_deposit_gift
+        where partner_id =  #{partnerId}
+        order by money
+    </select>
+
+</mapper>

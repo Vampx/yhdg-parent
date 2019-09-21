@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.serviceserver.persistence.basic.BalanceTransferOrderLogMapper">
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.basic.BalanceTransferOrderLog" useGeneratedKeys="true" keyProperty="id">
+        insert into  bas_balance_transfer_order_log (order_id, operator_name, content, create_time)
+        values(#{orderId}, #{operatorName}, #{content}, #{createTime})
+    </insert>
+
+</mapper>

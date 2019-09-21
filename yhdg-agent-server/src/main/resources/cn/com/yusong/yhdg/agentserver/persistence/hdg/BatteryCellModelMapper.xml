@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.hdg.BatteryCellModelMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.hdg.BatteryCellModel">
+        select
+        *
+        from hdg_battery_cell_model
+        where id = #{id}
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.hdg.BatteryCellModel" resultType="int">
+        select count(*) from hdg_battery_cell_model
+        where 1 = 1
+        <if test="cellMfr != null and cellMfr !='' ">
+            <![CDATA[and cell_mfr LIKE concat('%',#{cellMfr}, '%')]]>
+        </if>
+        <if test="cellModel != null and cellModel !='' ">
+            <![CDATA[and cell_model LIKE concat('%',#{cellModel}, '%')]]>
+        </if>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.hdg.BatteryCellModel"
+            resultType="cn.com.yusong.yhdg.common.domain.hdg.BatteryCellModel">
+        select
+        *
+        from hdg_battery_cell_model
+        where 1 = 1
+        <if test="cellMfr != null and cellMfr !='' ">
+            <![CDATA[and cell_mfr LIKE concat('%',#{cellMfr}, '%')]]>
+        </if>
+        <if test="cellModel != null and cellModel !='' ">
+            <![CDATA[and cell_model LIKE concat('%',#{cellModel}, '%')]]>
+        </if>
+        order by create_time desc
+        limit ${beginIndex}, ${rows}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.BatteryCellModel" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO hdg_battery_cell_model(
+        cell_mfr,
+        cell_model,
+        memo,
+        operator,
+        create_time
+        ) VALUES (
+        #{cellMfr},
+        #{cellModel},
+        #{memo},
+        #{operator},
+        #{createTime}
+        )
+    </insert>
+
+    <update id="update">
+        update hdg_battery_cell_model set
+        cell_mfr = #{cellMfr},
+        cell_model = #{cellModel},
+        memo = #{memo}
+        where id = #{id}
+    </update>
+
+    <delete id="delete">
+        delete from hdg_battery_cell_model where id = #{id}
+    </delete>
+
+</mapper>

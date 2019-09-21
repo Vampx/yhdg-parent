@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.frontserver.persistence.yms.TerminalMapper">
+
+    <select id="find" parameterType="string" resultType="cn.com.yusong.yhdg.common.domain.yms.Terminal">
+        select
+            id,
+            version,
+            uid,
+            strategy_id as strategyId,
+            playlist_id as playlistId,
+            is_online as isOnline,
+            heart_time as heartTime
+        from yms_terminal
+        where id = #{id}
+    </select>
+
+    <select id="findByPlaylist" resultType="cn.com.yusong.yhdg.common.domain.yms.Terminal">
+        select
+            id,
+            version,
+            uid,
+            strategy_id as strategyId,
+            playlist_id as playlistId,
+            is_online as isOnline,
+            heart_time as heartTime
+        from yms_terminal
+        where playlist_id = #{playlistId}
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.yms.Terminal">
+        insert into yms_terminal(
+            id,
+            version,
+            uid,
+            strategy_id,
+            is_online,
+            heart_time
+        ) values (
+            #{id},
+            #{version},
+            #{uid},
+            #{strategyId},
+            #{isOnline},
+            #{heartTime}
+        );
+    </insert>
+
+    <update id="updateLoginInfo">
+        update yms_terminal set
+        version = #{version}
+        where id = #{id}
+    </update>
+
+    <update id="offline">
+        update yms_terminal set is_online = #{isOnline} where id = #{id}
+    </update>
+
+</mapper>

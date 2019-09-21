@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.webserver.persistence.basic.VoiceMessageTemplateMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.basic.VoiceMessageTemplate">
+        SELECT
+            *
+        FROM bas_voice_message_template
+        WHERE id = #{id}
+          AND partner_id = #{partnerId}
+    </select>
+
+    <select id="findPageResult" resultType="cn.com.yusong.yhdg.common.domain.basic.VoiceMessageTemplate">
+        SELECT
+            *
+        FROM bas_voice_message_template
+        <trim prefix="where" prefixOverrides="and">
+            <if test="partnerId != null">
+                AND partner_id = #{partnerId}
+            </if>
+            <if test="title != null and title !=''">
+                <![CDATA[AND title LIKE concat('%', #{title}, '%')]]>
+            </if>
+        </trim>
+        limit ${beginIndex}, ${rows}
+    </select>
+
+    <select id="findPageCount" resultType="int">
+        SELECT
+            COUNT(*)
+        FROM bas_voice_message_template
+        <trim prefix="where" prefixOverrides="and">
+            <if test="partnerId != null">
+                AND partner_id = #{partnerId}
+            </if>
+            <if test="title != null and title !=''">
+                <![CDATA[AND title LIKE concat('%', #{title}, '%')]]>
+            </if>
+        </trim>
+    </select>
+
+    <update id="update">
+        UPDATE bas_voice_message_template SET
+        	called_show_number = #{calledShowNumber},
+            volume = #{volume},
+            play_times = #{playTimes},
+            content = #{content},
+            code = #{code}
+        WHERE id = #{id}
+    </update>
+
+</mapper>

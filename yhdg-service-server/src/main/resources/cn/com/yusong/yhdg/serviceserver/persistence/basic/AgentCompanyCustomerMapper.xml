@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.yusong.yhdg.serviceserver.persistence.basic.AgentCompanyCustomerMapper">
+
+    <select id="find" resultType="cn.com.yusong.yhdg.common.domain.basic.AgentCompanyCustomer">
+        select
+        *
+        from bas_agent_company_customer
+        where agent_company_id = #{agentCompanyId}
+        and customer_id = #{customerId}
+    </select>
+
+
+</mapper>

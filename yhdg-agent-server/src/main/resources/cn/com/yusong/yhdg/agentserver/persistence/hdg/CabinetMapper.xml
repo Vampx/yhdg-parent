@@ -1,0 +1,703 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.com.yusong.yhdg.agentserver.persistence.hdg.CabinetMapper">
+
+    <select id="find" parameterType="string" resultType="cn.com.yusong.yhdg.common.domain.hdg.Cabinet">
+        select
+            *
+        from hdg_cabinet
+        where id = #{id}
+    </select>
+
+    <select id="findListByShopId" parameterType="string" resultType="cn.com.yusong.yhdg.common.domain.hdg.Cabinet">
+        SELECT
+        *
+        FROM hdg_cabinet
+        WHERE shop_id = #{shopId}
+    </select>
+
+    <select id="findListByEstateId" parameterType="long" resultType="cn.com.yusong.yhdg.common.domain.hdg.Cabinet">
+        SELECT
+        *
+        FROM hdg_cabinet
+        WHERE estate_id = #{estateId}
+    </select>
+
+    <select id="findListByBatteryType" parameterType="int" resultType="cn.com.yusong.yhdg.common.domain.hdg.Cabinet">
+        SELECT
+        hdg_cabinet.*
+        FROM hdg_cabinet, hdg_cabinet_battery_type
+        WHERE hdg_cabinet_battery_type.battery_type = #{batteryType}
+        and hdg_cabinet.id = hdg_cabinet_battery_type.cabinet_id
+    </select>
+
+    <select id="findListByAgentAndBatteryType" resultType="cn.com.yusong.yhdg.common.domain.hdg.Cabinet">
+        SELECT
+        hdg_cabinet.*
+        FROM hdg_cabinet, hdg_cabinet_battery_type
+        WHERE hdg_cabinet_battery_type.battery_type = #{batteryType}
+        and hdg_cabinet.id = hdg_cabinet_battery_type.cabinet_id
+        and agent_id = #{agentId}
+    </select>
+
+    <select id="findByAgent" resultType="cn.com.yusong.yhdg.common.domain.hdg.Cabinet">
+        select
+        id,
+        cabinet_name as cabinetName
+        from hdg_cabinet
+        where 1 = 1
+        <if test="agentId != null">
+            and agent_id = #{agentId}
+        </if>
+        <if test="dispatcherId != null">
+            and dispatcher_id = #{dispatcherId}
+        </if>
+        <if test="provinceId != null">
+            and province_id = #{provinceId}
+        </if>
+        <if test="cityId != null">
+            and city_id = #{cityId}
+        </if>
+        <if test="districtId != null">
+            and district_id = #{districtId}
+        </if>
+    </select>
+
+    <select id="findPageCount" parameterType="cn.com.yusong.yhdg.common.domain.hdg.Cabinet" resultType="int">
+        select
+        count(*)
+        from hdg_cabinet
+        where 1 = 1
+        <if test="cabinetName != null and cabinetName != ''">
+            <![CDATA[and cabinet_name LIKE concat('%', #{cabinetName}, '%')]]>
+        </if>
+        <if test="agentId != null">
+            and agent_id = #{agentId}
+        </if>
+        <if test="unbindEstate != null and unbindEstate == 1">
+            and estate_id is null
+        </if>
+        <if test="dispatcherId != null">
+            and dispatcher_id = #{dispatcherId}
+        </if>
+        <if test="unbindShop != null and unbindShop == 1">
+            and shop_id is null
+        </if>
+        <if test="batteryType != null and unbind == null ">
+            and id in (select cabinet_id from hdg_cabinet_battery_type where battery_type = #{batteryType})
+        </if>
+        <if test="batteryType != null and unbind != null and unbind ==1">
+            and id not in (select cabinet_id from hdg_cabinet_battery_type where battery_type = #{batteryType})
+        </if>
+        <if test="vipFlag != null and vipFlag ==1">
+            and id not in (select cabinet_id from hdg_vip_price_cabinet)
+        </if>
+        <if test="provinceId != null">
+            and province_id = #{provinceId}
+        </if>
+        <if test="cityId != null">
+            and city_id = #{cityId}
+        </if>
+        <if test="districtId != null">
+            and district_id = #{districtId}
+        </if>
+        <if test="mac != null and mac != ''">
+            <![CDATA[and mac LIKE concat('%', #{mac}, '%')]]>
+        </if>
+        <if test="id != null and id != ''">
+            <![CDATA[and id LIKE concat('%', #{id}, '%')]]>
+        </if>
+	  <if test="version !=null and version != '' ">
+            and version = #{version}
+        </if>
+        <if test="queryAntiVersion !=null and queryAntiVersion != '' ">
+            and (version != #{queryAntiVersion} or version is null)
+        </if>
+    </select>
+
+    <select id="findPageResult" parameterType="cn.com.yusong.yhdg.common.domain.hdg.Cabinet"
+            resultType="cn.com.yusong.yhdg.common.domain.hdg.Cabinet">
+        select
+        *
+        from hdg_cabinet
+        where 1 = 1
+        <if test="cabinetName != null and cabinetName != ''">
+            <![CDATA[and cabinet_name LIKE concat('%', #{cabinetName}, '%')]]>
+        </if>
+        <if test="agentId != null">
+            and agent_id = #{agentId}
+        </if>
+        <if test="dispatcherId != null">
+            and dispatcher_id = #{dispatcherId}
+        </if>
+        <if test="unbindEstate != null and unbindEstate == 1">
+            and estate_id is null
+        </if>
+        <if test="unbindShop != null and unbindShop == 1">
+            and shop_id is null
+        </if>
+        <if test="batteryType != null and unbind == null ">
+            and id in (select cabinet_id from hdg_cabinet_battery_type where battery_type = #{batteryType})
+        </if>
+        <if test="batteryType != null and unbind != null and unbind ==1">
+            and id not in (select cabinet_id from hdg_cabinet_battery_type where battery_type = #{batteryType})
+        </if>
+        <if test="vipFlag != null and vipFlag ==1">
+            and id not in (select cabinet_id from hdg_vip_price_cabinet)
+        </if>
+        <if test="provinceId != null">
+            and province_id = #{provinceId}
+        </if>
+        <if test="cityId != null">
+            and city_id = #{cityId}
+        </if>
+        <if test="districtId != null">
+            and district_id = #{districtId}
+        </if>
+        <if test="mac != null and mac != ''">
+            <![CDATA[and mac LIKE concat('%', #{mac}, '%')]]>
+        </if>
+        <if test="id != null and id != ''">
+            <![CDATA[and id LIKE concat('%', #{id}, '%')]]>
+        </if>
+	  <if test="version !=null and version != '' ">
+            and version = #{version}
+        </if>
+        <if test="queryAntiVersion !=null and queryAntiVersion != '' ">
+            and (version != #{queryAntiVersion} or version is null)
+        </if>
+        order by id desc
+        limit ${beginIndex}, ${rows}
+    </select>
+
+    <select id="findPageCountByStats" parameterType="cn.com.yusong.yhdg.common.domain.hdg.Cabinet" resultType="int">
+        select
+        count(*)
+        from (
+        select
+        count(*)
+        from hdg_cabinet c , hdg_cabinet_box b
+        WHERE c.id = b.cabinet_id
+        <if test="cabinetName != null and cabinetName != ''">
+            <![CDATA[and cabinet_name LIKE concat('%', #{cabinetName}, '%')]]>
+        </if>
+        <if test="agentId != null">
+            and c.agent_id = #{agentId}
+        </if>
+        <if test="id != null and id != ''">
+            <![CDATA[and c.id LIKE concat(#{id}, '%')]]>
+        </if>
+        <if test="type != null and type != 0">
+            and b.type = #{type}
+        </if>
+        group by c.id
+        ) a
+    </select>
+
+    <select id="findCountByAgent" resultType="int">
+        select count(1) from hdg_cabinet  where agent_id = #{agentId}
+    </select>
+
+    <select id="findPageResultByStats" parameterType="cn.com.yusong.yhdg.common.domain.hdg.Cabinet"
+            resultType="cn.com.yusong.yhdg.common.domain.hdg.Cabinet">
+        select
+        c.*
+        from hdg_cabinet c , hdg_cabinet_box b
+        WHERE c.id = b.cabinet_id
+        <if test="cabinetName != null and cabinetName != ''">
+            <![CDATA[and cabinet_name LIKE concat('%', #{cabinetName}, '%')]]>
+        </if>
+        <if test="agentId != null">
+            and c.agent_id = #{agentId}
+        </if>
+        <if test="id != null and id != ''">
+            <![CDATA[and c.id LIKE concat(#{id}, '%')]]>
+        </if>
+        <if test="type != null and type != 0">
+            and b.type = #{type}
+        </if>
+        group by c.id
+        order by c.id desc
+        limit ${beginIndex}, ${rows}
+    </select>
+
+    <select id="findCabinetList" resultType="cn.com.yusong.yhdg.common.domain.hdg.Cabinet">
+        select
+         id,
+         cabinet_name as cabinetName
+        from hdg_cabinet
+        where cabinet_company_id = #{cabinetCompanyId}
+    </select>
+
+    <select id="findUnique" parameterType="string" resultType="cn.com.yusong.yhdg.common.domain.hdg.Cabinet">
+        select id from hdg_cabinet where id = #{id}
+    </select>
+
+    <select id="hasRecordByProperty" resultType="string">
+        select cabinet_name from hdg_cabinet where
+        <if test="property == 'agentId'">
+            agent_id = #{value}
+        </if>
+        <if test="property == 'priceSettingId'">
+            price_setting_id = #{value}
+        </if>
+        limit 1
+    </select>
+
+    <select id="findByTerminalId" resultType="cn.com.yusong.yhdg.common.domain.hdg.Cabinet">
+        select * from hdg_cabinet where terminal_id = #{terminalId} limit 1
+    </select>
+
+    <insert id="insert" parameterType="cn.com.yusong.yhdg.common.domain.hdg.Cabinet">
+        INSERT INTO hdg_cabinet (
+                id,
+                agent_id,
+                cabinet_name,
+                permit_exchange_volume,
+                province_id,
+                city_id,
+                district_id,
+                street,
+                lng,
+                lat,
+                geo_hash,
+                charge_full_volume,
+                active_status,
+                image_path1,
+                image_path2,
+                image_path3,
+                work_time,
+                linkname,
+                tel,
+                dispatcher_id,
+                address,
+                keyword,
+                terminal_id,
+                operation_flag,
+                all_full_count,
+                all_full_fault_log_id,
+                login_token,
+                dynamic_code,
+                subtype,
+                network_type,
+                current_signal,
+                ip,
+                mac,
+                version,
+                max_charge_power,
+                box_max_power,
+                box_min_power,
+                box_trickle_time,
+                heart_time,
+                is_online,
+                status_info,
+                temp1,
+                temp2,
+                power,
+                sim_memo,
+                max_charge_count,
+                fault_type,
+                offline_fault_log_id,
+                temp_fault_log_id,
+                active_fan_temp,
+                is_fp_open,
+                fan_speed,
+                water_level,
+                smoke_state,
+                foregift_money,
+                rent_money,
+                rent_period_type,
+                rent_expire_time,
+                create_time
+            ) VALUES (
+                #{id},
+                #{agentId},
+                #{cabinetName},
+                #{permitExchangeVolume},
+                #{provinceId},
+                #{cityId},
+                #{districtId},
+                #{street},
+                #{lng},
+                #{lat},
+                #{geoHash},
+                #{chargeFullVolume},
+                #{activeStatus},
+                #{imagePath1},
+                #{imagePath2},
+                #{imagePath3},
+                #{workTime},
+                #{linkname},
+                #{tel},
+                #{dispatcherId},
+                #{address},
+                #{keyword},
+                #{terminalId},
+                #{operationFlag},
+                #{allFullCount},
+                #{allFullFaultLogId},
+                #{loginToken},
+                #{dynamicCode},
+                #{subtype},
+                #{networkType},
+                #{currentSignal},
+                #{ip},
+                #{mac},
+                #{version},
+                #{maxChargePower},
+                #{boxMaxPower},
+                #{boxMinPower},
+                #{boxTrickleTime},
+                #{heartTime},
+                #{isOnline},
+                #{statusInfo},
+                #{temp1},
+                #{temp2},
+                #{power},
+                #{simMemo},
+                #{maxChargeCount},
+                #{faultType},
+                #{offlineFaultLogId},
+                #{tempFaultLogId},
+                #{activeFanTemp},
+                #{isFpOpen},
+                #{fanSpeed},
+                #{waterLevel},
+                #{smokeState},
+                #{foregiftMoney},
+                #{rentMoney},
+                #{rentPeriodType},
+                #{rentExpireTime},
+                #{createTime}
+            )
+    </insert>
+
+    <select id="findByAgentIdList" resultType="cn.com.yusong.yhdg.common.domain.hdg.Cabinet">
+        select * from hdg_cabinet where agent_id = #{agentId}
+    </select>
+
+    <select id="findAll" resultType="cn.com.yusong.yhdg.common.domain.hdg.Cabinet">
+        select * from hdg_cabinet
+    </select>
+
+    <update id="cleanDispatcherId" parameterType="cn.com.yusong.yhdg.common.domain.hdg.Cabinet">
+        update hdg_cabinet set
+        dispatcher_id = NULL
+        where id = #{id}
+    </update>
+
+    <update id="update" parameterType="cn.com.yusong.yhdg.common.domain.hdg.Cabinet">
+        update hdg_cabinet set
+        <trim suffix="" suffixOverrides=",">
+            <if test="id != null and id != ''">
+                id = #{id},
+            </if>
+            <if test="agentId != null">
+                agent_id = #{agentId},
+            </if>
+            <if test="cabinetName != null and cabinetName != ''">
+                cabinet_name = #{cabinetName},
+            </if>
+            <if test="provinceId != null">
+                province_id = #{provinceId},
+            </if>
+            <if test="cityId != null">
+                city_id = #{cityId},
+            </if>
+            <if test="districtId != null">
+                district_id = #{districtId},
+            </if>
+            <if test="street != null and cabinetName != ''">
+                street = #{street},
+            </if>
+            <if test="lng != null">
+                lng = #{lng},
+            </if>
+            <if test="lat != null">
+                lat = #{lat},
+            </if>
+            <if test="geoHash != null and geoHash != ''">
+                geo_hash = #{geoHash},
+            </if>
+            <if test="activeStatus != null">
+                active_status = #{activeStatus},
+            </if>
+            <if test="imagePath1 != null and imagePath1 != ''">
+                image_path1 = #{imagePath1},
+            </if>
+            <if test="imagePath2 != null and imagePath2 != ''">
+                image_path2 = #{imagePath2},
+            </if>
+            <if test="imagePath3 != null and imagePath3 != ''">
+                image_path3 = #{imagePath3},
+            </if>
+            <if test="workTime != ''">
+                work_time = #{workTime},
+            </if>
+            <if test="currentSignal != null">
+                current_signal = #{currentSignal},
+            </if>
+            <if test="linkname != null and linkname != ''">
+                linkname = #{linkname},
+            </if>
+            <if test="tel != null and tel != ''">
+                tel = #{tel},
+            </if>
+            <if test="dispatcherId != null">
+                dispatcher_id = #{dispatcherId},
+            </if>
+            <if test="address != null and address != ''">
+                address = #{address},
+            </if>
+            <if test="keyword != null and keyword != ''">
+                keyword = #{keyword},
+            </if>
+            <if test="chargeFullVolume != null and chargeFullVolume != ''">
+                charge_full_volume = #{chargeFullVolume},
+            </if>
+            <if test="permitExchangeVolume != null and permitExchangeVolume != ''">
+                permit_exchange_volume = #{permitExchangeVolume},
+            </if>
+            <if test="minExchangeVolume != 0">
+                min_exchange_volume = #{minExchangeVolume},
+            </if>
+            <if test="terminalId != null and terminalId != ''">
+                terminal_id = #{terminalId},
+            </if>
+            <if test="dynamicCode != null">
+                dynamic_code = #{dynamicCode},
+            </if>
+            <if test="maxChargePower != null">
+                max_charge_power = #{maxChargePower},
+            </if>
+            <if test="boxMaxPower != null">
+                box_max_power = #{boxMaxPower},
+            </if>
+            <if test="boxMinPower != null">
+                box_min_power = #{boxMinPower},
+            </if>
+            <if test="boxTrickleTime != null">
+                box_trickle_time = #{boxTrickleTime},
+            </if>
+            <if test="subtype != null">
+                subtype = #{subtype},
+            </if>
+            <if test="mac != null and mac != ''">
+                mac = #{mac},
+            </if>
+            <if test="version != null and version != ''">
+                version = #{version},
+            </if>
+            <if test="heartTime != null">
+                heart_time = #{heartTime},
+            </if>
+            <if test="isOnline != null">
+                is_online = #{isOnline},
+            </if>
+            <if test="statusInfo != null">
+                status_info = #{statusInfo},
+            </if>
+            <if test="currentSignal != null">
+                current_signal = #{currentSignal},
+            </if>
+            <if test="simMemo != null">
+                sim_memo = #{simMemo},
+            </if>
+            <if test="price != null">
+                price = #{price},
+            </if>
+            <if test="maxChargeCount != null">
+                max_charge_count = #{maxChargeCount},
+            </if>
+            <if test="activeFanTemp != null">
+                active_fan_temp = #{activeFanTemp},
+            </if>
+            <if test="foregiftMoney != null">
+                foregift_money = #{foregiftMoney},
+            </if>
+            <if test="rentMoney != null">
+                rent_money = #{rentMoney},
+            </if>
+            <if test="rentPeriodType != null">
+                rent_period_type = #{rentPeriodType},
+            </if>
+            <if test="rentExpireTime != null">
+                rent_expire_time = #{rentExpireTime},
+            </if>
+            <if test="viewType != null">
+                view_type = #{viewType},
+            </if>
+            <if test="memo != null">
+                memo = #{memo},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="updateRatio">
+        update hdg_cabinet
+        set platform_ratio = #{platformRatio},
+              agent_ratio = #{agentRatio},
+              province_agent_ratio = #{provinceAgentRatio},
+              city_agent_ratio = #{cityAgentRatio},
+              shop_ratio = #{shopRatio}
+              where id = #{id}
+    </update>
+
+    <select id="findCabinetCount" resultType="int">
+        select count(*) from hdg_cabinet where agent_id = #{agentId}
+    </select>
+
+    <delete id="delete">
+        delete from hdg_cabinet where id = #{id}
+    </delete>
+
+    <update id="updateDispatcher">
+        update hdg_cabinet set
+        dispatcher_id = null
+        where 1 = 1
+        <if test="dispatcherId != null">
+            and dispatcher_id = #{dispatcherId}
+        </if>
+        <if test="provinceId != null">
+            and province_id = #{provinceId}
+        </if>
+        <if test="cityId != null">
+            and city_id = #{cityId}
+        </if>
+        <if test="districtId != null">
+            and district_id = #{districtId}
+        </if>
+    </update>
+
+    <update id="updateDispatcherById">
+        update hdg_cabinet set
+        dispatcher_id = #{dispatcherId}
+        where id = #{id}
+    </update>
+
+    <update id="updateTerminalId">
+        update hdg_cabinet set
+        terminal_id = #{terminalId}
+        where id = #{id}
+    </update>
+
+    <update id="clearTerminalId">
+        update hdg_cabinet set
+        terminal_id = #{toTerminalId}
+        where terminal_id = #{fromTerminalId}
+    </update>
+
+    <update id="updateLocation">
+        update hdg_cabinet
+        set
+        id = #{cabinetId}
+        <if test="provinceId != null">
+            ,province_id = #{provinceId}
+        </if>
+        <if test="cityId != null">
+            ,city_id = #{cityId}
+        </if>
+        <if test="districtId != null">
+            ,district_id = #{districtId}
+        </if>
+        <if test="geoHash != null">
+            ,geo_hash = #{geoHash}
+        </if>
+        <if test="address != null">
+            ,address = #{address}
+        </if>
+        <if test="keyword != null and keyword != '' ">
+            ,keyword = #{keyword}
+        </if>
+        <if test="cabinetName != null and cabinetName != '' ">
+            ,cabinet_name = #{cabinetName}
+        </if>
+        <if test="lng != null ">
+            ,lng = #{lng}
+        </if>
+        <if test="lat != null ">
+            ,lat = #{lat}
+        </if>
+        where id = #{cabinetId}
+    </update>
+
+    <update id="updateFaultLog">
+        update hdg_cabinet set
+            all_full_fault_log_id = null,
+            all_full_count = 0
+        where all_full_fault_log_id = #{allFullFaultLogId}
+    </update>
+
+    <update id="updateAgentId">
+        update hdg_cabinet set
+        agent_id = #{agentId}
+        where id = #{cabinetId}
+    </update>
+
+    <update id="updateMac">
+        update hdg_cabinet set
+        mac = #{mac}
+        where id = #{id}
+    </update>
+
+    <update id="updateUpline">
+        update hdg_cabinet set
+        foregift_money = #{foregiftMoney},
+        rent_money = #{rentMoney},
+        rent_period_type = #{rentPeriodType},
+        rent_expire_time = #{rentExpireTime},
+        active_platform_deduct = #{activePlatformDeduct},
+        platform_deduct_money = #{platformDeductMoney},
+        platform_deduct_expire_time = #{platformDeductExpireTime}
+        where id = #{id}
+    </update>
+
+    <update id="updateUplineStatus">
+        update hdg_cabinet set
+        <if test="agentId != null ">
+            agent_id = #{agentId},
+        </if>
+        up_line_status = #{uplineStatus}
+        where id = #{id}
+    </update>
+
+    <update id="bindShop">
+        update hdg_cabinet set
+        shop_id = #{shopId}
+        where id = #{id}
+    </update>
+
+    <update id="bindIsAllowOpenBox">
+        update hdg_cabinet set
+        is_allow_open_box = #{isAllowOpenBox}
+        where id = #{id}
+    </update>
+
+    <update id="unbindShop">
+        update hdg_cabinet set
+        shop_id = null
+        where id = #{id}
+    </update>
+
+    <update id="bindEstate">
+        update hdg_cabinet set
+        estate_id = #{estateId}
+        where id = #{id}
+    </update>
+
+    <update id="unbindEstate">
+        update hdg_cabinet set
+        estate_id = null
+        where id = #{id}
+    </update>
+
+    <update id="updatePrice">
+        update hdg_cabinet set
+        min_price = #{minPrice},
+        max_price = #{maxPrice}
+        where id = #{id}
+    </update>
+</mapper>

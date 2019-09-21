@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+     http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+     http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+     http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
+
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:app-config.xml</value>
+            </list>
+        </property>
+        <property name="propertiesPersister">
+            <bean class="cn.com.yusong.yhdg.vehicleserver.config.ConfigFileParser"/>
+        </property>
+    </bean>
+
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
+          destroy-method="close">
+        <property name="driverClass" value="${db.driver}" />
+        <property name="jdbcUrl" value="${db.url}" />
+        <property name="user" value="${db.user}" />
+        <property name="password" value="${db.password}" />
+
+        <property name="minPoolSize" value="1" />
+        <property name="maxPoolSize" value="20" />
+        <property name="maxIdleTime" value="1800" />
+        <property name="acquireIncrement" value="2" />
+        <property name="maxStatements" value="10" />
+        <property name="initialPoolSize" value="2" />
+        <property name="idleConnectionTestPeriod" value="1800" />
+        <property name="acquireRetryAttempts" value="30" />
+        <property name="breakAfterAcquireFailure" value="false" />
+        <property name="testConnectionOnCheckout" value="false" />
+    </bean>
+
+    <!-- transaction manager, use JtaTransactionManager for global tx -->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+
+    <!-- enable autowire -->
+    <context:annotation-config />
+
+    <!-- enable transaction demarcation with annotations -->
+    <tx:annotation-driven />
+
+    <aop:aspectj-autoproxy expose-proxy="true"/>
+
+    <!-- define the SqlSessionFactory -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+        <property name="configLocation" value="classpath:mybatis-config.xml"/>
+    </bean>
+
+    <!-- scan for mappers and let them be autowired -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="cn.com.yusong.yhdg.vehicleserver.persistence" />
+    </bean>
+
+    <bean id = "jdbcTemplate"
+          class = "org.springframework.jdbc.core.JdbcTemplate">
+        <property name = "dataSource" ref="dataSource"/>
+    </bean>
+
+    <context:component-scan base-package="cn.com.yusong.yhdg.vehicleserver.service" />
+    <bean class="cn.com.yusong.yhdg.common.spring.SpringContextHolder" />
+
+    <bean id="areaCache" class="cn.com.yusong.yhdg.common.entity.AreaCache"/>
+    <bean class="cn.com.yusong.yhdg.vehicleserver.config.SpringApplicationContextAware"/>
+
+    <bean class="cn.com.yusong.yhdg.vehicleserver.config.AppConfig"/>
+    <bean class="cn.com.yusong.yhdg.vehicleserver.comm.session.SessionManager"/>
+
+    <bean id="memCachedClient" class="cn.com.yusong.yhdg.common.tool.memcached.MemCachedClientFactory">
+        <property name="config">
+            <bean class="cn.com.yusong.yhdg.common.tool.memcached.MemCachedConfig">
+                <constructor-arg index="0" value="${memcached.url}"></constructor-arg>
+            </bean>
+        </property>
+    </bean>
+
+</beans>

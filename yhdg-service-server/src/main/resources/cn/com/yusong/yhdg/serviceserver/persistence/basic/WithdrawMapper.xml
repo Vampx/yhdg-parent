@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.com.yusong.yhdg.serviceserver.persistence.basic.WithdrawMapper">
+
+    <select id="findByStatus" resultType="cn.com.yusong.yhdg.common.domain.basic.Withdraw">
+        select
+        t1.*
+        from bas_withdraw t1
+        where  status = #{status}
+        order by id
+        limit #{offset}, #{limit}
+    </select>
+
+    <select id="findPartnerIncrement" resultType="cn.com.yusong.yhdg.common.domain.basic.Withdraw">
+        select
+        partner_id as partnerId,
+        account_type as accountType,
+        sum(real_money) as realMoney
+        from bas_withdraw
+        where  status = #{status}
+        and handle_time &lt;= #{endTime}
+        AND handle_time &gt;= #{beginTime}
+        group by partner_id, account_type
+    </select>
+
+    <update id="transfer">
+        update bas_withdraw
+        set weixin_account = #{mpOpenId}, account_name = #{accountName}, status = #{toStatus}, handle_time = #{handleTime}
+        where id = #{id} and status = #{fromStatus}
+    </update>
+
+</mapper>
